@@ -93,23 +93,20 @@
     .song-input-block input:focus { border-color: var(--gold); }
     .song-input-block input::placeholder { color: var(--muted); }
 
-    /* ── PACING ── */
     .pacing-row {
       display: flex; align-items: center; gap: 0.8rem;
       flex-wrap: wrap; margin-bottom: 2rem;
     }
     .pacing-label {
       font-size: 0.58rem; color: var(--muted);
-      letter-spacing: 0.15em; text-transform: uppercase;
-      white-space: nowrap;
+      letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap;
     }
     .pacing-btns { display: flex; gap: 0.4rem; flex-wrap: wrap; }
     .pacing-btn {
       background: transparent; border: 1px solid var(--border2);
       color: var(--muted2); font-family: 'DM Mono', monospace;
       font-size: 0.57rem; letter-spacing: 0.05em;
-      padding: 0.35rem 0.75rem; cursor: pointer; transition: all 0.18s;
-      white-space: nowrap;
+      padding: 0.35rem 0.75rem; cursor: pointer; transition: all 0.18s; white-space: nowrap;
     }
     .pacing-btn:hover { border-color: var(--gold); color: var(--gold); }
     .pacing-btn.active-perfect { border-color: var(--green); color: var(--green); background: rgba(45,158,107,0.08); }
@@ -122,7 +119,7 @@
 
     .cat-top {
       display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 0.7rem; gap: 1rem;
+      align-items: flex-start; margin-bottom: 0.7rem; gap: 1rem;
     }
     .cat-left { flex: 1; }
     .cat-name {
@@ -134,10 +131,23 @@
       font-size: 0.52rem; color: var(--muted);
       letter-spacing: 0.1em; text-transform: uppercase; margin-top: 0.2rem;
     }
-    .cat-right { text-align: right; }
+    .cat-right { text-align: right; min-width: 130px; }
     .cat-score {
       font-family: 'Playfair Display', serif;
       font-size: 2rem; font-weight: 900; line-height: 1; transition: color 0.3s;
+    }
+    /* tiny description under score */
+    .cat-desc {
+      font-size: 0.54rem;
+      color: var(--muted2);
+      letter-spacing: 0.03em;
+      line-height: 1.4;
+      margin-top: 0.25rem;
+      font-style: italic;
+      max-width: 160px;
+      margin-left: auto;
+      transition: color 0.3s, opacity 0.2s;
+      min-height: 0.8rem;
     }
 
     .slider-row { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.45rem; }
@@ -387,17 +397,7 @@
       letter-spacing: 0.1em; text-transform: uppercase; color: var(--text);
     }
     .folder-count { font-size: 0.53rem; color: var(--muted); letter-spacing: 0.08em; }
-    .folder-right { display: flex; align-items: center; gap: 0.8rem; }
-    .folder-avg {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem; font-weight: 900;
-    }
-    .folder-del-btn {
-      background: transparent; border: none; color: var(--muted);
-      cursor: pointer; font-size: 0.7rem; padding: 0.2rem 0.3rem;
-      transition: color 0.15s; line-height: 1;
-    }
-    .folder-del-btn:hover { color: var(--red); }
+    .folder-avg { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 900; }
 
     .folder-body {
       display: none; border: 1px solid var(--border);
@@ -476,36 +476,44 @@
     <div class="section-num">02</div>
   </div>
 
+  <!-- FLOW -->
   <div class="category flow-cat">
     <div class="cat-top">
       <div class="cat-left">
         <div class="cat-name">Flow &amp; Delivery</div>
         <div class="cat-weight">28% · Peak + Consistency</div>
       </div>
-      <div class="cat-right"><div class="cat-score" id="flow-display" style="color:var(--flow)">5.0</div></div>
+      <div class="cat-right">
+        <div class="cat-score" id="flow-display" style="color:var(--flow)">—</div>
+        <div class="cat-desc" id="flow-desc" style="color:var(--flow)"></div>
+      </div>
     </div>
     <div class="slider-row">
-      <div class="slider-meta"><span>Peak</span><span class="sval" id="fp-val">5</span></div>
-      <input type="range" min="1" max="10" value="5" id="flow-peak" oninput="update()">
+      <div class="slider-meta"><span>Peak</span><span class="sval" id="fp-val">—</span></div>
+      <input type="range" min="0" max="10" value="0" id="flow-peak" oninput="update()">
     </div>
     <div class="slider-row">
-      <div class="slider-meta"><span>Consistency</span><span class="sval" id="fc-val">5</span></div>
-      <input type="range" min="1" max="10" value="5" id="flow-cons" oninput="update()">
+      <div class="slider-meta"><span>Consistency</span><span class="sval" id="fc-val">—</span></div>
+      <input type="range" min="0" max="10" value="0" id="flow-cons" oninput="update()">
     </div>
-    <div class="subscore">(<span id="fp-echo" style="color:var(--flow)">5</span> + <span id="fc-echo" style="color:var(--flow)">5</span>) ÷ 2 = <span id="f-result" style="color:var(--flow)">5.0</span></div>
+    <div class="subscore">(<span id="fp-echo" style="color:var(--flow)">—</span> + <span id="fc-echo" style="color:var(--flow)">—</span>) ÷ 2 = <span id="f-result" style="color:var(--flow)">—</span></div>
   </div>
 
+  <!-- VERSES -->
   <div class="category verses-cat">
     <div class="cat-top">
       <div class="cat-left">
         <div class="cat-name">Verses</div>
         <div class="cat-weight">22% · Quality + Consistency Tier</div>
       </div>
-      <div class="cat-right"><div class="cat-score" id="verses-display" style="color:var(--verses)">4.5</div></div>
+      <div class="cat-right">
+        <div class="cat-score" id="verses-display" style="color:var(--verses)">—</div>
+        <div class="cat-desc" id="verses-desc" style="color:var(--verses)"></div>
+      </div>
     </div>
     <div class="slider-row">
-      <div class="slider-meta"><span>Best Verse</span><span class="sval" id="vq-val">5</span></div>
-      <input type="range" min="1" max="10" value="5" id="verse-quality" oninput="update()">
+      <div class="slider-meta"><span>Best Verse</span><span class="sval" id="vq-val">—</span></div>
+      <input type="range" min="0" max="10" value="0" id="verse-quality" oninput="update()">
     </div>
     <div class="tier-label">How many verses held up?</div>
     <div class="tier-grid">
@@ -514,50 +522,66 @@
       <button class="tier-btn active" data-tier="0.90" onclick="selectTier(this)"><span class="ticon">🟡</span>Majority good<span class="tmult">×0.90</span></button>
       <button class="tier-btn" data-tier="1.00" onclick="selectTier(this)"><span class="ticon">🟢</span>All good<span class="tmult">×1.00</span></button>
     </div>
-    <div class="verse-eq"><span id="vq-echo">5</span> × <span id="vt-echo">0.90</span> = <span id="v-result">4.5</span></div>
+    <div class="verse-eq"><span id="vq-echo">—</span> × <span id="vt-echo">0.90</span> = <span id="v-result">—</span></div>
   </div>
 
+  <!-- PRODUCTION -->
   <div class="category prod-cat">
     <div class="cat-top">
       <div class="cat-left"><div class="cat-name">Production / Beat</div><div class="cat-weight">20%</div></div>
-      <div class="cat-right"><div class="cat-score" id="prod-display" style="color:var(--prod)">5</div></div>
+      <div class="cat-right">
+        <div class="cat-score" id="prod-display" style="color:var(--prod)">—</div>
+        <div class="cat-desc" id="prod-desc" style="color:var(--prod)"></div>
+      </div>
     </div>
     <div class="slider-row">
-      <div class="slider-meta"><span>Score</span><span class="sval" id="p-val">5</span></div>
-      <input type="range" min="1" max="10" value="5" id="prod" oninput="update()">
+      <div class="slider-meta"><span>Score</span><span class="sval" id="p-val">—</span></div>
+      <input type="range" min="0" max="10" value="0" id="prod" oninput="update()">
     </div>
   </div>
 
+  <!-- CHORUS -->
   <div class="category chorus-cat">
     <div class="cat-top">
       <div class="cat-left"><div class="cat-name">Chorus</div><div class="cat-weight">14%</div></div>
-      <div class="cat-right"><div class="cat-score" id="chorus-display" style="color:var(--chorus)">5</div></div>
+      <div class="cat-right">
+        <div class="cat-score" id="chorus-display" style="color:var(--chorus)">—</div>
+        <div class="cat-desc" id="chorus-desc" style="color:var(--chorus)"></div>
+      </div>
     </div>
     <div class="slider-row">
-      <div class="slider-meta"><span>Score</span><span class="sval" id="c-val">5</span></div>
-      <input type="range" min="1" max="10" value="5" id="chorus" oninput="update()">
+      <div class="slider-meta"><span>Score</span><span class="sval" id="c-val">—</span></div>
+      <input type="range" min="0" max="10" value="0" id="chorus" oninput="update()">
     </div>
   </div>
 
+  <!-- LYRICS -->
   <div class="category lyrics-cat">
     <div class="cat-top">
       <div class="cat-left"><div class="cat-name">Lyrics / Wordplay</div><div class="cat-weight">8%</div></div>
-      <div class="cat-right"><div class="cat-score" id="lyrics-display" style="color:var(--lyrics)">5</div></div>
+      <div class="cat-right">
+        <div class="cat-score" id="lyrics-display" style="color:var(--lyrics)">—</div>
+        <div class="cat-desc" id="lyrics-desc" style="color:var(--lyrics)"></div>
+      </div>
     </div>
     <div class="slider-row">
-      <div class="slider-meta"><span>Score</span><span class="sval" id="l-val">5</span></div>
-      <input type="range" min="1" max="10" value="5" id="lyrics" oninput="update()">
+      <div class="slider-meta"><span>Score</span><span class="sval" id="l-val">—</span></div>
+      <input type="range" min="0" max="10" value="0" id="lyrics" oninput="update()">
     </div>
   </div>
 
+  <!-- REPLAY -->
   <div class="category replay-cat">
     <div class="cat-top">
       <div class="cat-left"><div class="cat-name">Replay Value</div><div class="cat-weight">8%</div></div>
-      <div class="cat-right"><div class="cat-score" id="replay-display" style="color:var(--replay)">5</div></div>
+      <div class="cat-right">
+        <div class="cat-score" id="replay-display" style="color:var(--replay)">—</div>
+        <div class="cat-desc" id="replay-desc" style="color:var(--replay)"></div>
+      </div>
     </div>
     <div class="slider-row">
-      <div class="slider-meta"><span>Score</span><span class="sval" id="r-val">5</span></div>
-      <input type="range" min="1" max="10" value="5" id="replay" oninput="update()">
+      <div class="slider-meta"><span>Score</span><span class="sval" id="r-val">—</span></div>
+      <input type="range" min="0" max="10" value="0" id="replay" oninput="update()">
     </div>
   </div>
 
@@ -575,7 +599,7 @@
       </div>
       <div>
         <div class="score-label" style="text-align:right">Score</div>
-        <div class="score-big" id="final-score">5.0</div>
+        <div class="score-big" id="final-score" style="color:var(--muted)">—</div>
       </div>
     </div>
     <div class="score-bar-wrap"><div class="score-bar" id="score-bar"></div></div>
@@ -585,8 +609,8 @@
       <div class="bd-item">Bonuses<span class="bdval" id="b-bon">—</span></div>
       <div class="bd-item">Dim. Returns<span class="bdval" id="b-dr">—</span></div>
     </div>
-    <div class="modifiers" id="modifiers"></div>
-    <div class="verdict-bar" id="verdict">—</div>
+    <div class="modifiers" id="modifiers"><span class="mod-tag neutral">Rate each category to see score</span></div>
+    <div class="verdict-bar" id="verdict" style="color:var(--muted)">—</div>
   </div>
 
   <div class="btn-row">
@@ -616,24 +640,18 @@
   <div class="modal">
     <div class="modal-title">Save Rating</div>
     <div class="modal-song-preview" id="modal-song-preview">—</div>
-
     <label class="modal-label">Choose a folder</label>
     <div class="modal-tabs">
       <button class="modal-tab active" id="tab-existing" onclick="switchTab('existing')">Existing</button>
       <button class="modal-tab" id="tab-new" onclick="switchTab('new')">New Folder</button>
     </div>
-
     <div class="folder-tab-content active" id="tab-content-existing">
       <div class="folder-list" id="folder-list"></div>
-      <div id="no-folders-msg" style="display:none;font-size:0.6rem;color:var(--muted);font-style:italic;padding:0.5rem 0">
-        No folders yet — create one first.
-      </div>
+      <div id="no-folders-msg" style="display:none;font-size:0.6rem;color:var(--muted);font-style:italic;padding:0.5rem 0">No folders yet — create one first.</div>
     </div>
-
     <div class="folder-tab-content" id="tab-content-new">
       <input type="text" class="modal-input" id="new-folder-input" placeholder="Folder name (e.g. Drake, Favorites...)">
     </div>
-
     <div class="modal-btns">
       <button class="modal-btn modal-btn-confirm" onclick="confirmSave()">Save</button>
       <button class="modal-btn modal-btn-cancel"  onclick="closeSaveModal()">Cancel</button>
@@ -642,6 +660,82 @@
 </div>
 
 <script>
+  // ── DESCRIPTIONS ──
+  const DESCS = {
+    flow: {
+      1:"Completely off beat, no sense of rhythm",
+      2:"Barely any cadence, stumbling constantly",
+      3:"Some attempt at rhythm but frequently falls off",
+      4:"Choppy and inconsistent, loses the beat often",
+      5:"Functional but one-dimensional, no personality",
+      6:"Decent flow, consistent but predictable",
+      7:"Solid with variation, rides the beat well",
+      8:"Strong delivery with good switches and control",
+      9:"Exceptional — unique cadence, effortless on beat",
+      10:"Iconic flow, every syllable deliberate and perfect"
+    },
+    verses: {
+      1:"No ideas, nothing going on in the verses",
+      2:"Barely any effort, no standout moments",
+      3:"One or two decent lines buried in weak writing",
+      4:"Below average, verses feel rushed or hollow",
+      5:"Mediocre — some okay stretches, nothing memorable",
+      6:"Decent content, a few strong moments",
+      7:"Solid verses with real ideas and quotables",
+      8:"Strong verses, at least one that genuinely slaps",
+      9:"Elite verse quality — layered, creative, hard to top",
+      10:"All-time verse writing, every bar intentional and sharp"
+    },
+    prod: {
+      1:"Unlistenable — distorted and broken",
+      2:"Amateur quality, clashing sounds, no cohesion",
+      3:"Basic and poorly executed, disconnected from vocal",
+      4:"Generic and flat, mixing feels muddy",
+      5:"Average — works but nothing stands out",
+      6:"Decent and clean, safe but uninspired",
+      7:"Good beat with clear identity, one standout moment",
+      8:"Strong production with creative choices that elevate",
+      9:"Excellent — the beat itself is a highlight",
+      10:"Legendary — instantly recognizable, perfectly mixed"
+    },
+    chorus: {
+      1:"No chorus or one that actively hurts the song",
+      2:"Painful and completely forgettable",
+      3:"Weak with no identity, total afterthought",
+      4:"Below average, the concept doesn't land",
+      5:"Passable, does its job but you won't hum it",
+      6:"Decent, sticks a little on first listen",
+      7:"Good chorus — you'll remember it after the song",
+      8:"Strong, genuinely catchy, makes you sing along",
+      9:"Excellent — immediately memorable",
+      10:"Legendary chorus, defines the entire song"
+    },
+    lyrics: {
+      1:"Incoherent filler, nothing being said",
+      2:"Clichéd to the extreme, no original thought",
+      3:"Surface level, generic tropes, no creativity",
+      4:"Below average, some ideas but poorly executed",
+      5:"Mediocre — gets the job done but nothing to quote",
+      6:"Decent with a few good lines, shows some thought",
+      7:"Solid with real ideas and a quotable or two",
+      8:"Sharp writing, layered meaning throughout",
+      9:"Elite — complex metaphors, punchlines that hit hard",
+      10:"All-time pen game, every bar is intentional"
+    },
+    replay: {
+      1:"Never want to hear it again",
+      2:"Would actively skip if it came on",
+      3:"Might finish once, no desire to return",
+      4:"Forgettable — gone from memory in a week",
+      5:"Fine on shuffle, wouldn't seek it out",
+      6:"Would play again, fades after a few listens",
+      7:"Goes in rotation, holds up across multiple plays",
+      8:"Heavy rotation — coming back for weeks",
+      9:"Long-term staple, still fresh after months",
+      10:"Timeless — hits just as hard years later"
+    }
+  };
+
   const SLIDER_COLORS = {
     'flow-peak':'#c9a84c','flow-cons':'#c9a84c',
     'verse-quality':'#d93025','prod':'#b07d3a',
@@ -656,12 +750,9 @@
     Object.entries(SLIDER_COLORS).forEach(([id,col]) => { const el = document.getElementById(id); if(el) fillSlider(el,col); });
   }
 
-  let activeTier = 0.90;
-  let pacingPen  = 0;
-  let allRatings = [];
-  let openFolders = new Set();
-  let selectedFolder = null;
-  let activeTab = 'existing';
+  let activeTier = 0.90, pacingPen = 0;
+  let allRatings = [], openFolders = new Set();
+  let selectedFolder = null, activeTab = 'existing';
 
   function selectTier(btn) {
     document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
@@ -685,6 +776,8 @@
     return '#d93025';
   }
 
+  function fmt(v) { return v === 0 ? '—' : v; }
+
   function getScores() {
     const fp = +document.getElementById('flow-peak').value;
     const fc = +document.getElementById('flow-cons').value;
@@ -693,12 +786,12 @@
     const ch = +document.getElementById('chorus').value;
     const l  = +document.getElementById('lyrics').value;
     const r  = +document.getElementById('replay').value;
-    const F  = (fp+fc)/2;
-    const V  = Math.min(10, vq*activeTier);
-    return { fp,fc,vq,p,ch,l,r,F,V };
+    const F  = (fp + fc) / 2;
+    const V  = Math.min(10, vq * activeTier);
+    return { fp, fc, vq, p, ch, l, r, F, V };
   }
 
-  function calcFinal(F,V,p,ch,l,r) {
+  function calcFinal(F, V, p, ch, l, r) {
     const B = (F*0.28)+(V*0.22)+(p*0.20)+(ch*0.14)+(l*0.08)+(r*0.08);
     const scores    = [F,V,p,ch,l,r];
     const catLabels = ['Flow','Verses','Production','Chorus','Lyrics','Replay'];
@@ -715,33 +808,64 @@
 
   function update() {
     refreshFills();
-    const {fp,fc,vq,p,ch,l,r,F,V} = getScores();
+    const { fp, fc, vq, p, ch, l, r, F, V } = getScores();
+    const allZero = (fp+fc+vq+p+ch+l+r) === 0;
 
-    document.getElementById('fp-val').textContent    = fp;
-    document.getElementById('fc-val').textContent    = fc;
-    document.getElementById('fp-echo').textContent   = fp;
-    document.getElementById('fc-echo').textContent   = fc;
-    document.getElementById('f-result').textContent  = F.toFixed(1);
-    document.getElementById('flow-display').textContent   = F.toFixed(1);
-    document.getElementById('vq-val').textContent    = vq;
-    document.getElementById('vq-echo').textContent   = vq;
-    document.getElementById('vt-echo').textContent   = activeTier.toFixed(2);
-    document.getElementById('v-result').textContent  = V.toFixed(1);
-    document.getElementById('verses-display').textContent = V.toFixed(1);
+    // Flow
+    const fpDisp = fp === 0 ? '—' : fp;
+    const fcDisp = fc === 0 ? '—' : fc;
+    const fDisp  = (fp === 0 && fc === 0) ? '—' : F.toFixed(1);
+    document.getElementById('fp-val').textContent   = fpDisp;
+    document.getElementById('fc-val').textContent   = fcDisp;
+    document.getElementById('fp-echo').textContent  = fpDisp;
+    document.getElementById('fc-echo').textContent  = fcDisp;
+    document.getElementById('f-result').textContent = fDisp;
+    document.getElementById('flow-display').textContent = fDisp;
+    document.getElementById('flow-desc').textContent = (fp===0&&fc===0) ? '' : (DESCS.flow[Math.round(F)] || '');
 
-    [{numId:'p-val',dispId:'prod-display',val:p},
-     {numId:'c-val',dispId:'chorus-display',val:ch},
-     {numId:'l-val',dispId:'lyrics-display',val:l},
-     {numId:'r-val',dispId:'replay-display',val:r}
-    ].forEach(({numId,dispId,val}) => {
-      document.getElementById(numId).textContent  = val;
-      document.getElementById(dispId).textContent = val;
+    // Verses
+    const vqDisp = vq === 0 ? '—' : vq;
+    const vDisp  = vq === 0 ? '—' : V.toFixed(1);
+    document.getElementById('vq-val').textContent   = vqDisp;
+    document.getElementById('vq-echo').textContent  = vqDisp;
+    document.getElementById('vt-echo').textContent  = activeTier.toFixed(2);
+    document.getElementById('v-result').textContent = vDisp;
+    document.getElementById('verses-display').textContent = vDisp;
+    document.getElementById('verses-desc').textContent = vq === 0 ? '' : (DESCS.verses[Math.round(Math.max(1,V))] || '');
+
+    // Others
+    [
+      { numId:'p-val', dispId:'prod-display',   descId:'prod-desc',   cat:'prod',   val:p  },
+      { numId:'c-val', dispId:'chorus-display', descId:'chorus-desc', cat:'chorus', val:ch },
+      { numId:'l-val', dispId:'lyrics-display', descId:'lyrics-desc', cat:'lyrics', val:l  },
+      { numId:'r-val', dispId:'replay-display', descId:'replay-desc', cat:'replay', val:r  },
+    ].forEach(({ numId, dispId, descId, cat, val }) => {
+      document.getElementById(numId).textContent  = val === 0 ? '—' : val;
+      document.getElementById(dispId).textContent = val === 0 ? '—' : val;
+      document.getElementById(descId).textContent = val === 0 ? '' : (DESCS[cat][val] || '');
     });
 
-    const sn = document.getElementById('songName').value.trim();
-    document.getElementById('score-song-name').textContent = sn || '—';
+    document.getElementById('score-song-name').textContent =
+      document.getElementById('songName').value.trim() || '—';
 
-    const {B, weakCats, eliteCats, penalty, bonus, gap, dr, final} = calcFinal(F,V,p,ch,l,r);
+    // If everything is 0 — show blank score panel
+    if (allZero) {
+      const fs = document.getElementById('final-score');
+      fs.textContent = '—';
+      fs.style.color = 'var(--muted)';
+      document.getElementById('score-bar').style.width = '0';
+      document.getElementById('b-base').textContent = '—';
+      document.getElementById('b-pen').textContent  = '—';
+      document.getElementById('b-bon').textContent  = '—';
+      document.getElementById('b-dr').textContent   = '—';
+      document.getElementById('modifiers').innerHTML = '<span class="mod-tag neutral">Rate each category to see score</span>';
+      const vEl = document.getElementById('verdict');
+      vEl.textContent = '—';
+      vEl.style.color = 'var(--muted)';
+      return;
+    }
+
+    const { B, weakCats, eliteCats, penalty, bonus, gap, dr, final } = calcFinal(F,V,p,ch,l,r);
 
     document.getElementById('b-base').textContent = B.toFixed(2);
     document.getElementById('b-pen').textContent  = penalty > 0 ? `−${penalty.toFixed(2)}` : '—';
@@ -763,7 +887,7 @@
       modDiv.innerHTML = '<span class="mod-tag neutral">No modifiers</span>';
     weakCats.forEach(c  => modDiv.innerHTML += `<span class="mod-tag penalty">⚠ ${c} −0.15</span>`);
     eliteCats.forEach(c => modDiv.innerHTML += `<span class="mod-tag bonus">★ ${c} +0.20</span>`);
-    if (dr>0) modDiv.innerHTML += `<span class="mod-tag dr">↓ Gap ${gap.toFixed(1)} −${dr.toFixed(2)}</span>`;
+    if (dr>0)        modDiv.innerHTML += `<span class="mod-tag dr">↓ Gap ${gap.toFixed(1)} −${dr.toFixed(2)}</span>`;
     if (pacingPen>0) modDiv.innerHTML += `<span class="mod-tag ${pacingPen>=0.50?'pacing-bad':'pacing'}">⏱ ${pacingPen>=0.50?'Drags / Too Short':'Slightly Off'} −${pacingPen.toFixed(2)}</span>`;
 
     const verdicts = [
@@ -781,27 +905,28 @@
   /* ── MODAL ── */
   function switchTab(tab) {
     activeTab = tab;
-    document.getElementById('tab-existing').classList.toggle('active', tab === 'existing');
-    document.getElementById('tab-new').classList.toggle('active', tab === 'new');
-    document.getElementById('tab-content-existing').classList.toggle('active', tab === 'existing');
-    document.getElementById('tab-content-new').classList.toggle('active', tab === 'new');
+    document.getElementById('tab-existing').classList.toggle('active', tab==='existing');
+    document.getElementById('tab-new').classList.toggle('active', tab==='new');
+    document.getElementById('tab-content-existing').classList.toggle('active', tab==='existing');
+    document.getElementById('tab-content-new').classList.toggle('active', tab==='new');
   }
 
   function openSaveModal() {
     const songName = document.getElementById('songName').value.trim();
     if (!songName) { alert('Add a song name first.'); return; }
+    const { fp,fc,vq,p,ch,l,r } = getScores();
+    if ((fp+fc+vq+p+ch+l+r) === 0) { alert('Rate at least one category before saving.'); return; }
 
     document.getElementById('modal-song-preview').textContent = songName;
     document.getElementById('new-folder-input').value = '';
     selectedFolder = null;
 
-    // Build folder list
     const folders = [...new Set(allRatings.map(r => r.folder).filter(Boolean))].sort();
     const listEl  = document.getElementById('folder-list');
     const noMsg   = document.getElementById('no-folders-msg');
     listEl.innerHTML = '';
 
-    if (folders.length === 0) {
+    if (!folders.length) {
       noMsg.style.display = 'block';
       listEl.style.display = 'none';
       switchTab('new');
@@ -842,29 +967,19 @@
     }
 
     const songName = document.getElementById('songName').value.trim();
-    const {fp,fc,vq,p,ch,l,r,F,V} = getScores();
-    const {final} = calcFinal(F,V,p,ch,l,r);
-    const verdict = document.getElementById('verdict').textContent;
+    const { fp,fc,vq,p,ch,l,r,F,V } = getScores();
+    const { final } = calcFinal(F,V,p,ch,l,r);
+    const verdict   = document.getElementById('verdict').textContent;
 
     const { error } = await db.from('ratings').insert({
-      song_name: songName,
-      flow_peak: fp, flow_consistency: fc, flow_score: F,
-      verse_quality: vq, verse_tier: activeTier, verse_score: V,
-      production: p, chorus: ch, lyrics: l, replay: r,
-      pacing_penalty: pacingPen,
-      final_score: final,
-      verdict: verdict,
-      folder: folder
+      song_name:songName, flow_peak:fp, flow_consistency:fc, flow_score:F,
+      verse_quality:vq, verse_tier:activeTier, verse_score:V,
+      production:p, chorus:ch, lyrics:l, replay:r,
+      pacing_penalty:pacingPen, final_score:final, verdict:verdict, folder:folder
     });
 
-    if (error) {
-      alert('Save failed: ' + error.message);
-    } else {
-      closeSaveModal();
-      await loadRatings();
-      openFolders.add(folder);
-      resetAll();
-    }
+    if (error) { alert('Save failed: ' + error.message); }
+    else { closeSaveModal(); await loadRatings(); openFolders.add(folder); resetAll(); }
   }
 
   async function deleteRating(id, e) {
@@ -876,13 +991,13 @@
 
   function loadRatingIntoForm(row) {
     document.getElementById('songName').value      = row.song_name || '';
-    document.getElementById('flow-peak').value     = row.flow_peak || 5;
-    document.getElementById('flow-cons').value     = row.flow_consistency || 5;
-    document.getElementById('verse-quality').value = row.verse_quality || 5;
-    document.getElementById('prod').value          = row.production || 5;
-    document.getElementById('chorus').value        = row.chorus || 5;
-    document.getElementById('lyrics').value        = row.lyrics || 5;
-    document.getElementById('replay').value        = row.replay || 5;
+    document.getElementById('flow-peak').value     = row.flow_peak || 0;
+    document.getElementById('flow-cons').value     = row.flow_consistency || 0;
+    document.getElementById('verse-quality').value = row.verse_quality || 0;
+    document.getElementById('prod').value          = row.production || 0;
+    document.getElementById('chorus').value        = row.chorus || 0;
+    document.getElementById('lyrics').value        = row.lyrics || 0;
+    document.getElementById('replay').value        = row.replay || 0;
     activeTier = parseFloat(row.verse_tier) || 0.90;
     pacingPen  = parseFloat(row.pacing_penalty) || 0;
     document.querySelectorAll('.tier-btn').forEach(b =>
@@ -913,7 +1028,6 @@
       return;
     }
 
-    // Group by folder
     const groups = {};
     filtered.forEach(r => {
       const f = r.folder || 'Uncategorized';
@@ -938,9 +1052,7 @@
           <span class="folder-name">${folderName}</span>
           <span class="folder-count">${songs.length} song${songs.length!==1?'s':''}</span>
         </div>
-        <div class="folder-right">
-          <div class="folder-avg" style="color:${scoreColor(avg)}">${avg.toFixed(1)}</div>
-        </div>
+        <div class="folder-avg" style="color:${scoreColor(avg)}">${avg.toFixed(1)}</div>
       `;
       header.onclick = () => {
         if (openFolders.has(folderName)) openFolders.delete(folderName);
@@ -975,7 +1087,7 @@
 
   function resetAll() {
     ['flow-peak','flow-cons','verse-quality','prod','chorus','lyrics','replay']
-      .forEach(id => { document.getElementById(id).value = 5; });
+      .forEach(id => { document.getElementById(id).value = 0; });
     document.getElementById('songName').value = '';
     document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tier-btn')[2].classList.add('active');
