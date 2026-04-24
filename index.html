@@ -87,6 +87,7 @@
     .interlude-btn.active svg{stroke:var(--gold)}
     .interlude-banner{background:rgba(167,139,250,.1);border:1px solid var(--gold);color:var(--gold);padding:.55rem 1rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-align:center;border-radius:3px;margin-bottom:.65rem;line-height:1.5}
     .interlude-dim{opacity:.28;pointer-events:none;user-select:none;transition:opacity .2s}
+    .rr-confirm-row{display:flex!important}
 
     /* REFRESH BUTTON */
     .refresh-btn{display:flex;align-items:center;justify-content:center;gap:.35rem;background:var(--gold);border:none;color:var(--bg);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.38rem .75rem;border-radius:3px;cursor:pointer;flex-shrink:0;transition:opacity .15s,transform .15s}
@@ -700,8 +701,8 @@
     .rr-current-lbl{font-size:.5rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.2rem}
     .rr-current-title{font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1}
     .rr-current-meta{font-size:.6rem;color:var(--muted2);margin-top:.2rem}
-    .rr-progress-bar{padding:.45rem 1.25rem;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
-    .rr-progress-txt{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .rr-progress-bar{padding:.45rem 1.25rem;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+    .rr-progress-txt{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .rr-submitted-pill{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green);display:none}
     .rr-cat{padding:.55rem 1.25rem;border-bottom:1px solid var(--border)}
     .rr-cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem}
@@ -716,6 +717,16 @@
     .rr-submit-btn{padding:.7rem 1.2rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:var(--gold);color:var(--bg);border:none;border-radius:2px;transition:opacity .2s;flex-shrink:0}
     .rr-submit-btn:disabled{opacity:.35;cursor:not-allowed}
     .rr-reveal-avg{font-family:'Playfair Display',serif;font-size:7rem;font-weight:900;line-height:1;text-align:center;letter-spacing:-.02em}
+    .rr-chat-btn{position:relative;background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:3px;padding:.28rem .55rem;cursor:pointer;display:flex;align-items:center;gap:.3rem;flex-shrink:0;transition:border-color .15s,color .15s}
+    .rr-chat-btn:active{opacity:.7}
+    .rr-chat-btn.has-unread{border-color:var(--red);color:var(--text)}
+    .rr-chat-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;flex-shrink:0}
+    .rr-chat-badge{position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;min-width:17px;height:17px;border-radius:9px;display:none;align-items:center;justify-content:center;padding:0 3px;border:1.5px solid var(--bg);line-height:1}
+    .rr-rating-chat{position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--gold);z-index:30;display:flex;flex-direction:column;height:56vh;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
+    .rr-rating-chat.open{transform:translateY(0)}
+    .rr-rating-chat-hdr{display:flex;align-items:center;padding:.6rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0}
+    .rr-rating-chat-msgs{flex:1;overflow-y:auto;padding:.65rem 1.25rem;display:flex;flex-direction:column;gap:.5rem}
+    .rr-rating-chat-foot{display:flex;gap:.5rem;padding:.55rem 1.25rem calc(env(safe-area-inset-bottom,.5rem) + .55rem);border-top:1px solid var(--border);flex-shrink:0;background:var(--surface)}
     .rr-score-reveal-row{display:flex;flex-direction:column;padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent}
     .rr-score-reveal-header{display:flex;align-items:center;justify-content:space-between}
     .rr-reveal-arrow{color:var(--muted);font-size:.58rem;transition:transform .25s ease;display:inline-block;flex-shrink:0;margin-left:.35rem}
@@ -1244,12 +1255,22 @@
     </div>
 
     <!-- RATING -->
-    <div id="rr-rating" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+    <div id="rr-rating" style="display:none;flex-direction:column;flex:1;overflow:hidden;position:relative">
       <div id="rr-current-song-bar" class="rr-current-song-bar"></div>
       <div class="rr-progress-bar">
-        <div id="rr-progress-txt" class="rr-progress-txt">0 / 0 submitted</div>
+        <div id="rr-progress-txt" class="rr-progress-txt">Waiting…</div>
         <div id="rr-submitted-pill" class="rr-submitted-pill">✓ Submitted</div>
-        <button id="rr-force-btn" onclick="rrForceReveal()" style="display:none;background:transparent;border:1px solid var(--muted);color:var(--muted);font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border-radius:.3rem;cursor:pointer">Force →</button>
+        <button id="rr-force-btn" onclick="rrForcePrompt()" style="display:none;background:transparent;border:1px solid var(--muted);color:var(--muted);font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border-radius:.3rem;cursor:pointer">Force →</button>
+        <div id="rr-force-confirm" style="display:none;align-items:center;gap:.4rem">
+          <span style="font-family:'DM Mono',monospace;font-size:.5rem;color:var(--text);letter-spacing:.06em">Force reveal?</span>
+          <button onclick="rrForceReveal()" style="background:var(--gold);border:none;color:var(--bg);font-family:'DM Mono',monospace;font-size:.5rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .5rem;border-radius:.3rem;cursor:pointer">Yes</button>
+          <button onclick="rrForceCancelConfirm()" style="background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'DM Mono',monospace;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .5rem;border-radius:.3rem;cursor:pointer">No</button>
+        </div>
+        <button id="rr-chat-btn" class="rr-chat-btn" onclick="rrToggleRatingChat()" title="Room chat">
+          <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.06em">Chat</span>
+          <div id="rr-chat-badge" class="rr-chat-badge"></div>
+        </button>
       </div>
       <div class="scroll-area" style="padding-bottom:5rem">
         <div style="padding:.75rem 1.25rem .1rem">
@@ -1308,6 +1329,21 @@
         </div>
         <button id="rr-submit-btn" class="rr-submit-btn" onclick="rrSubmit()">Submit</button>
       </div>
+
+      <!-- Rating chat drawer -->
+      <div id="rr-rating-chat" class="rr-rating-chat">
+        <div class="rr-rating-chat-hdr">
+          <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text)">Room Chat</div>
+          <button onclick="rrToggleRatingChat()" style="background:transparent;border:none;color:var(--muted);font-size:.9rem;cursor:pointer;line-height:1;padding:.1rem .3rem">✕</button>
+        </div>
+        <div id="rr-rating-msgs" class="rr-rating-chat-msgs">
+          <div data-empty style="font-size:.58rem;color:var(--muted);font-style:italic;text-align:center;padding:.5rem 0">No messages yet. Say something!</div>
+        </div>
+        <div class="rr-rating-chat-foot">
+          <input id="rr-rating-chat-input" class="modal-input" placeholder="Say something…" maxlength="200" style="font-size:.75rem;padding:.5rem .75rem;flex:1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();rrSendRatingMsg();}">
+          <button onclick="rrSendRatingMsg()" style="background:var(--gold);border:none;color:var(--bg);font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.5rem .85rem;cursor:pointer;border-radius:2px;flex-shrink:0">Send</button>
+        </div>
+      </div>
     </div>
 
     <!-- REVEAL -->
@@ -1332,10 +1368,25 @@
           <input id="rr-chat-input" class="modal-input" placeholder="Say something about this song…" maxlength="200" style="font-size:.75rem;padding:.5rem .75rem;flex:1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();rrSendMessage();}">
           <button onclick="rrSendMessage()" style="background:var(--gold);border:none;color:var(--bg);font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.5rem .85rem;cursor:pointer;border-radius:2px;flex-shrink:0">Send</button>
         </div>
-        <div style="padding:.5rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);display:flex;gap:.65rem">
-          <div id="rr-reveal-wait-msg" style="flex:1;font-size:.6rem;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;align-self:center">Waiting for host…</div>
-          <button id="rr-next-btn" class="rr-btn rr-btn-secondary" style="display:none;flex:1;padding:.7rem" onclick="rrNextSong()">Next Song →</button>
-          <button id="rr-end-btn" class="rr-btn rr-btn-primary" style="display:none;flex:1;padding:.7rem" onclick="rrEnd()">End Session</button>
+        <div style="padding:.5rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);display:flex;flex-direction:column;gap:.5rem">
+          <div id="rr-reveal-wait-msg" style="font-size:.6rem;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;padding:.2rem 0">Waiting for host…</div>
+          <!-- Normal state -->
+          <div id="rr-next-normal" style="display:none;gap:.65rem;flex-direction:row" class="rr-confirm-row">
+            <button id="rr-next-btn" class="rr-btn rr-btn-secondary" style="flex:1;padding:.7rem" onclick="rrNextSongPrompt()">Next Song →</button>
+            <button id="rr-end-btn" class="rr-btn rr-btn-primary" style="flex:1;padding:.7rem" onclick="rrEnd()">End Session</button>
+          </div>
+          <!-- Confirmation state -->
+          <div id="rr-next-confirm" style="display:none;flex-direction:column;gap:.4rem">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text);text-align:center;padding:.2rem 0">Advance to next song?</div>
+            <div style="display:flex;gap:.5rem">
+              <button class="rr-btn rr-btn-secondary" style="flex:1;padding:.65rem" onclick="rrNextSongCancel()">✕ Cancel</button>
+              <button class="rr-btn rr-btn-primary" style="flex:1;padding:.65rem" onclick="rrNextSong()">✓ Confirm</button>
+            </div>
+          </div>
+          <!-- End only (last song) -->
+          <div id="rr-end-only" style="display:none">
+            <button class="rr-btn rr-btn-primary" style="width:100%;padding:.7rem" onclick="rrEnd()">End Session</button>
+          </div>
         </div>
       </div>
     </div>
@@ -5286,12 +5337,18 @@ function rrRenderRating(){
   rrIsInterlude=false;
   const rrIBtn=document.getElementById('rr-interlude-btn');const rrIBanner=document.getElementById('rr-interlude-banner');const rrIBody=document.getElementById('rr-interlude-rating-body');
   rrIBtn?.classList.remove('active');if(rrIBanner)rrIBanner.style.display='none';if(rrIBody)rrIBody.classList.remove('interlude-dim');
+  rrChatUnread=0;
+  const rrcDrawer=document.getElementById('rr-rating-chat');if(rrcDrawer)rrcDrawer.classList.remove('open');
+  const rrcBadge=document.getElementById('rr-chat-badge');if(rrcBadge){rrcBadge.style.display='none';rrcBadge.textContent='';}
+  document.getElementById('rr-chat-btn')?.classList.remove('has-unread');
+  const rrcMsgs=document.getElementById('rr-rating-msgs');if(rrcMsgs)rrcMsgs.innerHTML='<div data-empty style="font-size:.58rem;color:var(--muted);font-style:italic;text-align:center;padding:.5rem 0">No messages yet. Say something!</div>';
   ['rr-flow','rr-verses','rr-prod','rr-chorus','rr-lyrics','rr-replay'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0;});
   applyPacingDefault(true);
   rrSubmitted=false;
   document.getElementById('rr-submitted-pill').style.display='none';
   const sb=document.getElementById('rr-submit-btn');sb.disabled=false;sb.textContent='Submit';
   const fb=document.getElementById('rr-force-btn');if(fb)fb.style.display=currentRoom.host_id===currentUser?.id?'block':'none';
+  const fc=document.getElementById('rr-force-confirm');if(fc)fc.style.display='none';
   rrUpdate();
   rrRefreshProgress();
 }
@@ -5355,9 +5412,19 @@ async function rrRefreshProgress(){
   const song=roomSongs[currentRoom.current_song_idx];
   if(!song)return;
   const{data}=await db.from('rank_room_ratings').select('user_id').eq('room_id',currentRoom.id).eq('song_id',song.id);
-  const submitted=(data||[]).length,total=roomMembers.length;
+  const submittedIds=new Set((data||[]).map(r=>r.user_id));
+  const total=roomMembers.length;
+  const submitted=submittedIds.size;
   const el=document.getElementById('rr-progress-txt');
-  if(el)el.textContent=`${submitted} / ${total} submitted`;
+  if(el){
+    const pending=roomMembers.filter(m=>!submittedIds.has(m.user_id));
+    if(pending.length===0){
+      el.textContent='All submitted ✓';el.style.color='var(--green)';
+    } else {
+      const names=pending.map(m=>{const u=profileMap[m.user_id]?.username||'unknown';return'@'+u;}).join(', ');
+      el.textContent=`Waiting: ${names}`;el.style.color='var(--muted)';
+    }
+  }
   if(submitted>=total&&total>0&&currentRoom.status==='rating'){
     rrShowCompleteAnimation();
     if(currentRoom.host_id===currentUser?.id){
@@ -5395,6 +5462,52 @@ async function rrSubmit(){
   await rrRefreshProgress();
 }
 
+let rrChatUnread=0;
+
+function rrToggleRatingChat(){
+  const drawer=document.getElementById('rr-rating-chat');
+  if(!drawer)return;
+  const opening=!drawer.classList.contains('open');
+  drawer.classList.toggle('open',opening);
+  if(opening){
+    rrChatUnread=0;
+    const badge=document.getElementById('rr-chat-badge');
+    if(badge){badge.style.display='none';badge.textContent='';}
+    document.getElementById('rr-chat-btn')?.classList.remove('has-unread');
+    const song=roomSongs[currentRoom?.current_song_idx];
+    if(song)rrLoadRatingMessages(song.id);
+    setTimeout(()=>document.getElementById('rr-rating-chat-input')?.focus(),300);
+  }
+}
+
+async function rrLoadRatingMessages(songId){
+  const container=document.getElementById('rr-rating-msgs');
+  if(!container)return;
+  const{data}=await db.from('rank_room_messages').select('*').eq('room_id',currentRoom.id).eq('song_id',songId).order('created_at');
+  container.innerHTML=(data&&data.length)
+    ?data.map(m=>rrMessageHTML(m)).join('')
+    :'<div data-empty style="font-size:.58rem;color:var(--muted);font-style:italic;text-align:center;padding:.5rem 0">No messages yet. Say something!</div>';
+  container.scrollTop=container.scrollHeight;
+}
+
+async function rrSendRatingMsg(){
+  const input=document.getElementById('rr-rating-chat-input');
+  const msg=(input?.value||'').trim();
+  if(!msg||!currentRoom)return;
+  const song=roomSongs[currentRoom.current_song_idx];
+  if(!song)return;
+  input.value='';
+  const{data,error}=await db.from('rank_room_messages').insert({room_id:currentRoom.id,song_id:song.id,user_id:currentUser.id,message:msg}).select().single();
+  if(error){alert('Failed: '+error.message);input.value=msg;return;}
+  const container=document.getElementById('rr-rating-msgs');
+  if(container){
+    const empty=container.querySelector('[data-empty]');
+    if(empty)empty.remove();
+    container.insertAdjacentHTML('beforeend',rrMessageHTML(data));
+    container.scrollTop=container.scrollHeight;
+  }
+}
+
 function rrMessageHTML(m){
   const p=profileMap[m.user_id],u=p?.username||'Unknown',col=p?.avatar_color||'#c9a84c';
   const isMe=m.user_id===currentUser?.id;
@@ -5409,13 +5522,32 @@ async function rrLoadMessages(songId){
 }
 
 function rrAddMessageToUI(m){
-  const container=document.getElementById('rr-round-chat');
-  if(!container||currentRoom?.status!=='reveal')return;
   SFX.chat();
-  const empty=container.querySelector('div[style*="italic"]');
-  if(empty)empty.remove();
-  container.insertAdjacentHTML('beforeend',rrMessageHTML(m));
-  container.scrollIntoView({behavior:'smooth',block:'end'});
+  if(currentRoom?.status==='reveal'){
+    const container=document.getElementById('rr-round-chat');
+    if(!container)return;
+    const empty=container.querySelector('div[style*="italic"]');
+    if(empty)empty.remove();
+    container.insertAdjacentHTML('beforeend',rrMessageHTML(m));
+    container.scrollIntoView({behavior:'smooth',block:'end'});
+  } else if(currentRoom?.status==='rating'){
+    const drawer=document.getElementById('rr-rating-chat');
+    const isOpen=drawer?.classList.contains('open');
+    if(isOpen){
+      const container=document.getElementById('rr-rating-msgs');
+      if(container){
+        const empty=container.querySelector('[data-empty]');
+        if(empty)empty.remove();
+        container.insertAdjacentHTML('beforeend',rrMessageHTML(m));
+        container.scrollTop=container.scrollHeight;
+      }
+    } else {
+      rrChatUnread++;
+      const badge=document.getElementById('rr-chat-badge');
+      if(badge){badge.textContent=rrChatUnread>9?'9+':String(rrChatUnread);badge.style.display='flex';}
+      document.getElementById('rr-chat-btn')?.classList.add('has-unread');
+    }
+  }
 }
 
 async function rrSendMessage(){
@@ -5460,58 +5592,95 @@ async function rrRenderReveal(){
   document.getElementById('rr-reveal-song-name').innerHTML=`${song.song} — ${song.artist}${adder?`<span style="display:block;font-size:.48rem;color:var(--muted);letter-spacing:.12em;font-weight:600;margin-top:.25rem">added by @${adder}</span>`:''}`;
 
   const{data:ratings}=await db.from('rank_room_ratings').select('*').eq('room_id',currentRoom.id).eq('song_id',song.id);
-  const scores=(ratings||[]).map(r=>parseFloat(r.final_score));
-  const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1):'—';
-  const avgEl=document.getElementById('rr-reveal-avg');avgEl.textContent=avg;avgEl.style.color=avg==='—'?'var(--muted)':scoreColor(parseFloat(avg));
-  const vds=[[9.5,'🏆 Classic'],[9,'🔥 Elite'],[8.5,'💎 Hard'],[8,'✅ Solid'],[7,'👍 Decent'],[6,'😐 Mid'],[5,'🙄 Skip'],[3,'👎 Weak'],[0,'🗑 Trash']];
-  const vrdEl=document.getElementById('rr-reveal-verdict');
-  vrdEl.textContent=avg==='—'?'':(vds.find(([t])=>parseFloat(avg)>=t)||['',''])[1];
-  vrdEl.style.color=avg==='—'?'var(--muted)':scoreColor(parseFloat(avg));
+  const scoredRatings=(ratings||[]).filter(r=>!r.is_interlude&&r.final_score!=null);
+  const songIsInterlude=(ratings||[]).length>0&&scoredRatings.length===0;
 
+  const avgEl=document.getElementById('rr-reveal-avg');
+  const vrdEl=document.getElementById('rr-reveal-verdict');
   const catStatsEl=document.getElementById('rr-cat-stats');
-  if((ratings||[]).length){
-    const catDefs=[['Flow','flow_score','var(--flow)'],['Verses','verse_quality','var(--verses)'],['Production','production','var(--prod)'],['Chorus','chorus','var(--chorus)'],['Lyrics','lyrics','var(--lyrics)'],['Replay','replay','var(--replay)']];
-    const catAvgs=catDefs.map(([name,key,color])=>{
-      const vals=(ratings||[]).map(r=>parseFloat(r[key]||0)).filter(v=>v>0);
-      const avg=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):0;
-      return{name,avg,color};
-    });
-    const best=catAvgs.reduce((a,b)=>b.avg>a.avg?b:a);
-    const worst=catAvgs.reduce((a,b)=>b.avg<a.avg?b:a);
-    catStatsEl.style.display='flex';
-    catStatsEl.innerHTML=`
-      <div style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.65rem .85rem">
-        <div style="font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.3rem">Most Loved</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${best.color}">${best.name}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${best.color};line-height:1.1">${best.avg.toFixed(1)}</div>
-      </div>
-      <div style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.65rem .85rem">
-        <div style="font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.3rem">Weakest</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${worst.color}">${worst.name}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${worst.color};line-height:1.1">${worst.avg.toFixed(1)}</div>
-      </div>`;
-  } else {
+
+  if(songIsInterlude){
+    avgEl.textContent='🎵 Interlude';avgEl.style.color='var(--gold)';avgEl.style.fontSize='1.4rem';
+    vrdEl.textContent='Excluded from rankings';vrdEl.style.color='var(--muted)';
     catStatsEl.style.display='none';
+  } else {
+    const scores=scoredRatings.map(r=>parseFloat(r.final_score));
+    const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1):'—';
+    avgEl.textContent=avg;avgEl.style.color=avg==='—'?'var(--muted)':scoreColor(parseFloat(avg));avgEl.style.fontSize='';
+    const vds=[[9.5,'🏆 Classic'],[9,'🔥 Elite'],[8.5,'💎 Hard'],[8,'✅ Solid'],[7,'👍 Decent'],[6,'😐 Mid'],[5,'🙄 Skip'],[3,'👎 Weak'],[0,'🗑 Trash']];
+    vrdEl.textContent=avg==='—'?'':(vds.find(([t])=>parseFloat(avg)>=t)||['',''])[1];
+    vrdEl.style.color=avg==='—'?'var(--muted)':scoreColor(parseFloat(avg));
+
+    if(scoredRatings.length){
+      const catDefs=[['Flow','flow_score','var(--flow)'],['Verses','verse_quality','var(--verses)'],['Production','production','var(--prod)'],['Chorus','chorus','var(--chorus)'],['Lyrics','lyrics','var(--lyrics)'],['Replay','replay','var(--replay)']];
+      const catAvgs=catDefs.map(([name,key,color])=>{
+        const vals=scoredRatings.map(r=>parseFloat(r[key]||0)).filter(v=>v>0);
+        const avg=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+        return{name,avg,color};
+      });
+      const best=catAvgs.reduce((a,b)=>b.avg>a.avg?b:a);
+      const worst=catAvgs.reduce((a,b)=>b.avg<a.avg?b:a);
+      catStatsEl.style.display='flex';
+      catStatsEl.innerHTML=`
+        <div style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.65rem .85rem">
+          <div style="font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.3rem">Most Loved</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${best.color}">${best.name}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${best.color};line-height:1.1">${best.avg.toFixed(1)}</div>
+        </div>
+        <div style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.65rem .85rem">
+          <div style="font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.3rem">Weakest</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${worst.color}">${worst.name}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${worst.color};line-height:1.1">${worst.avg.toFixed(1)}</div>
+        </div>`;
+    } else {
+      catStatsEl.style.display='none';
+    }
   }
-  rrRevealRatings=(ratings||[]).map(r=>({...r,profile:roomMembers.find(m=>m.user_id===r.user_id)?.profile})).sort((a,b)=>parseFloat(b.final_score)-parseFloat(a.final_score));
-  document.getElementById('rr-reveal-scores').innerHTML=rrRevealRatings.map(r=>{
-    const u=r.profile?.username||'Unknown',col=r.profile?.avatar_color||'#c9a84c',s=parseFloat(r.final_score),isMe=r.user_id===currentUser?.id;
+
+  rrRevealRatings=(ratings||[]).map(r=>({...r,profile:roomMembers.find(m=>m.user_id===r.user_id)?.profile}));
+  const sortedReveal=[...rrRevealRatings.filter(r=>!r.is_interlude&&r.final_score!=null)].sort((a,b)=>parseFloat(b.final_score)-parseFloat(a.final_score));
+  const interludeReveal=rrRevealRatings.filter(r=>r.is_interlude);
+  document.getElementById('rr-reveal-scores').innerHTML=[...sortedReveal,...interludeReveal].map(r=>{
+    const u=r.profile?.username||'Unknown',col=r.profile?.avatar_color||'#c9a84c',isMe=r.user_id===currentUser?.id;
+    if(r.is_interlude){
+      return`<div class="rr-score-reveal-row"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem"><div style="width:26px;height:26px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;color:#07071a">${avatarInitial(u)}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="font-size:.62rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em">🎵 Interlude</div></div></div>`;
+    }
+    const s=parseFloat(r.final_score);
     return`<div class="rr-score-reveal-row" onclick="rrOpenScoreDetail('${r.user_id}')"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem"><div style="width:26px;height:26px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;color:#07071a">${avatarInitial(u)}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="display:flex;align-items:center;gap:.5rem"><div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${r.verdict||''}</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${scoreColor(s)}">${s.toFixed(1)}</div><span class="rr-reveal-arrow">▶</span></div></div></div>`;
   }).join('');
   const isHost=currentRoom.host_id===currentUser?.id;
   const hasNext=currentRoom.current_song_idx<roomSongs.length-1;
   document.getElementById('rr-reveal-wait-msg').style.display=isHost?'none':'block';
-  document.getElementById('rr-next-btn').style.display=(isHost&&hasNext)?'block':'none';
-  document.getElementById('rr-end-btn').style.display=isHost?'block':'none';
+  document.getElementById('rr-next-normal').style.display=(isHost&&hasNext)?'flex':'none';
+  document.getElementById('rr-next-confirm').style.display='none';
+  document.getElementById('rr-end-only').style.display=(isHost&&!hasNext)?'block':'none';
   await rrLoadMessages(song.id);
 }
 
+function rrForcePrompt(){
+  document.getElementById('rr-force-btn').style.display='none';
+  document.getElementById('rr-force-confirm').style.display='flex';
+}
+function rrForceCancelConfirm(){
+  document.getElementById('rr-force-confirm').style.display='none';
+  document.getElementById('rr-force-btn').style.display='block';
+}
 async function rrForceReveal(){
+  document.getElementById('rr-force-confirm').style.display='none';
   if(currentRoom.host_id!==currentUser?.id)return;
   await db.from('rank_rooms').update({status:'reveal'}).eq('id',currentRoom.id);
 }
 
+function rrNextSongPrompt(){
+  document.getElementById('rr-next-normal').style.display='none';
+  document.getElementById('rr-next-confirm').style.display='flex';
+}
+function rrNextSongCancel(){
+  document.getElementById('rr-next-confirm').style.display='none';
+  document.getElementById('rr-next-normal').style.display='flex';
+}
 async function rrNextSong(){
+  document.getElementById('rr-next-confirm').style.display='none';
   rrSubmitted=false;
   await db.from('rank_rooms').update({status:'rating',current_song_idx:currentRoom.current_song_idx+1}).eq('id',currentRoom.id);
 }
@@ -5527,18 +5696,22 @@ async function rrRenderEnded(){
 
   const{data:allRatings}=await db.from('rank_room_ratings').select('*').eq('room_id',currentRoom.id);
   const ratings=allRatings||[];
-  const myRatings=ratings.filter(r=>r.user_id===currentUser.id);
+  // Exclude interlude ratings from all calculations
+  const scoredRatings=ratings.filter(r=>!r.is_interlude&&r.final_score!=null);
+  const myRatings=scoredRatings.filter(r=>r.user_id===currentUser.id);
 
   const songRatingMap={};
-  ratings.forEach(r=>{if(!songRatingMap[r.song_id])songRatingMap[r.song_id]=[];songRatingMap[r.song_id].push(r);});
+  scoredRatings.forEach(r=>{if(!songRatingMap[r.song_id])songRatingMap[r.song_id]=[];songRatingMap[r.song_id].push(r);});
 
+  // Only include songs that have at least one scored (non-interlude) rating
   const songStats=roomSongs.map(s=>{
     const rs=songRatingMap[s.id]||[];
+    if(!rs.length)return null;
     const sc=rs.map(r=>parseFloat(r.final_score));
-    const avg=sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:0;
+    const avg=sc.reduce((a,b)=>a+b,0)/sc.length;
     const variance=sc.length>1?sc.reduce((a,b)=>a+(b-avg)**2,0)/sc.length:0;
     return{song:s,scores:sc,avg,stddev:Math.sqrt(variance)};
-  }).sort((a,b)=>b.avg-a.avg);
+  }).filter(Boolean).sort((a,b)=>b.avg-a.avg);
 
   const myScores=myRatings.map(r=>parseFloat(r.final_score));
   const myAvg=myScores.length?myScores.reduce((a,b)=>a+b,0)/myScores.length:0;
@@ -5555,7 +5728,7 @@ async function rrRenderEnded(){
   });
 
   const memberAvgs=roomMembers.map(m=>{
-    const mr=ratings.filter(r=>r.user_id===m.user_id);
+    const mr=scoredRatings.filter(r=>r.user_id===m.user_id);
     const sc=mr.map(r=>parseFloat(r.final_score));
     const avg=sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:0;
     return{member:m,avg,count:sc.length};
@@ -5570,7 +5743,7 @@ async function rrRenderEnded(){
 
   let html=`<div style="text-align:center;margin-bottom:1.25rem">
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">Session Complete</div>
-    <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">${currentRoom.name||'Rank Room'} · ${roomSongs.length} song${roomSongs.length!==1?'s':''} · ${roomMembers.length} member${roomMembers.length!==1?'s':''}</div>
+    <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">${currentRoom.name||'Rank Room'} · ${songStats.length} song${songStats.length!==1?'s':''} rated${roomSongs.length>songStats.length?` · ${roomSongs.length-songStats.length} interlude${roomSongs.length-songStats.length!==1?'s':''}`:''} · ${roomMembers.length} member${roomMembers.length!==1?'s':''}</div>
   </div>`;
 
   // ── Final Rankings (first & most prominent) ──
@@ -5808,6 +5981,44 @@ async function rrTryRejoin(){
   }
   else if(s==='reveal'){rrState('reveal');await rrRenderReveal();}
 }
+
+async function rrResync(){
+  if(!currentRoom||!currentUser)return;
+  const{data:room}=await db.from('rank_rooms').select('*').eq('id',currentRoom.id).maybeSingle();
+  if(!room)return;
+  const prevStatus=currentRoom.status;
+  const prevIdx=currentRoom.current_song_idx;
+  currentRoom={...currentRoom,...room};
+  // Always re-subscribe — mobile WebSocket likely dropped while backgrounded
+  rrSubscribe(currentRoom.id);
+  if(room.status===prevStatus&&room.current_song_idx===prevIdx)return;
+  await rrLoadData();
+  if(room.status==='ended'&&prevStatus!=='ended'){rrState('ended');await rrRenderEnded();}
+  else if(room.status==='lobby'){rrState('lobby');rrRenderLobby();}
+  else if(room.status==='rating'){
+    rrSubmitted=false;
+    // Check if already submitted for this song so we don't wipe a done state
+    const song=roomSongs[currentRoom.current_song_idx];
+    if(song){
+      const{data:ex}=await db.from('rank_room_ratings').select('id').eq('room_id',currentRoom.id).eq('song_id',song.id).eq('user_id',currentUser.id).maybeSingle();
+      if(ex){
+        rrSubmitted=true;
+        rrState('rating');rrRenderRating();
+        const sb=document.getElementById('rr-submit-btn');if(sb){sb.disabled=true;sb.textContent='✓ Submitted';}
+        document.getElementById('rr-submitted-pill').style.display='block';
+      } else {
+        if(rrIntroTimer)clearTimeout(rrIntroTimer);
+        rrState('intro');rrRenderIntro();
+        rrIntroTimer=setTimeout(()=>{if(currentRoom?.status==='rating'){SFX.go();rrState('rating');rrRenderRating();}},3500);
+      }
+    }
+  }
+  else if(room.status==='reveal'){rrState('reveal');await rrRenderReveal();}
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible')rrResync();
+});
 
 db.auth.onAuthStateChange(async(event, session)=>{
   clearTimeout(_authFallback);
