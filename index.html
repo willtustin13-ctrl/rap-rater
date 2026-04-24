@@ -80,6 +80,9 @@
     .app-header-sub{font-size:.55rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
 
     /* INTERLUDE */
+    .no-hook-btn{background:transparent;border:1px dashed var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.18rem .45rem;border-radius:3px;cursor:pointer;transition:all .15s;flex-shrink:0}
+    .no-hook-btn.active{background:rgba(96,165,250,.15);border-color:var(--chorus);border-style:solid;color:var(--chorus)}
+    .no-hook-dim{opacity:.28;pointer-events:none;transition:opacity .2s}
     .interlude-btn{width:100%;padding:.75rem 1rem;background:var(--surface2);border:2px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:.55rem;transition:all .2s;margin-bottom:.65rem}
     .interlude-btn svg{width:18px;height:18px;flex-shrink:0;transition:stroke .2s}
     .interlude-btn:active{transform:scale(.97)}
@@ -1034,7 +1037,7 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--flow)">Flow &amp; Delivery</div>
-              <div class="rcat-weight">22% · Peak</div>
+              <div class="rcat-weight" id="flow-weight-lbl">22% · Peak</div>
             </div>
             <div class="rcat-score" id="flow-display">—</div>
           </div>
@@ -1051,11 +1054,14 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--chorus)">Chorus</div>
-              <div class="rcat-weight">20%</div>
+              <div class="rcat-weight" id="chorus-weight-lbl">20%</div>
             </div>
-            <div class="rcat-score" id="chorus-display">—</div>
+            <div style="display:flex;align-items:center;gap:.55rem">
+              <button id="no-hook-btn" class="no-hook-btn" onclick="toggleNoHook()">No Hook</button>
+              <div class="rcat-score" id="chorus-display">—</div>
+            </div>
           </div>
-          <div class="rcat-row">
+          <div class="rcat-row" id="chorus-slider-row">
             <span class="rcat-lbl"><strong id="c-val">—</strong></span>
             <input type="range" min="0" max="10" value="0" id="chorus" oninput="update()" class="rcat-slider">
           </div>
@@ -1067,7 +1073,7 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--verses)">Verses</div>
-              <div class="rcat-weight">14%</div>
+              <div class="rcat-weight" id="verses-weight-lbl">14%</div>
             </div>
             <div class="rcat-score" id="verses-display">—</div>
           </div>
@@ -1084,7 +1090,7 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--prod)">Beat</div>
-              <div class="rcat-weight">8%</div>
+              <div class="rcat-weight" id="prod-weight-lbl">8%</div>
             </div>
             <div class="rcat-score" id="prod-display">—</div>
           </div>
@@ -1100,7 +1106,7 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--lyrics)">Lyrics / Wordplay</div>
-              <div class="rcat-weight">8%</div>
+              <div class="rcat-weight" id="lyrics-weight-lbl">8%</div>
             </div>
             <div class="rcat-score" id="lyrics-display">—</div>
           </div>
@@ -1296,27 +1302,27 @@
           <div class="rcat-desc" id="rr-replay-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--flow)">Flow &amp; Delivery <span style="color:var(--muted);font-weight:400;font-size:.55rem">22%</span></div><div class="rr-cat-val" id="rr-flow-val">—</div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--flow)">Flow &amp; Delivery <span id="rr-flow-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">22%</span></div><div class="rr-cat-val" id="rr-flow-val">—</div></div>
           <input type="range" min="0" max="10" value="0" id="rr-flow" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-flow-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--chorus)">Chorus <span style="color:var(--muted);font-weight:400;font-size:.55rem">20%</span></div><div class="rr-cat-val" id="rr-chorus-val">—</div></div>
-          <input type="range" min="0" max="10" value="0" id="rr-chorus" class="rr-slider" oninput="rrUpdate()">
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--chorus)">Chorus <span id="rr-chorus-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">20%</span></div><div style="display:flex;align-items:center;gap:.45rem"><button id="rr-no-hook-btn" class="no-hook-btn" onclick="rrToggleNoHook()">No Hook</button><div class="rr-cat-val" id="rr-chorus-val">—</div></div></div>
+          <div id="rr-chorus-slider-row"><input type="range" min="0" max="10" value="0" id="rr-chorus" class="rr-slider" oninput="rrUpdate()"></div>
           <div class="rcat-desc" id="rr-chorus-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--verses)">Verses <span style="color:var(--muted);font-weight:400;font-size:.55rem">14%</span></div><div class="rr-cat-val" id="rr-verses-val">—</div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--verses)">Verses <span id="rr-verses-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">14%</span></div><div class="rr-cat-val" id="rr-verses-val">—</div></div>
           <input type="range" min="0" max="10" value="0" id="rr-verses" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-verses-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--prod)">Beat <span style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-prod-val">—</div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--prod)">Beat <span id="rr-prod-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-prod-val">—</div></div>
           <input type="range" min="0" max="10" value="0" id="rr-prod" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-prod-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--lyrics)">Lyrics <span style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-lyrics-val">—</div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--lyrics)">Lyrics <span id="rr-lyrics-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-lyrics-val">—</div></div>
           <input type="range" min="0" max="10" value="0" id="rr-lyrics" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-lyrics-desc"></div>
         </div>
@@ -4650,6 +4656,7 @@ async function unfollow(followId){
 
 // INTERLUDE
 let isInterlude=false;
+let noHook=false;
 function toggleInterlude(){
   isInterlude=!isInterlude;
   const btn=document.getElementById('interlude-btn');
@@ -4661,7 +4668,24 @@ function toggleInterlude(){
   update();
 }
 
+function toggleNoHook(){
+  noHook=!noHook;
+  document.getElementById('no-hook-btn')?.classList.toggle('active',noHook);
+  const cr=document.getElementById('chorus-slider-row');
+  if(cr)cr.classList.toggle('no-hook-dim',noHook);
+  const wls={
+    'flow-weight-lbl':  noHook?'26% · Peak':'22% · Peak',
+    'chorus-weight-lbl':noHook?'N/A':'20%',
+    'verses-weight-lbl':noHook?'26%':'14%',
+    'prod-weight-lbl':  noHook?'10%':'8%',
+    'lyrics-weight-lbl':noHook?'10%':'8%'
+  };
+  Object.entries(wls).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+  update();
+}
+
 let rrIsInterlude=false;
+let rrNoHook=false;
 function rrToggleInterlude(){
   rrIsInterlude=!rrIsInterlude;
   const btn=document.getElementById('rr-interlude-btn');
@@ -4679,6 +4703,21 @@ function rrToggleInterlude(){
     rrUpdate();
   }
 }
+function rrToggleNoHook(){
+  rrNoHook=!rrNoHook;
+  document.getElementById('rr-no-hook-btn')?.classList.toggle('active',rrNoHook);
+  const cr=document.getElementById('rr-chorus-slider-row');
+  if(cr)cr.classList.toggle('no-hook-dim',rrNoHook);
+  const wls={
+    'rr-flow-weight-lbl':  rrNoHook?'26%':'22%',
+    'rr-chorus-weight-lbl':rrNoHook?'N/A':'20%',
+    'rr-verses-weight-lbl':rrNoHook?'26%':'14%',
+    'rr-prod-weight-lbl':  rrNoHook?'10%':'8%',
+    'rr-lyrics-weight-lbl':rrNoHook?'10%':'8%'
+  };
+  Object.entries(wls).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+  rrUpdate();
+}
 
 // RATING
 function fillSlider(el,color){const pct=((+el.value-+el.min)/(+el.max-+el.min))*100;el.style.background=`linear-gradient(to right,${color} 0%,${color} ${pct}%,#1e1d42 ${pct}%,#1e1d42 100%)`;}
@@ -4690,9 +4729,11 @@ function getScores(){
   const ch=+document.getElementById('chorus').value,l=+document.getElementById('lyrics').value,r=+document.getElementById('replay').value;
   return{fp,vq,p,ch,l,r,F:fp,V:vq};
 }
-function calcFinal(F,V,p,ch,l,r){
-  const B=(r*.28)+(F*.22)+(ch*.20)+(V*.14)+(p*.08)+(l*.08);
-  const scores=[r,F,ch,V,p,l],cats=['Replay','Flow','Chorus','Verses','Beat','Lyrics'];
+function calcFinal(F,V,p,ch,l,r,nh=false){
+  const B=nh?(r*.28)+(F*.26)+(V*.26)+(p*.10)+(l*.10)
+            :(r*.28)+(F*.22)+(ch*.20)+(V*.14)+(p*.08)+(l*.08);
+  const scores=nh?[r,F,V,p,l]:[r,F,ch,V,p,l];
+  const cats=nh?['Replay','Flow','Verses','Beat','Lyrics']:['Replay','Flow','Chorus','Verses','Beat','Lyrics'];
   const weakCats=cats.filter((_,i)=>scores[i]<=5),eliteCats=cats.filter((_,i)=>scores[i]>=9);
   const penalty=weakCats.length*.15,bonus=eliteCats.length*.20;
   const gap=Math.max(...scores)-Math.min(...scores);
@@ -4712,7 +4753,7 @@ function update(){
   }
   refreshFills();
   const{fp,vq,p,ch,l,r,F,V}=getScores();
-  const allZero=(fp+vq+p+ch+l+r)===0;
+  const allZero=noHook?(fp+vq+p+l+r)===0:(fp+vq+p+ch+l+r)===0;
   document.getElementById('fp-val').textContent=fp;
   document.getElementById('fp-echo').textContent=fp;
   const fD=F.toFixed(1);
@@ -4722,8 +4763,8 @@ function update(){
   document.getElementById('vq-val').textContent=vq;document.getElementById('vq-echo').textContent=vq;
   document.getElementById('v-result').textContent=vD;document.getElementById('verses-display').textContent=vD;
   document.getElementById('verses-desc').textContent=vq===0?'':(DESCS.verses[Math.round(Math.max(1,V))]||'');
-  [{numId:'p-val',dispId:'prod-display',descId:'prod-desc',cat:'prod',val:p},{numId:'c-val',dispId:'chorus-display',descId:'chorus-desc',cat:'chorus',val:ch},{numId:'l-val',dispId:'lyrics-display',descId:'lyrics-desc',cat:'lyrics',val:l},{numId:'r-val',dispId:'replay-display',descId:'replay-desc',cat:'replay',val:r}].forEach(({numId,dispId,descId,cat,val})=>{
-    document.getElementById(numId).textContent=val;document.getElementById(dispId).textContent=val;document.getElementById(descId).textContent=val===0?'':(DESCS[cat][val]||'');
+  [{numId:'p-val',dispId:'prod-display',descId:'prod-desc',cat:'prod',val:p},{numId:'c-val',dispId:'chorus-display',descId:'chorus-desc',cat:'chorus',val:noHook?'—':ch},{numId:'l-val',dispId:'lyrics-display',descId:'lyrics-desc',cat:'lyrics',val:l},{numId:'r-val',dispId:'replay-display',descId:'replay-desc',cat:'replay',val:r}].forEach(({numId,dispId,descId,cat,val})=>{
+    document.getElementById(numId).textContent=val;document.getElementById(dispId).textContent=val;document.getElementById(descId).textContent=(val===0||val==='—')?'':(DESCS[cat]?.[val]||'');
   });
   const sn=selectedSong?.song||'',an=selectedSong?.artist||'';
   document.getElementById('score-song-name').textContent=sn?(an?`${sn} — ${an}`:sn):'—';
@@ -4735,7 +4776,7 @@ function update(){
     document.getElementById('verdict').textContent='—';document.getElementById('verdict').style.color='var(--muted)';
     return;
   }
-  const{B,weakCats,eliteCats,penalty,bonus,gap,dr,final}=calcFinal(F,V,p,ch,l,r);
+  const{B,weakCats,eliteCats,penalty,bonus,gap,dr,final}=calcFinal(F,V,p,ch,l,r,noHook);
   document.getElementById('b-base').textContent=B.toFixed(2);
   document.getElementById('b-pen').textContent=penalty>0?`−${penalty.toFixed(2)}`:'—';
   document.getElementById('b-bon').textContent=bonus>0?`+${bonus.toFixed(2)}`:'—';
@@ -4847,7 +4888,7 @@ async function confirmSave(){
   const sn=selectedSong?.song||'';
   const an=artistVal || selectedSong?.artist||'';
   const{fp,vq,p,ch,l,r,F,V}=getScores();
-  const{final}=calcFinal(F,V,p,ch,l,r);
+  const{final}=calcFinal(F,V,p,ch,l,r,noHook);
   const verdict=document.getElementById('verdict').textContent;
 
   const comment=(document.getElementById('modal-comment').value||'').trim()||null;
@@ -4967,6 +5008,7 @@ function resetAll(){
   ['flow-peak','verse-quality','prod','chorus','lyrics','replay'].forEach(id=>{document.getElementById(id).value=0;});
   document.getElementById('modal-comment').value='';
   if(isInterlude){isInterlude=false;const btn=document.getElementById('interlude-btn');const banner=document.getElementById('interlude-banner');const body=document.getElementById('interlude-rating-body');btn?.classList.remove('active');if(banner)banner.style.display='none';if(body)body.classList.remove('interlude-dim');}
+  if(noHook){noHook=false;document.getElementById('no-hook-btn')?.classList.remove('active');const cr=document.getElementById('chorus-slider-row');if(cr)cr.classList.remove('no-hook-dim');['flow-weight-lbl','verses-weight-lbl','prod-weight-lbl','lyrics-weight-lbl'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=['22% · Peak','14%','8%','8%'][i];});const cwl=document.getElementById('chorus-weight-lbl');if(cwl)cwl.textContent='20%';}
   clearSongPicker();
   applyPacingDefault(false);update();
 }
@@ -5337,6 +5379,11 @@ function rrRenderRating(){
   rrIsInterlude=false;
   const rrIBtn=document.getElementById('rr-interlude-btn');const rrIBanner=document.getElementById('rr-interlude-banner');const rrIBody=document.getElementById('rr-interlude-rating-body');
   rrIBtn?.classList.remove('active');if(rrIBanner)rrIBanner.style.display='none';if(rrIBody)rrIBody.classList.remove('interlude-dim');
+  rrNoHook=false;
+  document.getElementById('rr-no-hook-btn')?.classList.remove('active');
+  const rrCsRow=document.getElementById('rr-chorus-slider-row');if(rrCsRow)rrCsRow.classList.remove('no-hook-dim');
+  const rrWls={'rr-flow-weight-lbl':'22%','rr-chorus-weight-lbl':'20%','rr-verses-weight-lbl':'14%','rr-prod-weight-lbl':'8%','rr-lyrics-weight-lbl':'8%'};
+  Object.entries(rrWls).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
   rrChatUnread=0;
   const rrcDrawer=document.getElementById('rr-rating-chat');if(rrcDrawer)rrcDrawer.classList.remove('open');
   const rrcBadge=document.getElementById('rr-chat-badge');if(rrcBadge){rrcBadge.style.display='none';rrcBadge.textContent='';}
@@ -5376,11 +5423,12 @@ function rrUpdate(){
   document.getElementById('rr-chorus-desc').textContent=ch===0?'':(DESCS.chorus[ch]||'');
   document.getElementById('rr-lyrics-desc').textContent=l===0?'':(DESCS.lyrics[l]||'');
   document.getElementById('rr-replay-desc').textContent=r===0?'':(DESCS.replay[r]||'');
-  const B=(r*.28)+(fp*.22)+(ch*.20)+(vq*.14)+(p*.08)+(l*.08);
-  const allZero=(fp+vq+p+ch+l+r)===0;
+  const B=rrNoHook?(r*.28)+(fp*.26)+(vq*.26)+(p*.10)+(l*.10)
+                  :(r*.28)+(fp*.22)+(ch*.20)+(vq*.14)+(p*.08)+(l*.08);
+  const allZero=rrNoHook?(fp+vq+p+l+r)===0:(fp+vq+p+ch+l+r)===0;
   const fEl=document.getElementById('rr-final-score'),vEl=document.getElementById('rr-verdict-txt');
   if(allZero){fEl.textContent='—';fEl.style.color='var(--muted)';vEl.textContent='—';return;}
-  const scores=[fp,vq,p,ch,l,r];
+  const scores=rrNoHook?[fp,vq,p,l,r]:[fp,vq,p,ch,l,r];
   const pen=scores.filter(s=>s<=5).length*.15,bon=scores.filter(s=>s>=9).length*.20;
   const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
   const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
@@ -5390,7 +5438,7 @@ function rrUpdate(){
   vEl.textContent=(vds.find(([t])=>final>=t)||['','—'])[1];
   const _song=roomSongs[currentRoom?.current_song_idx];
   if(currentRoom&&_song&&!rrSubmitted){
-    localStorage.setItem('rr_draft_'+currentRoom.id+'_'+_song.id,JSON.stringify({flow:fp,verses:vq,prod:p,chorus:ch,lyrics:l,replay:r,pacing:rrPacingPen}));
+    localStorage.setItem('rr_draft_'+currentRoom.id+'_'+_song.id,JSON.stringify({flow:fp,verses:vq,prod:p,chorus:ch,lyrics:l,replay:r,pacing:rrPacingPen,noHook:rrNoHook}));
   }
 }
 
@@ -5442,9 +5490,10 @@ async function rrSubmit(){
     fp=+document.getElementById('rr-flow').value;vq=+document.getElementById('rr-verses').value;
     p=+document.getElementById('rr-prod').value;ch=+document.getElementById('rr-chorus').value;
     l=+document.getElementById('rr-lyrics').value;r=+document.getElementById('rr-replay').value;
-    if((fp+vq+p+ch+l+r)===0){alert('Rate at least one category first.');return;}
-    const B=(r*.28)+(fp*.22)+(ch*.20)+(vq*.14)+(p*.08)+(l*.08);
-    const scores=[fp,vq,p,ch,l,r];
+    if(rrNoHook?(fp+vq+p+l+r)===0:(fp+vq+p+ch+l+r)===0){alert('Rate at least one category first.');return;}
+    const B=rrNoHook?(r*.28)+(fp*.26)+(vq*.26)+(p*.10)+(l*.10)
+                    :(r*.28)+(fp*.22)+(ch*.20)+(vq*.14)+(p*.08)+(l*.08);
+    const scores=rrNoHook?[fp,vq,p,l,r]:[fp,vq,p,ch,l,r];
     const pen=scores.filter(s=>s<=5).length*.15,bon=scores.filter(s=>s>=9).length*.20;
     const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
     const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
@@ -5970,6 +6019,7 @@ async function rrTryRejoin(){
           if(d.chorus)document.getElementById('rr-chorus').value=d.chorus;
           if(d.lyrics)document.getElementById('rr-lyrics').value=d.lyrics;
           if(d.replay)document.getElementById('rr-replay').value=d.replay;
+          if(d.noHook&&!rrNoHook)rrToggleNoHook();
           if(d.pacing!=null){
             rrPacingPen=d.pacing;
             document.querySelectorAll('#rr-rating .pacing-btn').forEach(b=>{b.classList.remove('active-perfect','active-slight','active-drags');if(parseFloat(b.dataset.pacing)===d.pacing)b.classList.add(b.dataset.cls);});
