@@ -1026,6 +1026,14 @@
             <input type="text" id="song-picker-input" autocomplete="off" placeholder="Search for a song..." oninput="filterSongPicker()" onfocus="filterSongPicker()" style="width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none">
             <div id="song-picker-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:50;max-height:55vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
           </div>
+          <div id="song-picker-manual" style="display:none;padding:.4rem 0 .2rem">
+            <input type="text" id="manual-song" autocomplete="off" placeholder="Song name..." oninput="manualUpdate()" style="width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;-webkit-appearance:none;appearance:none">
+            <input type="text" id="manual-artist" autocomplete="off" placeholder="Artist name..." oninput="manualUpdate()" style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:.85rem;padding:.45rem 0;outline:none;margin-top:.5rem;-webkit-appearance:none;appearance:none">
+            <div style="display:flex;gap:.5rem;margin-top:.7rem">
+              <button id="manual-confirm-btn" onclick="confirmManualSong()" style="flex:1;background:var(--gold);color:#07071a;border:none;border-radius:4px;padding:.55rem .8rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer;opacity:.4;pointer-events:none" disabled>USE THIS SONG</button>
+              <button onclick="cancelManualEntry()" style="background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:4px;padding:.55rem .8rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">CANCEL</button>
+            </div>
+          </div>
         </div>
 
         <!-- Genre selector -->
@@ -2084,6 +2092,59 @@ function albumScore(songs){
 function timeAgo(ts){const d=Date.now()-new Date(ts).getTime(),m=Math.floor(d/60000);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
 function avatarInitial(u){return(u||'?')[0].toUpperCase();}
 
+function avatarHTML(p, cls, size, xStyle=''){
+  const col=(p?.avatar_color)||'#c9a84c';
+  const u=p?.username||'?';
+  const url=p?.avatar_url;
+  if(url){
+    if(cls) return`<img class="${cls}" src="${url}" style="object-fit:cover;${xStyle}" loading="lazy">`;
+    return`<img src="${url}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0;${xStyle}" loading="lazy">`;
+  }
+  if(cls) return`<div class="${cls}" style="background:${col};${xStyle}">${avatarInitial(u)}</div>`;
+  const fs=Math.max(Math.round(size*.38),9);
+  return`<div style="width:${size}px;height:${size}px;background:${col};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:${fs}px;font-weight:800;color:var(--bg);flex-shrink:0;${xStyle}">${avatarInitial(u)}</div>`;
+}
+
+function compressAvatarImage(file){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    const objUrl=URL.createObjectURL(file);
+    img.onload=()=>{
+      const sz=160;
+      const canvas=document.createElement('canvas');
+      canvas.width=sz;canvas.height=sz;
+      const ctx=canvas.getContext('2d');
+      const min=Math.min(img.width,img.height);
+      const sx=(img.width-min)/2,sy=(img.height-min)/2;
+      ctx.drawImage(img,sx,sy,min,min,0,0,sz,sz);
+      URL.revokeObjectURL(objUrl);
+      resolve(canvas.toDataURL('image/jpeg',0.78));
+    };
+    img.onerror=()=>{URL.revokeObjectURL(objUrl);reject(new Error('load failed'));};
+    img.src=objUrl;
+  });
+}
+
+async function handleAvatarUpload(input){
+  const file=input.files?.[0];
+  if(!file||!file.type.startsWith('image/'))return;
+  try{
+    const base64=await compressAvatarImage(file);
+    const preview=document.getElementById('pf-edit-avatar');
+    if(preview){preview.innerHTML=`<img src="${base64}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;preview.style.background='transparent';}
+    const{error}=await db.from('profiles').update({avatar_url:base64}).eq('id',currentUser.id);
+    if(error){alert('Save failed: '+error.message);return;}
+    currentProfile={...currentProfile,avatar_url:base64};
+  }catch(e){alert('Failed to process image.');}
+}
+
+async function removeAvatarPhoto(){
+  const{error}=await db.from('profiles').update({avatar_url:null}).eq('id',currentUser.id);
+  if(error){alert('Failed: '+error.message);return;}
+  currentProfile={...currentProfile,avatar_url:null};
+  loadProfile();
+}
+
 let feedData = [];
 let feedSort = 'likes';
 
@@ -2137,7 +2198,7 @@ function renderFeed() {
       <div class="feed-card-accent" style="background:${scolor}"></div>
       <div class="feed-card-top">
         <div class="feed-user" onclick="event.stopPropagation();openUserModal('${row.user_id}')" style="cursor:pointer">
-          <div class="feed-avatar" style="background:${col}">${avatarInitial(u)}</div>
+          ${avatarHTML(p,'feed-avatar')}
           <div>
             <div class="feed-username">@${u}</div>
             <div class="feed-time">${timeAgo(row.created_at)}</div>
@@ -2196,7 +2257,7 @@ function openRatingDetail(row){
     <div class="rd-meta">${row.artist_name||''}${row.album?' · <em>'+row.album+'</em>':''}</div>
     <div class="rd-top">
       <div class="feed-user">
-        <div class="feed-avatar" style="background:${col}">${avatarInitial(u)}</div>
+        ${avatarHTML(p,'feed-avatar')}
         <div>
           <div class="feed-username">@${u}</div>
           <div class="feed-time">${timeAgo(row.created_at)}</div>
@@ -2243,7 +2304,7 @@ async function loadFeed(){
 
   const userIds=[...new Set(ratings.map(r=>r.user_id).filter(Boolean))];
   if(userIds.length){
-    const{data:profilesData}=await db.from('profiles').select('id,username,avatar_color').in('id',userIds);
+    const{data:profilesData}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',userIds);
     profileMap={};
     (profilesData||[]).forEach(p=>{profileMap[p.id]=p;});
   }
@@ -2377,7 +2438,7 @@ async function loadProfile(){
 
   document.getElementById('profile-header').innerHTML=`
     <div class="profile-header" style="position:relative">
-      <div class="profile-avatar" style="background:${avatar_color}">${avatarInitial(username)}</div>
+      ${avatarHTML(currentProfile,'profile-avatar')}
       <div class="profile-info">
         <div class="profile-username">${username}</div>
         <div class="profile-handle">@${username}</div>
@@ -2471,8 +2532,15 @@ function openProfileEdit(){
   header.innerHTML=`
     <div class="pf-edit-form">
       <div style="display:flex;gap:1rem;align-items:center">
-        <div id="pf-edit-avatar" class="profile-avatar" style="background:${avatar_color}">${avatarInitial(username)}</div>
-        <div class="color-grid" style="margin:0;flex:1">${swatches}</div>
+        <div style="position:relative;flex-shrink:0;cursor:pointer" onclick="document.getElementById('pf-avatar-input').click()" title="Change photo">
+          <div id="pf-edit-avatar" class="profile-avatar" style="background:${avatar_color};overflow:hidden">${currentProfile?.avatar_url?`<img src="${currentProfile.avatar_url}" style="width:100%;height:100%;object-fit:cover;">`:avatarInitial(username)}</div>
+          <div style="position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:1.15rem;opacity:0;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">📷</div>
+          <input id="pf-avatar-input" type="file" accept="image/*" style="display:none" onchange="handleAvatarUpload(this)">
+        </div>
+        <div style="flex:1">
+          <div class="color-grid" style="margin:0">${swatches}</div>
+          ${currentProfile?.avatar_url?`<button onclick="removeAvatarPhoto()" style="margin-top:.5rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.08em;cursor:pointer;padding:0;text-decoration:underline">Remove photo</button>`:''}
+        </div>
       </div>
       <textarea id="pf-edit-bio" class="pf-edit-bio" rows="3" placeholder="Add a bio…">${bio||''}</textarea>
       <div style="display:flex;gap:.5rem;margin-top:.75rem">
@@ -2811,7 +2879,7 @@ async function loadComments(ratingId){
   const uids=[...new Set(comments.map(c=>c.user_id))];
   const cMap={};
   if(uids.length){
-    const{data:profs}=await db.from('profiles').select('id,username,avatar_color').in('id',uids);
+    const{data:profs}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',uids);
     (profs||[]).forEach(p=>{cMap[p.id]=p;});
   }
 
@@ -2829,7 +2897,7 @@ async function loadComments(ratingId){
     const own=c.user_id===currentUser?.id;
     return`<div class="cmt">
       <div class="cmt-row">
-        <div class="cmt-av" style="background:${col}">${avatarInitial(u)}</div>
+        ${avatarHTML(p,'cmt-av')}
         <div class="cmt-main">
           <div class="cmt-meta">
             <span class="cmt-user" style="color:${col}">@${u}</span>
@@ -2907,7 +2975,7 @@ async function searchProfiles(){
   clearTimeout(psTimeout);
   if(!q){el.innerHTML='';return;}
   psTimeout=setTimeout(async()=>{
-    const{data}=await db.from('profiles').select('id,username,avatar_color').ilike('username',`%${q}%`).limit(20);
+    const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').ilike('username',`%${q}%`).limit(20);
     if(!data?.length){el.innerHTML='<div class="feed-empty" style="padding:1.2rem 1.25rem">No users found.</div>';return;}
     el.innerHTML=data.map(p=>{
       const isMe=p.id===currentUser?.id;
@@ -2921,7 +2989,7 @@ async function searchProfiles(){
       const clickAttr=isMe?'':`onclick="openUserModal('${p.id}');toggleProfileSearch()"`;
       return`<div class="ps-result pressable" ${clickAttr} style="cursor:${isMe?'default':'pointer'}">
         <div class="feed-user">
-          <div class="feed-avatar" style="background:${col}">${avatarInitial(p.username)}</div>
+          ${avatarHTML(p,'feed-avatar')}
           <div><div class="feed-username">@${p.username}</div></div>
         </div>
         ${badge}
@@ -2964,7 +3032,7 @@ async function openUserModal(userId){
 
   let p=profileMap[userId]||null;
   if(!p){
-    const{data}=await db.from('profiles').select('id,username,avatar_color').eq('id',userId).single();
+    const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',userId).single();
     if(data){p=data;profileMap[userId]=data;}
   }
   const u=p?.username||'Unknown',col=p?.avatar_color||'#c9a84c';
@@ -2988,7 +3056,7 @@ async function openUserModal(userId){
 
   document.getElementById('upo-header').innerHTML=`
     <div class="um-center">
-      <div class="um-avatar" style="background:${col}">${avatarInitial(u)}</div>
+      ${avatarHTML(p,'um-avatar')}
       <div class="um-name">${u}</div>
       <div class="um-handle">@${u}</div>
     </div>`;
@@ -3119,14 +3187,14 @@ async function openFollowersModal(){
   }
   const missing=followerIds.filter(id=>!profileMap[id]);
   if(missing.length){
-    const{data}=await db.from('profiles').select('id,username,avatar_color').in('id',missing);
+    const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',missing);
     (data||[]).forEach(p=>{profileMap[p.id]=p;});
   }
   list.innerHTML=followerIds.map(id=>{
     const p=profileMap[id];
     const u=p?.username||'Unknown',col=p?.avatar_color||'#c9a84c';
     return `<div onclick="closeFollowersModal();openUserModal('${id}')" style="display:flex;align-items:center;gap:.85rem;padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer">
-      <div style="width:36px;height:36px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;color:#07071a;flex-shrink:0">${avatarInitial(u)}</div>
+      ${avatarHTML(p,null,36)}
       <div style="font-size:.82rem;font-weight:700;color:var(--text)">@${u}</div>
     </div>`;
   }).join('');
@@ -3575,16 +3643,17 @@ async function filterSongPicker(){
       });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(song,artist)=>{const h=(song+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      songPickerMatches=all.map(r=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName)})).sort((a,b)=>b._score-a._score);
+      songPickerMatches=all.map((r,i)=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
     }catch(e){}
     renderSongDropdown(resultsEl,songPickerMatches,false);
   },350);
 }
 
 function renderSongDropdown(resultsEl,matches,loading){
-  if(!matches.length&&!loading){resultsEl.style.display='none';return;}
+  const manualLink=`<div onclick="showManualEntry()" style="padding:.5rem .85rem;font-size:.6rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;cursor:pointer;text-align:center;border-top:1px solid var(--border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">+ CAN'T FIND IT? ENTER MANUALLY</div>`;
+  if(!matches.length&&!loading){resultsEl.innerHTML=manualLink;resultsEl.style.display='block';return;}
   const artThumb=(s,sz)=>s.artwork?`<img src="${itunesArtUrl(s.artwork,sz)}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div data-art-key="${s.artist}|||${s.album||s.artist}" data-art-size="${sz}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`;
-  resultsEl.innerHTML=matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'');
+  resultsEl.innerHTML=matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'')+manualLink;
   loadMissingArtwork(resultsEl);
   resultsEl.style.display='block';
 }
@@ -3611,10 +3680,52 @@ function selectSong(idx){
   update();
 }
 
+function showManualEntry(){
+  const q=document.getElementById('song-picker-input').value.trim();
+  document.getElementById('manual-song').value=q;
+  document.getElementById('manual-artist').value='';
+  document.getElementById('manual-confirm-btn').disabled=true;
+  document.getElementById('manual-confirm-btn').style.opacity='.4';
+  document.getElementById('manual-confirm-btn').style.pointerEvents='none';
+  document.getElementById('song-picker-results').style.display='none';
+  document.getElementById('song-picker-input-wrap').style.display='none';
+  document.getElementById('song-picker-manual').style.display='';
+  setTimeout(()=>document.getElementById('manual-artist').focus(),50);
+}
+
+function cancelManualEntry(){
+  document.getElementById('song-picker-manual').style.display='none';
+  document.getElementById('song-picker-input-wrap').style.display='';
+}
+
+function manualUpdate(){
+  const sn=(document.getElementById('manual-song').value||'').trim();
+  const an=(document.getElementById('manual-artist').value||'').trim();
+  const ok=sn.length>0&&an.length>0;
+  const btn=document.getElementById('manual-confirm-btn');
+  btn.disabled=!ok;btn.style.opacity=ok?'1':'.4';btn.style.pointerEvents=ok?'':'none';
+}
+
+function confirmManualSong(){
+  const sn=(document.getElementById('manual-song').value||'').trim();
+  const an=(document.getElementById('manual-artist').value||'').trim();
+  if(!sn||!an)return;
+  selectedSong={song:sn,artist:an,album:'',artwork:'',preview:''};
+  document.getElementById('song-picker-sel-name').textContent=sn;
+  document.getElementById('song-picker-sel-meta').textContent=an;
+  const artEl=document.getElementById('song-picker-sel-art');
+  artEl.style.display='none';
+  document.getElementById('song-picker-selected').style.display='flex';
+  document.getElementById('song-picker-manual').style.display='none';
+  document.getElementById('song-picker-input-wrap').style.display='none';
+  update();
+}
+
 function clearSongPicker(){
   stopPreview();
   selectedSong=null;
   document.getElementById('song-picker-selected').style.display='none';
+  document.getElementById('song-picker-manual').style.display='none';
   document.getElementById('song-picker-input-wrap').style.display='block';
   document.getElementById('song-picker-input').value='';
   document.getElementById('song-picker-results').style.display='none';
@@ -3817,7 +3928,7 @@ async function rrLoadData(){
   const ids=(members||[]).map(m=>m.user_id);
   let profs={};
   if(ids.length){
-    const{data:pd}=await db.from('profiles').select('id,username,avatar_color').in('id',ids);
+    const{data:pd}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',ids);
     (pd||[]).forEach(p=>{profs[p.id]=p;profileMap[p.id]=p;});
   }
   roomMembers=(members||[]).map(m=>({...m,profile:profs[m.user_id]||null}));
@@ -3847,7 +3958,7 @@ function rrRenderLobby(){
     const pill=isSelf
       ?`<button class="rr-ready-pill ${readyClass} clickable" onclick="rrToggleReady()">${readyLabel}</button>`
       :`<div class="rr-ready-pill ${readyClass}">${readyLabel}</div>`;
-    return`<div class="rr-member-row"><div class="rr-member-av" style="background:${col}">${avatarInitial(u)}</div><div class="rr-member-name">${u}${host?'<span class="rr-host-tag">host</span>':''}</div>${pill}</div>`;
+    return`<div class="rr-member-row">${avatarHTML(m.profile,'rr-member-av')}<div class="rr-member-name">${u}${host?'<span class="rr-host-tag">host</span>':''}</div>${pill}</div>`;
   }).join('');
   document.getElementById('rr-queue-count').textContent=roomSongs.length;
   document.getElementById('rr-queue-list').innerHTML=roomSongs.length
@@ -3912,7 +4023,7 @@ async function rrFilterSongs(){
       });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(song,artist)=>{const h=(song+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      rrSongMatches=all.filter(r=>!added.has(r.trackName+'||'+r.artistName)).map(r=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName)})).sort((a,b)=>b._score-a._score);
+      rrSongMatches=all.filter(r=>!added.has(r.trackName+'||'+r.artistName)).map((r,i)=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
     }catch(e){}
     renderRRSongDropdown(resEl,rrSongMatches,false);
   },350);
@@ -4257,7 +4368,7 @@ async function rrSendRatingMsg(){
 function rrMessageHTML(m){
   const p=profileMap[m.user_id],u=p?.username||'Unknown',col=p?.avatar_color||'#c9a84c';
   const isMe=m.user_id===currentUser?.id;
-  return`<div class="rr-msg"><div class="rr-msg-av" style="background:${col}">${avatarInitial(u)}</div><div style="flex:1;min-width:0"><div class="rr-msg-name" style="${isMe?'color:var(--gold)':''}">@${u}</div><div class="rr-msg-text">${m.message.replace(/</g,'&lt;')}</div></div></div>`;
+  return`<div class="rr-msg">${avatarHTML(p,'rr-msg-av')}<div style="flex:1;min-width:0"><div class="rr-msg-name" style="${isMe?'color:var(--gold)':''}">@${u}</div><div class="rr-msg-text">${m.message.replace(/</g,'&lt;')}</div></div></div>`;
 }
 
 async function rrLoadMessages(songId){
@@ -4315,7 +4426,7 @@ function rrOpenScoreDetail(userId){
   const cats=[['Flow',r.flow_score,'var(--flow)'],['Verses',r.verse_quality,'var(--verses)'],['Production',r.production,'var(--prod)'],['Chorus',r.chorus,'var(--chorus)'],['Lyrics',r.lyrics,'var(--lyrics)'],['Replay',r.replay,'var(--replay)']];
   document.getElementById('rr-score-detail-body').innerHTML=`
     <div style="text-align:center;margin-bottom:1rem">
-      <div style="width:48px;height:48px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;color:#07071a;margin:0 auto .6rem">${avatarInitial(u)}</div>
+      ${avatarHTML(r.profile,null,48,'margin:0 auto .6rem;')}
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div>
       <div style="font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:900;color:${scoreColor(s)};line-height:1;margin:.4rem 0 .2rem;text-shadow:0 0 24px currentColor">${s.toFixed(1)}</div>
       <div style="font-size:.65rem;color:${scoreColor(s)};font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em">${r.verdict||''}</div>
@@ -4389,10 +4500,10 @@ async function rrRenderReveal(){
   document.getElementById('rr-reveal-scores').innerHTML=[...sortedReveal,...interludeReveal].map(r=>{
     const u=r.profile?.username||'Unknown',col=r.profile?.avatar_color||'#c9a84c',isMe=r.user_id===currentUser?.id;
     if(r.is_interlude){
-      return`<div class="rr-score-reveal-row"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem"><div style="width:26px;height:26px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;color:#07071a">${avatarInitial(u)}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="font-size:.62rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em">🎵 Interlude</div></div></div>`;
+      return`<div class="rr-score-reveal-row"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem">${avatarHTML(r.profile,null,26)}<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="font-size:.62rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em">🎵 Interlude</div></div></div>`;
     }
     const s=parseFloat(r.final_score);
-    return`<div class="rr-score-reveal-row" onclick="rrOpenScoreDetail('${r.user_id}')"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem"><div style="width:26px;height:26px;border-radius:50%;background:${col};display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;color:#07071a">${avatarInitial(u)}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="display:flex;align-items:center;gap:.5rem"><div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${r.verdict||''}</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${scoreColor(s)}">${s.toFixed(1)}</div><span class="rr-reveal-arrow">▶</span></div></div></div>`;
+    return`<div class="rr-score-reveal-row" onclick="rrOpenScoreDetail('${r.user_id}')"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem">${avatarHTML(r.profile,null,26)}<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="display:flex;align-items:center;gap:.5rem"><div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${r.verdict||''}</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${scoreColor(s)}">${s.toFixed(1)}</div><span class="rr-reveal-arrow">▶</span></div></div></div>`;
   }).join('');
   const isHost=currentRoom.host_id===currentUser?.id;
   const hasNext=currentRoom.current_song_idx<roomSongs.length-1;
