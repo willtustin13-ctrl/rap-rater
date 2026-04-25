@@ -2165,6 +2165,7 @@ function renderFeed() {
           ${count>1?`<div class="feed-rating-count">🎯 ${count} ratings</div>`:''}
         </div>
         <div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">
+          <button class="preview-btn" data-song="${(row.song_name||'').replace(/"/g,'&quot;')}" data-artist="${(row.artist_name||'').replace(/"/g,'&quot;')}" onclick="playFeedSong(this)" title="Preview" style="width:30px;height:30px">${previewPlayIcon()}</button>
           <span style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.04em">💬 ${commentCounts[row.id]||0}</span>
           <button class="like-btn${liked?' liked':''}" data-rid="${row.id}" onclick="event.stopPropagation();toggleLike('${row.id}')">♥ <span class="like-count">${likeCount}</span></button>
         </div>
@@ -3561,11 +3562,20 @@ async function filterSongPicker(){
   if(q.length<2)return;
   songPickerTimer=setTimeout(async()=>{
     try{
-      const res=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&limit=50&country=us');
-      const data=await res.json();
+      const [r1,r2]=await Promise.all([
+        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&limit=50&country=us'),
+        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&attribute=artistTerm&limit=25&country=us')
+      ]);
+      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+      const seen=new Set();
+      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
+        if(!r.trackName||!r.artistName)return false;
+        const key=(r.trackName+r.artistName).toLowerCase();
+        if(seen.has(key))return false;seen.add(key);return true;
+      });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(song,artist)=>{const h=(song+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      songPickerMatches=(data.results||[]).filter(r=>r.trackName&&r.artistName).map(r=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName)})).sort((a,b)=>b._score-a._score);
+      songPickerMatches=all.map(r=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName)})).sort((a,b)=>b._score-a._score);
     }catch(e){}
     renderSongDropdown(resultsEl,songPickerMatches,false);
   },350);
@@ -3678,6 +3688,24 @@ function previewPlayIcon(){return`<svg viewBox="0 0 12 12"><polygon points="3,1 
 function previewStopIcon(){return`<svg viewBox="0 0 12 12"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>`;}
 function playPreviewFromPicker(i,btn){const s=songPickerMatches[i];if(s?.preview)playPreview(s.preview,s.song,s.artist,btn);}
 function playPreviewFromRR(i,btn){const s=rrSongMatches[i];if(s?.preview)playPreview(s.preview,s.song,s.artist,btn);}
+
+const feedPreviewCache={};
+async function playFeedSong(btn){
+  event.stopPropagation();
+  const song=btn.dataset.song,artist=btn.dataset.artist;
+  const key=song+'|||'+artist;
+  if(feedPreviewCache[key]===null)return; // no preview available
+  if(feedPreviewCache[key]){playPreview(feedPreviewCache[key],song,artist,btn);return;}
+  btn.style.opacity='.45';btn.disabled=true;
+  try{
+    const res=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(artist+' '+song)+'&entity=song&limit=5&country=us');
+    const data=await res.json();
+    const match=(data.results||[]).find(r=>r.previewUrl&&r.trackName&&r.artistName);
+    feedPreviewCache[key]=match?.previewUrl||null;
+  }catch(e){feedPreviewCache[key]=null;}
+  btn.style.opacity='';btn.disabled=false;
+  if(feedPreviewCache[key])playPreview(feedPreviewCache[key],song,artist,btn);
+}
 
 // ── SFX ───────────────────────────────────────────────────────────────────────
 const SFX=(()=>{
@@ -3871,11 +3899,20 @@ async function rrFilterSongs(){
   if(q.length<2)return;
   rrSongTimer=setTimeout(async()=>{
     try{
-      const res=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&limit=50&country=us');
-      const data=await res.json();
+      const [r1,r2]=await Promise.all([
+        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&limit=50&country=us'),
+        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&attribute=artistTerm&limit=25&country=us')
+      ]);
+      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+      const seen=new Set();
+      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
+        if(!r.trackName||!r.artistName)return false;
+        const key=(r.trackName+r.artistName).toLowerCase();
+        if(seen.has(key))return false;seen.add(key);return true;
+      });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(song,artist)=>{const h=(song+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      rrSongMatches=(data.results||[]).filter(r=>r.trackName&&r.artistName&&!added.has(r.trackName+'||'+r.artistName)).map(r=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName)})).sort((a,b)=>b._score-a._score);
+      rrSongMatches=all.filter(r=>!added.has(r.trackName+'||'+r.artistName)).map(r=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName)})).sort((a,b)=>b._score-a._score);
     }catch(e){}
     renderRRSongDropdown(resEl,rrSongMatches,false);
   },350);
