@@ -773,6 +773,28 @@
     .rr-ended-stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;display:block;line-height:1;margin-bottom:.3rem}
     .rr-ended-stat-lbl{font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700}
     .rr-pacing-row{padding:.55rem 1.25rem;border-bottom:1px solid var(--border)}
+    /* LISTS */
+    .pst-bar{display:flex;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0}
+    .pst-btn{flex:1;padding:.65rem .5rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .15s,border-color .15s}
+    .pst-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .list-card{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.25rem;display:flex;align-items:center;gap:.85rem;cursor:pointer}
+    .list-card:active{background:var(--surface2)}
+    .list-card-thumbs{display:flex;gap:3px;flex-shrink:0}
+    .list-card-thumb{width:36px;height:36px;border-radius:4px;object-fit:cover;background:var(--border2)}
+    .list-card-info{flex:1;min-width:0}
+    .list-card-title{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .list-card-meta{font-size:.58rem;color:var(--muted);margin-top:.15rem;font-family:'DM Mono',monospace}
+    .list-item-row{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border)}
+    .list-item-num{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--muted);width:28px;text-align:center;flex-shrink:0}
+    .list-item-art{width:46px;height:46px;border-radius:5px;object-fit:cover;flex-shrink:0;background:var(--border2)}
+    .list-item-info{flex:1;min-width:0}
+    .list-item-title{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+    .list-item-sub{font-size:.6rem;color:var(--muted);margin-top:.1rem}
+    .list-item-note{font-size:.62rem;color:var(--muted2);font-style:italic;margin-top:.15rem;line-height:1.4}
+    .list-move-btn{background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:.2rem .3rem;line-height:1}
+    .list-move-btn:disabled{opacity:.2;cursor:default}
+    .ali-type{flex:1;padding:.42rem .5rem;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;cursor:pointer;border-radius:3px;transition:all .15s}
+    .ali-type.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
   </style>
 </head>
 <body>
@@ -1082,7 +1104,7 @@
           </div>
           <div class="rcat-row">
             <span class="rcat-lbl"><strong id="r-val">—</strong></span>
-            <input type="range" min="0" max="10" value="0" id="replay" oninput="update()" class="rcat-slider">
+            <input type="range" min="0" max="10" step="0.5" value="0" id="replay" oninput="update()" class="rcat-slider">
           </div>
           <div class="rcat-desc" id="replay-desc"></div>
         </div>
@@ -1098,7 +1120,7 @@
           </div>
           <div class="rcat-row">
             <span class="rcat-lbl">Peak <strong id="fp-val">—</strong></span>
-            <input type="range" min="0" max="10" value="0" id="flow-peak" oninput="update()" class="rcat-slider">
+            <input type="range" min="0" max="10" step="0.5" value="0" id="flow-peak" oninput="update()" class="rcat-slider">
           </div>
           <div class="rcat-desc" id="flow-desc"></div>
           <span id="fp-echo" style="display:none">0</span><span id="f-result" style="display:none">0</span>
@@ -1118,7 +1140,7 @@
           </div>
           <div class="rcat-row" id="chorus-slider-row">
             <span class="rcat-lbl"><strong id="c-val">—</strong></span>
-            <input type="range" min="0" max="10" value="0" id="chorus" oninput="update()" class="rcat-slider">
+            <input type="range" min="0" max="10" step="0.5" value="0" id="chorus" oninput="update()" class="rcat-slider">
           </div>
           <div class="rcat-desc" id="chorus-desc"></div>
         </div>
@@ -1134,7 +1156,7 @@
           </div>
           <div class="rcat-row">
             <span class="rcat-lbl">Best <strong id="vq-val">—</strong></span>
-            <input type="range" min="0" max="10" value="0" id="verse-quality" oninput="update()" class="rcat-slider">
+            <input type="range" min="0" max="10" step="0.5" value="0" id="verse-quality" oninput="update()" class="rcat-slider">
           </div>
           <div class="rcat-desc" id="verses-desc"></div>
           <span id="vq-echo" style="display:none">0</span><span id="v-result" style="display:none">0</span>
@@ -1151,7 +1173,7 @@
           </div>
           <div class="rcat-row">
             <span class="rcat-lbl"><strong id="p-val">—</strong></span>
-            <input type="range" min="0" max="10" value="0" id="prod" oninput="update()" class="rcat-slider">
+            <input type="range" min="0" max="10" step="0.5" value="0" id="prod" oninput="update()" class="rcat-slider">
           </div>
           <div class="rcat-desc" id="prod-desc"></div>
         </div>
@@ -1167,7 +1189,7 @@
           </div>
           <div class="rcat-row">
             <span class="rcat-lbl"><strong id="l-val">—</strong></span>
-            <input type="range" min="0" max="10" value="0" id="lyrics" oninput="update()" class="rcat-slider">
+            <input type="range" min="0" max="10" step="0.5" value="0" id="lyrics" oninput="update()" class="rcat-slider">
           </div>
           <div class="rcat-desc" id="lyrics-desc"></div>
         </div>
@@ -1225,13 +1247,18 @@
       </div>
       <div id="profile-search-results"></div>
     </div>
-    <div class="scroll-area">
+    <div class="scroll-area" style="display:flex;flex-direction:column">
       <div id="profile-header"></div>
       <div id="profile-stats" class="profile-stats"></div>
       <div id="profile-artist-stats"></div>
       <div id="profile-milestones"></div>
       <div id="profile-requests"></div>
+      <div class="pst-bar">
+        <button class="pst-btn active" id="pst-ratings" onclick="switchProfileSection('ratings')">Ratings</button>
+        <button class="pst-btn" id="pst-lists" onclick="switchProfileSection('lists')">Lists</button>
+      </div>
       <div id="profile-ratings"></div>
+      <div id="profile-lists" style="display:none"></div>
     </div>
   </div>
 
@@ -1358,32 +1385,32 @@
         </div>
         <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--replay)">Replay Value <span style="color:var(--muted);font-weight:400;font-size:.55rem">28%</span></div><div class="rr-cat-val" id="rr-replay-val">—</div></div>
-          <input type="range" min="0" max="10" value="0" id="rr-replay" class="rr-slider" oninput="rrUpdate()">
+          <input type="range" min="0" max="10" step="0.5" value="0" id="rr-replay" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-replay-desc"></div>
         </div>
         <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--flow)">Flow &amp; Delivery <span id="rr-flow-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">22%</span></div><div class="rr-cat-val" id="rr-flow-val">—</div></div>
-          <input type="range" min="0" max="10" value="0" id="rr-flow" class="rr-slider" oninput="rrUpdate()">
+          <input type="range" min="0" max="10" step="0.5" value="0" id="rr-flow" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-flow-desc"></div>
         </div>
         <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--chorus)">Chorus <span id="rr-chorus-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">20%</span></div><div style="display:flex;align-items:center;gap:.45rem"><button id="rr-no-hook-btn" class="no-hook-btn" onclick="rrToggleNoHook()">No Hook</button><div class="rr-cat-val" id="rr-chorus-val">—</div></div></div>
-          <div id="rr-chorus-slider-row"><input type="range" min="0" max="10" value="0" id="rr-chorus" class="rr-slider" oninput="rrUpdate()"></div>
+          <div id="rr-chorus-slider-row"><input type="range" min="0" max="10" step="0.5" value="0" id="rr-chorus" class="rr-slider" oninput="rrUpdate()"></div>
           <div class="rcat-desc" id="rr-chorus-desc"></div>
         </div>
         <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--verses)">Verses <span id="rr-verses-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">14%</span></div><div class="rr-cat-val" id="rr-verses-val">—</div></div>
-          <input type="range" min="0" max="10" value="0" id="rr-verses" class="rr-slider" oninput="rrUpdate()">
+          <input type="range" min="0" max="10" step="0.5" value="0" id="rr-verses" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-verses-desc"></div>
         </div>
         <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--prod)">Beat <span id="rr-prod-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-prod-val">—</div></div>
-          <input type="range" min="0" max="10" value="0" id="rr-prod" class="rr-slider" oninput="rrUpdate()">
+          <input type="range" min="0" max="10" step="0.5" value="0" id="rr-prod" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-prod-desc"></div>
         </div>
         <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--lyrics)">Lyrics <span id="rr-lyrics-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-lyrics-val">—</div></div>
-          <input type="range" min="0" max="10" value="0" id="rr-lyrics" class="rr-slider" oninput="rrUpdate()">
+          <input type="range" min="0" max="10" step="0.5" value="0" id="rr-lyrics" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-lyrics-desc"></div>
         </div>
         </div><!-- /rr-interlude-rating-body -->
@@ -1464,6 +1491,7 @@
       </div>
       <div style="padding:.75rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);background:var(--bg);border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:.5rem">
         <button class="rr-btn rr-btn-primary" id="rr-save-btn" onclick="rrSaveAll()">Save Ratings to Profile</button>
+        <button class="rr-btn rr-btn-secondary" onclick="shareRRSession()" style="display:flex;align-items:center;justify-content:center;gap:.5rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share Session Card</button>
         <button class="rr-btn rr-btn-secondary" onclick="rrLeave()">Back to Home</button>
       </div>
     </div>
@@ -1549,6 +1577,61 @@
   </div>
 </div>
 
+<!-- LIST OVERLAY -->
+<div id="list-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:310;flex-direction:column;overflow:hidden">
+  <div style="display:flex;align-items:center;padding:.9rem 1.25rem;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;gap:.75rem">
+    <button onclick="closeListOverlay()" style="background:transparent;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;line-height:1;padding:.2rem .3rem;flex-shrink:0">←</button>
+    <div id="lo-title" style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+    <button id="lo-edit-btn" onclick="openListMeta()" style="background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;cursor:pointer;flex-shrink:0">✎ Edit</button>
+  </div>
+  <div class="scroll-area" style="flex:1;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 5rem)">
+    <div id="lo-desc" style="padding:.6rem 1.25rem .2rem;font-size:.7rem;color:var(--muted);font-style:italic;display:none"></div>
+    <div id="lo-items"></div>
+    <div id="lo-empty" style="display:none;padding:2.5rem 1.25rem;text-align:center;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.75rem;letter-spacing:.08em">NO ITEMS YET — ADD BELOW</div>
+  </div>
+  <div style="position:absolute;bottom:calc(var(--nav-h) + var(--safe-b));left:0;right:0;padding:.75rem 1.25rem;background:var(--bg);border-top:1px solid var(--border);display:flex;gap:.5rem">
+    <button onclick="openAddToList()" style="flex:1;padding:.65rem;background:var(--gold);color:var(--bg);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">+ ADD ITEM</button>
+    <button onclick="confirmDeleteList()" style="padding:.65rem .9rem;background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">Delete List</button>
+  </div>
+</div>
+
+<!-- LIST META MODAL -->
+<div class="modal-overlay" id="list-meta-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" style="padding-bottom:1.5rem">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem" id="list-meta-title-label">New List</div>
+    <input id="list-meta-name" type="text" maxlength="60" placeholder="List title…" class="modal-input" style="margin-bottom:.65rem">
+    <input id="list-meta-desc" type="text" maxlength="120" placeholder="Description (optional)…" class="modal-input" style="margin-bottom:1rem">
+    <div style="display:flex;gap:.5rem">
+      <button onclick="document.getElementById('list-meta-modal').classList.remove('open')" class="modal-btn modal-btn-cancel" style="flex:1">Cancel</button>
+      <button onclick="saveListMeta()" class="modal-btn" style="flex:1;background:var(--gold);color:var(--bg);border:none" id="list-meta-save-btn">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD TO LIST MODAL -->
+<div class="modal-overlay" id="add-list-item-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" style="padding-bottom:1.25rem;max-height:80vh;display:flex;flex-direction:column">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem">Add Item</div>
+    <div style="display:flex;gap:.4rem;margin-bottom:.65rem;flex-shrink:0">
+      <button class="ali-type active" id="ali-songs" onclick="setAliType('songs')">Songs</button>
+      <button class="ali-type" id="ali-albums" onclick="setAliType('albums')">Albums</button>
+      <button class="ali-type" id="ali-manual" onclick="setAliType('manual')">Manual</button>
+    </div>
+    <div id="ali-search-wrap" style="position:relative;flex-shrink:0">
+      <input id="ali-search" type="text" autocomplete="off" placeholder="Search…" class="modal-input" oninput="aliSearch()" style="margin-bottom:0">
+      <div id="ali-results" style="display:none;max-height:38vh;overflow-y:auto;border:1px solid var(--border2);border-top:none;border-radius:0 0 4px 4px;background:var(--surface2)"></div>
+    </div>
+    <div id="ali-manual-wrap" style="display:none;margin-top:.65rem">
+      <input id="ali-manual-title" type="text" maxlength="80" placeholder="Title…" class="modal-input" style="margin-bottom:.5rem">
+      <input id="ali-manual-sub" type="text" maxlength="80" placeholder="Subtitle (artist, year…)" class="modal-input" style="margin-bottom:.5rem">
+      <input id="ali-manual-note" type="text" maxlength="140" placeholder="Note (optional)…" class="modal-input" style="margin-bottom:.75rem">
+      <button onclick="addManualItem()" style="width:100%;padding:.6rem;background:var(--gold);color:var(--bg);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">Add</button>
+    </div>
+  </div>
+</div>
+
 <!-- USER PROFILE MODAL (kept for legacy close refs) -->
 <div class="modal-overlay" id="user-modal">
   <div class="modal"><div class="modal-handle"></div><div id="user-modal-body"></div></div>
@@ -1628,76 +1711,136 @@ let selectedSong=null;
 const AVATAR_COLORS=['#c9a84c','#d93025','#2d9e6b','#8b6db5','#5b8dd9','#b07d3a'];
 const DESCS={
   flow:{
-  1:"Constantly off beat and hard to listen to",
-  2:"Usually off beat with very weak control",
-  3:"Noticeable timing issues and awkward delivery",
-  4:"Inconsistent flow with some rough moments",
-  5:"Mostly on beat but plain and unremarkable",
-  6:"Solid control with a few nice moments",
-  7:"Good flow that fits the beat well",
-  8:"Very strong delivery with variety and control",
-  9:"Elite flow that feels natural and impressive",
-  10:"Near-perfect flow with total control and presence"
+  0.5:"Almost impossible to follow",
+  1:"Very hard to stay with",
+  1.5:"Rarely fits the beat",
+  2:"Usually off and awkward",
+  2.5:"Often rough and uneven",
+  3:"Noticeably shaky",
+  3.5:"Inconsistent most of the time",
+  4:"Sometimes works, sometimes does not",
+  4.5:"On beat but rough",
+  5:"Acceptable but plain",
+  5.5:"Mostly solid",
+  6:"Good and steady",
+  6.5:"Smooth in a lot of spots",
+  7:"Fits the beat well",
+  7.5:"Very smooth and confident",
+  8:"Strong and controlled",
+  8.5:"Sharp, smooth, and varied",
+  9:"Excellent almost all the way through",
+  9.5:"Nearly flawless",
+  10:"Perfect fit with the beat"
 },
 verses:{
-  1:"Very weak writing with almost nothing memorable",
-  2:"Mostly empty bars with little substance",
-  3:"A few decent lines but mostly weak",
-  4:"Below average writing with limited impact",
-  5:"Average verses that do the job",
-  6:"Decent writing with some strong moments",
-  7:"Good verses with clear standout lines",
-  8:"Very strong verses with multiple memorable bars",
-  9:"Elite writing with creativity, depth, and quotables",
-  10:"Masterful verses where nearly every bar lands"
+  0.5:"Almost nothing works",
+  1:"Very weak throughout",
+  1.5:"Little to remember",
+  2:"Mostly poor writing",
+  2.5:"A few okay moments only",
+  3:"Weak overall",
+  3.5:"Below average most of the time",
+  4:"Some decent lines, not much more",
+  4.5:"Close to average but thin",
+  5:"Average and fine",
+  5.5:"Slightly above average",
+  6:"Good in places",
+  6.5:"Solid with a few standout lines",
+  7:"Clearly good",
+  7.5:"Strong most of the way through",
+  8:"Very strong and memorable",
+  8.5:"Excellent with many standout moments",
+  9:"Elite writing",
+  9.5:"Exceptional line after line",
+  10:"Amazing from start to finish"
 },
 prod:{
-  1:"Terrible production that actively hurts the song",
-  2:"Very weak beat with poor sound or structure",
-  3:"Below average production with little appeal",
-  4:"Flat or generic production with weak presence",
-  5:"Average production that works but stands out little",
-  6:"Solid beat with some good choices",
-  7:"Good production with clear identity",
-  8:"Very strong production with creative details",
-  9:"Elite production that elevates the whole song",
-  10:"Master-level production with outstanding sound and impact"
+  0.5:"Sounds very bad",
+  1:"Hurts the song badly",
+  1.5:"Very rough and unpleasant",
+  2:"Weak and poorly put together",
+  2.5:"Cheap or distracting",
+  3:"Below average and dull",
+  3.5:"Weak with little character",
+  4:"Flat and forgettable",
+  4.5:"Okay but plain",
+  5:"Average and serviceable",
+  5.5:"Decent with small highlights",
+  6:"Solid and works well",
+  6.5:"Good with clear style",
+  7:"Strong and memorable",
+  7.5:"Very well made",
+  8:"Creative and polished",
+  8.5:"Excellent with strong detail",
+  9:"Outstanding production",
+  9.5:"Almost impossible to improve",
+  10:"Perfect for the song"
 },
 chorus:{
-  1:"Terrible chorus that makes the song worse",
-  2:"Very weak and forgettable chorus",
-  3:"Below average chorus with little impact",
-  4:"Does not land and feels underdeveloped",
-  5:"Serviceable chorus that is easy to forget",
-  6:"Decent chorus with some catchiness",
-  7:"Good chorus that helps the song stick",
-  8:"Very catchy chorus that stands out",
-  9:"Excellent chorus that is instantly memorable",
-  10:"Iconic chorus that defines the song"
+  0.5:"Actively bad",
+  1:"Makes the song worse",
+  1.5:"Very hard to enjoy",
+  2:"Weak and forgettable",
+  2.5:"Barely leaves an impression",
+  3:"Not very effective",
+  3.5:"Clearly below average",
+  4:"Does not really land",
+  4.5:"Almost works but not quite",
+  5:"Fine but forgettable",
+  5.5:"Decent enough",
+  6:"Somewhat catchy",
+  6.5:"Pretty catchy",
+  7:"Good and helps the song",
+  7.5:"Very catchy",
+  8:"Strong and memorable",
+  8.5:"Sticks with you a lot",
+  9:"Excellent and instantly memorable",
+  9.5:"Extremely hard to forget",
+  10:"Defines the whole song"
 },
 lyrics:{
-  1:"Very weak lyrics with almost no value",
-  2:"Little originality or substance",
-  3:"Mostly generic writing with few good moments",
-  4:"Below average lyrics with limited impact",
-  5:"Average lyrics that are fine but not notable",
-  6:"Decent lyrics with some good lines",
-  7:"Good lyrics with clear ideas and quotables",
-  8:"Very strong lyrics with depth or sharp writing",
-  9:"Elite lyricism with standout lines throughout",
-  10:"Top-tier writing with exceptional depth, skill, and impact"
+  0.5:"Says almost nothing",
+  1:"Very weak writing",
+  1.5:"Little thought or meaning",
+  2:"Mostly empty or generic",
+  2.5:"Few good ideas",
+  3:"Weak overall",
+  3.5:"Below average writing",
+  4:"Some decent lines only",
+  4.5:"A little promise, not much payoff",
+  5:"Average and fine",
+  5.5:"Slightly above average",
+  6:"Good in parts",
+  6.5:"Several lines stand out",
+  7:"Clearly strong writing",
+  7.5:"Very good and memorable",
+  8:"Sharp and well written",
+  8.5:"Excellent with depth",
+  9:"Elite lyricism",
+  9.5:"Exceptional writing throughout",
+  10:"Top-level writing"
 },
 replay:{
-  1:"Would never want to play this again",
-  2:"Would almost always skip it",
-  3:"Very little reason to come back to it",
-  4:"Forgettable and unlikely to stay in rotation",
-  5:"Fine occasionally but not something you seek out",
-  6:"Worth replaying once in a while",
-  7:"Easy to keep in regular rotation",
-  8:"Very replayable and stays in rotation",
-  9:"Highly addictive and holds up over time",
-  10:"Timeless replay value that never gets old"
+  0.5:"Never want to hear it again",
+  1:"Would always skip it",
+  1.5:"Almost no reason to replay",
+  2:"Very hard to come back to",
+  2.5:"Rarely worth replaying",
+  3:"Little replay value",
+  3.5:"Easy to forget",
+  4:"Probably will not return to it much",
+  4.5:"Might replay once in a while",
+  5:"Fine sometimes",
+  5.5:"Easy enough to revisit",
+  6:"Worth replaying now and then",
+  6.5:"Comes back into rotation sometimes",
+  7:"Easy to replay regularly",
+  7.5:"Very easy to come back to",
+  8:"Strong replay value",
+  8.5:"Can replay a lot without getting tired",
+  9:"Highly replayable",
+  9.5:"Stays fresh for a long time",
+  10:"Never gets old"
 }};
 const SLIDER_COLORS={'flow-peak':'#c9a84c','verse-quality':'#d93025','prod':'#b07d3a','chorus':'#8b6db5','lyrics':'#5b8dd9','replay':'#2d9e6b'};
 const GENRE_PRESETS={
@@ -1928,7 +2071,7 @@ function applyTheme(key){
 const SETTINGS_KEY='songr_settings';
 const SETTINGS_DEFAULTS={
   feedDefault:'all',
-  compactFeed:false,
+  compactFeed:true,
   hideDescs:false,
   autoReady:false,
   pacingDefault:'0',
@@ -2279,7 +2422,7 @@ function openRatingDetail(row){
           <div class="rd-cat-name" style="color:${c.color}">${c.name}</div>
           <div class="rd-cat-weight">${c.weight} weight</div>
         </div>
-        <div class="rd-cat-score" style="color:${c.color}">${v.toFixed(0)}</div>
+        <div class="rd-cat-score" style="color:${c.color}">${v%1===0?v:v.toFixed(1)}</div>
       </div>
       <div class="rd-bar-bg"><div class="rd-bar-fill" style="width:${v*10}%;background:${c.color}"></div></div>
     </div>`;
@@ -2531,15 +2674,18 @@ function openProfileEdit(){
   const swatches=AVATAR_COLORS.map(c=>`<div class="color-swatch${c===avatar_color?' selected':''}" style="background:${c};width:32px;height:32px" onclick="profileEditColor='${c}';document.getElementById('pf-edit-avatar').style.background='${c}';this.parentElement.querySelectorAll('.color-swatch').forEach(s=>s.classList.remove('selected'));this.classList.add('selected')"></div>`).join('');
   header.innerHTML=`
     <div class="pf-edit-form">
-      <div style="display:flex;gap:1rem;align-items:center">
-        <div style="position:relative;flex-shrink:0;cursor:pointer" onclick="document.getElementById('pf-avatar-input').click()" title="Change photo">
-          <div id="pf-edit-avatar" class="profile-avatar" style="background:${avatar_color};overflow:hidden">${currentProfile?.avatar_url?`<img src="${currentProfile.avatar_url}" style="width:100%;height:100%;object-fit:cover;">`:avatarInitial(username)}</div>
-          <div style="position:absolute;inset:0;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:1.15rem;opacity:0;transition:opacity .15s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">📷</div>
+      <div style="display:flex;gap:1rem;align-items:flex-start">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;flex-shrink:0">
+          <div style="position:relative;cursor:pointer" onclick="document.getElementById('pf-avatar-input').click()">
+            <div id="pf-edit-avatar" class="profile-avatar" style="background:${avatar_color};overflow:hidden">${currentProfile?.avatar_url?`<img src="${currentProfile.avatar_url}" style="width:100%;height:100%;object-fit:cover;">`:avatarInitial(username)}</div>
+            <div style="position:absolute;bottom:0;right:0;width:20px;height:20px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:.65rem;box-shadow:0 0 0 2px var(--surface)">📷</div>
+          </div>
+          <button onclick="document.getElementById('pf-avatar-input').click()" style="background:transparent;border:none;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:0">${currentProfile?.avatar_url?'Change photo':'Add photo'}</button>
+          ${currentProfile?.avatar_url?`<button onclick="removeAvatarPhoto()" style="background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.55rem;letter-spacing:.06em;cursor:pointer;padding:0;margin-top:-.2rem;text-decoration:underline">Remove</button>`:''}
           <input id="pf-avatar-input" type="file" accept="image/*" style="display:none" onchange="handleAvatarUpload(this)">
         </div>
-        <div style="flex:1">
+        <div style="flex:1;padding-top:.2rem">
           <div class="color-grid" style="margin:0">${swatches}</div>
-          ${currentProfile?.avatar_url?`<button onclick="removeAvatarPhoto()" style="margin-top:.5rem;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.58rem;letter-spacing:.08em;cursor:pointer;padding:0;text-decoration:underline">Remove photo</button>`:''}
         </div>
       </div>
       <textarea id="pf-edit-bio" class="pf-edit-bio" rows="3" placeholder="Add a bio…">${bio||''}</textarea>
@@ -2561,6 +2707,251 @@ async function saveProfileEdit(){
 
 function cancelProfileEdit(){
   loadProfile();
+}
+
+// ── LISTS ──────────────────────────────────────────────────────────
+let currentListId=null, currentListItems=[], aliType='songs', aliTimer=null;
+
+function switchProfileSection(sec){
+  document.getElementById('profile-ratings').style.display=sec==='ratings'?'':'none';
+  document.getElementById('profile-lists').style.display=sec==='lists'?'':'none';
+  document.getElementById('pst-ratings').classList.toggle('active',sec==='ratings');
+  document.getElementById('pst-lists').classList.toggle('active',sec==='lists');
+  if(sec==='lists')loadLists();
+}
+
+async function loadLists(){
+  const el=document.getElementById('profile-lists');
+  if(!currentUser){el.innerHTML='';return;}
+  el.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.7rem">Loading…</div>';
+  const{data,error}=await db.from('lists').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+  if(error){el.innerHTML=`<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.7rem">${error.message}</div>`;return;}
+  renderListsSection(data||[],el);
+}
+
+async function renderListsSection(lists,el){
+  const itemCounts={};
+  const artworks={};
+  if(lists.length){
+    const{data:items}=await db.from('list_items').select('list_id,position,artwork_url').in('list_id',lists.map(l=>l.id)).order('position');
+    (items||[]).forEach(it=>{
+      if(!itemCounts[it.list_id])itemCounts[it.list_id]=0;
+      itemCounts[it.list_id]++;
+      if(!artworks[it.list_id])artworks[it.list_id]=[];
+      if(artworks[it.list_id].length<3&&it.artwork_url)artworks[it.list_id].push(it.artwork_url);
+    });
+  }
+  const newBtn=`<div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border)"><button onclick="openListMeta(true)" style="width:100%;padding:.6rem;background:transparent;border:1px dashed var(--border2);color:var(--muted);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ NEW LIST</button></div>`;
+  if(!lists.length){el.innerHTML=newBtn+'<div style="padding:2.5rem 1.25rem;text-align:center;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;font-size:.75rem;letter-spacing:.08em">NO LISTS YET</div>';return;}
+  el.innerHTML=newBtn+lists.map(l=>{
+    const count=itemCounts[l.id]||0;
+    const thumbs=(artworks[l.id]||[]).map(u=>`<img src="${itunesArtUrl(u,44)}" class="list-card-thumb" loading="lazy">`).join('')+
+      (count>3?`<div class="list-card-thumb" style="display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted)">+${count-3}</div>`:'');
+    return`<div class="list-card" onclick="openListOverlay('${l.id}')">
+      <div class="list-card-thumbs">${thumbs||'<div class="list-card-thumb"></div>'}</div>
+      <div class="list-card-info">
+        <div class="list-card-title">${l.title}</div>
+        <div class="list-card-meta">${count} item${count!==1?'s':''}${l.description?' · '+l.description:''}</div>
+      </div>
+      <div style="color:var(--muted);font-size:1rem;flex-shrink:0">›</div>
+    </div>`;
+  }).join('');
+}
+
+async function openListOverlay(id){
+  currentListId=id;
+  const overlay=document.getElementById('list-overlay');
+  overlay.style.display='flex';
+  document.getElementById('lo-items').innerHTML='<div style="padding:2rem;text-align:center;color:var(--muted);font-size:.7rem">Loading…</div>';
+  const [{data:list},{data:items}]=await Promise.all([
+    db.from('lists').select('*').eq('id',id).single(),
+    db.from('list_items').select('*').eq('list_id',id).order('position')
+  ]);
+  if(!list){overlay.style.display='none';return;}
+  currentListItems=items||[];
+  document.getElementById('lo-title').textContent=list.title;
+  const descEl=document.getElementById('lo-desc');
+  if(list.description){descEl.textContent=list.description;descEl.style.display='';}
+  else descEl.style.display='none';
+  const isOwn=list.user_id===currentUser?.id;
+  document.getElementById('lo-edit-btn').style.display=isOwn?'':'none';
+  document.querySelector('#list-overlay [onclick="confirmDeleteList()"]').style.display=isOwn?'':'none';
+  document.querySelector('#list-overlay [onclick="openAddToList()"]').style.display=isOwn?'':'none';
+  renderListItems(isOwn);
+}
+
+function closeListOverlay(){
+  document.getElementById('list-overlay').style.display='none';
+  currentListId=null;currentListItems=[];
+  loadLists();
+}
+
+function renderListItems(isOwn){
+  const el=document.getElementById('lo-items');
+  const empty=document.getElementById('lo-empty');
+  if(!currentListItems.length){el.innerHTML='';empty.style.display='';return;}
+  empty.style.display='none';
+  el.innerHTML=currentListItems.map((it,i)=>`
+    <div class="list-item-row" id="li-row-${it.id}">
+      <div class="list-item-num">${i+1}</div>
+      ${it.artwork_url?`<img src="${itunesArtUrl(it.artwork_url,60)}" class="list-item-art" loading="lazy">`:`<div class="list-item-art"></div>`}
+      <div class="list-item-info">
+        <div class="list-item-title">${it.title}</div>
+        ${it.subtitle?`<div class="list-item-sub">${it.subtitle}</div>`:''}
+        ${it.note?`<div class="list-item-note">${it.note}</div>`:''}
+      </div>
+      ${isOwn?`<div style="display:flex;flex-direction:column;gap:0;flex-shrink:0">
+        <button class="list-move-btn" onclick="moveItem('${it.id}',-1)" ${i===0?'disabled':''}>▲</button>
+        <button class="list-move-btn" onclick="moveItem('${it.id}',1)" ${i===currentListItems.length-1?'disabled':''}>▼</button>
+      </div>
+      <button onclick="removeListItem('${it.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:.2rem .3rem;flex-shrink:0">✕</button>`:''}
+    </div>`).join('');
+}
+
+async function moveItem(id,dir){
+  const idx=currentListItems.findIndex(it=>it.id===id);
+  if(idx<0)return;
+  const swapIdx=idx+dir;
+  if(swapIdx<0||swapIdx>=currentListItems.length)return;
+  [currentListItems[idx],currentListItems[swapIdx]]=[currentListItems[swapIdx],currentListItems[idx]];
+  renderListItems(true);
+  await Promise.all(currentListItems.map((it,i)=>db.from('list_items').update({position:i}).eq('id',it.id)));
+}
+
+async function removeListItem(id){
+  currentListItems=currentListItems.filter(it=>it.id!==id);
+  renderListItems(true);
+  await db.from('list_items').delete().eq('id',id);
+  await Promise.all(currentListItems.map((it,i)=>db.from('list_items').update({position:i}).eq('id',it.id)));
+}
+
+async function confirmDeleteList(){
+  if(!confirm('Delete this list?'))return;
+  await db.from('lists').delete().eq('id',currentListId);
+  closeListOverlay();
+}
+
+function openListMeta(isNew=false){
+  document.getElementById('list-meta-title-label').textContent=isNew?'New List':'Edit List';
+  document.getElementById('list-meta-save-btn').textContent=isNew?'Create':'Save';
+  document.getElementById('list-meta-name').value='';
+  document.getElementById('list-meta-desc').value='';
+  if(!isNew&&currentListId){
+    const titleEl=document.getElementById('lo-title');
+    const descEl=document.getElementById('lo-desc');
+    document.getElementById('list-meta-name').value=titleEl.textContent||'';
+    document.getElementById('list-meta-desc').value=descEl.style.display!=='none'?descEl.textContent:'';
+  }
+  document.getElementById('list-meta-modal')._isNew=isNew;
+  document.getElementById('list-meta-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('list-meta-name').focus(),100);
+}
+
+async function saveListMeta(){
+  const title=(document.getElementById('list-meta-name').value||'').trim();
+  if(!title)return;
+  const desc=(document.getElementById('list-meta-desc').value||'').trim();
+  const modal=document.getElementById('list-meta-modal');
+  const isNew=modal._isNew;
+  if(isNew){
+    const{data,error}=await db.from('lists').insert({user_id:currentUser.id,title,description:desc||null}).select().single();
+    if(error){alert('Failed: '+error.message);return;}
+    modal.classList.remove('open');
+    openListOverlay(data.id);
+  } else {
+    await db.from('lists').update({title,description:desc||null}).eq('id',currentListId);
+    document.getElementById('lo-title').textContent=title;
+    const descEl=document.getElementById('lo-desc');
+    if(desc){descEl.textContent=desc;descEl.style.display='';}else descEl.style.display='none';
+    modal.classList.remove('open');
+  }
+}
+
+function openAddToList(){
+  document.getElementById('ali-search').value='';
+  document.getElementById('ali-results').style.display='none';
+  document.getElementById('ali-results').innerHTML='';
+  document.getElementById('ali-manual-title').value='';
+  document.getElementById('ali-manual-sub').value='';
+  document.getElementById('ali-manual-note').value='';
+  setAliType('songs');
+  document.getElementById('add-list-item-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('ali-search').focus(),100);
+}
+
+function setAliType(type){
+  aliType=type;
+  ['songs','albums','manual'].forEach(t=>{document.getElementById('ali-'+t).classList.toggle('active',t===type);});
+  document.getElementById('ali-search-wrap').style.display=type==='manual'?'none':'';
+  document.getElementById('ali-manual-wrap').style.display=type==='manual'?'':'none';
+  document.getElementById('ali-results').style.display='none';
+  if(type!=='manual')setTimeout(()=>document.getElementById('ali-search').focus(),50);
+}
+
+function aliSearch(){
+  clearTimeout(aliTimer);
+  const q=(document.getElementById('ali-search').value||'').trim();
+  const resEl=document.getElementById('ali-results');
+  if(!q){resEl.style.display='none';return;}
+  resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.52rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">SEARCHING…</div>';
+  resEl.style.display='block';
+  aliTimer=setTimeout(async()=>{
+    const entity=aliType==='albums'?'album':'song';
+    try{
+      const [r1,r2]=await Promise.all([
+        fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=${entity}&limit=30&country=us`),
+        fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=${entity}&attribute=artistTerm&limit=15&country=us`)
+      ]);
+      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+      const seen=new Set();
+      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
+        const k=aliType==='albums'?(r.collectionName+r.artistName):(r.trackName+r.artistName);
+        const key=k.toLowerCase();
+        if(seen.has(key))return false;seen.add(key);return true;
+      });
+      resEl.innerHTML=all.slice(0,25).map((r,i)=>{
+        const title=aliType==='albums'?r.collectionName:r.trackName;
+        const sub=r.artistName;
+        const art=r.artworkUrl100||'';
+        if(!title)return'';
+        return`<div style="display:flex;align-items:center;gap:.65rem;padding:.55rem .85rem;border-bottom:1px solid var(--border);cursor:pointer" onclick="addSearchItem(${i})">
+          ${art?`<img src="${itunesArtUrl(art,44)}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
+            <div style="font-size:.58rem;color:var(--muted)">${sub}</div>
+          </div>
+        </div>`;
+      }).join('')||(all.length?'':`<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">No results</div>`);
+      resEl._results=all;
+    }catch(e){resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted)">Search failed</div>';}
+  },350);
+}
+
+async function addSearchItem(i){
+  const resEl=document.getElementById('ali-results');
+  const r=(resEl._results||[])[i];
+  if(!r)return;
+  const title=aliType==='albums'?r.collectionName:r.trackName;
+  const sub=r.artistName||'';
+  const art=r.artworkUrl100||'';
+  await doAddListItem({title,subtitle:sub,artwork_url:art,note:''});
+}
+
+async function addManualItem(){
+  const title=(document.getElementById('ali-manual-title').value||'').trim();
+  if(!title)return;
+  const sub=(document.getElementById('ali-manual-sub').value||'').trim();
+  const note=(document.getElementById('ali-manual-note').value||'').trim();
+  await doAddListItem({title,subtitle:sub||null,artwork_url:null,note:note||null});
+}
+
+async function doAddListItem(item){
+  const pos=currentListItems.length;
+  const{data,error}=await db.from('list_items').insert({list_id:currentListId,position:pos,...item}).select().single();
+  if(error){alert('Failed: '+error.message);return;}
+  currentListItems.push(data);
+  document.getElementById('add-list-item-modal').classList.remove('open');
+  renderListItems(true);
 }
 
 function renderProfileFolders(ratings, container){
@@ -2822,7 +3213,7 @@ async function shareRating(row){
     c.fillText(cat.name,x+12,y+24);
     // score
     c.font='900 42px "Playfair Display"';c.fillStyle='#e8e5ff';
-    c.fillText(val.toFixed(0),x+12,y+72);
+    c.fillText(val%1===0?String(val):val.toFixed(1),x+12,y+72);
   });
 
   // Footer
@@ -3253,7 +3644,7 @@ function renderGenericCats(preset){
       </div>
       <div class="rcat-row">
         <span class="rcat-lbl"><strong id="gc-val-${i}">—</strong></span>
-        <input type="range" min="0" max="10" value="0" id="gc-cat-${i}" oninput="updateGenericSlider(${i},'${preset.colors[i]}')" class="rcat-slider">
+        <input type="range" min="0" max="10" step="0.5" value="0" id="gc-cat-${i}" oninput="updateGenericSlider(${i},'${preset.colors[i]}')" class="rcat-slider">
       </div>
       <div class="rcat-desc" id="gc-desc-${i}"></div>
     </div>`).join('');
@@ -3435,7 +3826,7 @@ function update(){
   document.getElementById('v-result').textContent=vD;document.getElementById('verses-display').textContent=vD;
   document.getElementById('verses-desc').textContent=vq===0?'':(DESCS.verses[Math.round(Math.max(1,V))]||'');
   [{numId:'p-val',dispId:'prod-display',descId:'prod-desc',cat:'prod',val:p},{numId:'c-val',dispId:'chorus-display',descId:'chorus-desc',cat:'chorus',val:noHook?'—':ch},{numId:'l-val',dispId:'lyrics-display',descId:'lyrics-desc',cat:'lyrics',val:l},{numId:'r-val',dispId:'replay-display',descId:'replay-desc',cat:'replay',val:r}].forEach(({numId,dispId,descId,cat,val})=>{
-    document.getElementById(numId).textContent=val;document.getElementById(dispId).textContent=val;document.getElementById(descId).textContent=(val===0||val==='—')?'':(DESCS[cat]?.[val]||'');
+    document.getElementById(numId).textContent=val;document.getElementById(dispId).textContent=val;document.getElementById(descId).textContent=(val===0||val==='—')?'':(DESCS[cat]?.[Math.round(val)]||'');
   });
   const sn=selectedSong?.song||'',an=selectedSong?.artist||'';
   document.getElementById('score-song-name').textContent=sn?(an?`${sn} — ${an}`:sn):'—';
@@ -3650,10 +4041,10 @@ async function filterSongPicker(){
 }
 
 function renderSongDropdown(resultsEl,matches,loading){
-  const manualLink=`<div onclick="showManualEntry()" style="padding:.5rem .85rem;font-size:.6rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;cursor:pointer;text-align:center;border-top:1px solid var(--border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">+ CAN'T FIND IT? ENTER MANUALLY</div>`;
+  const manualLink=`<div onclick="showManualEntry()" style="padding:.5rem .85rem;font-size:.6rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;cursor:pointer;text-align:center;border-bottom:1px solid var(--border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">+ CAN'T FIND IT? ENTER MANUALLY</div>`;
   if(!matches.length&&!loading){resultsEl.innerHTML=manualLink;resultsEl.style.display='block';return;}
   const artThumb=(s,sz)=>s.artwork?`<img src="${itunesArtUrl(s.artwork,sz)}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div data-art-key="${s.artist}|||${s.album||s.artist}" data-art-size="${sz}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`;
-  resultsEl.innerHTML=matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'')+manualLink;
+  resultsEl.innerHTML=manualLink+matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'');
   loadMissingArtwork(resultsEl);
   resultsEl.style.display='block';
 }
@@ -3865,7 +4256,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrIntroTimer=null, rrRevealRatings=[];
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null;
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -4681,6 +5072,141 @@ async function rrRenderEnded(){
   }
 
   body.innerHTML=html;
+
+  rrRecapData={songStats,myRatings,myAvg,myHigh,myLow,myTopSong,myTopRating,memberAvgs,mostGenerous,harshest,mostDivisive,myCatAvgs};
+}
+
+async function shareRRSession(){
+  if(!rrRecapData)return;
+  await document.fonts.ready;
+  const{songStats,myAvg,myHigh,myLow,myTopSong,myTopRating,mostGenerous,harshest,mostDivisive}=rrRecapData;
+  const W=1080,H=1350,pad=72;
+  const canvas=document.createElement('canvas');
+  canvas.width=W;canvas.height=H;
+  const c=canvas.getContext('2d');
+
+  const fit=(txt,maxW,font)=>{if(font)c.font=font;if(c.measureText(txt).width<=maxW)return txt;while(c.measureText(txt+'…').width>maxW&&txt.length>1)txt=txt.slice(0,-1);return txt+'…';};
+  const hue=n=>n>=9?'#34d399':n>=7?'#a78bfa':n>=5?'#fb923c':'#f472b6';
+
+  // Background
+  const bg=c.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#07071a');bg.addColorStop(1,'#0d0c24');
+  c.fillStyle=bg;c.fillRect(0,0,W,H);
+
+  // Glow blobs
+  const blob=(x,y,r,col)=>{const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,col+'44');g.addColorStop(1,'transparent');c.fillStyle=g;c.fillRect(x-r,y-r,r*2,r*2);};
+  blob(W*.1,H*.05,350,'#7c3aed');blob(W*.9,H*.25,280,'#be185d');blob(W*.5,H*.7,320,'#1d4ed8');blob(W*.2,H*.9,250,'#0f766e');
+
+  // Stars
+  c.fillStyle='rgba(255,255,255,0.65)';
+  const rng=s=>{let x=Math.sin(s)*10000;return x-Math.floor(x);};
+  for(let i=0;i<140;i++){const sx=rng(i*37)*W,sy=rng(i*73)*H,sr=rng(i*11)>.85?.9:.4;c.beginPath();c.arc(sx,sy,sr,0,Math.PI*2);c.fill();}
+
+  // Top accent bar
+  const bar=c.createLinearGradient(0,0,W,0);
+  bar.addColorStop(0,'#a78bfa');bar.addColorStop(.5,'#f472b6');bar.addColorStop(1,'#60a5fa');
+  c.fillStyle=bar;c.fillRect(0,0,W,7);
+
+  // Room name
+  const roomName=(currentRoom?.name||'Rank Room').toUpperCase();
+  c.font='900 72px "Barlow Condensed"';c.textAlign='center';c.textBaseline='alphabetic';
+  c.fillStyle='#e8e5ff';c.fillText(fit(roomName,W-pad*2),W/2,110);
+
+  // Subtitle
+  const date=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  c.font='600 28px "Barlow Condensed"';c.fillStyle='#5c5a80';c.textAlign='center';
+  c.fillText(`${songStats.length} SONGS · ${roomMembers.length} MEMBERS · ${date}`,W/2,150);
+
+  // Divider
+  const div=(y)=>{const g=c.createLinearGradient(pad,0,W-pad,0);g.addColorStop(0,'transparent');g.addColorStop(.5,'#2b2958');g.addColorStop(1,'transparent');c.strokeStyle=g;c.lineWidth=1;c.beginPath();c.moveTo(pad,y);c.lineTo(W-pad,y);c.stroke();};
+  div(175);
+
+  // RANKINGS label
+  c.font='700 22px "Barlow Condensed"';c.fillStyle='#5c5a80';c.textAlign='left';c.letterSpacing='4px';
+  c.fillText('FINAL RANKINGS',pad,215);
+
+  // Song rows
+  const podCol=['#f5c518','#c0c0c0','#cd7f32'];
+  const medals=['🥇','🥈','🥉'];
+  const top=songStats.slice(0,Math.min(5,songStats.length));
+  const rowH=108,rowGap=10;
+  let ry=232;
+  top.forEach((ss,i)=>{
+    const x=pad,y=ry,w=W-pad*2,h=rowH;
+    // bg cell
+    c.fillStyle='#0d0c2466';c.fillRect(x,y,w,h);
+    const border=i<3?podCol[i]:'#2b2958';
+    c.strokeStyle=border+(i<3?'60':'');c.lineWidth=i===0?2:1;c.strokeRect(x,y,w,h);
+    c.fillStyle=border;c.fillRect(x,y,i===0?4:3,h);
+    // medal/rank
+    if(i<3){c.font=`${i===0?'52':'42'}px serif`;c.textAlign='center';c.fillText(medals[i],x+46,y+h*.67);}
+    else{c.font='700 32px "Barlow Condensed"';c.fillStyle='#5c5a80';c.textAlign='center';c.fillText(`#${i+1}`,x+46,y+h*.62);}
+    // song name + artist
+    c.textAlign='left';
+    c.font=`800 ${i===0?'42':'36'}px "Barlow Condensed"`;c.fillStyle='#e8e5ff';
+    c.fillText(fit(ss.song.song.toUpperCase(),W-pad*2-200,'800 36px "Barlow Condensed"'),x+80,y+h*.46);
+    c.font='400 24px "DM Mono"';c.fillStyle='#5c5a80';
+    c.fillText(fit(ss.song.artist,W-pad*2-200,'400 24px "DM Mono"'),x+80,y+h*.76);
+    // avg score
+    const sc=hue(ss.avg);
+    c.save();c.shadowColor=sc;c.shadowBlur=i===0?30:14;
+    c.font=`900 ${i===0?'64':'52'}px "Playfair Display"`;c.fillStyle=sc;c.textAlign='right';
+    c.fillText(ss.avg.toFixed(1),x+w-24,y+h*.7);
+    c.restore();
+    ry+=h+rowGap;
+  });
+
+  div(ry+10);
+
+  // YOUR SESSION
+  c.font='700 22px "Barlow Condensed"';c.fillStyle='#5c5a80';c.textAlign='left';
+  c.fillText('YOUR SESSION',pad,ry+50);
+  const statW=(W-pad*2-20)/3;
+  [['AVG',myAvg],['BEST',myHigh],['LOW',myLow]].forEach(([lbl,val],i)=>{
+    const sx=pad+i*(statW+10),sy=ry+62,sw=statW,sh=110;
+    c.fillStyle='#0d0c24';c.fillRect(sx,sy,sw,sh);
+    c.strokeStyle='#1e1d42';c.lineWidth=1;c.strokeRect(sx,sy,sw,sh);
+    const col=hue(val);
+    c.save();c.shadowColor=col;c.shadowBlur=16;
+    c.font='900 52px "Playfair Display"';c.fillStyle=col;c.textAlign='center';c.fillText(val.toFixed(1),sx+sw/2,sy+74);
+    c.restore();
+    c.font='600 20px "Barlow Condensed"';c.fillStyle='#5c5a80';c.textAlign='center';
+    c.fillText(lbl,sx+sw/2,sy+100);
+  });
+
+  // HIGHLIGHTS
+  const hlY=ry+196;
+  div(hlY-16);
+  c.font='700 22px "Barlow Condensed"';c.fillStyle='#5c5a80';c.textAlign='left';
+  c.fillText('ROOM HIGHLIGHTS',pad,hlY+10);
+  const hl=[];
+  if(songStats[0])hl.push({icon:'🏆',label:'BEST SONG',val:`${songStats[0].song.song} — ${songStats[0].avg.toFixed(1)}`});
+  if(mostDivisive?.scores.length>1)hl.push({icon:'💥',label:'MOST DIVISIVE',val:`${mostDivisive.song.song} — σ ${mostDivisive.stddev.toFixed(1)}`});
+  if(mostGenerous)hl.push({icon:'💚',label:'MOST GENEROUS',val:`@${profileMap[mostGenerous.member.user_id]?.username||'—'} · ${mostGenerous.avg.toFixed(1)} avg`});
+  if(harshest&&harshest.member.user_id!==mostGenerous?.member.user_id)hl.push({icon:'🔥',label:'HARSHEST CRITIC',val:`@${profileMap[harshest.member.user_id]?.username||'—'} · ${harshest.avg.toFixed(1)} avg`});
+  hl.slice(0,3).forEach((h,i)=>{
+    const hy=hlY+30+i*66;
+    c.font='32px serif';c.textAlign='left';c.fillText(h.icon,pad,hy+36);
+    c.font='600 20px "Barlow Condensed"';c.fillStyle='#5c5a80';c.fillText(h.label,pad+48,hy+20);
+    c.font='700 28px "Barlow Condensed"';c.fillStyle='#c4c1f0';c.fillText(fit(h.val,W-pad*2-60,'700 28px "Barlow Condensed"'),pad+48,hy+46);
+  });
+
+  // Footer
+  div(H-86);
+  const fy=H-48;
+  const me=currentProfile;
+  const acol=me?.avatar_color||'#c9a84c';
+  const uname=me?.username||'anonymous';
+  c.fillStyle=acol;c.beginPath();c.arc(pad+18,fy,18,0,Math.PI*2);c.fill();
+  c.fillStyle='#07071a';c.font='800 13px "Barlow Condensed"';c.textAlign='center';c.fillText(avatarInitial(uname),pad+18,fy+5);
+  c.textAlign='left';c.fillStyle='#5c5a80';c.font='600 24px "Barlow Condensed"';c.fillText('@'+uname,pad+44,fy+8);
+  c.textAlign='right';c.font='900 28px "Playfair Display"';c.fillStyle='#a78bfa';c.fillText('SONGR',W-pad,fy+8);
+
+  // Export
+  const link=document.createElement('a');
+  link.download=`songr-session-${(currentRoom?.name||'room').toLowerCase().replace(/\s+/g,'-')}.png`;
+  link.href=canvas.toDataURL('image/png');
+  link.click();
 }
 
 async function rrSaveAll(){
