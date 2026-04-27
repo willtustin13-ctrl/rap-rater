@@ -1596,7 +1596,7 @@
 </div>
 
 <!-- LIST META MODAL -->
-<div class="modal-overlay" id="list-meta-modal" onclick="if(event.target===this)this.classList.remove('open')">
+<div class="modal-overlay" id="list-meta-modal" style="z-index:320" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal" style="padding-bottom:1.5rem">
     <div class="modal-handle"></div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem" id="list-meta-title-label">New List</div>
@@ -1610,7 +1610,7 @@
 </div>
 
 <!-- ADD TO LIST MODAL -->
-<div class="modal-overlay" id="add-list-item-modal" onclick="if(event.target===this)this.classList.remove('open')">
+<div class="modal-overlay" id="add-list-item-modal" style="z-index:320" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal" style="padding-bottom:1.25rem;max-height:80vh;display:flex;flex-direction:column">
     <div class="modal-handle"></div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem">Add Item</div>
@@ -3826,7 +3826,7 @@ function update(){
   document.getElementById('v-result').textContent=vD;document.getElementById('verses-display').textContent=vD;
   document.getElementById('verses-desc').textContent=vq===0?'':(DESCS.verses[Math.round(Math.max(1,V))]||'');
   [{numId:'p-val',dispId:'prod-display',descId:'prod-desc',cat:'prod',val:p},{numId:'c-val',dispId:'chorus-display',descId:'chorus-desc',cat:'chorus',val:noHook?'—':ch},{numId:'l-val',dispId:'lyrics-display',descId:'lyrics-desc',cat:'lyrics',val:l},{numId:'r-val',dispId:'replay-display',descId:'replay-desc',cat:'replay',val:r}].forEach(({numId,dispId,descId,cat,val})=>{
-    document.getElementById(numId).textContent=val;document.getElementById(dispId).textContent=val;document.getElementById(descId).textContent=(val===0||val==='—')?'':(DESCS[cat]?.[Math.round(val)]||'');
+    document.getElementById(numId).textContent=val;document.getElementById(dispId).textContent=val;document.getElementById(descId).textContent=(val===0||val==='—')?'':(DESCS[cat]?.[val]??DESCS[cat]?.[Math.round(val)]??'');
   });
   const sn=selectedSong?.song||'',an=selectedSong?.artist||'';
   document.getElementById('score-song-name').textContent=sn?(an?`${sn} — ${an}`:sn):'—';
@@ -4256,7 +4256,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null;
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null;
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -4480,64 +4480,117 @@ let rrAlbumTimer=null;
 async function rrFilterAlbums(){
   const q=(document.getElementById('rr-album-search').value||'').trim();
   const resEl=document.getElementById('rr-album-results');
-  if(!q){resEl.style.display='none';return;}
-  const qL=q.toLowerCase();
-  const albumMap={};
-  SONG_CATALOG.forEach(s=>{
-    if(!s.album)return;
-    if(!albumMap[s.album])albumMap[s.album]={album:s.album,artist:s.artist,count:0};
-    albumMap[s.album].count++;
-  });
-  const local=Object.values(albumMap).filter(a=>a.album.toLowerCase().includes(qL)||a.artist.toLowerCase().includes(qL));
-  rrAlbumList=[...local];
-  renderRRAlbumDropdown(resEl,rrAlbumList,q.length>=2);
+  if(!q){resEl.style.display='none';rrExpandedAlbumIdx=-1;rrExpandedTracks=[];return;}
+  resEl.innerHTML='<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">SEARCHING…</div>';
+  resEl.style.display='block';
+  rrExpandedAlbumIdx=-1;rrExpandedTracks=[];
   clearTimeout(rrAlbumTimer);
-  if(q.length<2)return;
   rrAlbumTimer=setTimeout(async()=>{
     try{
-      const res=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=album&limit=20&country=us');
-      const data=await res.json();
-      const seen=new Set(local.map(a=>(a.album+a.artist).toLowerCase()));
-      const fresh=(data.results||[]).filter(r=>r.collectionName&&r.artistName&&!seen.has((r.collectionName+r.artistName).toLowerCase())).map(r=>({album:r.collectionName,artist:r.artistName,collectionId:r.collectionId,count:r.trackCount||'?',artwork:r.artworkUrl100||''}));
-      rrAlbumList=[...local,...fresh];
-    }catch(e){}
-    renderRRAlbumDropdown(resEl,rrAlbumList,false);
+      const [r1,r2]=await Promise.all([
+        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=album&limit=30&country=us'),
+        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=album&attribute=artistTerm&limit=15&country=us')
+      ]);
+      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+      const seen=new Set();
+      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
+        if(!r.collectionName||!r.artistName)return false;
+        const key=(r.collectionName+r.artistName).toLowerCase();
+        if(seen.has(key))return false;seen.add(key);return true;
+      });
+      const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
+      const score=(title,artist)=>{const h=(title+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
+      rrAlbumList=all.map((r,i)=>({album:r.collectionName,artist:r.artistName,collectionId:r.collectionId,count:r.trackCount||0,artwork:r.artworkUrl100||'',_score:score(r.collectionName,r.artistName),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
+    }catch(e){rrAlbumList=[];}
+    renderRRAlbumDropdown(resEl,rrAlbumList);
   },350);
 }
 
-function renderRRAlbumDropdown(resEl,albums,loading){
-  if(!albums.length&&!loading){resEl.style.display='none';return;}
-  resEl.innerHTML=albums.slice(0,30).map((a,i)=>`<div onclick="rrAddAlbum(${i})" style="padding:.45rem .75rem;border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:.65rem" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background='transparent'">${a.artwork?`<img src="${itunesArtUrl(a.artwork,44)}" style="width:36px;height:36px;border-radius:3px;object-fit:cover;flex-shrink:0;background:var(--border2)" loading="lazy">`:`<div style="width:36px;height:36px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.album}</div><div style="font-size:.54rem;color:var(--muted)">${a.artist}${a.count!=='?'?' · '+a.count+' track'+(a.count!==1?'s':''):''}</div></div><div style="font-size:.58rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;white-space:nowrap">+ ALL</div></div>`).join('')+(loading?`<div style="padding:.35rem .85rem;font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING…</div>`:'');
+function renderRRAlbumDropdown(resEl,albums){
+  if(!albums.length){resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted)">No results</div>';resEl.style.display='block';return;}
+  resEl.innerHTML=albums.slice(0,25).map((a,i)=>{
+    const expanded=i===rrExpandedAlbumIdx;
+    let html=`<div onclick="rrToggleAlbumExpand(${i})" style="padding:.45rem .75rem;border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:.65rem;background:${expanded?'var(--surface)':'transparent'}" onmouseenter="this.style.background='var(--surface)'" onmouseleave="this.style.background='${expanded?'var(--surface)':'transparent'}'">
+      ${a.artwork?`<img src="${itunesArtUrl(a.artwork,44)}" style="width:36px;height:36px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:36px;height:36px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
+      <div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.album}</div><div style="font-size:.54rem;color:var(--muted)">${a.artist}${a.count?' · '+a.count+' tracks':''}</div></div>
+      <div style="font-size:.6rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em">${expanded?'▲':'▼'}</div>
+    </div>`;
+    if(expanded){
+      if(rrExpandedTracks.length){
+        const added=new Set([...roomSongs,...roomPendingSongs].map(s=>s.song+'||'+s.artist));
+        html+=`<div style="background:var(--surface);border-bottom:1px solid var(--border)">
+          <div onclick="rrAddAlbumAll(${i})" style="padding:.35rem .75rem;font-size:.55rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;cursor:pointer;text-align:right;border-bottom:1px solid var(--border)">+ ADD ALL TRACKS</div>
+          ${rrExpandedTracks.map((t,ti)=>{const inQ=added.has(t.song+'||'+t.artist);return`<div onclick="${inQ?'':`rrAddTrack(${ti})`}" style="padding:.38rem .75rem .38rem 1.5rem;border-bottom:1px solid var(--border);cursor:${inQ?'default':'pointer'};display:flex;align-items:center;gap:.5rem;opacity:${inQ?.45:1}" onmouseenter="if(!${inQ})this.style.background='var(--surface2)'" onmouseleave="this.style.background='transparent'">
+            <div style="font-size:.48rem;color:var(--muted);font-family:'DM Mono',monospace;width:1.2rem;text-align:right;flex-shrink:0">${ti+1}</div>
+            <div style="flex:1;min-width:0;font-size:.75rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.song}</div>
+            <div style="font-size:.6rem;color:${inQ?'var(--muted)':'var(--gold)'};font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em">${inQ?'✓':'+'}</div>
+          </div>`}).join('')}
+        </div>`;
+      } else {
+        html+=`<div style="background:var(--surface);border-bottom:1px solid var(--border);padding:.5rem .75rem;font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.08em">LOADING TRACKS…</div>`;
+      }
+    }
+    return html;
+  }).join('');
   resEl.style.display='block';
 }
 
-async function rrAddAlbum(idx){
+async function rrToggleAlbumExpand(idx){
+  const resEl=document.getElementById('rr-album-results');
+  if(rrExpandedAlbumIdx===idx){rrExpandedAlbumIdx=-1;rrExpandedTracks=[];renderRRAlbumDropdown(resEl,rrAlbumList);return;}
+  rrExpandedAlbumIdx=idx;rrExpandedTracks=[];
+  renderRRAlbumDropdown(resEl,rrAlbumList);
   const a=rrAlbumList[idx];
   if(!a)return;
-  document.getElementById('rr-album-search').value='';
-  document.getElementById('rr-album-results').style.display='none';
-  const isHost=currentRoom?.host_id===currentUser?.id;
-  const status=isHost?'approved':'pending';
-  const added=new Set([...roomSongs,...roomPendingSongs].map(s=>s.song+'||'+s.artist));
-  let songs;
   if(a.collectionId){
     try{
       const res=await fetch('https://itunes.apple.com/lookup?id='+a.collectionId+'&entity=song&limit=200');
       const data=await res.json();
-      songs=(data.results||[]).filter(r=>r.wrapperType==='track'&&r.trackName).map(r=>({song:r.trackName,artist:r.artistName,album:a.album,artwork:a.artwork||''}));
-    }catch(e){alert('Could not load album tracks.');return;}
-  } else {
-    songs=SONG_CATALOG.filter(s=>s.album===a.album).map(s=>({...s,artwork:a.artwork||''}));
+      rrExpandedTracks=(data.results||[]).filter(r=>r.wrapperType==='track'&&r.trackName).map(r=>({song:r.trackName,artist:r.artistName||a.artist,album:a.album,artwork:a.artwork}));
+    }catch(e){}
   }
-  const toAdd=songs.filter(s=>!added.has(s.song+'||'+s.artist));
+  renderRRAlbumDropdown(resEl,rrAlbumList);
+}
+
+async function rrAddTrack(trackIdx){
+  const a=rrAlbumList[rrExpandedAlbumIdx];
+  const t=rrExpandedTracks[trackIdx];
+  if(!a||!t)return;
+  const added=new Set([...roomSongs,...roomPendingSongs].map(s=>s.song+'||'+s.artist));
+  if(added.has(t.song+'||'+t.artist))return;
+  const isHost=currentRoom?.host_id===currentUser?.id;
+  const pos=roomSongs.length+roomPendingSongs.length;
+  const{data,error}=await db.from('rank_room_songs').insert({room_id:currentRoom.id,position:pos,song:t.song,artist:t.artist,album:t.album||'',status:isHost?'approved':'pending',suggested_by:currentUser.id}).select().single();
+  if(error){alert('Failed: '+error.message);return;}
+  if(isHost)roomSongs.push({...data,artwork:t.artwork||''});else roomPendingSongs.push({...data,artwork:t.artwork||''});
+  SFX.add();
+  rrRenderLobby();
+  renderRRAlbumDropdown(document.getElementById('rr-album-results'),rrAlbumList);
+}
+
+async function rrAddAlbumAll(idx){
+  const a=rrAlbumList[idx];
+  if(!a||!rrExpandedTracks.length)return;
+  const isHost=currentRoom?.host_id===currentUser?.id;
+  const status=isHost?'approved':'pending';
+  const added=new Set([...roomSongs,...roomPendingSongs].map(s=>s.song+'||'+s.artist));
+  const toAdd=rrExpandedTracks.filter(t=>!added.has(t.song+'||'+t.artist));
   if(!toAdd.length){alert('All songs from this album are already in the queue.');return;}
-  const rows=toAdd.map((s,i)=>({room_id:currentRoom.id,position:roomSongs.length+i,song:s.song,artist:s.artist,album:s.album||'',status,suggested_by:currentUser.id}));
+  const pos=roomSongs.length+roomPendingSongs.length;
+  const rows=toAdd.map((t,i)=>({room_id:currentRoom.id,position:pos+i,song:t.song,artist:t.artist,album:t.album||'',status,suggested_by:currentUser.id}));
   const{data,error}=await db.from('rank_room_songs').insert(rows).select();
   if(error){alert('Failed: '+error.message);return;}
   const withArt=(data||[]).map((d,i)=>({...d,artwork:toAdd[i]?.artwork||''}));
   if(isHost)roomSongs.push(...withArt);else roomPendingSongs.push(...withArt);
   SFX.add();
+  rrExpandedAlbumIdx=-1;rrExpandedTracks=[];
+  document.getElementById('rr-album-search').value='';
+  document.getElementById('rr-album-results').style.display='none';
   rrRenderLobby();
+}
+
+async function rrAddAlbum(idx){
+  rrToggleAlbumExpand(idx);
 }
 
 async function rrStart(){
