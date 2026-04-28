@@ -757,6 +757,14 @@
     .rr-rating-chat{position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--gold);z-index:30;display:flex;flex-direction:column;height:56vh;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
     .rr-rating-chat.open{transform:translateY(0)}
     .rr-react-bar{display:flex;justify-content:center;gap:.3rem;padding:.4rem .6rem;background:var(--bg);border-top:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+    @keyframes carnageFlicker{0%,100%{opacity:1}45%{opacity:.55}50%{opacity:.85}55%{opacity:.4}60%{opacity:1}}
+    @keyframes carnageIn{0%{background:rgba(180,10,10,0)}30%{background:rgba(180,10,10,.95)}100%{background:rgba(180,10,10,.95)}}
+    @keyframes carnageFadeOut{0%{opacity:1}100%{opacity:0;pointer-events:none}}
+    #carnage-card{position:fixed;inset:0;background:rgba(180,10,10,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2.5rem 2rem;gap:1.1rem;animation:carnageIn .4s ease-out forwards}
+    .carnage-title{font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff;animation:carnageFlicker 2s ease-in-out infinite;line-height:1;text-shadow:0 0 40px rgba(0,0,0,.6)}
+    .carnage-sub{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.85);line-height:1.7;max-width:280px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
+    .carnage-dismiss{display:none}
+    .carnage-pill{background:rgba(192,57,43,.18);border:1px solid rgba(192,57,43,.45);color:#c0392b;font-family:'Barlow Condensed',sans-serif;font-size:.46rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .45rem;border-radius:2px;flex-shrink:0}
     .rr-react-btn{background:transparent;border:1px solid var(--border2);border-radius:3px;padding:.28rem .5rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);cursor:pointer;transition:transform .1s,background .15s,color .15s;flex-shrink:0;-webkit-tap-highlight-color:transparent;white-space:nowrap}
     .rr-react-btn:active{transform:scale(.82);background:var(--surface2);color:var(--gold);border-color:var(--gold)}
     @keyframes rrFloatUp{0%{transform:translateY(0) scale(1);opacity:1}65%{transform:translateY(-150px) scale(1.1);opacity:.95}100%{transform:translateY(-250px) scale(.7);opacity:0}}
@@ -1423,20 +1431,29 @@
         </div><!-- /rr-interlude-rating-body -->
       </div>
       <div class="rr-react-bar">
-        <button class="rr-react-btn" onclick="rrReact('FIRE')">FIRE</button>
-        <button class="rr-react-btn" onclick="rrReact('HARD')">HARD</button>
-        <button class="rr-react-btn" onclick="rrReact('BARS')">BARS</button>
-        <button class="rr-react-btn" onclick="rrReact('GOAT')">GOAT</button>
+        <button class="rr-react-btn" onclick="rrReact('PORN')">PORN</button>
+        <button class="rr-react-btn" onclick="rrReact('FUCK')">FUCK</button>
+        <button class="rr-react-btn" onclick="rrReact('THIS SHIT ASS')">THIS SHIT ASS</button>
+        <button class="rr-react-btn" onclick="rrReact('OK')">OK</button>
         <button class="rr-react-btn" onclick="rrReact('MID')">MID</button>
         <button class="rr-react-btn" onclick="rrReact('TRASH')">TRASH</button>
         <button class="rr-react-btn" onclick="rrReact('SKIP')">SKIP</button>
-        <button class="rr-react-btn" onclick="rrReact('SLAPS')">SLAPS</button>
+        <button class="rr-react-btn" onclick="rrReact('DARTH MAUL HAS AURA')">DARTH MAUL HAS AURA</button>
       </div>
       <div id="rr-react-floats" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:20"></div>
+      <!-- Carnage secret reveal card -->
+      <div id="carnage-card" style="display:none">
+        <div style="font-size:2.4rem;line-height:1">🩸</div>
+        <div class="carnage-title">YOU ARE<br>CARNAGE</div>
+        <div class="carnage-sub">YOURE CARNAGE, BE AS SUSSY BECAUSE YOU ARE RED, SUSSSSS</div>
+      </div>
       <div class="rr-score-footer">
         <div style="flex:1;min-width:0">
           <div id="rr-final-score" class="rr-final-score" style="color:var(--muted)">—</div>
-          <div id="rr-verdict-txt" class="rr-verdict-txt">—</div>
+          <div style="display:flex;align-items:center;gap:.4rem">
+            <div id="rr-verdict-txt" class="rr-verdict-txt">—</div>
+            <div id="carnage-mode-badge" class="carnage-pill" style="display:none">🩸 CARNAGE</div>
+          </div>
         </div>
         <button id="rr-submit-btn" class="rr-submit-btn" onclick="rrSubmit()">Submit</button>
       </div>
@@ -4269,7 +4286,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null;
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, isCarnage=false, carnageUserId=null;
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -4599,6 +4616,13 @@ async function rrAddAlbum(idx){
 
 async function rrStart(){
   if(!roomSongs.length){alert('Add at least one song first.');return;}
+  const validMembers=roomMembers.filter(m=>m.user_id);
+  if(validMembers.length){
+    const pick=validMembers[Math.floor(Math.random()*validMembers.length)];
+    carnageUserId=pick.user_id;
+    if(pick.user_id===currentUser?.id)isCarnage=true;
+    roomChannel.send({type:'broadcast',event:'carnage_assign',payload:{user_id:pick.user_id}});
+  }
   const{error}=await db.from('rank_rooms').update({status:'rating',current_song_idx:0}).eq('id',currentRoom.id);
   if(error)alert('Failed: '+error.message);
 }
@@ -4654,6 +4678,25 @@ function rrRenderRating(){
   const fc=document.getElementById('rr-force-confirm');if(fc)fc.style.display='none';
   rrUpdate();
   rrRefreshProgress();
+  const carnageBadge=document.getElementById('carnage-mode-badge');
+  const carnageCardEl=document.getElementById('carnage-card');
+  if(isCarnage){
+    if(carnageBadge)carnageBadge.style.display='inline-flex';
+    if(carnageCardEl){
+      carnageCardEl.style.display='flex';
+      carnageCardEl.style.animation='carnageIn .4s ease-out forwards';
+      carnageCardEl.style.opacity='1';
+      setTimeout(()=>{
+        if(!carnageCardEl)return;
+        carnageCardEl.style.transition='opacity .6s ease-out';
+        carnageCardEl.style.opacity='0';
+        setTimeout(()=>{carnageCardEl.style.display='none';carnageCardEl.style.opacity='1';carnageCardEl.style.transition='';},650);
+      },7000);
+    }
+  } else {
+    if(carnageBadge)carnageBadge.style.display='none';
+    if(carnageCardEl)carnageCardEl.style.display='none';
+  }
 }
 
 function rrSelectPacing(btn){
@@ -5067,10 +5110,28 @@ async function rrRenderEnded(){
   const hue=n=>n>=9?'var(--green)':n>=7?'var(--gold)':n>=5?'var(--chorus)':'var(--muted2)';
   const sec=t=>`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:1.5rem 0 .5rem">${t}</div>`;
 
+  // Carnage reveal
+  const carnageMember=carnageUserId?roomMembers.find(m=>m.user_id===carnageUserId):null;
+  const carnageName=carnageMember?.profiles?.username||'Unknown';
+  const carnageRatings=carnageUserId?scoredRatings.filter(r=>r.user_id===carnageUserId):[];
+  const carnageSus=carnageRatings.length?carnageRatings.reduce((sum,r)=>{
+    const group=songRatingMap[r.song_id]||[];
+    const groupAvg=group.length?group.reduce((a,b)=>a+parseFloat(b.final_score),0)/group.length:parseFloat(r.final_score);
+    return sum+Math.abs(parseFloat(r.final_score)-groupAvg);
+  },0)/carnageRatings.length:0;
+  const susVerdict=carnageSus>2.5?'MAXIMUM SUS 🩸':carnageSus>1.5?'VERY SUS':carnageSus>0.8?'SOMEWHAT SUS':'BLENDED IN';
+
   let html=`<div style="text-align:center;margin-bottom:1.25rem">
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">Session Complete</div>
     <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">${currentRoom.name||'Rank Room'} · ${songStats.length} song${songStats.length!==1?'s':''} rated${roomSongs.length>songStats.length?` · ${roomSongs.length-songStats.length} interlude${roomSongs.length-songStats.length!==1?'s':''}`:''} · ${roomMembers.length} member${roomMembers.length!==1?'s':''}</div>
-  </div>`;
+  </div>
+  ${carnageUserId?`<div style="margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);border-radius:4px;text-align:center">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.48rem;color:#c0392b;letter-spacing:.2em;font-weight:900;text-transform:uppercase;margin-bottom:.5rem">🩸 CARNAGE REVEALED</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#fff">${carnageName}</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:#c0392b;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem">${susVerdict}</div>
+    <div style="font-size:.54rem;color:var(--muted);margin-top:.3rem">avg deviance from group: ${carnageSus.toFixed(2)} pts</div>
+  </div>`:''}
+`;
 
   // ── Final Rankings (first & most prominent) ──
   html+=sec('Final Rankings');
@@ -5352,6 +5413,12 @@ function rrSubscribe(roomId){
     .on('broadcast',{event:'reaction'},({payload})=>{
       if(currentRoom?.status==='rating')rrSpawnReactFloat(payload.emoji,payload.username||'?');
     })
+    .on('broadcast',{event:'carnage_assign'},({payload})=>{
+      if(!carnageUserId){
+        carnageUserId=payload.user_id;
+        if(payload.user_id===currentUser?.id)isCarnage=true;
+      }
+    })
     .subscribe();
 }
 
@@ -5383,7 +5450,7 @@ function checkRoomInvite(){
 async function rrLeave(){
   if(roomChannel){db.removeChannel(roomChannel);roomChannel=null;}
   localStorage.removeItem('rr_room_id');
-  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;
+  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;isCarnage=false;carnageUserId=null;
   document.getElementById('rr-join-input').value='';
   rrState('home');
 }
