@@ -2896,26 +2896,18 @@ function aliSearch(){
   resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.52rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">SEARCHING…</div>';
   resEl.style.display='block';
   aliTimer=setTimeout(async()=>{
-    const entity=aliType==='albums'?'album':'song';
     try{
-      const [r1,r2]=await Promise.all([
-        fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=${entity}&limit=30&country=us`),
-        fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=${entity}&attribute=artistTerm&limit=15&country=us`)
-      ]);
-      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
-      const seen=new Set();
-      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
-        const k=aliType==='albums'?(r.collectionName+r.artistName):(r.trackName+r.artistName);
-        const key=k.toLowerCase();
-        if(seen.has(key))return false;seen.add(key);return true;
-      });
+      const deezerType=aliType==='albums'?'album':'track';
+      const res=await fetch('https://api.deezer.com/search/'+deezerType+'?q='+encodeURIComponent(q)+'&limit=25');
+      const d=await res.json();
+      const all=(d.data||[]).filter(r=>r.title&&r.artist?.name);
       resEl.innerHTML=all.slice(0,25).map((r,i)=>{
-        const title=aliType==='albums'?r.collectionName:r.trackName;
-        const sub=r.artistName;
-        const art=r.artworkUrl100||'';
+        const title=r.title;
+        const sub=r.artist?.name||'';
+        const art=aliType==='albums'?(r.cover_medium||''):(r.album?.cover_medium||'');
         if(!title)return'';
         return`<div style="display:flex;align-items:center;gap:.65rem;padding:.55rem .85rem;border-bottom:1px solid var(--border);cursor:pointer" onclick="addSearchItem(${i})">
-          ${art?`<img src="${itunesArtUrl(art,44)}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
+          ${art?`<img src="${art}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
           <div style="flex:1;min-width:0">
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
             <div style="font-size:.58rem;color:var(--muted)">${sub}</div>
@@ -2931,9 +2923,9 @@ async function addSearchItem(i){
   const resEl=document.getElementById('ali-results');
   const r=(resEl._results||[])[i];
   if(!r)return;
-  const title=aliType==='albums'?r.collectionName:r.trackName;
-  const sub=r.artistName||'';
-  const art=r.artworkUrl100||'';
+  const title=r.title;
+  const sub=r.artist?.name||'';
+  const art=(aliType==='albums'?r.cover_medium:r.album?.cover_medium)||'';
   await doAddListItem({title,subtitle:sub,artwork_url:art,note:''});
 }
 
@@ -3993,9 +3985,9 @@ async function resolveArtwork(el){
   try{
     const [artist,album]=key.split('|||');
     const term=encodeURIComponent(artist+(album?' '+album:''));
-    const res=await fetch('https://itunes.apple.com/search?term='+term+'&entity=album&limit=1&country=us');
+    const res=await fetch('https://api.deezer.com/search/album?q='+term+'&limit=1');
     const data=await res.json();
-    artworkCache[key]=data.results?.[0]?.artworkUrl100||'';
+    artworkCache[key]=data.data?.[0]?.cover_medium||'';
   }catch(e){artworkCache[key]='';}
   artworkFetching.delete(key);
   if(artworkCache[key]&&el.isConnected){
@@ -4021,20 +4013,17 @@ async function filterSongPicker(){
   if(q.length<2)return;
   songPickerTimer=setTimeout(async()=>{
     try{
-      const [r1,r2]=await Promise.all([
-        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&limit=50&country=us'),
-        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&attribute=artistTerm&limit=25&country=us')
-      ]);
-      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+      const res=await fetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=50');
+      const d=await res.json();
       const seen=new Set();
-      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
-        if(!r.trackName||!r.artistName)return false;
-        const key=(r.trackName+r.artistName).toLowerCase();
+      const all=(d.data||[]).filter(r=>{
+        if(!r.title||!r.artist?.name)return false;
+        const key=(r.title+r.artist.name).toLowerCase();
         if(seen.has(key))return false;seen.add(key);return true;
       });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(song,artist)=>{const h=(song+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      songPickerMatches=all.map((r,i)=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
+      songPickerMatches=all.map((r,i)=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',artwork:r.album?.cover_medium||'',preview:r.preview||'',_score:score(r.title,r.artist.name),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
     }catch(e){}
     renderSongDropdown(resultsEl,songPickerMatches,false);
   },350);
@@ -4062,7 +4051,7 @@ function selectSong(idx){
     if(artworkCache[key]){selectedSong.artwork=artworkCache[key];showArt(selectedSong.artwork);}
     else if(!artworkFetching.has(key)){
       artworkFetching.add(key);
-      fetch('https://itunes.apple.com/search?term='+encodeURIComponent(selectedSong.artist+' '+(selectedSong.album||''))+'&entity=album&limit=1&country=us').then(r=>r.json()).then(d=>{artworkCache[key]=d.results?.[0]?.artworkUrl100||'';artworkFetching.delete(key);if(artworkCache[key]){selectedSong.artwork=artworkCache[key];showArt(selectedSong.artwork);}}).catch(()=>{artworkCache[key]='';artworkFetching.delete(key);});
+      fetch('https://api.deezer.com/search/album?q='+encodeURIComponent(selectedSong.artist+' '+(selectedSong.album||''))+'&limit=1').then(r=>r.json()).then(d=>{artworkCache[key]=d.data?.[0]?.cover_medium||'';artworkFetching.delete(key);if(artworkCache[key]){selectedSong.artwork=artworkCache[key];showArt(selectedSong.artwork);}}).catch(()=>{artworkCache[key]='';artworkFetching.delete(key);});
     }
   }
   document.getElementById('song-picker-selected').style.display='flex';
@@ -4200,10 +4189,10 @@ async function playFeedSong(btn){
   if(feedPreviewCache[key]){playPreview(feedPreviewCache[key],song,artist,btn);return;}
   btn.style.opacity='.45';btn.disabled=true;
   try{
-    const res=await fetch('https://itunes.apple.com/search?term='+encodeURIComponent(artist+' '+song)+'&entity=song&limit=5&country=us');
+    const res=await fetch('https://api.deezer.com/search/track?q='+encodeURIComponent(artist+' '+song)+'&limit=5');
     const data=await res.json();
-    const match=(data.results||[]).find(r=>r.previewUrl&&r.trackName&&r.artistName);
-    feedPreviewCache[key]=match?.previewUrl||null;
+    const match=(data.data||[]).find(r=>r.preview&&r.title&&r.artist?.name);
+    feedPreviewCache[key]=match?.preview||null;
   }catch(e){feedPreviewCache[key]=null;}
   btn.style.opacity='';btn.disabled=false;
   if(feedPreviewCache[key])playPreview(feedPreviewCache[key],song,artist,btn);
@@ -4401,20 +4390,17 @@ async function rrFilterSongs(){
   if(q.length<2)return;
   rrSongTimer=setTimeout(async()=>{
     try{
-      const [r1,r2]=await Promise.all([
-        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&limit=50&country=us'),
-        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=song&attribute=artistTerm&limit=25&country=us')
-      ]);
-      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+      const res=await fetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=50');
+      const d=await res.json();
       const seen=new Set();
-      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
-        if(!r.trackName||!r.artistName)return false;
-        const key=(r.trackName+r.artistName).toLowerCase();
+      const all=(d.data||[]).filter(r=>{
+        if(!r.title||!r.artist?.name)return false;
+        const key=(r.title+r.artist.name).toLowerCase();
         if(seen.has(key))return false;seen.add(key);return true;
       });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(song,artist)=>{const h=(song+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      rrSongMatches=all.filter(r=>!added.has(r.trackName+'||'+r.artistName)).map((r,i)=>({song:r.trackName,artist:r.artistName,album:r.collectionName||'',artwork:r.artworkUrl100||'',preview:r.previewUrl||'',_score:score(r.trackName,r.artistName),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
+      rrSongMatches=all.filter(r=>!added.has(r.title+'||'+r.artist.name)).map((r,i)=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',artwork:r.album?.cover_medium||'',preview:r.preview||'',_score:score(r.title,r.artist.name),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
     }catch(e){}
     renderRRSongDropdown(resEl,rrSongMatches,false);
   },350);
@@ -4487,20 +4473,17 @@ async function rrFilterAlbums(){
   clearTimeout(rrAlbumTimer);
   rrAlbumTimer=setTimeout(async()=>{
     try{
-      const [r1,r2]=await Promise.all([
-        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=album&limit=30&country=us'),
-        fetch('https://itunes.apple.com/search?term='+encodeURIComponent(q)+'&entity=album&attribute=artistTerm&limit=15&country=us')
-      ]);
-      const [d1,d2]=await Promise.all([r1.json(),r2.json()]);
+      const res=await fetch('https://api.deezer.com/search/album?q='+encodeURIComponent(q)+'&limit=25');
+      const d=await res.json();
       const seen=new Set();
-      const all=[...(d1.results||[]),...(d2.results||[])].filter(r=>{
-        if(!r.collectionName||!r.artistName)return false;
-        const key=(r.collectionName+r.artistName).toLowerCase();
+      const all=(d.data||[]).filter(r=>{
+        if(!r.title||!r.artist?.name)return false;
+        const key=(r.title+r.artist.name).toLowerCase();
         if(seen.has(key))return false;seen.add(key);return true;
       });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(title,artist)=>{const h=(title+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      rrAlbumList=all.map((r,i)=>({album:r.collectionName,artist:r.artistName,collectionId:r.collectionId,count:r.trackCount||0,artwork:r.artworkUrl100||'',_score:score(r.collectionName,r.artistName),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
+      rrAlbumList=all.map((r,i)=>({album:r.title,artist:r.artist.name,deezerId:r.id,count:r.nb_tracks||0,artwork:r.cover_medium||'',_score:score(r.title,r.artist.name),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
     }catch(e){rrAlbumList=[];}
     renderRRAlbumDropdown(resEl,rrAlbumList);
   },350);
@@ -4542,11 +4525,11 @@ async function rrToggleAlbumExpand(idx){
   renderRRAlbumDropdown(resEl,rrAlbumList);
   const a=rrAlbumList[idx];
   if(!a)return;
-  if(a.collectionId){
+  if(a.deezerId){
     try{
-      const res=await fetch('https://itunes.apple.com/lookup?id='+a.collectionId+'&entity=song&limit=200');
+      const res=await fetch('https://api.deezer.com/album/'+a.deezerId+'/tracks?limit=200');
       const data=await res.json();
-      rrExpandedTracks=(data.results||[]).filter(r=>r.wrapperType==='track'&&r.trackName).map(r=>({song:r.trackName,artist:r.artistName||a.artist,album:a.album,artwork:a.artwork}));
+      rrExpandedTracks=(data.data||[]).filter(r=>r.title).map(r=>({song:r.title,artist:r.artist?.name||a.artist,album:a.album,artwork:a.artwork,preview:r.preview||''}));
     }catch(e){}
   }
   renderRRAlbumDropdown(resEl,rrAlbumList);
