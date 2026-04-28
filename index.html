@@ -2898,8 +2898,7 @@ function aliSearch(){
   aliTimer=setTimeout(async()=>{
     try{
       const deezerType=aliType==='albums'?'album':'track';
-      const res=await fetch('https://api.deezer.com/search/'+deezerType+'?q='+encodeURIComponent(q)+'&limit=25');
-      const d=await res.json();
+      const d=await deezerFetch('https://api.deezer.com/search/'+deezerType+'?q='+encodeURIComponent(q)+'&limit=25');
       const all=(d.data||[]).filter(r=>r.title&&r.artist?.name);
       resEl.innerHTML=all.slice(0,25).map((r,i)=>{
         const title=r.title;
@@ -3964,6 +3963,16 @@ async function confirmSave(){
 }
 let songPickerMatches=[],songPickerTimer=null;
 function itunesArtUrl(url,size=50){return url?(url.replace(/\d+x\d+bb/,size+'x'+size+'bb')):'';}
+function deezerFetch(url){
+  return new Promise((resolve,reject)=>{
+    const fn='_dz'+(Math.random()*1e9|0);
+    const s=document.createElement('script');
+    s.src=url+(url.includes('?')?'&':'?')+'output=jsonp&callback='+fn;
+    window[fn]=(data)=>{delete window[fn];s.remove();resolve(data);};
+    s.onerror=()=>{delete window[fn];s.remove();reject(new Error('deezer fetch failed'));};
+    document.head.appendChild(s);
+  });
+}
 
 const artworkCache={};
 const artworkFetching=new Set();
@@ -3985,8 +3994,7 @@ async function resolveArtwork(el){
   try{
     const [artist,album]=key.split('|||');
     const term=encodeURIComponent(artist+(album?' '+album:''));
-    const res=await fetch('https://api.deezer.com/search/album?q='+term+'&limit=1');
-    const data=await res.json();
+    const data=await deezerFetch('https://api.deezer.com/search/album?q='+term+'&limit=1');
     artworkCache[key]=data.data?.[0]?.cover_medium||'';
   }catch(e){artworkCache[key]='';}
   artworkFetching.delete(key);
@@ -4013,8 +4021,7 @@ async function filterSongPicker(){
   if(q.length<2)return;
   songPickerTimer=setTimeout(async()=>{
     try{
-      const res=await fetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=50');
-      const d=await res.json();
+      const d=await deezerFetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=50');
       const seen=new Set();
       const all=(d.data||[]).filter(r=>{
         if(!r.title||!r.artist?.name)return false;
@@ -4051,7 +4058,7 @@ function selectSong(idx){
     if(artworkCache[key]){selectedSong.artwork=artworkCache[key];showArt(selectedSong.artwork);}
     else if(!artworkFetching.has(key)){
       artworkFetching.add(key);
-      fetch('https://api.deezer.com/search/album?q='+encodeURIComponent(selectedSong.artist+' '+(selectedSong.album||''))+'&limit=1').then(r=>r.json()).then(d=>{artworkCache[key]=d.data?.[0]?.cover_medium||'';artworkFetching.delete(key);if(artworkCache[key]){selectedSong.artwork=artworkCache[key];showArt(selectedSong.artwork);}}).catch(()=>{artworkCache[key]='';artworkFetching.delete(key);});
+      deezerFetch('https://api.deezer.com/search/album?q='+encodeURIComponent(selectedSong.artist+' '+(selectedSong.album||''))+'&limit=1').then(d=>{artworkCache[key]=d.data?.[0]?.cover_medium||'';artworkFetching.delete(key);if(artworkCache[key]){selectedSong.artwork=artworkCache[key];showArt(selectedSong.artwork);}}).catch(()=>{artworkCache[key]='';artworkFetching.delete(key);});
     }
   }
   document.getElementById('song-picker-selected').style.display='flex';
@@ -4189,8 +4196,7 @@ async function playFeedSong(btn){
   if(feedPreviewCache[key]){playPreview(feedPreviewCache[key],song,artist,btn);return;}
   btn.style.opacity='.45';btn.disabled=true;
   try{
-    const res=await fetch('https://api.deezer.com/search/track?q='+encodeURIComponent(artist+' '+song)+'&limit=5');
-    const data=await res.json();
+    const data=await deezerFetch('https://api.deezer.com/search/track?q='+encodeURIComponent(artist+' '+song)+'&limit=5');
     const match=(data.data||[]).find(r=>r.preview&&r.title&&r.artist?.name);
     feedPreviewCache[key]=match?.preview||null;
   }catch(e){feedPreviewCache[key]=null;}
@@ -4390,8 +4396,7 @@ async function rrFilterSongs(){
   if(q.length<2)return;
   rrSongTimer=setTimeout(async()=>{
     try{
-      const res=await fetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=50');
-      const d=await res.json();
+      const d=await deezerFetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=50');
       const seen=new Set();
       const all=(d.data||[]).filter(r=>{
         if(!r.title||!r.artist?.name)return false;
@@ -4473,8 +4478,7 @@ async function rrFilterAlbums(){
   clearTimeout(rrAlbumTimer);
   rrAlbumTimer=setTimeout(async()=>{
     try{
-      const res=await fetch('https://api.deezer.com/search/album?q='+encodeURIComponent(q)+'&limit=25');
-      const d=await res.json();
+      const d=await deezerFetch('https://api.deezer.com/search/album?q='+encodeURIComponent(q)+'&limit=25');
       const seen=new Set();
       const all=(d.data||[]).filter(r=>{
         if(!r.title||!r.artist?.name)return false;
@@ -4527,8 +4531,7 @@ async function rrToggleAlbumExpand(idx){
   if(!a)return;
   if(a.deezerId){
     try{
-      const res=await fetch('https://api.deezer.com/album/'+a.deezerId+'/tracks?limit=200');
-      const data=await res.json();
+      const data=await deezerFetch('https://api.deezer.com/album/'+a.deezerId+'/tracks?limit=200');
       rrExpandedTracks=(data.data||[]).filter(r=>r.title).map(r=>({song:r.title,artist:r.artist?.name||a.artist,album:a.album,artwork:a.artwork,preview:r.preview||''}));
     }catch(e){}
   }
