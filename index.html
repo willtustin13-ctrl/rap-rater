@@ -764,7 +764,16 @@
     .carnage-title{font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff;animation:carnageFlicker 2s ease-in-out infinite;line-height:1;text-shadow:0 0 40px rgba(0,0,0,.6)}
     .carnage-sub{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.85);line-height:1.7;max-width:280px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
     .carnage-dismiss{display:none}
-    .carnage-pill{background:rgba(192,57,43,.18);border:1px solid rgba(192,57,43,.45);color:#c0392b;font-family:'Barlow Condensed',sans-serif;font-size:.46rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .45rem;border-radius:2px;flex-shrink:0}
+    .carnage-pill{background:rgba(192,57,43,.18);border:1px solid rgba(192,57,43,.45);color:#c0392b;font-family:'Barlow Condensed',sans-serif;font-size:.46rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .45rem;border-radius:2px;flex-shrink:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .carnage-pill.used{opacity:.45;cursor:default}
+    #sus-picker-sheet{position:fixed;inset:0;z-index:9998;display:none;flex-direction:column;justify-content:flex-end}
+    #sus-picker-sheet.open{display:flex}
+    .sus-picker-bg{position:absolute;inset:0;background:rgba(0,0,0,.65)}
+    .sus-picker-body{position:relative;background:var(--surface);border-top:2px solid #c0392b;padding:1.25rem 1.25rem calc(env(safe-area-inset-bottom,1rem) + 1.25rem);z-index:1}
+    .sus-member-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid var(--border)}
+    .sus-btn{background:#c0392b;border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .75rem;border-radius:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    @keyframes sussedIn{0%{opacity:0;transform:scale(1.08)}30%{opacity:1;transform:scale(1)}}
+    #sus-overlay{position:fixed;inset:0;z-index:9999;background:rgba(180,10,10,.95);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;gap:.75rem;animation:sussedIn .3s ease-out}
     .rr-react-btn{background:transparent;border:1px solid var(--border2);border-radius:3px;padding:.28rem .5rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);cursor:pointer;transition:transform .1s,background .15s,color .15s;flex-shrink:0;-webkit-tap-highlight-color:transparent;white-space:nowrap}
     .rr-react-btn:active{transform:scale(.82);background:var(--surface2);color:var(--gold);border-color:var(--gold)}
     @keyframes rrFloatUp{0%{transform:translateY(0) scale(1);opacity:1}65%{transform:translateY(-150px) scale(1.1);opacity:.95}100%{transform:translateY(-250px) scale(.7);opacity:0}}
@@ -1452,7 +1461,7 @@
           <div id="rr-final-score" class="rr-final-score" style="color:var(--muted)">—</div>
           <div style="display:flex;align-items:center;gap:.4rem">
             <div id="rr-verdict-txt" class="rr-verdict-txt">—</div>
-            <div id="carnage-mode-badge" class="carnage-pill" style="display:none">🩸 CARNAGE</div>
+            <div id="carnage-mode-badge" class="carnage-pill" style="display:none" onclick="rrOpenSusPicker()">🩸 SUS SOMEONE</div>
           </div>
         </div>
         <button id="rr-submit-btn" class="rr-submit-btn" onclick="rrSubmit()">Submit</button>
@@ -1529,6 +1538,23 @@
         <button class="rr-btn rr-btn-secondary" onclick="shareRRSession()" style="display:flex;align-items:center;justify-content:center;gap:.5rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share Session Card</button>
         <button class="rr-btn rr-btn-secondary" onclick="rrLeave()">Back to Home</button>
       </div>
+    </div>
+
+    <!-- CARNAGE SUS PICKER -->
+    <div id="sus-picker-sheet">
+      <div class="sus-picker-bg" onclick="document.getElementById('sus-picker-sheet').classList.remove('open')"></div>
+      <div class="sus-picker-body">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#c0392b;margin-bottom:.15rem">SUS SOMEONE 🩸</div>
+        <div style="font-size:.54rem;color:var(--muted);margin-bottom:.85rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em">One target per round. They'll know it was you.</div>
+        <div id="sus-member-list"></div>
+      </div>
+    </div>
+
+    <!-- SUSSED OVERLAY (shown to target) -->
+    <div id="sus-overlay">
+      <div style="font-size:2.8rem;line-height:1">🩸</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff;line-height:1.1">YOU HAVE BEEN<br>SUSSED</div>
+      <div id="sus-overlay-by" style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-top:.25rem">BY CARNAGE</div>
     </div>
 
     <!-- SCORE DETAIL MODAL -->
@@ -1707,6 +1733,7 @@
     <div class="folder-tab-content" id="mtab-content-new">
       <input type="text" class="modal-input" id="new-folder-input" placeholder="Album name...">
     </div>
+    <div id="save-modal-err" style="color:#c0392b;font-size:.6rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;margin-top:.5rem;min-height:1em"></div>
     <div class="modal-btns">
       <button class="modal-btn modal-btn-confirm" onclick="confirmSave()">Save</button>
       <button class="modal-btn modal-btn-cancel" onclick="closeSaveModal()">Cancel</button>
@@ -2992,13 +3019,17 @@ function renderProfileFolders(ratings, container){
 
   container.innerHTML='';
 
-  Object.keys(artists).sort().forEach(artistName=>{
+  const artistEntries=Object.keys(artists).map(artistName=>{
+    const albums=artists[artistName];
+    const albumScores=Object.values(albums).map(songs=>albumScore(songs)).filter(v=>v>0);
+    const artistAvg=albumScores.length?albumScores.reduce((a,b)=>a+b,0)/albumScores.length:0;
+    const totalSongs=Object.values(albums).flat().length;
+    return{artistName,albums,artistAvg,totalSongs};
+  }).sort((a,b)=>b.artistAvg-a.artistAvg);
+
+  artistEntries.forEach(({artistName,albums,artistAvg,totalSongs})=>{
     const artistKey = 'artist:'+artistName;
     const isArtistOpen = profileOpenFolders.has(artistKey);
-    const albums = artists[artistName];
-    const allSongs = Object.values(albums).flat();
-    const artistAvg = (allSongs.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/allSongs.length);
-    const totalSongs = allSongs.length;
 
     const artistBlock = document.createElement('div');
     artistBlock.className = 'pf-folder-block';
@@ -3956,16 +3987,15 @@ function openSaveModal(){
 
   populateAlbumList();
 
-  // auto-select album from catalog if it already exists as a folder
-  const existingFolder=document.querySelector(`#folder-list .folder-option`);
-  if(existingFolder){
-    document.querySelectorAll('#folder-list .folder-option').forEach(opt=>{
-      if(opt.querySelector('span')?.textContent===selectedSong.album){
-        opt.click();
-      }
-    });
-  }
+  // auto-select matching album without firing click events
+  document.querySelectorAll('#folder-list .folder-option').forEach(opt=>{
+    if(opt.querySelector('span')?.textContent===selectedSong.album){
+      opt.classList.add('selected');
+      selectedFolder=selectedSong.album;
+    }
+  });
 
+  document.getElementById('save-modal-err').textContent='';
   document.getElementById('save-modal').classList.add('open');
 }
 
@@ -3992,8 +4022,10 @@ async function confirmSave(){
     const{final}=calcGenericFinal(scores,preset.weights,preset.cats);
     Object.assign(insertData,{flow_peak:scores[0],flow_score:scores[0],verse_quality:scores[1],verse_score:scores[1],production:scores[2],chorus:scores[3],lyrics:scores[4],replay:scores[5],pacing_penalty:0,final_score:isInterlude?null:final,verdict:isInterlude?'Interlude':verdict});
   }
+  const errEl=document.getElementById('save-modal-err');
+  if(errEl)errEl.textContent='';
   const{error}=await db.from('ratings').insert(insertData);
-  if(error)alert('Save failed: '+error.message);
+  if(error){if(errEl)errEl.textContent='Save failed: '+error.message;}
   else{closeSaveModal();resetAll();loadFeed();switchTab('feed');}
 }
 let songPickerMatches=[],songPickerTimer=null;
@@ -4286,7 +4318,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, isCarnage=false, carnageUserId=null;
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, isCarnage=false, carnageUserId=null, rrSusUsed=false;
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -4678,10 +4710,11 @@ function rrRenderRating(){
   const fc=document.getElementById('rr-force-confirm');if(fc)fc.style.display='none';
   rrUpdate();
   rrRefreshProgress();
+  rrSusUsed=false;
   const carnageBadge=document.getElementById('carnage-mode-badge');
   const carnageCardEl=document.getElementById('carnage-card');
   if(isCarnage){
-    if(carnageBadge)carnageBadge.style.display='inline-flex';
+    if(carnageBadge){carnageBadge.style.display='inline-flex';carnageBadge.textContent='🩸 SUS SOMEONE';carnageBadge.classList.remove('used');}
     if(carnageCardEl){
       carnageCardEl.style.display='flex';
       carnageCardEl.style.animation='carnageIn .4s ease-out forwards';
@@ -4778,6 +4811,41 @@ async function rrRefreshProgress(){
       await db.from('rank_rooms').update({status:'reveal'}).eq('id',currentRoom.id);
     }
   }
+}
+
+function rrOpenSusPicker(){
+  if(!isCarnage||rrSusUsed||currentRoom?.status!=='rating')return;
+  const others=roomMembers.filter(m=>m.user_id&&m.user_id!==currentUser?.id);
+  const list=document.getElementById('sus-member-list');
+  list.innerHTML=others.length?others.map(m=>{
+    const name=m.profiles?.username||'Unknown';
+    return`<div class="sus-member-row">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${name}</div>
+      <button class="sus-btn" onclick="rrSusPlayer('${m.user_id}','${name}')">SUS 🩸</button>
+    </div>`;
+  }).join(''):`<div style="font-size:.6rem;color:var(--muted);padding:.5rem 0">No other players in the room.</div>`;
+  document.getElementById('sus-picker-sheet').classList.add('open');
+}
+function rrSusPlayer(userId,username){
+  if(!roomChannel||rrSusUsed)return;
+  rrSusUsed=true;
+  roomChannel.send({type:'broadcast',event:'sus_hit',payload:{target_user_id:userId,carnage_name:currentProfile?.username||'CARNAGE'}});
+  document.getElementById('sus-picker-sheet').classList.remove('open');
+  const badge=document.getElementById('carnage-mode-badge');
+  if(badge){badge.textContent='🩸 SUSSED ✓';badge.classList.add('used');}
+}
+function rrShowSussed(carnageName){
+  const overlay=document.getElementById('sus-overlay');
+  if(!overlay)return;
+  const byEl=document.getElementById('sus-overlay-by');
+  if(byEl)byEl.textContent='BY '+(carnageName||'CARNAGE').toUpperCase();
+  overlay.style.display='flex';
+  overlay.style.opacity='1';
+  setTimeout(()=>{
+    overlay.style.transition='opacity .6s ease-out';
+    overlay.style.opacity='0';
+    setTimeout(()=>{overlay.style.display='none';overlay.style.opacity='1';overlay.style.transition='';},650);
+  },3500);
 }
 
 const rrReactCooldown={};
@@ -5354,10 +5422,10 @@ async function rrSaveAll(){
   if(error||!myRatings?.length){btn.textContent='Nothing to save';return;}
   const rows=myRatings.map(r=>{
     const s=roomSongs.find(x=>x.id===r.song_id);
-    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,pacing_penalty:r.pacing_penalty,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false};
+    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',genre:'rap',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,pacing_penalty:r.pacing_penalty,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false,comment:r.comment||null};
   });
   const{error:e2}=await db.from('ratings').insert(rows);
-  if(e2){alert('Save failed: '+e2.message);btn.textContent='Retry';btn.disabled=false;return;}
+  if(e2){btn.textContent='Save failed: '+e2.message;btn.style.color='#c0392b';btn.disabled=false;return;}
   btn.textContent='Saved ✓';loadFeed();
 }
 
@@ -5418,6 +5486,9 @@ function rrSubscribe(roomId){
         carnageUserId=payload.user_id;
         if(payload.user_id===currentUser?.id)isCarnage=true;
       }
+    })
+    .on('broadcast',{event:'sus_hit'},({payload})=>{
+      if(payload.target_user_id===currentUser?.id)rrShowSussed(payload.carnage_name);
     })
     .subscribe();
 }
