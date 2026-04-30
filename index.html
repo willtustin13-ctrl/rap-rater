@@ -745,6 +745,12 @@
     .rr-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--text);cursor:pointer;border:2px solid var(--bg)}
     .rr-score-footer{padding:.7rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0}
     .rr-final-score{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1;flex-shrink:0}
+    @keyframes rrBlindPulse{0%,100%{opacity:.4}50%{opacity:.9}}
+    .rr-blind-score{animation:rrBlindPulse 1.8s ease-in-out infinite;font-size:2rem;letter-spacing:.05em}
+    .rr-blind-mode-row{display:flex;align-items:center;justify-content:space-between;padding:.45rem .55rem;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;margin-bottom:.5rem}
+    .rr-blind-toggle{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--border2);border-radius:2px;padding:.3rem .65rem;cursor:pointer;transition:all .15s;background:transparent;color:var(--muted)}
+    .rr-blind-toggle.on{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+    .rr-blind-reveal-tag{font-size:.42rem;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.35);border-radius:2px;padding:.1rem .35rem;margin-left:.35rem;vertical-align:middle}
     .rr-verdict-txt{font-size:.56rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
     .rr-submit-btn{padding:.8rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:var(--gold);color:var(--bg);border:none;border-radius:4px;transition:opacity .2s;flex-shrink:0;min-height:42px}
     .rr-submit-btn:disabled{opacity:.35;cursor:not-allowed}
@@ -1354,6 +1360,13 @@
         </div>
       </div>
       <div style="padding:.85rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);background:var(--bg);border-top:1px solid var(--border);flex-shrink:0">
+        <div id="rr-blind-mode-row" class="rr-blind-mode-row">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text)">👁 Blind Mode</div>
+            <div style="font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">Your score is hidden until the reveal screen</div>
+          </div>
+          <button id="rr-blind-toggle" class="rr-blind-toggle" onclick="rrToggleBlindMode()">OFF</button>
+        </div>
         <div id="rr-waiting-msg" style="font-size:.6rem;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;padding:.3rem 0">Waiting for host to start…</div>
         <button id="rr-start-btn" style="display:none" class="rr-btn rr-btn-primary" onclick="rrStart()">Start Session</button>
       </div>
@@ -4318,7 +4331,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, isCarnage=false, carnageUserId=null, rrSusUsed=false;
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, isCarnage=false, carnageUserId=null, rrSusUsed=false, rrBlindMode=false;
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -4446,6 +4459,14 @@ function rrRenderLobby(){
   document.getElementById('rr-adder-note').style.display=isHost?'none':'block';
   document.getElementById('rr-start-btn').style.display=isHost?'block':'none';
   document.getElementById('rr-waiting-msg').style.display=isHost?'none':'block';
+  const blindToggleBtn=document.getElementById('rr-blind-toggle');
+  if(blindToggleBtn){
+    blindToggleBtn.textContent=rrBlindMode?'ON':'OFF';
+    blindToggleBtn.classList.toggle('on',rrBlindMode);
+    blindToggleBtn.disabled=!isHost;
+    blindToggleBtn.style.cursor=isHost?'pointer':'default';
+    blindToggleBtn.title=isHost?'Toggle blind mode':'Only the host can change this';
+  }
 }
 
 let rrSongMatches=[],rrSongTimer=null;
@@ -4655,8 +4676,16 @@ async function rrStart(){
     if(pick.user_id===currentUser?.id)isCarnage=true;
     roomChannel.send({type:'broadcast',event:'carnage_assign',payload:{user_id:pick.user_id}});
   }
+  roomChannel.send({type:'broadcast',event:'blind_mode_set',payload:{enabled:rrBlindMode}});
   const{error}=await db.from('rank_rooms').update({status:'rating',current_song_idx:0}).eq('id',currentRoom.id);
   if(error)alert('Failed: '+error.message);
+}
+
+function rrToggleBlindMode(){
+  if(currentRoom?.host_id!==currentUser?.id)return;
+  rrBlindMode=!rrBlindMode;
+  if(roomChannel)roomChannel.send({type:'broadcast',event:'blind_mode_set',payload:{enabled:rrBlindMode}});
+  rrRenderLobby();
 }
 
 function rrRenderIntro(){
@@ -4765,9 +4794,15 @@ function rrUpdate(){
   const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
   const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
   const final=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
-  fEl.textContent=final.toFixed(1);fEl.style.color=scoreColor(final);
-  const vds=[[9.5,'🏆 Classic'],[9,'🔥 Elite'],[8.5,'💎 Hard'],[8,'✅ Solid'],[7,'👍 Decent'],[6,'😐 Mid'],[5,'🙄 Skip'],[3,'👎 Weak'],[0,'🗑 Trash']];
-  vEl.textContent=(vds.find(([t])=>final>=t)||['','—'])[1];
+  if(rrBlindMode){
+    fEl.textContent='?';fEl.style.color='var(--muted)';fEl.classList.add('rr-blind-score');
+    vEl.textContent='Revealed at submit';
+  } else {
+    fEl.classList.remove('rr-blind-score');
+    fEl.textContent=final.toFixed(1);fEl.style.color=scoreColor(final);
+    const vds=[[9.5,'🏆 Classic'],[9,'🔥 Elite'],[8.5,'💎 Hard'],[8,'✅ Solid'],[7,'👍 Decent'],[6,'😐 Mid'],[5,'🙄 Skip'],[3,'👎 Weak'],[0,'🗑 Trash']];
+    vEl.textContent=(vds.find(([t])=>final>=t)||['','—'])[1];
+  }
   const _song=roomSongs[currentRoom?.current_song_idx];
   if(currentRoom&&_song&&!rrSubmitted){
     localStorage.setItem('rr_draft_'+currentRoom.id+'_'+_song.id,JSON.stringify({flow:fp,verses:vq,prod:p,chorus:ch,lyrics:l,replay:r,pacing:rrPacingPen,noHook:rrNoHook}));
@@ -5083,7 +5118,8 @@ async function rrRenderReveal(){
       return`<div class="rr-score-reveal-row"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem">${avatarHTML(r.profile,null,26)}<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="font-size:.62rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em">🎵 Interlude</div></div></div>`;
     }
     const s=parseFloat(r.final_score);
-    return`<div class="rr-score-reveal-row" onclick="rrOpenScoreDetail('${r.user_id}')"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem">${avatarHTML(r.profile,null,26)}<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}</div></div><div style="display:flex;align-items:center;gap:.5rem"><div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${r.verdict||''}</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${scoreColor(s)}">${s.toFixed(1)}</div><span class="rr-reveal-arrow">▶</span></div></div></div>`;
+    const revealTag=rrBlindMode&&isMe?'<span class="rr-blind-reveal-tag">REVEALED</span>':'';
+    return`<div class="rr-score-reveal-row" onclick="rrOpenScoreDetail('${r.user_id}')"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem">${avatarHTML(r.profile,null,26)}<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${u}${isMe?' ★':''}${revealTag}</div></div><div style="display:flex;align-items:center;gap:.5rem"><div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${r.verdict||''}</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${scoreColor(s)}">${s.toFixed(1)}</div><span class="rr-reveal-arrow">▶</span></div></div></div>`;
   }).join('');
   const isHost=currentRoom.host_id===currentUser?.id;
   const hasNext=currentRoom.current_song_idx<roomSongs.length-1;
@@ -5490,6 +5526,11 @@ function rrSubscribe(roomId){
     .on('broadcast',{event:'sus_hit'},({payload})=>{
       if(payload.target_user_id===currentUser?.id)rrShowSussed(payload.carnage_name);
     })
+    .on('broadcast',{event:'blind_mode_set'},({payload})=>{
+      rrBlindMode=!!payload.enabled;
+      const bt=document.getElementById('rr-blind-toggle');
+      if(bt){bt.textContent=rrBlindMode?'ON':'OFF';bt.classList.toggle('on',rrBlindMode);}
+    })
     .subscribe();
 }
 
@@ -5521,7 +5562,7 @@ function checkRoomInvite(){
 async function rrLeave(){
   if(roomChannel){db.removeChannel(roomChannel);roomChannel=null;}
   localStorage.removeItem('rr_room_id');
-  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;isCarnage=false;carnageUserId=null;
+  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;isCarnage=false;carnageUserId=null;rrBlindMode=false;
   document.getElementById('rr-join-input').value='';
   rrState('home');
 }
