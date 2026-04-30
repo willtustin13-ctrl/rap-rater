@@ -772,23 +772,6 @@
     .rr-rating-chat{position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--gold);z-index:30;display:flex;flex-direction:column;height:56vh;transform:translateY(100%);transition:transform .25s cubic-bezier(.4,0,.2,1)}
     .rr-rating-chat.open{transform:translateY(0)}
     .rr-react-bar{display:flex;justify-content:center;gap:.3rem;padding:.4rem .6rem;background:var(--bg);border-top:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
-    @keyframes carnageFlicker{0%,100%{opacity:1}45%{opacity:.55}50%{opacity:.85}55%{opacity:.4}60%{opacity:1}}
-    @keyframes carnageIn{0%{background:rgba(180,10,10,0)}30%{background:rgba(180,10,10,.95)}100%{background:rgba(180,10,10,.95)}}
-    @keyframes carnageFadeOut{0%{opacity:1}100%{opacity:0;pointer-events:none}}
-    #carnage-card{position:fixed;inset:0;background:rgba(180,10,10,.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2.5rem 2rem;gap:1.1rem;animation:carnageIn .4s ease-out forwards}
-    .carnage-title{font-family:'Barlow Condensed',sans-serif;font-size:2.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff;animation:carnageFlicker 2s ease-in-out infinite;line-height:1;text-shadow:0 0 40px rgba(0,0,0,.6)}
-    .carnage-sub{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.85);line-height:1.7;max-width:280px;text-shadow:0 1px 6px rgba(0,0,0,.5)}
-    .carnage-dismiss{display:none}
-    .carnage-pill{background:rgba(192,57,43,.18);border:1px solid rgba(192,57,43,.45);color:#c0392b;font-family:'Barlow Condensed',sans-serif;font-size:.46rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:.15rem .45rem;border-radius:2px;flex-shrink:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
-    .carnage-pill.used{opacity:.45;cursor:default}
-    #sus-picker-sheet{position:fixed;inset:0;z-index:9998;display:none;flex-direction:column;justify-content:flex-end}
-    #sus-picker-sheet.open{display:flex}
-    .sus-picker-bg{position:absolute;inset:0;background:rgba(0,0,0,.65)}
-    .sus-picker-body{position:relative;background:var(--surface);border-top:2px solid #c0392b;padding:1.25rem 1.25rem calc(env(safe-area-inset-bottom,1rem) + 1.25rem);z-index:1}
-    .sus-member-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid var(--border)}
-    .sus-btn{background:#c0392b;border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .75rem;border-radius:3px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-    @keyframes sussedIn{0%{opacity:0;transform:scale(1.08)}30%{opacity:1;transform:scale(1)}}
-    #sus-overlay{position:fixed;inset:0;z-index:9999;background:rgba(180,10,10,.95);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;gap:.75rem;animation:sussedIn .3s ease-out}
     .rr-react-btn{background:transparent;border:1px solid var(--border2);border-radius:3px;padding:.28rem .5rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);cursor:pointer;transition:transform .1s,background .15s,color .15s;flex-shrink:0;-webkit-tap-highlight-color:transparent;white-space:nowrap}
     .rr-react-btn:active{transform:scale(.82);background:var(--surface2);color:var(--gold);border-color:var(--gold)}
     @keyframes rrFloatUp{0%{transform:translateY(0) scale(1);opacity:1}65%{transform:translateY(-150px) scale(1.1);opacity:.95}100%{transform:translateY(-250px) scale(.7);opacity:0}}
@@ -823,6 +806,28 @@
     .list-card-info{flex:1;min-width:0}
     .list-card-title{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .list-card-meta{font-size:.58rem;color:var(--muted);margin-top:.15rem;font-family:'DM Mono',monospace}
+    .feed-subj-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
+    .feed-subj-btn{flex:1;padding:.55rem .25rem;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:color .18s,border-color .18s}
+    .feed-subj-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .feed-list-card{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.25rem;display:flex;align-items:center;gap:.85rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .feed-list-card:active{background:var(--surface2)}
+    .feed-list-card-author{font-size:.56rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:.2rem}
+    .q-card{background:var(--surface);border-bottom:1px solid var(--border);padding:.9rem 1.25rem;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .q-card:active{background:var(--surface2)}
+    .q-card-text{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.03em;color:var(--text);line-height:1.3;margin-bottom:.3rem}
+    .q-card-meta{font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+    .q-type-pill{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.48rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:.1rem .35rem;border-radius:2px;flex-shrink:0}
+    .q-entry-row{display:flex;align-items:center;gap:.65rem;padding:.7rem 1.25rem;border-bottom:1px solid var(--border)}
+    .q-entry-info{flex:1;min-width:0}
+    .q-entry-title{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.03em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .q-entry-sub{font-size:.58rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .q-entry-by{font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;margin-top:.15rem}
+    #qo-add-sheet{position:absolute;bottom:calc(var(--nav-h) + var(--safe-b));left:0;right:0;background:var(--surface);border-top:1px solid var(--border);max-height:60%;display:flex;flex-direction:column;overflow:hidden}
+    #qo-search-results{overflow-y:auto;flex:1}
+    .qo-result-row{display:flex;align-items:center;gap:.65rem;padding:.6rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .qo-result-row:active{background:var(--surface2)}
+    .pq-type-btn{flex:1;padding:.4rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .18s}
+    .pq-type-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
     .list-item-row{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border)}
     .list-item-num{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--muted);width:28px;text-align:center;flex-shrink:0}
     .list-item-art{width:46px;height:46px;border-radius:5px;object-fit:cover;flex-shrink:0;background:var(--border2)}
@@ -1037,7 +1042,12 @@
         Refresh
       </button>
     </div>
-    <div class="feed-controls">
+    <div class="feed-subj-tabs">
+      <button class="feed-subj-btn active" data-subj="songs" onclick="setFeedSubject('songs')">Songs</button>
+      <button class="feed-subj-btn" data-subj="lists" onclick="setFeedSubject('lists')">Lists</button>
+      <button class="feed-subj-btn" data-subj="questions" onclick="setFeedSubject('questions')">Questions</button>
+    </div>
+    <div id="feed-songs-controls" class="feed-controls">
       <div class="feed-mode-btns">
         <button class="feed-mode-btn active" id="fmode-all" onclick="setFeedMode('all',this)">All</button>
         <button class="feed-mode-btn" id="fmode-following" onclick="setFeedMode('following',this)">Following</button>
@@ -1048,11 +1058,19 @@
       </div>
       <div class="feed-sort-btns">
         <button class="feed-sort-btn active" data-sort="likes" onclick="setFeedSort(this)">Most Liked</button>
+        <button class="feed-sort-btn" data-sort="recent" onclick="setFeedSort(this)">Recent</button>
         <button class="feed-sort-btn" data-sort="score" onclick="setFeedSort(this)">Highest</button>
         <button class="feed-sort-btn" data-sort="lowest" onclick="setFeedSort(this)">Lowest</button>
       </div>
     </div>
-    <div class="scroll-area"><div id="feed-list"><div class="feed-empty">Loading...</div></div></div>
+    <div id="feed-songs-area" class="scroll-area"><div id="feed-list"><div class="feed-empty">Loading...</div></div></div>
+    <div id="feed-lists-area" style="display:none;flex:1;overflow-y:auto"><div id="feed-lists-list"><div class="feed-empty">Loading...</div></div></div>
+    <div id="feed-questions-area" style="display:none;flex:1;overflow-y:auto;display:none;flex-direction:column">
+      <div style="padding:.65rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0">
+        <button onclick="openProposeQuestion()" style="width:100%;padding:.5rem;background:transparent;border:1px dashed var(--border2);color:var(--gold);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ Propose a Question</button>
+      </div>
+      <div id="feed-questions-list"><div class="feed-empty">Loading...</div></div>
+    </div>
   </div>
 
   <!-- RATE TAB -->
@@ -1490,18 +1508,11 @@
         <button class="rr-react-btn" onclick="rrReact('DARTH MAUL HAS AURA')">DARTH MAUL HAS AURA</button>
       </div>
       <div id="rr-react-floats" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:20"></div>
-      <!-- Carnage secret reveal card -->
-      <div id="carnage-card" style="display:none">
-        <div style="font-size:2.4rem;line-height:1">🩸</div>
-        <div class="carnage-title">YOU ARE<br>CARNAGE</div>
-        <div class="carnage-sub">YOURE CARNAGE, BE AS SUSSY BECAUSE YOU ARE RED, SUSSSSS</div>
-      </div>
-      <div class="rr-score-footer">
+<div class="rr-score-footer">
         <div style="flex:1;min-width:0">
           <div id="rr-final-score" class="rr-final-score" style="color:var(--muted)">—</div>
           <div style="display:flex;align-items:center;gap:.4rem">
             <div id="rr-verdict-txt" class="rr-verdict-txt">—</div>
-            <div id="carnage-mode-badge" class="carnage-pill" style="display:none" onclick="rrOpenSusPicker()">🩸 SUS SOMEONE</div>
           </div>
         </div>
         <button id="rr-submit-btn" class="rr-submit-btn" onclick="rrSubmit()">Submit</button>
@@ -1574,28 +1585,13 @@
         <div id="rr-recap-body" style="padding:1.5rem 1.25rem;padding-bottom:1rem"></div>
       </div>
       <div style="padding:.75rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);background:var(--bg);border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:.5rem">
-        <button class="rr-btn rr-btn-primary" id="rr-save-btn" onclick="rrSaveAll()">Save Ratings to Profile</button>
+        <button class="rr-btn rr-btn-primary" id="rr-save-btn" onclick="rrSaveAll(true)">Save &amp; Post to Feed</button>
+        <button class="rr-btn rr-btn-secondary" id="rr-save-private-btn" onclick="rrSaveAll(false)">Save &amp; Don't Post to Feed</button>
         <button class="rr-btn rr-btn-secondary" onclick="shareRRSession()" style="display:flex;align-items:center;justify-content:center;gap:.5rem"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share Session Card</button>
         <button class="rr-btn rr-btn-secondary" onclick="rrLeave()">Back to Home</button>
       </div>
     </div>
 
-    <!-- CARNAGE SUS PICKER -->
-    <div id="sus-picker-sheet">
-      <div class="sus-picker-bg" onclick="document.getElementById('sus-picker-sheet').classList.remove('open')"></div>
-      <div class="sus-picker-body">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#c0392b;margin-bottom:.15rem">SUS SOMEONE 🩸</div>
-        <div style="font-size:.54rem;color:var(--muted);margin-bottom:.85rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em">One target per round. They'll know it was you.</div>
-        <div id="sus-member-list"></div>
-      </div>
-    </div>
-
-    <!-- SUSSED OVERLAY (shown to target) -->
-    <div id="sus-overlay">
-      <div style="font-size:2.8rem;line-height:1">🩸</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:2.2rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff;line-height:1.1">YOU HAVE BEEN<br>SUSSED</div>
-      <div id="sus-overlay-by" style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75);margin-top:.25rem">BY CARNAGE</div>
-    </div>
 
     <!-- SCORE DETAIL MODAL -->
     <div class="modal-overlay" id="rr-score-detail-modal" onclick="if(event.target===this)this.classList.remove('open')">
@@ -1683,6 +1679,7 @@
   <div style="display:flex;align-items:center;padding:.9rem 1.25rem;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;gap:.75rem">
     <button onclick="closeListOverlay()" style="background:transparent;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;line-height:1;padding:.2rem .3rem;flex-shrink:0">←</button>
     <div id="lo-title" style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+    <button id="lo-post-btn" onclick="toggleListPosted()" style="display:none;background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;cursor:pointer;flex-shrink:0">Post to Feed</button>
     <button id="lo-edit-btn" onclick="openListMeta()" style="background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;cursor:pointer;flex-shrink:0">✎ Edit</button>
   </div>
   <div class="scroll-area" style="flex:1;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 5rem)">
@@ -1693,6 +1690,49 @@
   <div style="position:absolute;bottom:calc(var(--nav-h) + var(--safe-b));left:0;right:0;padding:.75rem 1.25rem;background:var(--bg);border-top:1px solid var(--border);display:flex;gap:.5rem">
     <button onclick="openAddToList()" style="flex:1;padding:.65rem;background:var(--gold);color:var(--bg);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">+ ADD ITEM</button>
     <button onclick="confirmDeleteList()" style="padding:.65rem .9rem;background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">Delete List</button>
+  </div>
+</div>
+
+<!-- QUESTION DETAIL OVERLAY -->
+<div id="question-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:315;flex-direction:column;overflow:hidden">
+  <div style="display:flex;align-items:center;padding:.9rem 1.25rem;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;gap:.75rem">
+    <button onclick="closeQuestionOverlay()" style="background:transparent;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;line-height:1;padding:.2rem .3rem;flex-shrink:0">←</button>
+    <div style="flex:1;min-width:0">
+      <div id="qo-title" style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.06em;color:var(--text);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+      <div id="qo-meta" style="font-size:.54rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.15rem"></div>
+    </div>
+    <div id="qo-delete-btn" style="display:none"><button onclick="deleteQuestion()" style="background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.08em;cursor:pointer">Delete</button></div>
+  </div>
+  <div id="qo-entries" class="scroll-area" style="flex:1;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 5rem)"></div>
+  <div id="qo-add-sheet" style="display:none">
+    <div style="display:flex;gap:.5rem;padding:.65rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0">
+      <input id="qo-search-input" type="text" placeholder="Search…" autocomplete="off" class="modal-input" style="flex:1;margin:0" oninput="qoSearch()">
+      <button onclick="document.getElementById('qo-add-sheet').style.display='none'" style="background:transparent;border:1px solid var(--border2);color:var(--muted);padding:.4rem .65rem;border-radius:4px;font-size:.7rem;cursor:pointer">✕</button>
+    </div>
+    <div id="qo-search-results" style="overflow-y:auto;max-height:200px"></div>
+  </div>
+  <div style="position:absolute;bottom:calc(var(--nav-h) + var(--safe-b));left:0;right:0;padding:.65rem 1.25rem;background:var(--bg);border-top:1px solid var(--border)">
+    <button id="qo-add-btn" onclick="openQoAdd()" style="width:100%;padding:.6rem;background:var(--gold);color:var(--bg);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">+ Add</button>
+  </div>
+</div>
+
+<!-- PROPOSE QUESTION MODAL -->
+<div class="modal-overlay" id="propose-q-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" style="padding-bottom:1.5rem">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Propose a Question</div>
+    <label class="modal-lbl">Question</label>
+    <textarea id="pq-text" class="modal-textarea" placeholder="e.g. Best Kendrick project? Top 5 rap intros?" maxlength="200" style="margin-bottom:.75rem"></textarea>
+    <label class="modal-lbl">Type of answers</label>
+    <div style="display:flex;gap:.5rem;margin-bottom:1rem">
+      <button class="pq-type-btn active" data-type="songs" onclick="setPqType('songs',this)">Songs</button>
+      <button class="pq-type-btn" data-type="albums" onclick="setPqType('albums',this)">Albums</button>
+    </div>
+    <div id="pq-err" style="color:#c0392b;font-size:.6rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;min-height:1em;margin-bottom:.5rem"></div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-confirm" onclick="submitQuestion()">Post Question</button>
+      <button class="modal-btn modal-btn-cancel" onclick="document.getElementById('propose-q-modal').classList.remove('open')">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -1781,6 +1821,20 @@
   </div>
 </div>
 
+<!-- POST TO FEED PROMPT -->
+<div id="post-feed-sheet" style="position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;justify-content:flex-end">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.55)" onclick="postToFeed(false)"></div>
+  <div style="position:relative;background:var(--surface);border-top:1px solid var(--border);border-radius:1.25rem 1.25rem 0 0;padding:1.5rem 1.25rem calc(env(safe-area-inset-bottom,1rem) + 1.25rem);display:flex;flex-direction:column;gap:.75rem">
+    <div style="width:36px;height:4px;border-radius:2px;background:var(--border2);margin:0 auto .25rem"></div>
+    <div id="post-feed-song-name" style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:var(--text);text-align:center;line-height:1.2"></div>
+    <div style="font-size:.72rem;color:var(--muted);text-align:center">Post this rating to your feed?</div>
+    <div style="display:flex;gap:.6rem">
+      <button onclick="postToFeed(true)" style="flex:1;background:var(--green);border:none;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:.75rem;border-radius:.6rem;cursor:pointer">Yes, Post It</button>
+      <button onclick="postToFeed(false)" style="flex:1;background:var(--surface2,var(--border));border:1px solid var(--border);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:.75rem;border-radius:.6rem;cursor:pointer">No, Keep Private</button>
+    </div>
+  </div>
+</div>
+
 <!-- RATING DETAIL MODAL -->
 <div class="modal-overlay" id="rating-detail-modal" onclick="if(event.target===this)closeRatingDetail()">
   <div class="modal rd-modal">
@@ -1808,6 +1862,7 @@ const SONG_CATALOG = []; // iTunes search only
 let currentUser=null,currentProfile=null,allRatings=[],pacingPen=0;
 let selectedFolder=null,activeModalTab='existing',selectedColor='#c9a84c';
 let myFollows=[],feedMode='all',profileMap={},activeRatingId=null;
+let feedSubject='songs',feedListsData=[],questionsData=[],currentQuestion=null,currentQuestionEntries=[],currentQuestionProfiles={},_pqType='songs';
 let myLikes=new Set(),likeCounts={},commentCounts={},detailRow=null;
 let selectedSong=null,editingRatingId=null;
 const AVATAR_COLORS=['#c9a84c','#d93025','#2d9e6b','#8b6db5','#5b8dd9','#b07d3a'];
@@ -2327,7 +2382,11 @@ async function refreshTab(tab){
   if(btn){btn.classList.add('spinning');btn.disabled=true;}
   const done=()=>{if(btn){btn.classList.remove('spinning');btn.disabled=false;}};
   try{
-    if(tab==='feed'){await loadFeed();}
+    if(tab==='feed'){
+      if(feedSubject==='songs')await loadFeed();
+      else if(feedSubject==='lists')await loadFeedLists();
+      else if(feedSubject==='questions')await loadQuestions();
+    }
     else if(tab==='rate'){resetAll();clearSongPicker();done();return;}
     else if(tab==='profile'){await loadProfile();}
     else if(tab==='room'){
@@ -2426,6 +2485,7 @@ function filterFeed() { renderFeed(); }
 function sortedFeed(data) {
   const d = [...data];
   if(feedSort==='likes') return d.sort((a,b)=>(likeCounts[b.id]||0)-(likeCounts[a.id]||0));
+  if(feedSort==='recent') return d.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
   if(feedSort==='lowest') return d.sort((a,b)=>parseFloat(a.final_score)-parseFloat(b.final_score));
   return d.sort((a,b)=>parseFloat(b.final_score)-parseFloat(a.final_score));
 }
@@ -2564,7 +2624,7 @@ function closeRatingDetail(){
 
 async function loadFeed(){
   const list=document.getElementById('feed-list');
-  const{data:ratingsData,error}=await db.from('ratings').select('*').neq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(200);
+  const{data:ratingsData,error}=await db.from('ratings').select('*').neq('user_id',currentUser.id).or('is_private.is.null,is_private.eq.false').order('created_at',{ascending:false}).limit(200);
   if(error){list.innerHTML='<div class="feed-empty">Feed failed to load.</div>';console.error(error);return;}
   const ratings=ratingsData||[];
 
@@ -2732,20 +2792,26 @@ async function loadProfile(){
     <div class="stat-item"><span class="stat-val" style="color:var(--green)">${followingCount}</span><span class="stat-lbl">Following</span></div>
     <div class="stat-item" style="cursor:pointer" onclick="openFollowersModal()"><span class="stat-val">${followersCount}</span><span class="stat-lbl">Followers</span></div>`;
 
-  // Artist stats
-  const artistMap={};
+  // Artist stats — use same albumScore formula as profile folder list
+  const artistAlbumMap={};
   ratings.forEach(r=>{
     const a=r.artist_name||'Unknown';
-    if(!artistMap[a])artistMap[a]={total:0,count:0};
-    artistMap[a].total+=parseFloat(r.final_score||0);
-    artistMap[a].count++;
+    const al=r.album||r.folder||'Unknown Album';
+    if(!artistAlbumMap[a])artistAlbumMap[a]={albums:{},count:0};
+    if(!artistAlbumMap[a].albums[al])artistAlbumMap[a].albums[al]=[];
+    artistAlbumMap[a].albums[al].push(r);
+    artistAlbumMap[a].count++;
   });
-  const artistEntries=Object.entries(artistMap);
-  const topArtist=artistEntries.length?artistEntries.reduce((best,[name,d])=>d.total/d.count>(best[1].total/best[1].count)?[name,d]:best):null;
+  const artistEntries=Object.entries(artistAlbumMap).map(([name,d])=>{
+    const albumScores=Object.values(d.albums).map(songs=>albumScore(songs)).filter(v=>v>0);
+    const avg=albumScores.length?albumScores.reduce((a,b)=>a+b,0)/albumScores.length:0;
+    return[name,{avg,count:d.count}];
+  });
+  const topArtist=artistEntries.length?artistEntries.reduce((best,[name,d])=>d.avg>best[1].avg?[name,d]:best):null;
   const mostRated=artistEntries.length?artistEntries.reduce((best,[name,d])=>d.count>best[1].count?[name,d]:best):null;
   const astEl=document.getElementById('profile-artist-stats');
   if(topArtist&&mostRated){
-    const topAvg=topArtist[1].total/topArtist[1].count;
+    const topAvg=topArtist[1].avg;
     astEl.innerHTML=`
       <div class="pf-artist-stats">
         <div class="pf-astat">
@@ -2900,6 +2966,12 @@ async function openListOverlay(id){
   document.getElementById('lo-edit-btn').style.display=isOwn?'':'none';
   document.querySelector('#list-overlay [onclick="confirmDeleteList()"]').style.display=isOwn?'':'none';
   document.querySelector('#list-overlay [onclick="openAddToList()"]').style.display=isOwn?'':'none';
+  const postBtn=document.getElementById('lo-post-btn');
+  if(postBtn){
+    postBtn.style.display=isOwn?'':'none';
+    postBtn.textContent=list.is_posted?'✓ Posted':'Post to Feed';
+    postBtn.style.color=list.is_posted?'var(--green)':'';
+  }
   renderListItems(isOwn);
 }
 
@@ -3156,10 +3228,14 @@ function renderProfileFolders(ratings, container){
         div.innerHTML=`
           <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0">
             ${artThumbPf}
-            <div class="pf-song" style="flex:1;min-width:0">${row.song_name}</div>
+            <div style="flex:1;min-width:0">
+              <div class="pf-song">${row.song_name}</div>
+              ${row.is_private?`<div style="font-size:.45rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">🔒 Private</div>`:''}
+            </div>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0">
             <div class="pf-score" style="color:${scoreColor(score)}">${score.toFixed(1)}</div>
+            ${row.is_private?`<button onclick="publishRating('${row.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:.2rem .3rem" title="Post to feed">Post</button>`:''}
             <button onclick="editRatingById('${row.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.65rem;cursor:pointer;padding:.2rem .3rem;transition:color .15s" title="Edit">✎</button>
             <button onclick="deleteProfileRating('${row.id}',event)" style="background:transparent;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;padding:.2rem .3rem;transition:color .15s" title="Delete">✕</button>
           </div>`;
@@ -3527,6 +3603,228 @@ function setFeedMode(mode,btn){
   renderFeed();
 }
 
+function setFeedSubject(subj){
+  feedSubject=subj;
+  document.querySelectorAll('.feed-subj-btn').forEach(b=>b.classList.toggle('active',b.dataset.subj===subj));
+  document.getElementById('feed-songs-controls').style.display=subj==='songs'?'':'none';
+  document.getElementById('feed-songs-area').style.display=subj==='songs'?'':'none';
+  const listsArea=document.getElementById('feed-lists-area');
+  listsArea.style.display=subj==='lists'?'block':'none';
+  const qArea=document.getElementById('feed-questions-area');
+  qArea.style.display=subj==='questions'?'flex':'none';
+  if(subj==='lists')loadFeedLists();
+  if(subj==='questions')loadQuestions();
+}
+
+async function loadFeedLists(){
+  const el=document.getElementById('feed-lists-list');
+  el.innerHTML='<div class="feed-empty">Loading…</div>';
+  const{data:lists}=await db.from('lists').select('*').eq('is_posted',true).order('created_at',{ascending:false}).limit(100);
+  if(!lists?.length){el.innerHTML='<div class="feed-empty">No lists posted yet.</div>';return;}
+  const{data:items}=await db.from('list_items').select('list_id,position,artwork_url').in('list_id',lists.map(l=>l.id)).order('position');
+  const itemCounts={};const artworks={};
+  (items||[]).forEach(it=>{
+    itemCounts[it.list_id]=(itemCounts[it.list_id]||0)+1;
+    if(!artworks[it.list_id])artworks[it.list_id]=[];
+    if(artworks[it.list_id].length<3&&it.artwork_url)artworks[it.list_id].push(it.artwork_url);
+  });
+  const uids=[...new Set(lists.map(l=>l.user_id))];
+  const{data:profiles}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',uids);
+  const pmap={};(profiles||[]).forEach(p=>pmap[p.id]=p);
+  feedListsData=lists;
+  el.innerHTML=lists.map(l=>{
+    const count=itemCounts[l.id]||0;
+    const uname=pmap[l.user_id]?.username||'Unknown';
+    const thumbs=(artworks[l.id]||[]).map(u=>`<img src="${itunesArtUrl(u,44)}" class="list-card-thumb" loading="lazy">`).join('')+
+      (count>3?`<div class="list-card-thumb" style="display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted)">+${count-3}</div>`:'');
+    return`<div class="feed-list-card" onclick="openListOverlay('${l.id}')">
+      <div class="list-card-thumbs">${thumbs||'<div class="list-card-thumb"></div>'}</div>
+      <div class="list-card-info">
+        <div class="feed-list-card-author">@${uname}</div>
+        <div class="list-card-title">${l.title}</div>
+        <div class="list-card-meta">${count} item${count!==1?'s':''}${l.description?' · '+l.description:''}</div>
+      </div>
+      <div style="color:var(--muted);font-size:1rem;flex-shrink:0">›</div>
+    </div>`;
+  }).join('');
+}
+
+async function toggleListPosted(){
+  if(!currentListId||!currentUser)return;
+  const{data:list}=await db.from('lists').select('is_posted').eq('id',currentListId).single();
+  const newVal=!list?.is_posted;
+  await db.from('lists').update({is_posted:newVal}).eq('id',currentListId).eq('user_id',currentUser.id);
+  const btn=document.getElementById('lo-post-btn');
+  if(btn){btn.textContent=newVal?'✓ Posted':'Post to Feed';btn.style.color=newVal?'var(--green)':'';}
+}
+
+async function loadQuestions(){
+  const el=document.getElementById('feed-questions-list');
+  el.innerHTML='<div class="feed-empty">Loading…</div>';
+  const{data:qs}=await db.from('questions').select('*').order('created_at',{ascending:false}).limit(100);
+  if(!qs?.length){el.innerHTML='<div class="feed-empty">No questions yet. Be the first to propose one!</div>';return;}
+  const uids=[...new Set(qs.map(q=>q.user_id))];
+  const{data:profiles}=await db.from('profiles').select('id,username').in('id',uids);
+  const pmap={};(profiles||[]).forEach(p=>pmap[p.id]=p);
+  const{data:entryCounts}=await db.from('question_entries').select('question_id').in('question_id',qs.map(q=>q.id));
+  const ecMap={};(entryCounts||[]).forEach(e=>{ecMap[e.question_id]=(ecMap[e.question_id]||0)+1;});
+  questionsData=qs;
+  el.innerHTML=qs.map(q=>{
+    const uname=pmap[q.user_id]?.username||'Unknown';
+    const count=ecMap[q.id]||0;
+    return`<div class="q-card" onclick="openQuestionOverlay('${q.id}')">
+      <div class="q-card-text">${q.question_text}</div>
+      <div class="q-card-meta">
+        <span class="q-type-pill">${q.type==='albums'?'Albums':'Songs'}</span>
+        <span>@${uname}</span>
+        <span>· ${count} answer${count!==1?'s':''}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function openQuestionOverlay(id){
+  const overlay=document.getElementById('question-overlay');
+  overlay.style.display='flex';
+  const q=questionsData.find(x=>x.id===id)||(await db.from('questions').select('*').eq('id',id).single()).data;
+  if(!q){overlay.style.display='none';return;}
+  currentQuestion=q;
+  document.getElementById('qo-title').textContent=q.question_text;
+  const isOwn=q.user_id===currentUser?.id;
+  document.getElementById('qo-delete-btn').style.display=isOwn?'':'none';
+  document.getElementById('qo-add-btn').textContent=`+ Add ${q.type==='albums'?'Album':'Song'}`;
+  document.getElementById('qo-add-sheet').style.display='none';
+  document.getElementById('qo-search-input').value='';
+  document.getElementById('qo-search-results').innerHTML='';
+  await refreshQuestionEntries();
+}
+
+async function refreshQuestionEntries(){
+  if(!currentQuestion)return;
+  document.getElementById('qo-entries').innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.65rem">Loading…</div>';
+  const{data:entries}=await db.from('question_entries').select('*').eq('question_id',currentQuestion.id).order('created_at',{ascending:true});
+  currentQuestionEntries=entries||[];
+  const uids=[...new Set(currentQuestionEntries.map(e=>e.user_id))];
+  if(uids.length){
+    const{data:profiles}=await db.from('profiles').select('id,username').in('id',uids);
+    currentQuestionProfiles={};(profiles||[]).forEach(p=>currentQuestionProfiles[p.id]=p);
+  }
+  const byEl=document.getElementById('qo-entries');
+  const count=currentQuestionEntries.length;
+  document.getElementById('qo-meta').textContent=`${count} answer${count!==1?'s':''}  ·  ${currentQuestion.type==='albums'?'Albums':'Songs'}`;
+  if(!count){byEl.innerHTML='<div class="feed-empty" style="margin-top:1.5rem">No answers yet — be the first!</div>';return;}
+  byEl.innerHTML=currentQuestionEntries.map((e,i)=>{
+    const uname=currentQuestionProfiles[e.user_id]?.username||'?';
+    const isOwn=e.user_id===currentUser?.id;
+    return`<div class="q-entry-row">
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:var(--muted);width:26px;text-align:center;flex-shrink:0">${i+1}</div>
+      ${e.artwork_url?`<img src="${itunesArtUrl(e.artwork_url,60)}" style="width:40px;height:40px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:40px;height:40px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`}
+      <div class="q-entry-info">
+        <div class="q-entry-title">${e.title}</div>
+        ${e.subtitle?`<div class="q-entry-sub">${e.subtitle}</div>`:''}
+        <div class="q-entry-by">@${uname}</div>
+      </div>
+      ${isOwn?`<button onclick="deleteQuestionEntry('${e.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;padding:.2rem .3rem;flex-shrink:0">✕</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+function closeQuestionOverlay(){
+  document.getElementById('question-overlay').style.display='none';
+  currentQuestion=null;currentQuestionEntries=[];
+  if(feedSubject==='questions')loadQuestions();
+}
+
+async function deleteQuestion(){
+  if(!currentQuestion||currentQuestion.user_id!==currentUser?.id)return;
+  if(!confirm('Delete this question and all its answers?'))return;
+  await db.from('questions').delete().eq('id',currentQuestion.id);
+  closeQuestionOverlay();
+}
+
+function openProposeQuestion(){
+  _pqType='songs';
+  document.getElementById('pq-text').value='';
+  document.getElementById('pq-err').textContent='';
+  document.querySelectorAll('.pq-type-btn').forEach(b=>b.classList.toggle('active',b.dataset.type==='songs'));
+  document.getElementById('propose-q-modal').classList.add('open');
+}
+function setPqType(type,btn){
+  _pqType=type;
+  document.querySelectorAll('.pq-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+async function submitQuestion(){
+  const text=(document.getElementById('pq-text').value||'').trim();
+  const errEl=document.getElementById('pq-err');
+  if(!text){errEl.textContent='Enter a question.';return;}
+  if(!currentUser){errEl.textContent='Sign in first.';return;}
+  const{error}=await db.from('questions').insert({user_id:currentUser.id,question_text:text,type:_pqType});
+  if(error){errEl.textContent=error.message;return;}
+  document.getElementById('propose-q-modal').classList.remove('open');
+  loadQuestions();
+}
+
+function openQoAdd(){
+  const sheet=document.getElementById('qo-add-sheet');
+  sheet.style.display='flex';
+  sheet.style.flexDirection='column';
+  document.getElementById('qo-search-input').focus();
+}
+
+let _qoSearchTimer=null;
+function qoSearch(){
+  clearTimeout(_qoSearchTimer);
+  _qoSearchTimer=setTimeout(async()=>{
+    const q=(document.getElementById('qo-search-input').value||'').trim();
+    const res=document.getElementById('qo-search-results');
+    if(!q){res.innerHTML='';return;}
+    res.innerHTML='<div style="padding:.6rem 1rem;font-size:.6rem;color:var(--muted)">Searching…</div>';
+    try{
+      const isAlbum=currentQuestion?.type==='albums';
+      const url=isAlbum
+        ?`https://api.deezer.com/search/album?q=${encodeURIComponent(q)}&limit=20`
+        :`https://api.deezer.com/search/track?q=${encodeURIComponent(q)}&limit=20`;
+      const data=await deezerFetch(url);
+      const results=data.data||[];
+      if(!results.length){res.innerHTML='<div style="padding:.6rem 1rem;font-size:.6rem;color:var(--muted)">No results</div>';return;}
+      res.innerHTML=results.map(r=>{
+        const title=isAlbum?r.title:r.title;
+        const subtitle=isAlbum?r.artist?.name:(r.artist?.name+(r.album?.title?' · '+r.album.title:''));
+        const art=isAlbum?r.cover_medium:r.album?.cover_medium;
+        const artEnc=encodeURIComponent(art||'');
+        const titleEnc=encodeURIComponent(title);
+        const subEnc=encodeURIComponent(subtitle||'');
+        return`<div class="qo-result-row" onclick="qoAddEntry('${titleEnc}','${subEnc}','${artEnc}')">
+          ${art?`<img src="${art}" style="width:36px;height:36px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:36px;height:36px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${title}</div>
+            <div style="font-size:.58rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${subtitle||''}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }catch(e){res.innerHTML='<div style="padding:.6rem 1rem;font-size:.6rem;color:var(--muted)">Search failed</div>';}
+  },350);
+}
+
+async function qoAddEntry(titleEnc,subEnc,artEnc){
+  if(!currentUser||!currentQuestion)return;
+  const title=decodeURIComponent(titleEnc);
+  const subtitle=decodeURIComponent(subEnc)||null;
+  const artwork_url=decodeURIComponent(artEnc)||null;
+  const{error}=await db.from('question_entries').insert({question_id:currentQuestion.id,user_id:currentUser.id,title,subtitle,artwork_url});
+  if(error){alert('Failed: '+error.message);return;}
+  document.getElementById('qo-add-sheet').style.display='none';
+  document.getElementById('qo-search-input').value='';
+  document.getElementById('qo-search-results').innerHTML='';
+  await refreshQuestionEntries();
+}
+
+async function deleteQuestionEntry(id){
+  await db.from('question_entries').delete().eq('id',id).eq('user_id',currentUser.id);
+  await refreshQuestionEntries();
+}
+
 let upoOpenFolders=new Set();
 
 async function openUserModal(userId){
@@ -3550,13 +3848,23 @@ async function openUserModal(userId){
   document.getElementById('upo-nav-title').textContent='@'+u;
 
   const[ratingsRes,followerRes]=await Promise.all([
-    db.from('ratings').select('*').eq('user_id',userId).order('final_score',{ascending:false}),
+    db.from('ratings').select('*').eq('user_id',userId).or('is_private.is.null,is_private.eq.false').order('final_score',{ascending:false}),
     db.from('follows').select('*',{count:'exact',head:true}).eq('addressee_id',userId)
   ]);
   const ratings=ratingsRes.data||[];
   const followerCount=followerRes.count||0;
-  const count=ratings.length;
-  const avg=count?(ratings.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/count).toFixed(1):'—';
+  const scoredRatings=ratings.filter(r=>r.final_score!=null);
+  const count=scoredRatings.length;
+  // build albumScore-based avg to match own profile display
+  const _artistAlbumMap={};
+  scoredRatings.forEach(r=>{
+    const a=r.artist_name||'Unknown';const al=r.album||r.folder||'Unknown Album';
+    if(!_artistAlbumMap[a])_artistAlbumMap[a]={};
+    if(!_artistAlbumMap[a][al])_artistAlbumMap[a][al]=[];
+    _artistAlbumMap[a][al].push(r);
+  });
+  const _albumScores=Object.values(_artistAlbumMap).flatMap(albums=>Object.values(albums).map(songs=>albumScore(songs))).filter(v=>v>0);
+  const avg=_albumScores.length?(_albumScores.reduce((a,b)=>a+b,0)/_albumScores.length).toFixed(1):'—';
 
   const fwd=myFollows.find(f=>f.requester_id===currentUser.id&&f.addressee_id===userId);
   const bwd=myFollows.find(f=>f.requester_id===userId&&f.addressee_id===currentUser.id);
@@ -3599,13 +3907,16 @@ function renderUserProfileFolders(ratings,container){
     artists[artist][album].push(r);
   });
   container.innerHTML='';
-  Object.keys(artists).sort().forEach(artistName=>{
+  const artistEntries=Object.keys(artists).map(artistName=>{
+    const albums=artists[artistName];
+    const albumScores=Object.values(albums).map(songs=>albumScore(songs)).filter(v=>v>0);
+    const artistAvg=albumScores.length?albumScores.reduce((a,b)=>a+b,0)/albumScores.length:0;
+    const totalSongs=Object.values(albums).flat().length;
+    return{artistName,albums,artistAvg,totalSongs};
+  }).sort((a,b)=>b.artistAvg-a.artistAvg);
+  artistEntries.forEach(({artistName,albums,artistAvg,totalSongs})=>{
     const artistKey='artist:'+artistName;
     const isArtistOpen=upoOpenFolders.has(artistKey);
-    const albums=artists[artistName];
-    const allSongs=Object.values(albums).flat();
-    const artistAvg=allSongs.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/allSongs.length;
-    const totalSongs=allSongs.length;
 
     const artistBlock=document.createElement('div');
     artistBlock.className='pf-folder-block';
@@ -3661,7 +3972,7 @@ function renderUserProfileFolders(ratings,container){
       };
 
       songs.forEach(row=>{
-        const score=parseFloat(row.final_score);
+        const score=row.final_score!=null?parseFloat(row.final_score):null;
         const div=document.createElement('div');
         div.className='pf-rating-row';
         const artThumbUpo=row.artwork_url
@@ -3672,7 +3983,7 @@ function renderUserProfileFolders(ratings,container){
             ${artThumbUpo}
             <div class="pf-song" style="flex:1;min-width:0">${row.song_name}</div>
           </div>
-          <div class="pf-score" style="color:${scoreColor(score)};flex-shrink:0">${score.toFixed(1)}</div>`;
+          <div class="pf-score" style="color:${score!=null?scoreColor(score):'var(--muted)'};flex-shrink:0">${score!=null?score.toFixed(1):'—'}</div>`;
         albumBody.appendChild(div);
       });
       loadMissingArtwork(albumBody);
@@ -4108,37 +4419,48 @@ function openSaveModal(){
     if(getGenreScores().every(s=>s===0)){alert('Rate at least one category first.');return;}
   }
 
-  document.getElementById('modal-preview').textContent=`${selectedSong.song} — ${selectedSong.artist}`;
-  document.getElementById('modal-artist').value=selectedSong.artist;
-  document.getElementById('new-folder-input').value=selectedSong.album;
-  selectedFolder=null;
-
-  populateAlbumList();
-
-  // auto-select matching album without firing click events
-  document.querySelectorAll('#folder-list .folder-option').forEach(opt=>{
-    if(opt.querySelector('span')?.textContent===selectedSong.album){
-      opt.classList.add('selected');
-      selectedFolder=selectedSong.album;
-    }
-  });
-
-  document.getElementById('save-modal-err').textContent='';
-  document.querySelector('#save-modal .modal-title').textContent=editingRatingId?'Update Rating':'Save Rating';
-  document.getElementById('save-modal').classList.add('open');
+  if(editingRatingId){
+    // editing — show full modal so user can change fields
+    document.getElementById('modal-preview').textContent=`${selectedSong.song} — ${selectedSong.artist}`;
+    document.getElementById('modal-artist').value=selectedSong.artist;
+    document.getElementById('new-folder-input').value=selectedSong.album;
+    selectedFolder=null;
+    populateAlbumList();
+    document.querySelectorAll('#folder-list .folder-option').forEach(opt=>{
+      if(opt.querySelector('span')?.textContent===selectedSong.album){
+        opt.classList.add('selected');
+        selectedFolder=selectedSong.album;
+      }
+    });
+    document.getElementById('save-modal-err').textContent='';
+    document.querySelector('#save-modal .modal-title').textContent='Update Rating';
+    document.getElementById('save-modal').classList.add('open');
+  } else {
+    // new rating — auto-save directly to the song's album
+    confirmSave(selectedSong.album, selectedSong.artist, null);
+  }
 }
 
 function closeSaveModal(){document.getElementById('save-modal').classList.remove('open');selectedFolder=null;editingRatingId=null;}
 
-async function confirmSave(){
-  const artistVal = document.getElementById('modal-artist').value.trim();
-  let album='';
-  if(activeModalTab==='existing'){album=selectedFolder;if(!album){alert('Select an album.');return;}}
-  else{album=document.getElementById('new-folder-input').value.trim();if(!album){alert('Enter an album name.');return;}}
+let _lastSavedRatingId=null;
+
+async function confirmSave(autoAlbum, autoArtist, autoComment){
+  const isAuto = autoAlbum !== undefined;
+  let album, artistVal, comment;
+  if(isAuto){
+    album = autoAlbum || '';
+    artistVal = autoArtist || selectedSong?.artist || '';
+    comment = autoComment || null;
+  } else {
+    artistVal = document.getElementById('modal-artist').value.trim();
+    if(activeModalTab==='existing'){album=selectedFolder;if(!album){alert('Select an album.');return;}}
+    else{album=document.getElementById('new-folder-input').value.trim();if(!album){alert('Enter an album name.');return;}}
+    comment=(document.getElementById('modal-comment').value||'').trim()||null;
+  }
 
   const sn=selectedSong?.song||'';
   const an=artistVal || selectedSong?.artist||'';
-  const comment=(document.getElementById('modal-comment').value||'').trim()||null;
   const verdict=document.getElementById('verdict').textContent;
   let insertData={song_name:sn,artist_name:an,album,user_id:currentUser.id,folder:album,comment,artwork_url:selectedSong?.artwork||null,is_interlude:isInterlude,genre:currentGenre};
   if(currentGenre==='rap'){
@@ -4154,16 +4476,45 @@ async function confirmSave(){
   }
   const errEl=document.getElementById('save-modal-err');
   if(errEl)errEl.textContent='';
-  let error;
+
   if(editingRatingId){
-    const{error:e}=await db.from('ratings').update(insertData).eq('id',editingRatingId).eq('user_id',currentUser.id);
-    error=e;
+    const{error}=await db.from('ratings').update(insertData).eq('id',editingRatingId).eq('user_id',currentUser.id);
+    if(error){if(errEl)errEl.textContent='Save failed: '+error.message;}
+    else{closeSaveModal();resetAll();loadFeed();loadProfile();switchTab('feed');}
   } else {
-    const{error:e}=await db.from('ratings').insert(insertData);
-    error=e;
+    // new rating — save as private, then ask if they want to post
+    const{data,error}=await db.from('ratings').insert({...insertData,is_private:true}).select('id').single();
+    if(error){if(errEl)errEl.textContent='Save failed: '+error.message;}
+    else{
+      _lastSavedRatingId=data?.id||null;
+      closeSaveModal();
+      resetAll();
+      loadProfile();
+      const nameEl=document.getElementById('post-feed-song-name');
+      if(nameEl)nameEl.textContent=`${sn} — ${an}`;
+      const sheet=document.getElementById('post-feed-sheet');
+      if(sheet){sheet.style.display='flex';}
+    }
   }
-  if(error){if(errEl)errEl.textContent='Save failed: '+error.message;}
-  else{closeSaveModal();resetAll();loadFeed();loadProfile();switchTab('feed');}
+}
+
+async function postToFeed(yes){
+  const sheet=document.getElementById('post-feed-sheet');
+  if(sheet)sheet.style.display='none';
+  if(yes && _lastSavedRatingId){
+    await db.from('ratings').update({is_private:false}).eq('id',_lastSavedRatingId).eq('user_id',currentUser.id);
+    await loadFeed();
+    switchTab('feed');
+  } else {
+    switchTab('profile');
+  }
+  _lastSavedRatingId=null;
+}
+
+async function publishRating(id){
+  await db.from('ratings').update({is_private:false}).eq('id',id).eq('user_id',currentUser.id);
+  loadProfile();
+  loadFeed();
 }
 let songPickerMatches=[],songPickerTimer=null;
 function itunesArtUrl(url,size=50){return url?(url.replace(/\d+x\d+bb/,size+'x'+size+'bb')):'';}
@@ -4457,7 +4808,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, isCarnage=false, carnageUserId=null, rrSusUsed=false, rrBlindMode=false;
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, rrBlindMode=false;
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -4795,13 +5146,6 @@ async function rrAddAlbum(idx){
 
 async function rrStart(){
   if(!roomSongs.length){alert('Add at least one song first.');return;}
-  const validMembers=roomMembers.filter(m=>m.user_id);
-  if(validMembers.length){
-    const pick=validMembers[Math.floor(Math.random()*validMembers.length)];
-    carnageUserId=pick.user_id;
-    if(pick.user_id===currentUser?.id)isCarnage=true;
-    roomChannel.send({type:'broadcast',event:'carnage_assign',payload:{user_id:pick.user_id}});
-  }
   roomChannel.send({type:'broadcast',event:'blind_mode_set',payload:{enabled:rrBlindMode}});
   const{error}=await db.from('rank_rooms').update({status:'rating',current_song_idx:0}).eq('id',currentRoom.id);
   if(error)alert('Failed: '+error.message);
@@ -4867,26 +5211,6 @@ function rrRenderRating(){
   const fc=document.getElementById('rr-force-confirm');if(fc)fc.style.display='none';
   rrUpdate();
   rrRefreshProgress();
-  rrSusUsed=false;
-  const carnageBadge=document.getElementById('carnage-mode-badge');
-  const carnageCardEl=document.getElementById('carnage-card');
-  if(isCarnage){
-    if(carnageBadge){carnageBadge.style.display='inline-flex';carnageBadge.textContent='🩸 SUS SOMEONE';carnageBadge.classList.remove('used');}
-    if(carnageCardEl){
-      carnageCardEl.style.display='flex';
-      carnageCardEl.style.animation='carnageIn .4s ease-out forwards';
-      carnageCardEl.style.opacity='1';
-      setTimeout(()=>{
-        if(!carnageCardEl)return;
-        carnageCardEl.style.transition='opacity .6s ease-out';
-        carnageCardEl.style.opacity='0';
-        setTimeout(()=>{carnageCardEl.style.display='none';carnageCardEl.style.opacity='1';carnageCardEl.style.transition='';},650);
-      },7000);
-    }
-  } else {
-    if(carnageBadge)carnageBadge.style.display='none';
-    if(carnageCardEl)carnageCardEl.style.display='none';
-  }
 }
 
 function rrSelectPacing(btn){
@@ -4981,40 +5305,6 @@ async function rrRefreshProgress(){
   }
 }
 
-function rrOpenSusPicker(){
-  if(!isCarnage||rrSusUsed||currentRoom?.status!=='rating')return;
-  const others=roomMembers.filter(m=>m.user_id&&m.user_id!==currentUser?.id);
-  const list=document.getElementById('sus-member-list');
-  list.innerHTML=others.length?others.map(m=>{
-    const name=m.profiles?.username||'Unknown';
-    return`<div class="sus-member-row">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase">${name}</div>
-      <button class="sus-btn" onclick="rrSusPlayer('${m.user_id}','${name}')">SUS 🩸</button>
-    </div>`;
-  }).join(''):`<div style="font-size:.6rem;color:var(--muted);padding:.5rem 0">No other players in the room.</div>`;
-  document.getElementById('sus-picker-sheet').classList.add('open');
-}
-function rrSusPlayer(userId,username){
-  if(!roomChannel||rrSusUsed)return;
-  rrSusUsed=true;
-  roomChannel.send({type:'broadcast',event:'sus_hit',payload:{target_user_id:userId,carnage_name:currentProfile?.username||'CARNAGE'}});
-  document.getElementById('sus-picker-sheet').classList.remove('open');
-  const badge=document.getElementById('carnage-mode-badge');
-  if(badge){badge.textContent='🩸 SUSSED ✓';badge.classList.add('used');}
-}
-function rrShowSussed(carnageName){
-  const overlay=document.getElementById('sus-overlay');
-  if(!overlay)return;
-  const byEl=document.getElementById('sus-overlay-by');
-  if(byEl)byEl.textContent='BY '+(carnageName||'CARNAGE').toUpperCase();
-  overlay.style.display='flex';
-  overlay.style.opacity='1';
-  setTimeout(()=>{
-    overlay.style.transition='opacity .6s ease-out';
-    overlay.style.opacity='0';
-    setTimeout(()=>{overlay.style.display='none';overlay.style.opacity='1';overlay.style.transition='';},650);
-  },3500);
-}
 
 const rrReactCooldown={};
 function rrReact(emoji){
@@ -5343,27 +5633,10 @@ async function rrRenderEnded(){
   const hue=n=>n>=9?'var(--green)':n>=7?'var(--gold)':n>=5?'var(--chorus)':'var(--muted2)';
   const sec=t=>`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:1.5rem 0 .5rem">${t}</div>`;
 
-  // Carnage reveal
-  const carnageMember=carnageUserId?roomMembers.find(m=>m.user_id===carnageUserId):null;
-  const carnageName=carnageMember?.profiles?.username||'Unknown';
-  const carnageRatings=carnageUserId?scoredRatings.filter(r=>r.user_id===carnageUserId):[];
-  const carnageSus=carnageRatings.length?carnageRatings.reduce((sum,r)=>{
-    const group=songRatingMap[r.song_id]||[];
-    const groupAvg=group.length?group.reduce((a,b)=>a+parseFloat(b.final_score),0)/group.length:parseFloat(r.final_score);
-    return sum+Math.abs(parseFloat(r.final_score)-groupAvg);
-  },0)/carnageRatings.length:0;
-  const susVerdict=carnageSus>2.5?'MAXIMUM SUS 🩸':carnageSus>1.5?'VERY SUS':carnageSus>0.8?'SOMEWHAT SUS':'BLENDED IN';
-
   let html=`<div style="text-align:center;margin-bottom:1.25rem">
     <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">Session Complete</div>
     <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">${currentRoom.name||'Rank Room'} · ${songStats.length} song${songStats.length!==1?'s':''} rated${roomSongs.length>songStats.length?` · ${roomSongs.length-songStats.length} interlude${roomSongs.length-songStats.length!==1?'s':''}`:''} · ${roomMembers.length} member${roomMembers.length!==1?'s':''}</div>
   </div>
-  ${carnageUserId?`<div style="margin-bottom:1.5rem;padding:1rem 1.25rem;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.3);border-radius:4px;text-align:center">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.48rem;color:#c0392b;letter-spacing:.2em;font-weight:900;text-transform:uppercase;margin-bottom:.5rem">🩸 CARNAGE REVEALED</div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;color:#fff">${carnageName}</div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:#c0392b;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem">${susVerdict}</div>
-    <div style="font-size:.54rem;color:var(--muted);margin-top:.3rem">avg deviance from group: ${carnageSus.toFixed(2)} pts</div>
-  </div>`:''}
 `;
 
   // ── Final Rankings (first & most prominent) ──
@@ -5592,17 +5865,23 @@ async function shareRRSession(){
   link.click();
 }
 
-async function rrSaveAll(){
-  const btn=document.getElementById('rr-save-btn');btn.textContent='Saving…';btn.disabled=true;
+async function rrSaveAll(postToFeed=true){
+  const btn=document.getElementById(postToFeed?'rr-save-btn':'rr-save-private-btn');
+  const otherBtn=document.getElementById(postToFeed?'rr-save-private-btn':'rr-save-btn');
+  btn.textContent='Saving…';btn.disabled=true;
+  if(otherBtn)otherBtn.disabled=true;
   const{data:myRatings,error}=await db.from('rank_room_ratings').select('*').eq('room_id',currentRoom.id).eq('user_id',currentUser.id);
-  if(error||!myRatings?.length){btn.textContent='Nothing to save';return;}
+  if(error||!myRatings?.length){btn.textContent='Nothing to save';if(otherBtn)otherBtn.disabled=false;return;}
   const rows=myRatings.map(r=>{
     const s=roomSongs.find(x=>x.id===r.song_id);
-    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',genre:'rap',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,pacing_penalty:r.pacing_penalty,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false,comment:r.comment||null};
+    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',genre:'rap',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,pacing_penalty:r.pacing_penalty,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false,comment:r.comment||null,is_private:!postToFeed};
   });
   const{error:e2}=await db.from('ratings').insert(rows);
-  if(e2){btn.textContent='Save failed: '+e2.message;btn.style.color='#c0392b';btn.disabled=false;return;}
-  btn.textContent='Saved ✓';loadFeed();
+  if(e2){btn.textContent='Save failed: '+e2.message;btn.style.color='#c0392b';btn.disabled=false;if(otherBtn)otherBtn.disabled=false;return;}
+  btn.textContent='Saved ✓';
+  if(otherBtn){otherBtn.disabled=true;otherBtn.style.opacity='.4';}
+  if(postToFeed)loadFeed();
+  loadProfile();
 }
 
 async function rrToggleReady(){
@@ -5657,15 +5936,6 @@ function rrSubscribe(roomId){
     .on('broadcast',{event:'reaction'},({payload})=>{
       if(currentRoom?.status==='rating')rrSpawnReactFloat(payload.emoji,payload.username||'?');
     })
-    .on('broadcast',{event:'carnage_assign'},({payload})=>{
-      if(!carnageUserId){
-        carnageUserId=payload.user_id;
-        if(payload.user_id===currentUser?.id)isCarnage=true;
-      }
-    })
-    .on('broadcast',{event:'sus_hit'},({payload})=>{
-      if(payload.target_user_id===currentUser?.id)rrShowSussed(payload.carnage_name);
-    })
     .on('broadcast',{event:'blind_mode_set'},({payload})=>{
       rrBlindMode=!!payload.enabled;
       const bt=document.getElementById('rr-blind-toggle');
@@ -5702,7 +5972,7 @@ function checkRoomInvite(){
 async function rrLeave(){
   if(roomChannel){db.removeChannel(roomChannel);roomChannel=null;}
   localStorage.removeItem('rr_room_id');
-  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;isCarnage=false;carnageUserId=null;rrBlindMode=false;
+  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;rrBlindMode=false;
   document.getElementById('rr-join-input').value='';
   rrState('home');
 }
