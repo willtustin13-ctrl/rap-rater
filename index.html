@@ -84,6 +84,14 @@
     .no-hook-btn.active{background:rgba(96,165,250,.15);border-color:var(--chorus);border-style:solid;color:var(--chorus)}
     .no-hook-dim{opacity:.28;pointer-events:none;transition:opacity .2s}
     .interlude-btn{width:100%;padding:.75rem 1rem;background:var(--surface2);border:2px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:.55rem;transition:all .2s;margin-bottom:.65rem}
+    .features-btn{width:100%;padding:.6rem 1rem;background:var(--surface2);border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;margin-bottom:.65rem}
+    .features-btn:active{transform:scale(.97)}
+    .features-btn.active{background:rgba(45,158,107,.12);border:1px solid var(--green);border-style:solid;color:var(--green)}
+    .features-bar{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.8rem 1rem;margin-bottom:.65rem}
+    .features-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem}
+    .features-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;min-width:2.4rem;flex-shrink:0}
+    .features-impact{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.08em;min-width:2.8rem;flex-shrink:0}
+    .features-desc{font-size:.6rem;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;margin-top:.3rem;min-height:.9rem}
     .interlude-btn svg{width:18px;height:18px;flex-shrink:0;transition:stroke .2s}
     .interlude-btn:active{transform:scale(.97)}
     .interlude-btn.active{background:rgba(167,139,250,.18);border:2px solid var(--gold);color:var(--gold)}
@@ -745,6 +753,7 @@
     .rr-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--text);cursor:pointer;border:2px solid var(--bg)}
     .rr-score-footer{padding:.7rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0}
     .rr-final-score{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1;flex-shrink:0}
+    .no-lyrics-dim{opacity:.2;pointer-events:none;user-select:none}
     @keyframes rrBlindPulse{0%,100%{opacity:.4}50%{opacity:.9}}
     .rr-blind-score{animation:rrBlindPulse 1.8s ease-in-out infinite;font-size:2rem;letter-spacing:.05em}
     .rr-blind-mode-row{display:flex;align-items:center;justify-content:space-between;padding:.45rem .55rem;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;margin-bottom:.5rem}
@@ -1111,6 +1120,15 @@
         <div id="interlude-banner" class="interlude-banner" style="display:none">
           🎵 Interlude — This track will not count toward the album score
         </div>
+        <button id="features-btn" class="features-btn pressable" onclick="toggleFeatures()">🎤 Rate Features</button>
+        <div id="features-bar" class="features-bar" style="display:none">
+          <div class="features-row">
+            <input type="range" min="0" max="10" step="0.5" value="5" id="features-slider" class="rcat-slider" style="flex:1" oninput="updateFeaturesSlider()">
+            <div id="features-val" class="features-val" style="color:var(--muted)">5.0</div>
+            <div id="features-impact" class="features-impact" style="color:var(--muted)">±0.0</div>
+          </div>
+          <div id="features-desc" class="features-desc">Feature is neutral — no real impact either way</div>
+        </div>
         <div id="interlude-rating-body">
 
         <!-- Pacing (Rap only) -->
@@ -1144,7 +1162,7 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--flow)">Flow &amp; Delivery</div>
-              <div class="rcat-weight" id="flow-weight-lbl">22% · Peak</div>
+              <div class="rcat-weight" id="flow-weight-lbl">20% · Peak</div>
             </div>
             <div class="rcat-score" id="flow-display">—</div>
           </div>
@@ -1161,7 +1179,7 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--chorus)">Chorus</div>
-              <div class="rcat-weight" id="chorus-weight-lbl">20%</div>
+              <div class="rcat-weight" id="chorus-weight-lbl">16%</div>
             </div>
             <div style="display:flex;align-items:center;gap:.55rem">
               <button id="no-hook-btn" class="no-hook-btn" onclick="toggleNoHook()">No Hook</button>
@@ -1197,7 +1215,7 @@
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--prod)">Beat</div>
-              <div class="rcat-weight" id="prod-weight-lbl">8%</div>
+              <div class="rcat-weight" id="prod-weight-lbl">18%</div>
             </div>
             <div class="rcat-score" id="prod-display">—</div>
           </div>
@@ -1209,7 +1227,7 @@
         </div>
 
         <!-- LYRICS -->
-        <div class="rcat lyrics-cat">
+        <div class="rcat lyrics-cat" id="lyrics-cat-row">
           <div class="rcat-head">
             <div>
               <div class="rcat-name" style="color:var(--lyrics)">Lyrics / Wordplay</div>
@@ -1411,6 +1429,15 @@
           <div id="rr-interlude-banner" class="interlude-banner" style="display:none">
             🎵 Interlude — This track will not count toward the album score
           </div>
+          <button id="rr-features-btn" class="features-btn pressable" onclick="rrToggleFeatures()">🎤 Rate Features</button>
+          <div id="rr-features-bar" class="features-bar" style="display:none">
+            <div class="features-row">
+              <input type="range" min="0" max="10" step="0.5" value="5" id="rr-features-slider" class="rr-slider" style="flex:1" oninput="rrUpdateFeaturesSlider()">
+              <div id="rr-features-val" class="features-val" style="color:var(--muted)">5.0</div>
+              <div id="rr-features-impact" class="features-impact" style="color:var(--muted)">±0.0</div>
+            </div>
+            <div id="rr-features-desc" class="features-desc">Feature is neutral — no real impact either way</div>
+          </div>
         </div>
         <div id="rr-interlude-rating-body">
         <div class="rr-pacing-row">
@@ -1426,12 +1453,12 @@
           <div class="rcat-desc" id="rr-replay-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--flow)">Flow &amp; Delivery <span id="rr-flow-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">22%</span></div><div class="rr-cat-val" id="rr-flow-val">—</div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--flow)">Flow &amp; Delivery <span id="rr-flow-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">20%</span></div><div class="rr-cat-val" id="rr-flow-val">—</div></div>
           <input type="range" min="0" max="10" step="0.5" value="0" id="rr-flow" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-flow-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--chorus)">Chorus <span id="rr-chorus-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">20%</span></div><div style="display:flex;align-items:center;gap:.45rem"><button id="rr-no-hook-btn" class="no-hook-btn" onclick="rrToggleNoHook()">No Hook</button><div class="rr-cat-val" id="rr-chorus-val">—</div></div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--chorus)">Chorus <span id="rr-chorus-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">16%</span></div><div style="display:flex;align-items:center;gap:.45rem"><button id="rr-no-hook-btn" class="no-hook-btn" onclick="rrToggleNoHook()">No Hook</button><div class="rr-cat-val" id="rr-chorus-val">—</div></div></div>
           <div id="rr-chorus-slider-row"><input type="range" min="0" max="10" step="0.5" value="0" id="rr-chorus" class="rr-slider" oninput="rrUpdate()"></div>
           <div class="rcat-desc" id="rr-chorus-desc"></div>
         </div>
@@ -1441,11 +1468,11 @@
           <div class="rcat-desc" id="rr-verses-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--prod)">Beat <span id="rr-prod-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-prod-val">—</div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--prod)">Beat <span id="rr-prod-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">18%</span></div><div class="rr-cat-val" id="rr-prod-val">—</div></div>
           <input type="range" min="0" max="10" step="0.5" value="0" id="rr-prod" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-prod-desc"></div>
         </div>
-        <div class="rr-cat">
+        <div class="rr-cat" id="rr-lyrics-cat-row">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--lyrics)">Lyrics <span id="rr-lyrics-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-lyrics-val">—</div></div>
           <input type="range" min="0" max="10" step="0.5" value="0" id="rr-lyrics" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-lyrics-desc"></div>
@@ -1782,7 +1809,7 @@ let currentUser=null,currentProfile=null,allRatings=[],pacingPen=0;
 let selectedFolder=null,activeModalTab='existing',selectedColor='#c9a84c';
 let myFollows=[],feedMode='all',profileMap={},activeRatingId=null;
 let myLikes=new Set(),likeCounts={},commentCounts={},detailRow=null;
-let selectedSong=null;
+let selectedSong=null,editingRatingId=null;
 const AVATAR_COLORS=['#c9a84c','#d93025','#2d9e6b','#8b6db5','#5b8dd9','#b07d3a'];
 const DESCS={
   flow:{
@@ -2156,6 +2183,7 @@ const SETTINGS_DEFAULTS={
   profilePublic:true,
   ratingsOnFeed:true,
   theme:'dark',
+  noLyrics:false,
 };
 let settings={...SETTINGS_DEFAULTS};
 
@@ -2176,12 +2204,31 @@ function applySettings(){
   feedMode=settings.feedDefault;
   document.body.classList.toggle('compact-feed',!!settings.compactFeed);
   document.body.classList.toggle('hide-descs',!!settings.hideDescs);
+  applyWeightLabels(noHook,!!settings.noLyrics,false);
+  applyWeightLabels(typeof rrNoHook!=='undefined'?rrNoHook:false,!!settings.noLyrics,true);
   const mAll=document.getElementById('fmode-all');
   const mFollow=document.getElementById('fmode-following');
   if(mAll&&mFollow){
     mAll.classList.toggle('active',feedMode==='all');
     mFollow.classList.toggle('active',feedMode==='following');
   }
+}
+function getWeightLabels(nh,nl){
+  if(nh&&nl) return{flow:'30%',chorus:'N/A',verses:'24%',prod:'20%',lyrics:'—'};
+  if(nh)     return{flow:'28%',chorus:'N/A',verses:'22%',prod:'18%',lyrics:'8%'};
+  if(nl)     return{flow:'22%',chorus:'17%',verses:'15%',prod:'20%',lyrics:'—'};
+  return     {flow:'20%',chorus:'16%',verses:'14%',prod:'18%',lyrics:'8%'};
+}
+function applyWeightLabels(nh,nl,rr=false){
+  const w=getWeightLabels(nh,nl);
+  const p=rr?'rr-':'';
+  const set=(id,val)=>{const el=document.getElementById(p+id);if(el)el.textContent=val;};
+  set('flow-weight-lbl', rr?w.flow:(w.flow==='N/A'?'N/A':w.flow+' · Peak'));
+  set('chorus-weight-lbl',w.chorus);
+  set('verses-weight-lbl',w.verses);
+  set('prod-weight-lbl',w.prod);
+  set('lyrics-weight-lbl',w.lyrics);
+  document.getElementById(rr?'rr-lyrics-cat-row':'lyrics-cat-row')?.classList.toggle('no-lyrics-dim',nl);
 }
 function applyPacingDefault(rr=false){
   const pen=parseFloat(settings.pacingDefault||'0');
@@ -2226,6 +2273,7 @@ function renderSettings(){
     ${sec('Ratings',
       row('Show Descriptions','Text hints under each category slider',`<button class="settings-toggle${!settings.hideDescs?' on':''}" onclick="toggleSetting('hideDescs')"></button>`),
       row('Pacing Default','Starting pacing selection',seg('pacingDefault',[['0','Perfect'],['0.20','Slight'],['0.50','Drags']])),
+      row('we dont give a fuck about lyrics','Removes lyrics from the equation, weight redistributed to other categories',tog('noLyrics')),
       row('How the Formula Works','Category weights, bonuses & penalties',`<button class="settings-action-btn settings-muted-btn" onclick="openFormulaOverlay()">View →</button>`)
     )}
     ${sec('Rank Room',
@@ -3138,7 +3186,8 @@ function editRatingById(id){
 }
 
 function editRating(row){
-  selectedSong={song:row.song_name||'',artist:row.artist_name||'',album:row.album||''};
+  editingRatingId=row.id;
+  selectedSong={song:row.song_name||'',artist:row.artist_name||'',album:row.album||'',artwork:row.artwork_url||''};
   document.getElementById('song-picker-sel-name').textContent=selectedSong.song;
   document.getElementById('song-picker-sel-meta').textContent=selectedSong.artist+(selectedSong.album?' · '+selectedSong.album:'');
   document.getElementById('song-picker-selected').style.display='block';
@@ -3154,6 +3203,7 @@ function editRating(row){
     b.classList.remove('active-perfect','active-slight','active-drags');
     if(parseFloat(b.dataset.pacing)===pacingPen)b.classList.add(b.dataset.cls);
   });
+  if(row.comment){document.getElementById('modal-comment').value=row.comment;}
   update();
   switchTab('rate');
   window.scrollTo({top:0,behavior:'smooth'});
@@ -3743,6 +3793,79 @@ function calcGenericFinal(scores,weights,catNames){
 // INTERLUDE
 let isInterlude=false;
 let noHook=false;
+let hasFeatures=false,featureRating=5;
+let rrHasFeatures=false,rrFeatureRating=5;
+
+const FEATURE_DESCS={
+  0:  "Feature completely ruins the song",
+  0.5:"Feature actively drags the track down",
+  1:  "Feature does more harm than good",
+  1.5:"Feature is a clear weak point",
+  2:  "Feature underperforms noticeably",
+  2.5:"Feature adds very little value",
+  3:  "Feature falls short of the track's level",
+  3.5:"Feature slightly underwhelms",
+  4:  "Feature feels unnecessary",
+  4.5:"Feature is barely passable",
+  5:  "Feature is neutral — no real impact either way",
+  5.5:"Feature adds a small something",
+  6:  "Feature contributes meaningfully",
+  6.5:"Feature elevates a key moment",
+  7:  "Feature genuinely improves the song",
+  7.5:"Strong feature, adds real energy",
+  8:  "Feature is a highlight of the track",
+  8.5:"Feature significantly elevates the song",
+  9:  "Feature performance is exceptional",
+  9.5:"One of the best feature spots on the project",
+  10: "Feature is iconic — the song would be lesser without them"
+};
+
+function featuresImpact(rating,active){return active?(rating-5)*0.3:0;}
+
+function _applyFeaturesDisplay(sliderEl,valEl,impactEl,descEl,rating){
+  const imp=(rating-5)*0.3;
+  const color=rating>5?'var(--green)':rating<5?'var(--red)':'var(--muted)';
+  if(sliderEl)fillSlider(sliderEl,rating>5?'#2d9e6b':rating<5?'#d93025':'#666');
+  if(valEl){valEl.textContent=rating.toFixed(1);valEl.style.color=color;}
+  if(impactEl){
+    const s=imp>0?`+${imp.toFixed(1)}`:imp<0?imp.toFixed(1):'±0.0';
+    impactEl.textContent=s;impactEl.style.color=color;
+  }
+  if(descEl)descEl.textContent=FEATURE_DESCS[rating]||'';
+}
+
+function toggleFeatures(){
+  hasFeatures=!hasFeatures;
+  if(!hasFeatures)featureRating=5;
+  document.getElementById('features-btn').classList.toggle('active',hasFeatures);
+  document.getElementById('features-bar').style.display=hasFeatures?'block':'none';
+  if(hasFeatures){
+    const sl=document.getElementById('features-slider');
+    if(sl){sl.value=featureRating;_applyFeaturesDisplay(sl,document.getElementById('features-val'),document.getElementById('features-impact'),document.getElementById('features-desc'),featureRating);}
+  }
+  update();
+}
+function updateFeaturesSlider(){
+  featureRating=parseFloat(document.getElementById('features-slider').value);
+  _applyFeaturesDisplay(document.getElementById('features-slider'),document.getElementById('features-val'),document.getElementById('features-impact'),document.getElementById('features-desc'),featureRating);
+  update();
+}
+function rrToggleFeatures(){
+  rrHasFeatures=!rrHasFeatures;
+  if(!rrHasFeatures)rrFeatureRating=5;
+  document.getElementById('rr-features-btn').classList.toggle('active',rrHasFeatures);
+  document.getElementById('rr-features-bar').style.display=rrHasFeatures?'block':'none';
+  if(rrHasFeatures){
+    const sl=document.getElementById('rr-features-slider');
+    if(sl){sl.value=rrFeatureRating;_applyFeaturesDisplay(sl,document.getElementById('rr-features-val'),document.getElementById('rr-features-impact'),document.getElementById('rr-features-desc'),rrFeatureRating);}
+  }
+  rrUpdate();
+}
+function rrUpdateFeaturesSlider(){
+  rrFeatureRating=parseFloat(document.getElementById('rr-features-slider').value);
+  _applyFeaturesDisplay(document.getElementById('rr-features-slider'),document.getElementById('rr-features-val'),document.getElementById('rr-features-impact'),document.getElementById('rr-features-desc'),rrFeatureRating);
+  rrUpdate();
+}
 function toggleInterlude(){
   isInterlude=!isInterlude;
   const btn=document.getElementById('interlude-btn');
@@ -3759,14 +3882,7 @@ function toggleNoHook(){
   document.getElementById('no-hook-btn')?.classList.toggle('active',noHook);
   const cr=document.getElementById('chorus-slider-row');
   if(cr)cr.classList.toggle('no-hook-dim',noHook);
-  const wls={
-    'flow-weight-lbl':  noHook?'26% · Peak':'22% · Peak',
-    'chorus-weight-lbl':noHook?'N/A':'20%',
-    'verses-weight-lbl':noHook?'26%':'14%',
-    'prod-weight-lbl':  noHook?'10%':'8%',
-    'lyrics-weight-lbl':noHook?'10%':'8%'
-  };
-  Object.entries(wls).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+  applyWeightLabels(noHook,!!settings.noLyrics,false);
   update();
 }
 
@@ -3794,14 +3910,7 @@ function rrToggleNoHook(){
   document.getElementById('rr-no-hook-btn')?.classList.toggle('active',rrNoHook);
   const cr=document.getElementById('rr-chorus-slider-row');
   if(cr)cr.classList.toggle('no-hook-dim',rrNoHook);
-  const wls={
-    'rr-flow-weight-lbl':  rrNoHook?'26%':'22%',
-    'rr-chorus-weight-lbl':rrNoHook?'N/A':'20%',
-    'rr-verses-weight-lbl':rrNoHook?'26%':'14%',
-    'rr-prod-weight-lbl':  rrNoHook?'10%':'8%',
-    'rr-lyrics-weight-lbl':rrNoHook?'10%':'8%'
-  };
-  Object.entries(wls).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+  applyWeightLabels(rrNoHook,!!settings.noLyrics,true);
   rrUpdate();
 }
 
@@ -3816,10 +3925,13 @@ function getScores(){
   return{fp,vq,p,ch,l,r,F:fp,V:vq};
 }
 function calcFinal(F,V,p,ch,l,r,nh=false){
-  const B=nh?(r*.28)+(F*.26)+(V*.26)+(p*.10)+(l*.10)
-            :(r*.28)+(F*.22)+(ch*.20)+(V*.14)+(p*.08)+(l*.08);
-  const scores=nh?[r,F,V,p,l]:[r,F,ch,V,p,l];
-  const cats=nh?['Replay','Flow','Verses','Beat','Lyrics']:['Replay','Flow','Chorus','Verses','Beat','Lyrics'];
+  const nl=settings.noLyrics;
+  const B=nh&&nl?(r*24+F*28+V*22+p*18)/92:
+          nh?    (r*.24)+(F*.28)+(V*.22)+(p*.18)+(l*.08):
+          nl?    (r*24+F*20+ch*16+V*14+p*18)/92:
+                 (r*.24)+(F*.20)+(ch*.16)+(V*.14)+(p*.18)+(l*.08);
+  const scores=nh&&nl?[r,F,V,p]:nh?[r,F,V,p,l]:nl?[r,F,ch,V,p]:[r,F,ch,V,p,l];
+  const cats=nh&&nl?['Replay','Flow','Verses','Beat']:nh?['Replay','Flow','Verses','Beat','Lyrics']:nl?['Replay','Flow','Chorus','Verses','Beat']:['Replay','Flow','Chorus','Verses','Beat','Lyrics'];
   const weakCats=cats.filter((_,i)=>scores[i]<=5),eliteCats=cats.filter((_,i)=>scores[i]>=9);
   const penalty=weakCats.length*.15,bonus=eliteCats.length*.20;
   const gap=Math.max(...scores)-Math.min(...scores);
@@ -3908,7 +4020,9 @@ function update(){
     document.getElementById('verdict').textContent='—';document.getElementById('verdict').style.color='var(--muted)';
     return;
   }
-  const{B,weakCats,eliteCats,penalty,bonus,gap,dr,final}=calcFinal(F,V,p,ch,l,r,noHook);
+  const{B,weakCats,eliteCats,penalty,bonus,gap,dr,final:baseFinal}=calcFinal(F,V,p,ch,l,r,noHook);
+  const featImp=featuresImpact(featureRating,hasFeatures);
+  const final=Math.min(10,Math.max(1,baseFinal+featImp));
   document.getElementById('b-base').textContent=B.toFixed(2);
   document.getElementById('b-pen').textContent=penalty>0?`−${penalty.toFixed(2)}`:'—';
   document.getElementById('b-bon').textContent=bonus>0?`+${bonus.toFixed(2)}`:'—';
@@ -3938,6 +4052,7 @@ function update(){
   eliteCats.forEach(c=>modDiv.innerHTML+=`<span class="mod-tag bonus">★ ${c} +0.20</span>`);
   if(dr>0)modDiv.innerHTML+=`<span class="mod-tag dr">↓ Gap ${gap.toFixed(1)} −${dr.toFixed(2)}</span>`;
   if(pacingPen>0)modDiv.innerHTML+=`<span class="mod-tag ${pacingPen>=.5?'pacing-bad':'pacing'}">⏱ ${pacingPen>=.5?'Drags':'Slightly Off'} −${pacingPen.toFixed(2)}</span>`;
+  if(hasFeatures&&featImp!==0)modDiv.innerHTML+=`<span class="mod-tag ${featImp>0?'bonus':'penalty'}">🎤 Features ${featImp>0?'+':''}${featImp.toFixed(1)}</span>`;
   const verdicts=[[9.5,'🏆 Classic — All Time'],[9,'🔥 Elite Tape'],[8.5,'💎 Hard — Heavy Rotation'],[8,'✅ Solid Song'],[7,'👍 Decent'],[6,'😐 Middle of the Road'],[5,'🙄 Skip Worthy'],[3,'👎 Weak'],[0,'🗑 Trash — Next']];
   const v=verdicts.find(([t])=>final>=t);
   const verdictText=v?v[1]:'🗑 Trash';
@@ -4009,10 +4124,11 @@ function openSaveModal(){
   });
 
   document.getElementById('save-modal-err').textContent='';
+  document.querySelector('#save-modal .modal-title').textContent=editingRatingId?'Update Rating':'Save Rating';
   document.getElementById('save-modal').classList.add('open');
 }
 
-function closeSaveModal(){document.getElementById('save-modal').classList.remove('open');selectedFolder=null;}
+function closeSaveModal(){document.getElementById('save-modal').classList.remove('open');selectedFolder=null;editingRatingId=null;}
 
 async function confirmSave(){
   const artistVal = document.getElementById('modal-artist').value.trim();
@@ -4027,7 +4143,8 @@ async function confirmSave(){
   let insertData={song_name:sn,artist_name:an,album,user_id:currentUser.id,folder:album,comment,artwork_url:selectedSong?.artwork||null,is_interlude:isInterlude,genre:currentGenre};
   if(currentGenre==='rap'){
     const{fp,vq,p,ch,l,r,F,V}=getScores();
-    const{final}=calcFinal(F,V,p,ch,l,r,noHook);
+    const{final:baseFinal}=calcFinal(F,V,p,ch,l,r,noHook);
+    const final=Math.min(10,Math.max(1,baseFinal+featuresImpact(featureRating,hasFeatures)));
     Object.assign(insertData,{flow_peak:fp,flow_score:F,verse_quality:vq,verse_score:V,production:p,chorus:ch,lyrics:l,replay:r,pacing_penalty:pacingPen,final_score:isInterlude?null:final,verdict:isInterlude?'Interlude':verdict});
   } else {
     const scores=getGenreScores();
@@ -4037,9 +4154,16 @@ async function confirmSave(){
   }
   const errEl=document.getElementById('save-modal-err');
   if(errEl)errEl.textContent='';
-  const{error}=await db.from('ratings').insert(insertData);
+  let error;
+  if(editingRatingId){
+    const{error:e}=await db.from('ratings').update(insertData).eq('id',editingRatingId).eq('user_id',currentUser.id);
+    error=e;
+  } else {
+    const{error:e}=await db.from('ratings').insert(insertData);
+    error=e;
+  }
   if(error){if(errEl)errEl.textContent='Save failed: '+error.message;}
-  else{closeSaveModal();resetAll();loadFeed();switchTab('feed');}
+  else{closeSaveModal();resetAll();loadFeed();loadProfile();switchTab('feed');}
 }
 let songPickerMatches=[],songPickerTimer=null;
 function itunesArtUrl(url,size=50){return url?(url.replace(/\d+x\d+bb/,size+'x'+size+'bb')):'';}
@@ -4200,11 +4324,13 @@ function clearSongPicker(){
 }
 
 function resetAll(){
+  editingRatingId=null;
+  if(hasFeatures){hasFeatures=false;featureRating=5;document.getElementById('features-btn')?.classList.remove('active');const fb=document.getElementById('features-bar');if(fb)fb.style.display='none';}
   ['flow-peak','verse-quality','prod','chorus','lyrics','replay'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0;});
   Array.from({length:6},(_,i)=>{const el=document.getElementById('gc-cat-'+i);if(el)el.value=0;});
   document.getElementById('modal-comment').value='';
   if(isInterlude){isInterlude=false;const btn=document.getElementById('interlude-btn');const banner=document.getElementById('interlude-banner');const body=document.getElementById('interlude-rating-body');btn?.classList.remove('active');if(banner)banner.style.display='none';if(body)body.classList.remove('interlude-dim');}
-  if(noHook){noHook=false;document.getElementById('no-hook-btn')?.classList.remove('active');const cr=document.getElementById('chorus-slider-row');if(cr)cr.classList.remove('no-hook-dim');['flow-weight-lbl','verses-weight-lbl','prod-weight-lbl','lyrics-weight-lbl'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=['22% · Peak','14%','8%','8%'][i];});const cwl=document.getElementById('chorus-weight-lbl');if(cwl)cwl.textContent='20%';}
+  if(noHook){noHook=false;document.getElementById('no-hook-btn')?.classList.remove('active');const cr=document.getElementById('chorus-slider-row');if(cr)cr.classList.remove('no-hook-dim');applyWeightLabels(false,!!settings.noLyrics,false);}
   clearSongPicker();
   if(currentGenre==='rap')applyPacingDefault(false);
   update();
@@ -4723,8 +4849,7 @@ function rrRenderRating(){
   rrNoHook=false;
   document.getElementById('rr-no-hook-btn')?.classList.remove('active');
   const rrCsRow=document.getElementById('rr-chorus-slider-row');if(rrCsRow)rrCsRow.classList.remove('no-hook-dim');
-  const rrWls={'rr-flow-weight-lbl':'22%','rr-chorus-weight-lbl':'20%','rr-verses-weight-lbl':'14%','rr-prod-weight-lbl':'8%','rr-lyrics-weight-lbl':'8%'};
-  Object.entries(rrWls).forEach(([id,txt])=>{const el=document.getElementById(id);if(el)el.textContent=txt;});
+  applyWeightLabels(false,!!settings.noLyrics,true);
   rrChatUnread=0;
   const rrcDrawer=document.getElementById('rr-rating-chat');if(rrcDrawer)rrcDrawer.classList.remove('open');
   const rrcBadge=document.getElementById('rr-chat-badge');if(rrcBadge){rrcBadge.style.display='none';rrcBadge.textContent='';}
@@ -4733,6 +4858,9 @@ function rrRenderRating(){
   ['rr-flow','rr-verses','rr-prod','rr-chorus','rr-lyrics','rr-replay'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0;});
   applyPacingDefault(true);
   rrSubmitted=false;
+  rrHasFeatures=false;rrFeatureRating=5;
+  document.getElementById('rr-features-btn')?.classList.remove('active');
+  const rrFb=document.getElementById('rr-features-bar');if(rrFb)rrFb.style.display='none';
   document.getElementById('rr-submitted-pill').style.display='none';
   const sb=document.getElementById('rr-submit-btn');sb.disabled=false;sb.textContent='Submit';
   const fb=document.getElementById('rr-force-btn');if(fb)fb.style.display=currentRoom.host_id===currentUser?.id?'block':'none';
@@ -4784,9 +4912,12 @@ function rrUpdate(){
   document.getElementById('rr-chorus-desc').textContent=ch===0?'':(DESCS.chorus[ch]||'');
   document.getElementById('rr-lyrics-desc').textContent=l===0?'':(DESCS.lyrics[l]||'');
   document.getElementById('rr-replay-desc').textContent=r===0?'':(DESCS.replay[r]||'');
-  const B=rrNoHook?(r*.28)+(fp*.26)+(vq*.26)+(p*.10)+(l*.10)
-                  :(r*.28)+(fp*.22)+(ch*.20)+(vq*.14)+(p*.08)+(l*.08);
-  const allZero=rrNoHook?(fp+vq+p+l+r)===0:(fp+vq+p+ch+l+r)===0;
+  const nl=settings.noLyrics;
+  const B=rrNoHook&&nl?(r*24+fp*28+vq*22+p*18)/92:
+          rrNoHook?    (r*.24)+(fp*.28)+(vq*.22)+(p*.18)+(l*.08):
+          nl?          (r*24+fp*20+ch*16+vq*14+p*18)/92:
+                       (r*.24)+(fp*.20)+(ch*.16)+(vq*.14)+(p*.18)+(l*.08);
+  const allZero=rrNoHook&&nl?(fp+vq+p+r)===0:rrNoHook?(fp+vq+p+l+r)===0:nl?(fp+vq+p+ch+r)===0:(fp+vq+p+ch+l+r)===0;
   const fEl=document.getElementById('rr-final-score'),vEl=document.getElementById('rr-verdict-txt');
   if(allZero){fEl.textContent='—';fEl.style.color='var(--muted)';vEl.textContent='—';return;}
   const scores=rrNoHook?[fp,vq,p,l,r]:[fp,vq,p,ch,l,r];
@@ -4794,14 +4925,16 @@ function rrUpdate(){
   const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
   const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
   const final=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
+  const rrFeatImp=featuresImpact(rrFeatureRating,rrHasFeatures);
+  const finalWithFeat=Math.min(10,Math.max(1,final+rrFeatImp));
   if(rrBlindMode){
     fEl.textContent='?';fEl.style.color='var(--muted)';fEl.classList.add('rr-blind-score');
     vEl.textContent='Revealed at submit';
   } else {
     fEl.classList.remove('rr-blind-score');
-    fEl.textContent=final.toFixed(1);fEl.style.color=scoreColor(final);
+    fEl.textContent=finalWithFeat.toFixed(1);fEl.style.color=scoreColor(finalWithFeat);
     const vds=[[9.5,'🏆 Classic'],[9,'🔥 Elite'],[8.5,'💎 Hard'],[8,'✅ Solid'],[7,'👍 Decent'],[6,'😐 Mid'],[5,'🙄 Skip'],[3,'👎 Weak'],[0,'🗑 Trash']];
-    vEl.textContent=(vds.find(([t])=>final>=t)||['','—'])[1];
+    vEl.textContent=(vds.find(([t])=>finalWithFeat>=t)||['','—'])[1];
   }
   const _song=roomSongs[currentRoom?.current_song_idx];
   if(currentRoom&&_song&&!rrSubmitted){
@@ -4914,13 +5047,17 @@ async function rrSubmit(){
     p=+document.getElementById('rr-prod').value;ch=+document.getElementById('rr-chorus').value;
     l=+document.getElementById('rr-lyrics').value;r=+document.getElementById('rr-replay').value;
     if(rrNoHook?(fp+vq+p+l+r)===0:(fp+vq+p+ch+l+r)===0){alert('Rate at least one category first.');return;}
-    const B=rrNoHook?(r*.28)+(fp*.26)+(vq*.26)+(p*.10)+(l*.10)
-                    :(r*.28)+(fp*.22)+(ch*.20)+(vq*.14)+(p*.08)+(l*.08);
+    const _nl=settings.noLyrics;
+    const B=rrNoHook&&_nl?(r*24+fp*28+vq*22+p*18)/92:
+            rrNoHook?     (r*.24)+(fp*.28)+(vq*.22)+(p*.18)+(l*.08):
+            _nl?          (r*24+fp*20+ch*16+vq*14+p*18)/92:
+                          (r*.24)+(fp*.20)+(ch*.16)+(vq*.14)+(p*.18)+(l*.08);
     const scores=rrNoHook?[fp,vq,p,l,r]:[fp,vq,p,ch,l,r];
     const pen=scores.filter(s=>s<=5).length*.15,bon=scores.filter(s=>s>=9).length*.20;
     const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
     const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
-    final=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
+    const baseFinalRR=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
+    final=Math.min(10,Math.max(1,baseFinalRR+featuresImpact(rrFeatureRating,rrHasFeatures)));
     const vds=[[9.5,'🏆 Classic — All Time'],[9,'🔥 Elite Tape'],[8.5,'💎 Hard — Heavy Rotation'],[8,'✅ Solid Song'],[7,'👍 Decent'],[6,'😐 Middle of the Road'],[5,'🙄 Skip Worthy'],[3,'👎 Weak'],[0,'🗑 Trash — Next']];
     verdict=(vds.find(([t])=>final>=t)||[0,'🗑 Trash — Next'])[1];
   }
@@ -5187,24 +5324,16 @@ async function rrRenderEnded(){
   }).filter(Boolean).sort((a,b)=>b.avg-a.avg);
 
   const myScores=myRatings.map(r=>parseFloat(r.final_score));
-  const myAvg=myScores.length?myScores.reduce((a,b)=>a+b,0)/myScores.length:0;
+  const myAvg=myRatings.length?albumScore(myRatings):0;
   const myHigh=myScores.length?Math.max(...myScores):0;
   const myLow=myScores.length?Math.min(...myScores):0;
   const myTopRating=myRatings.length?myRatings.reduce((best,r)=>parseFloat(r.final_score)>parseFloat(best.final_score)?r:best,myRatings[0]):null;
   const myTopSong=myTopRating?roomSongs.find(s=>s.id===myTopRating.song_id):null;
 
-  const cats=[['Flow','flow_score','var(--flow)'],['Verses','verse_quality','var(--verses)'],['Prod','production','var(--prod)'],['Chorus','chorus','var(--chorus)'],['Lyrics','lyrics','var(--lyrics)'],['Replay','replay','var(--replay)']];
-  const myCatAvgs=cats.map(([name,key,color])=>{
-    const vals=myRatings.map(r=>parseFloat(r[key]||0)).filter(v=>v>0);
-    const avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0;
-    return{name,color,avg};
-  });
-
   const memberAvgs=roomMembers.map(m=>{
     const mr=scoredRatings.filter(r=>r.user_id===m.user_id);
-    const sc=mr.map(r=>parseFloat(r.final_score));
-    const avg=sc.length?sc.reduce((a,b)=>a+b,0)/sc.length:0;
-    return{member:m,avg,count:sc.length};
+    const avg=mr.length?albumScore(mr):0;
+    return{member:m,avg,count:mr.length};
   }).filter(x=>x.count>0);
   const mostGenerous=memberAvgs.length?memberAvgs.reduce((a,b)=>b.avg>a.avg?b:a):null;
   const harshest=memberAvgs.length?memberAvgs.reduce((a,b)=>b.avg<a.avg?b:a):null;
@@ -5286,20 +5415,31 @@ async function rrRenderEnded(){
     html+=`</div>`;
   }
 
+  // ── Member Leaderboard ──
+  if(memberAvgs.length>1){
+    const sortedMembers=[...memberAvgs].sort((a,b)=>b.avg-a.avg);
+    html+=sec('Overall Ratings');
+    html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;overflow:hidden;margin-bottom:.75rem">`;
+    sortedMembers.forEach((m,i)=>{
+      const isMe=m.member.user_id===currentUser?.id;
+      const uname=profileMap[m.member.user_id]?.username||m.member.profiles?.username||'Unknown';
+      const profile=profileMap[m.member.user_id]||m.member.profiles;
+      const rankLabel=i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
+      html+=`<div style="display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;${i>0?'border-top:1px solid var(--border)':''}${isMe?';background:rgba(201,168,76,.06)':''}">
+        <div style="font-size:${i<3?'1.1rem':'.75rem'};width:1.6rem;text-align:center;flex-shrink:0;color:var(--muted)">${rankLabel}</div>
+        ${avatarHTML(profile,null,28)}
+        <div style="flex:1;min-width:0;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${uname}${isMe?' ★':''}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:${hue(m.avg)};flex-shrink:0">${m.avg.toFixed(1)}</div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
   // ── Your Session ──
   html+=sec('Your Session');
-  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.75rem">${[['Avg',myAvg],['Best',myHigh],['Low',myLow]].map(([lbl,val])=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem .5rem;text-align:center"><div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${hue(val)}">${val.toFixed(1)}</div><div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.1rem">${lbl}</div></div>`).join('')}</div>`;
+  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.75rem">${[['Score',myAvg],['Best',myHigh],['Low',myLow]].map(([lbl,val])=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem .5rem;text-align:center"><div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${hue(val)}">${val.toFixed(1)}</div><div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.1rem">${lbl}</div></div>`).join('')}</div>`;
 
   if(myTopSong)html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.4rem">⭐</div><div style="flex:1;min-width:0"><div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.1rem">Your Top Pick</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${myTopSong.song}</div><div style="font-size:.65rem;color:var(--muted2)">${myTopSong.artist}</div></div><div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${hue(parseFloat(myTopRating.final_score))};flex-shrink:0">${parseFloat(myTopRating.final_score).toFixed(1)}</div></div>`;
-
-  // ── Your Category Averages ──
-  html+=sec('Your Category Averages');
-  html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem 1rem;margin-bottom:.25rem">`;
-  myCatAvgs.forEach(({name,color,avg})=>{
-    const pct=Math.min(100,(avg/10)*100);
-    html+=`<div style="margin-bottom:.6rem"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.2rem"><span style="font-size:.7rem;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em">${name}</span><span style="font-size:.75rem;font-weight:700;color:${color}">${avg.toFixed(1)}</span></div><div style="height:4px;background:var(--surface2);border-radius:2px"><div style="height:100%;width:${pct}%;background:${color};border-radius:2px"></div></div></div>`;
-  });
-  html+=`</div>`;
 
   const highlights=[];
   if(songStats[0]?.scores.length)highlights.push({icon:'🏆',label:'Best Song',val:`${songStats[0].song.song} — ${songStats[0].avg.toFixed(1)}`});
@@ -5316,7 +5456,7 @@ async function rrRenderEnded(){
 
   body.innerHTML=html;
 
-  rrRecapData={songStats,myRatings,myAvg,myHigh,myLow,myTopSong,myTopRating,memberAvgs,mostGenerous,harshest,mostDivisive,myCatAvgs};
+  rrRecapData={songStats,myRatings,myAvg,myHigh,myLow,myTopSong,myTopRating,memberAvgs,mostGenerous,harshest,mostDivisive};
 }
 
 async function shareRRSession(){
