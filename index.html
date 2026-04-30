@@ -817,12 +817,15 @@
     .q-card-text{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.03em;color:var(--text);line-height:1.3;margin-bottom:.3rem}
     .q-card-meta{font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
     .q-type-pill{background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-size:.48rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase;padding:.1rem .35rem;border-radius:2px;flex-shrink:0}
-    .q-entry-row{display:flex;align-items:center;gap:.65rem;padding:.7rem 1.25rem;border-bottom:1px solid var(--border)}
-    .q-entry-info{flex:1;min-width:0}
-    .q-entry-title{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.03em;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .q-entry-sub{font-size:.58rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .q-entry-by{font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase;margin-top:.15rem}
-    #qo-add-sheet{position:absolute;bottom:calc(var(--nav-h) + var(--safe-b));left:0;right:0;background:var(--surface);border-top:1px solid var(--border);max-height:60%;display:flex;flex-direction:column;overflow:hidden}
+    .q-entries-grid{display:flex;flex-wrap:wrap;gap:.65rem;padding:.85rem 1rem}
+    .q-entry-card{background:var(--surface);border:1px solid var(--border);border-radius:.6rem;width:calc(50% - .325rem);display:flex;flex-direction:column;overflow:hidden;position:relative}
+    .q-entry-card-art{width:100%;aspect-ratio:1;object-fit:cover;background:var(--border2);display:block}
+    .q-entry-card-body{padding:.55rem .6rem .6rem}
+    .q-entry-card-user{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:900;letter-spacing:.06em;color:var(--gold);text-transform:uppercase;margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .q-entry-card-title{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.02em;color:var(--text);line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical}
+    .q-entry-card-sub{font-size:.55rem;color:var(--muted);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .q-entry-card-num{position:absolute;top:.4rem;left:.4rem;background:rgba(7,7,26,.72);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:900;color:rgba(255,255,255,.75);padding:.1rem .3rem;line-height:1.2}
+    .q-entry-card-del{position:absolute;top:.3rem;right:.3rem;background:rgba(7,7,26,.72);border:none;border-radius:3px;color:rgba(255,255,255,.6);font-size:.65rem;cursor:pointer;padding:.15rem .3rem;line-height:1}
     #qo-search-results{overflow-y:auto;flex:1}
     .qo-result-row{display:flex;align-items:center;gap:.65rem;padding:.6rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent}
     .qo-result-row:active{background:var(--surface2)}
@@ -1703,15 +1706,15 @@
     </div>
     <div id="qo-delete-btn" style="display:none"><button onclick="deleteQuestion()" style="background:transparent;border:none;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.08em;cursor:pointer">Delete</button></div>
   </div>
-  <div id="qo-entries" class="scroll-area" style="flex:1;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 5rem)"></div>
-  <div id="qo-add-sheet" style="display:none">
-    <div style="display:flex;gap:.5rem;padding:.65rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0">
+  <div id="qo-entries" style="flex:1;overflow-y:auto;padding-bottom:.5rem"></div>
+  <div id="qo-add-sheet" style="display:none;flex-direction:column;flex-shrink:0;border-top:1px solid var(--border);background:var(--surface)">
+    <div style="display:flex;gap:.5rem;padding:.65rem 1rem;border-bottom:1px solid var(--border)">
       <input id="qo-search-input" type="text" placeholder="Search…" autocomplete="off" class="modal-input" style="flex:1;margin:0" oninput="qoSearch()">
       <button onclick="document.getElementById('qo-add-sheet').style.display='none'" style="background:transparent;border:1px solid var(--border2);color:var(--muted);padding:.4rem .65rem;border-radius:4px;font-size:.7rem;cursor:pointer">✕</button>
     </div>
     <div id="qo-search-results" style="overflow-y:auto;max-height:200px"></div>
   </div>
-  <div style="position:absolute;bottom:calc(var(--nav-h) + var(--safe-b));left:0;right:0;padding:.65rem 1.25rem;background:var(--bg);border-top:1px solid var(--border)">
+  <div style="flex-shrink:0;padding:.65rem 1.25rem;background:var(--bg);border-top:1px solid var(--border);padding-bottom:calc(var(--safe-b) + .65rem)">
     <button id="qo-add-btn" onclick="openQoAdd()" style="width:100%;padding:.6rem;background:var(--gold);color:var(--bg);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">+ Add</button>
   </div>
 </div>
@@ -3713,20 +3716,22 @@ async function refreshQuestionEntries(){
   const count=currentQuestionEntries.length;
   document.getElementById('qo-meta').textContent=`${count} answer${count!==1?'s':''}  ·  ${currentQuestion.type==='albums'?'Albums':'Songs'}`;
   if(!count){byEl.innerHTML='<div class="feed-empty" style="margin-top:1.5rem">No answers yet — be the first!</div>';return;}
-  byEl.innerHTML=currentQuestionEntries.map((e,i)=>{
+  byEl.innerHTML=`<div class="q-entries-grid">${currentQuestionEntries.map((e,i)=>{
     const uname=currentQuestionProfiles[e.user_id]?.username||'?';
     const isOwn=e.user_id===currentUser?.id;
-    return`<div class="q-entry-row">
-      <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:var(--muted);width:26px;text-align:center;flex-shrink:0">${i+1}</div>
-      ${e.artwork_url?`<img src="${itunesArtUrl(e.artwork_url,60)}" style="width:40px;height:40px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:40px;height:40px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`}
-      <div class="q-entry-info">
-        <div class="q-entry-title">${e.title}</div>
-        ${e.subtitle?`<div class="q-entry-sub">${e.subtitle}</div>`:''}
-        <div class="q-entry-by">@${uname}</div>
+    return`<div class="q-entry-card">
+      ${e.artwork_url
+        ?`<img src="${itunesArtUrl(e.artwork_url,300)}" class="q-entry-card-art" loading="lazy">`
+        :`<div class="q-entry-card-art"></div>`}
+      <div class="q-entry-card-num">${i+1}</div>
+      ${isOwn?`<button class="q-entry-card-del" onclick="deleteQuestionEntry('${e.id}')">✕</button>`:''}
+      <div class="q-entry-card-body">
+        <div class="q-entry-card-user">@${uname}</div>
+        <div class="q-entry-card-title">${e.title}</div>
+        ${e.subtitle?`<div class="q-entry-card-sub">${e.subtitle}</div>`:''}
       </div>
-      ${isOwn?`<button onclick="deleteQuestionEntry('${e.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;padding:.2rem .3rem;flex-shrink:0">✕</button>`:''}
     </div>`;
-  }).join('');
+  }).join('')}</div>`;
 }
 
 function closeQuestionOverlay(){
@@ -3766,9 +3771,9 @@ async function submitQuestion(){
 }
 
 function openQoAdd(){
-  const sheet=document.getElementById('qo-add-sheet');
-  sheet.style.display='flex';
-  sheet.style.flexDirection='column';
+  document.getElementById('qo-add-sheet').style.display='flex';
+  document.getElementById('qo-search-input').value='';
+  document.getElementById('qo-search-results').innerHTML='';
   document.getElementById('qo-search-input').focus();
 }
 
