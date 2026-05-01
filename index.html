@@ -2614,14 +2614,22 @@ function openRatingDetail(row){
   const scolor=scoreColor(score);
   const liked=myLikes.has(row.id);
   const likeCount=likeCounts[row.id]||0;
-  const cats=[
-    {name:'Flow & Delivery',key:'flow_peak',weight:'28%',color:'var(--flow)'},
-    {name:'Verses',key:'verse_quality',weight:'22%',color:'var(--verses)'},
-    {name:'Production',key:'production',weight:'20%',color:'var(--prod)'},
-    {name:'Chorus',key:'chorus',weight:'14%',color:'var(--chorus)'},
-    {name:'Lyrics',key:'lyrics',weight:'8%',color:'var(--lyrics)'},
-    {name:'Replay Value',key:'replay',weight:'8%',color:'var(--replay)'},
-  ];
+  const dbColOrder=['flow_peak','verse_quality','production','chorus','lyrics','replay'];
+  const genre=row.genre||'rap';
+  let cats;
+  if(genre==='rap'||!GENRE_PRESETS[genre]){
+    cats=[
+      {name:'Flow & Delivery',key:'flow_peak',weight:'28%',color:'var(--flow)'},
+      {name:'Verses',key:'verse_quality',weight:'22%',color:'var(--verses)'},
+      {name:'Production',key:'production',weight:'20%',color:'var(--prod)'},
+      {name:'Chorus',key:'chorus',weight:'14%',color:'var(--chorus)'},
+      {name:'Lyrics',key:'lyrics',weight:'8%',color:'var(--lyrics)'},
+      {name:'Replay Value',key:'replay',weight:'8%',color:'var(--replay)'},
+    ];
+  } else {
+    const preset=GENRE_PRESETS[genre];
+    cats=preset.cats.map((name,i)=>({name,key:dbColOrder[i],weight:Math.round(preset.weights[i]*100)+'%',color:preset.colors[i]}));
+  }
   document.getElementById('rd-header').innerHTML=`
     <div class="rd-song">${row.song_name||'Unknown'}</div>
     <div class="rd-meta">${row.artist_name||''}${row.album?' · <em>'+row.album+'</em>':''}</div>
@@ -4110,11 +4118,12 @@ function selectGenre(g){
 
 function renderGenericCats(preset){
   const gc=document.getElementById('generic-cats');
-  gc.innerHTML=preset.cats.map((name,i)=>`
+  const sorted=[...preset.cats.keys()].sort((a,b)=>preset.weights[b]-preset.weights[a]);
+  gc.innerHTML=sorted.map(i=>`
     <div class="rcat">
       <div class="rcat-head">
         <div>
-          <div class="rcat-name" style="color:${preset.colors[i]}">${name}</div>
+          <div class="rcat-name" style="color:${preset.colors[i]}">${preset.cats[i]}</div>
           <div class="rcat-weight" id="gc-weight-${i}">${Math.round(preset.weights[i]*100)}%</div>
         </div>
         <div class="rcat-score" id="gc-display-${i}">—</div>
@@ -4140,11 +4149,12 @@ function updateGenericSlider(i,color){
 }
 
 function getGenreScores(){
-  return Array.from({length:6},(_,i)=>+(document.getElementById('gc-cat-'+i)?.value||0));
+  const n=GENRE_PRESETS[currentGenre]?.cats?.length||6;
+  return Array.from({length:n},(_,i)=>+(document.getElementById('gc-cat-'+i)?.value||0));
 }
 
 function calcGenericFinal(scores,weights,catNames){
-  const B=scores.reduce((s,v,i)=>s+v*weights[i],0);
+  const B=weights.reduce((s,w,i)=>s+(scores[i]||0)*w,0);
   const weakCats=catNames.filter((_,i)=>scores[i]<=5);
   const eliteCats=catNames.filter((_,i)=>scores[i]>=9);
   const penalty=weakCats.length*.15,bonus=eliteCats.length*.20;
@@ -5240,10 +5250,11 @@ function rrRenderGenreSliders(){
     const preset=GENRE_PRESETS[rrGenre];
     if(!preset){gc.style.display='none';return;}
     gc.style.display='';
-    gc.innerHTML=preset.cats.map((name,i)=>`
+    const sorted=[...preset.cats.keys()].sort((a,b)=>preset.weights[b]-preset.weights[a]);
+    gc.innerHTML=sorted.map(i=>`
       <div class="rr-cat">
         <div class="rr-cat-head">
-          <div class="rr-cat-name" style="color:${preset.colors[i]}">${name} <span style="color:var(--muted);font-weight:400;font-size:.55rem">${Math.round(preset.weights[i]*100)}%</span></div>
+          <div class="rr-cat-name" style="color:${preset.colors[i]}">${preset.cats[i]} <span style="color:var(--muted);font-weight:400;font-size:.55rem">${Math.round(preset.weights[i]*100)}%</span></div>
           <div class="rr-cat-val" id="rr-gc-val-${i}">—</div>
         </div>
         <input type="range" min="0" max="10" step="0.5" value="0" id="rr-gc-cat-${i}" oninput="rrUpdateGeneric()" class="rr-slider">
