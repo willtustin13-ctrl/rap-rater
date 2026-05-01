@@ -759,6 +759,12 @@
     .rr-react-btn{background:transparent;border:1px solid var(--border2);border-radius:3px;padding:.28rem .5rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);cursor:pointer;transition:transform .1s,background .15s,color .15s;flex-shrink:0;-webkit-tap-highlight-color:transparent;white-space:nowrap}
     .rr-react-btn:active{transform:scale(.82);background:var(--surface2);color:var(--gold);border-color:var(--gold)}
     @keyframes rrFloatUp{0%{transform:translateY(0) scale(1);opacity:1}65%{transform:translateY(-150px) scale(1.1);opacity:.95}100%{transform:translateY(-250px) scale(.7);opacity:0}}
+    @keyframes podiumDrop{from{opacity:0;transform:translateY(-28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes podiumStatSlide{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes podiumHeaderPop{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+    .podium-entry{animation:podiumDrop .5s cubic-bezier(.22,1,.36,1) both}
+    .podium-stat{animation:podiumStatSlide .38s ease both}
+    .podium-hdr{animation:podiumHeaderPop .45s cubic-bezier(.22,1,.36,1) both}
     .rr-react-float{position:absolute;pointer-events:none;animation:rrFloatUp 2.2s ease-out forwards;display:flex;flex-direction:column;align-items:center;gap:.15rem}
     .rr-react-float-word{font-family:'Barlow Condensed',sans-serif;font-size:1.35rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);text-shadow:0 2px 8px rgba(0,0,0,.9),0 0 20px rgba(201,168,76,.5);white-space:nowrap}
     .rr-react-float-name{font-family:'Barlow Condensed',sans-serif;font-size:.46rem;font-weight:700;letter-spacing:.09em;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.95);white-space:nowrap}
@@ -1570,6 +1576,18 @@
       </div>
     </div>
 
+    <!-- PODIUM REVEAL SEQUENCE -->
+    <div id="rr-podium" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div id="rr-podium-inner" style="flex:1;overflow-y:auto;padding:1.5rem 1.25rem 1rem;display:flex;flex-direction:column;align-items:center">
+        <div id="rr-podium-header" style="text-align:center;width:100%;margin-bottom:1.5rem"></div>
+        <div id="rr-podium-entries" style="width:100%;display:flex;flex-direction:column;gap:.6rem"></div>
+        <div id="rr-podium-stats" style="width:100%;margin-top:1.25rem;display:flex;flex-direction:column;gap:.5rem"></div>
+      </div>
+      <div style="padding:.75rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);background:var(--bg);border-top:1px solid var(--border);flex-shrink:0">
+        <button id="rr-view-recap-btn" class="rr-btn rr-btn-primary" style="width:100%;display:none" onclick="rrGoToRecap()">View Full Recap →</button>
+      </div>
+    </div>
+
     <!-- ENDED (SESSION RECAP) -->
     <div id="rr-ended" style="display:none;flex-direction:column;flex:1;overflow:hidden">
       <div class="scroll-area" style="flex:1">
@@ -2013,23 +2031,23 @@ const GENRE_PRESETS={
   pop:{label:'Pop',
     colors:['#f472b6','#a78bfa','#fb923c','#60a5fa','#34d399','#facc15'],
     cats:['Catchiness','Vocals','Production','Melody','Songwriting','Replay Value'],
-    weights:[0.25,0.20,0.20,0.15,0.10,0.10]},
+    weights:[0.22,0.18,0.15,0.10,0.07,0.28]},
   country:{label:'Country',
     colors:['#fb923c','#60a5fa','#34d399','#f472b6','#a78bfa','#facc15'],
     cats:['Storytelling','Chorus','Lyrics','Emotion','Vocals','Replay Value'],
-    weights:[0.25,0.20,0.20,0.15,0.10,0.10]},
+    weights:[0.22,0.18,0.15,0.10,0.07,0.28]},
   rock:{label:'Rock',
     colors:['#fb923c','#f472b6','#60a5fa','#a78bfa','#34d399','#facc15'],
     cats:['Instrumentation','Energy','Chorus','Vocals','Songwriting','Replay Value'],
-    weights:[0.25,0.20,0.20,0.15,0.10,0.10]},
+    weights:[0.22,0.18,0.15,0.10,0.07,0.28]},
   rnb:{label:'R&B',
     colors:['#a78bfa','#f472b6','#60a5fa','#fb923c','#34d399','#facc15'],
     cats:['Vocals','Emotion','Melody','Production','Lyrics','Replay Value'],
-    weights:[0.25,0.20,0.20,0.15,0.10,0.10]},
+    weights:[0.22,0.18,0.15,0.10,0.07,0.28]},
   edm:{label:'EDM',
     colors:['#fb923c','#f472b6','#60a5fa','#a78bfa','#34d399','#facc15'],
     cats:['Production','Build-Up','Drop / Payoff','Energy','Atmosphere','Replay Value'],
-    weights:[0.30,0.20,0.20,0.15,0.10,0.05]},
+    weights:[0.25,0.12,0.18,0.10,0.07,0.28]},
   hyperpop:{label:'Hyperpop',
     colors:['#f472b6','#a78bfa','#60a5fa','#34d399','#facc15','#fb923c'],
     cats:['Production','Vocals','Lyrics','Replay Value','Chorus'],
@@ -4821,7 +4839,7 @@ const SFX=(()=>{
 let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, rrBlindMode=false, rrGenre='rap';
 
 function rrState(s){
-  ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
+  ['home','lobby','intro','rating','reveal','podium','ended'].forEach(id=>{
     const el=document.getElementById('rr-'+id);
     if(!el)return;
     const active=id===s;
@@ -4892,6 +4910,7 @@ async function rrLoadData(){
 }
 
 function rrRenderLobby(){
+  if(currentRoom?.genre)rrApplyGenre(currentRoom.genre);
   const isHost=currentRoom?.host_id===currentUser?.id;
   const roomName=currentRoom?.name||'Rank Room';
   document.getElementById('rr-lobby-name').textContent=roomName;
@@ -5177,9 +5196,10 @@ function rrToggleBlindMode(){
   rrRenderLobby();
 }
 
-function rrSetGenre(g){
+async function rrSetGenre(g){
   if(currentRoom?.host_id!==currentUser?.id)return;
   rrGenre=g;
+  if(currentRoom)await db.from('rank_rooms').update({genre:g}).eq('id',currentRoom.id);
   if(roomChannel)roomChannel.send({type:'broadcast',event:'genre_set',payload:{genre:g}});
   rrRenderLobby();
 }
@@ -5558,7 +5578,15 @@ function rrOpenScoreDetail(userId){
   const r=rrRevealRatings.find(x=>x.user_id===userId);
   if(!r)return;
   const u=r.profile?.username||'Unknown',col=r.profile?.avatar_color||'#c9a84c',s=parseFloat(r.final_score),isMe=r.user_id===currentUser?.id;
-  const cats=[['Flow',r.flow_score,'var(--flow)'],['Verses',r.verse_quality,'var(--verses)'],['Production',r.production,'var(--prod)'],['Chorus',r.chorus,'var(--chorus)'],['Lyrics',r.lyrics,'var(--lyrics)'],['Replay',r.replay,'var(--replay)']];
+  const dbColOrder=['flow_score','verse_quality','production','chorus','lyrics','replay'];
+  let cats;
+  if(rrGenre==='rap'||!GENRE_PRESETS[rrGenre]){
+    cats=[['Flow',r.flow_score,'var(--flow)'],['Verses',r.verse_quality,'var(--verses)'],['Production',r.production,'var(--prod)'],['Chorus',r.chorus,'var(--chorus)'],['Lyrics',r.lyrics,'var(--lyrics)'],['Replay',r.replay,'var(--replay)']];
+  } else {
+    const preset=GENRE_PRESETS[rrGenre];
+    const sorted=[...preset.cats.keys()].sort((a,b)=>preset.weights[b]-preset.weights[a]);
+    cats=sorted.map(i=>[preset.cats[i],r[dbColOrder[i]]||0,preset.colors[i]]);
+  }
   document.getElementById('rr-score-detail-body').innerHTML=`
     <div style="text-align:center;margin-bottom:1rem">
       ${avatarHTML(r.profile,null,48,'margin:0 auto .6rem;')}
@@ -5682,9 +5710,13 @@ async function rrEnd(){
 }
 
 async function rrRenderEnded(){
-  SFX.fanfare();
+  rrState('podium');
+  document.getElementById('rr-podium-header').innerHTML='<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">Loading results…</div>';
+  document.getElementById('rr-podium-entries').innerHTML='';
+  document.getElementById('rr-podium-stats').innerHTML='';
+  document.getElementById('rr-view-recap-btn').style.display='none';
   const body=document.getElementById('rr-recap-body');
-  body.innerHTML='<div style="text-align:center;color:var(--muted);padding:2rem">Loading recap…</div>';
+  body.innerHTML='';
 
   const{data:allRatings}=await db.from('rank_room_ratings').select('*').eq('room_id',currentRoom.id);
   const ratings=allRatings||[];
@@ -5822,6 +5854,94 @@ async function rrRenderEnded(){
   body.innerHTML=html;
 
   rrRecapData={songStats,myRatings,myAvg,myHigh,myLow,myTopSong,myTopRating,memberAvgs,mostGenerous,harshest,mostDivisive};
+  rrRunPodiumSequence(rrRecapData);
+}
+
+function rrGoToRecap(){
+  SFX.fanfare();
+  rrState('ended');
+}
+
+async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harshest,mostDivisive,memberAvgs}){
+  rrState('podium');
+  const hue=n=>n>=9?'var(--green)':n>=7?'var(--gold)':n>=5?'var(--chorus)':'var(--muted2)';
+  const podiumColors=['#f5c518','#c0c0c0','#cd7f32'];
+  const rankLabels=['🥇','🥈','🥉','4th','5th'];
+
+  const headerEl=document.getElementById('rr-podium-header');
+  const entriesEl=document.getElementById('rr-podium-entries');
+  const statsEl=document.getElementById('rr-podium-stats');
+  const recapBtn=document.getElementById('rr-view-recap-btn');
+  entriesEl.innerHTML='';statsEl.innerHTML='';recapBtn.style.display='none';
+
+  // Header
+  headerEl.innerHTML=`<div class="podium-hdr">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">${currentRoom?.name||'Rank Room'}</div>
+    <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);line-height:1">Session Complete</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.4rem">Top Songs</div>
+  </div>`;
+
+  const delay=ms=>new Promise(r=>setTimeout(r,ms));
+  await delay(600);
+
+  // Podium entries: 5th down to 1st
+  const top5=songStats.slice(0,Math.min(5,songStats.length));
+  const reveal=[...top5].reverse(); // show 5th first
+  for(let i=0;i<reveal.length;i++){
+    const ss=reveal[i];
+    const rank=top5.indexOf(ss); // 0=1st
+    const myR=myRatings.find(r=>r.song_id===ss.song.id);
+    const myS=myR?parseFloat(myR.final_score):null;
+    const borderColor=rank<3?podiumColors[rank]:'var(--border2)';
+    const rankLbl=rankLabels[rank]||`#${rank+1}`;
+    const isTop=rank===0;
+    const entry=document.createElement('div');
+    entry.className='podium-entry';
+    entry.style.animationDelay='0s';
+    entry.innerHTML=`<div style="background:var(--surface);border:1px solid ${rank<3?borderColor+'55':'var(--border)'};border-left:3px solid ${borderColor};border-radius:.75rem;padding:.9rem 1rem;display:flex;align-items:center;gap:.85rem">
+      <div style="font-size:${isTop?'1.5rem':'1.1rem'};flex-shrink:0;line-height:1;min-width:1.6rem;text-align:center;${rank>=3?'font-family:\'Barlow Condensed\',sans-serif;font-size:.75rem;color:var(--muted);font-weight:700':''}">${rankLbl}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:${isTop?'1rem':'.9rem'};font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${ss.song.song}</div>
+        <div style="font-size:.6rem;color:var(--muted2)">${ss.song.artist}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Playfair Display',serif;font-size:${isTop?'1.6rem':'1.25rem'};font-weight:900;color:${hue(ss.avg)};line-height:1">${ss.avg.toFixed(1)}</div>
+        ${myS!==null?`<div style="font-size:.55rem;color:var(--muted);margin-top:.1rem">you: ${myS.toFixed(1)}</div>`:''}
+      </div>
+    </div>`;
+    entriesEl.prepend(entry);
+    if(i===0)SFX.submit();
+    else if(rank===0)SFX.fanfare();
+    await delay(i===reveal.length-1?400:900);
+  }
+
+  await delay(800);
+
+  // Stat highlights
+  const stats=[];
+  if(mostDivisive?.scores.length>1&&mostDivisive.stddev>0.01)stats.push({icon:'💥',label:'Most Divisive',val:`${mostDivisive.song.song}`,sub:`σ ${mostDivisive.stddev.toFixed(1)}`});
+  if(mostGenerous)stats.push({icon:'💚',label:'Most Generous',val:`@${profileMap[mostGenerous.member.user_id]?.username||'—'}`,sub:`${mostGenerous.avg.toFixed(1)} avg`});
+  if(harshest&&harshest.member.user_id!==mostGenerous?.member.user_id)stats.push({icon:'🔥',label:'Harshest Critic',val:`@${profileMap[harshest.member.user_id]?.username||'—'}`,sub:`${harshest.avg.toFixed(1)} avg`});
+  if(myAvg>0)stats.push({icon:'⭐',label:'Your Score',val:myAvg.toFixed(1),sub:'session avg'});
+
+  for(const s of stats){
+    const el=document.createElement('div');
+    el.className='podium-stat';
+    el.innerHTML=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem">
+      <div style="font-size:1.3rem;flex-shrink:0">${s.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;font-weight:700">${s.label}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.val}</div>
+      </div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--gold);flex-shrink:0;text-align:right">${s.sub}</div>
+    </div>`;
+    statsEl.appendChild(el);
+    await delay(650);
+  }
+
+  await delay(500);
+  recapBtn.style.display='block';
+  recapBtn.classList.add('podium-stat');
 }
 
 async function shareRRSession(){
@@ -5999,7 +6119,8 @@ function rrSubscribe(roomId){
         rrIntroTimer=setTimeout(()=>{if(currentRoom?.status==='rating'){SFX.go();rrState('rating');rrRenderRating();}},3500);
       }
       else if(s==='reveal'&&prev==='rating'){rrState('reveal');await rrRenderReveal();}
-      else if(s==='ended'&&prev!=='ended'){rrState('ended');await rrRenderEnded();}
+      else if(s==='ended'&&prev!=='ended'){await rrRenderEnded();}
+      else if(s==='lobby'){rrRenderLobby();}
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'rank_room_members',filter:`room_id=eq.${roomId}`},async()=>{
       await rrLoadData();if(currentRoom?.status==='lobby'){SFX.join();rrRenderLobby();}
@@ -6138,7 +6259,7 @@ async function rrResync(){
   rrSubscribe(currentRoom.id);
   if(room.status===prevStatus&&room.current_song_idx===prevIdx)return;
   await rrLoadData();
-  if(room.status==='ended'&&prevStatus!=='ended'){rrState('ended');await rrRenderEnded();}
+  if(room.status==='ended'&&prevStatus!=='ended'){await rrRenderEnded();}
   else if(room.status==='lobby'){rrState('lobby');rrRenderLobby();}
   else if(room.status==='rating'){
     rrSubmitted=false;
