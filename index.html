@@ -192,8 +192,6 @@
     .rc-input::placeholder{color:var(--muted)}
     .rc-title{font-size:1.3rem;font-weight:900;margin-bottom:.3rem}
     .rc-artist{font-size:.95rem;color:var(--muted2);margin-bottom:0}
-    .rc-pacing{display:flex;gap:.3rem}
-    .rc-pacing .pacing-btn{flex:1;text-align:center;font-size:.7rem;padding:.5rem .3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
     /* Each category row */
     .rcat{border-top:1px solid var(--border);padding:.55rem 0}
@@ -292,7 +290,6 @@
     .rr-btn:active{transform:scale(.96);}
     .rr-submit-btn:active:not([disabled]){transform:scale(.96);}
     .follow-btn:active:not([disabled]){transform:scale(.95);}
-    .pacing-btn:active{transform:scale(.92);}
     .rr-add-tab:active{transform:scale(.93);}
     .rr-ready-pill.clickable:active{transform:scale(.92)!important;opacity:1!important;}
     .rr-approve-btn:active{transform:scale(.92);}
@@ -308,10 +305,6 @@
       .rr-btn-danger:hover{background:rgba(244,114,182,.09);}
       .rc-btn-save:hover,.rate-btn-save:hover{background:rgba(167,139,250,.1);}
       .rc-btn-reset:hover,.rate-btn-reset:hover{border-color:var(--red);color:var(--red);}
-      .pacing-btn:not(.active-perfect):not(.active-slight):not(.active-drags):hover{border-color:var(--muted2);color:var(--text);}
-      .pacing-btn.active-perfect:hover{box-shadow:0 0 10px var(--glow-teal);}
-      .pacing-btn.active-slight:hover{box-shadow:0 0 10px rgba(167,139,250,.4);}
-      .pacing-btn.active-drags:hover{box-shadow:0 0 10px var(--glow-pink);}
       .rr-add-tab:not(.active):hover{border-color:var(--muted2);color:var(--text);}
       .rr-ready-pill.clickable:hover{border-color:var(--gold);color:var(--gold);}
       .rr-approve-btn:hover{background:var(--green);color:var(--bg);}
@@ -339,13 +332,6 @@
     .song-inputs input:focus{border-color:var(--gold)}
     .song-inputs input::placeholder{color:var(--muted)}
     .song-inputs input.artist-inp{font-size:1.1rem;color:var(--muted2);margin-top:.5rem}
-    .pacing-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem}
-    .pacing-lbl{font-size:.56rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
-    .pacing-btns{display:flex;gap:.35rem;flex-wrap:wrap}
-    .pacing-btn{background:transparent;border:1.5px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;padding:.5rem .75rem;cursor:pointer;transition:all .18s;white-space:nowrap;border-radius:4px;min-height:36px}
-    .pacing-btn.active-perfect{border-color:var(--green);color:var(--green);background:rgba(52,211,153,.08)}
-    .pacing-btn.active-slight{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.08)}
-    .pacing-btn.active-drags{border-color:var(--red);color:var(--red);background:rgba(244,114,182,.08)}
     .category{border-top:1px solid var(--border);padding:.9rem 0}
     .category:last-of-type{border-bottom:1px solid var(--border)}
     .cat-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.65rem;gap:.75rem}
@@ -388,8 +374,6 @@
     .mod-tag.penalty{border-color:var(--red);color:var(--red)}
     .mod-tag.bonus{border-color:var(--green);color:var(--green)}
     .mod-tag.dr{border-color:var(--gold);color:var(--gold)}
-    .mod-tag.pacing{border-color:var(--gold);color:var(--gold)}
-    .mod-tag.pacing-bad{border-color:var(--red);color:var(--red)}
     .mod-tag.neutral{border-color:var(--border2);color:var(--muted)}
     .verdict-bar{padding:.7rem 1.2rem;border-top:1px solid var(--border);font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;transition:color .3s}
     .rate-btn-row{display:flex;gap:.5rem;margin-top:.9rem}
@@ -794,7 +778,6 @@
     .rr-ended-stat{text-align:center;padding:1rem;flex:1}
     .rr-ended-stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;display:block;line-height:1;margin-bottom:.3rem}
     .rr-ended-stat-lbl{font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700}
-    .rr-pacing-row{padding:.55rem 1.25rem;border-bottom:1px solid var(--border)}
     /* LISTS */
     .pst-bar{display:flex;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0}
     .pst-btn{flex:1;padding:.65rem .5rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .15s,border-color .15s}
@@ -1153,13 +1136,6 @@
         </div>
         <div id="interlude-rating-body">
 
-        <!-- Pacing (Rap only) -->
-        <div id="rap-pacing" class="rc-pacing" style="margin-bottom:.8rem">
-          <button class="pacing-btn active-perfect" data-pacing="0" data-cls="active-perfect" onclick="selectPacing(this)">✅ Perfect</button>
-          <button class="pacing-btn" data-pacing="0.20" data-cls="active-slight" onclick="selectPacing(this)">⚠️ Slightly Off</button>
-          <button class="pacing-btn" data-pacing="0.50" data-cls="active-drags" onclick="selectPacing(this)">🔴 Drags</button>
-        </div>
-
         <!-- RAP CATEGORIES -->
         <div id="rap-cats">
 
@@ -1196,6 +1172,22 @@
           <span id="fp-echo" style="display:none">0</span><span id="f-result" style="display:none">0</span>
         </div>
 
+        <!-- BEAT -->
+        <div class="rcat prod-cat">
+          <div class="rcat-head">
+            <div>
+              <div class="rcat-name" style="color:var(--prod)">Beat</div>
+              <div class="rcat-weight" id="prod-weight-lbl">18%</div>
+            </div>
+            <div class="rcat-score" id="prod-display">—</div>
+          </div>
+          <div class="rcat-row">
+            <span class="rcat-lbl"><strong id="p-val">—</strong></span>
+            <input type="range" min="0" max="10" step="0.5" value="0" id="prod" oninput="update()" class="rcat-slider">
+          </div>
+          <div class="rcat-desc" id="prod-desc"></div>
+        </div>
+
         <!-- CHORUS -->
         <div class="rcat chorus-cat">
           <div class="rcat-head">
@@ -1230,22 +1222,6 @@
           </div>
           <div class="rcat-desc" id="verses-desc"></div>
           <span id="vq-echo" style="display:none">0</span><span id="v-result" style="display:none">0</span>
-        </div>
-
-        <!-- BEAT -->
-        <div class="rcat prod-cat">
-          <div class="rcat-head">
-            <div>
-              <div class="rcat-name" style="color:var(--prod)">Beat</div>
-              <div class="rcat-weight" id="prod-weight-lbl">18%</div>
-            </div>
-            <div class="rcat-score" id="prod-display">—</div>
-          </div>
-          <div class="rcat-row">
-            <span class="rcat-lbl"><strong id="p-val">—</strong></span>
-            <input type="range" min="0" max="10" step="0.5" value="0" id="prod" oninput="update()" class="rcat-slider">
-          </div>
-          <div class="rcat-desc" id="prod-desc"></div>
         </div>
 
         <!-- LYRICS -->
@@ -1478,13 +1454,6 @@
         </div>
         <div id="rr-interlude-rating-body">
         <div id="rr-rap-cats">
-        <div class="rr-pacing-row">
-          <div class="rc-pacing">
-            <button class="pacing-btn active-perfect" data-pacing="0" data-cls="active-perfect" onclick="rrSelectPacing(this)">✅ Perfect</button>
-            <button class="pacing-btn" data-pacing="0.20" data-cls="active-slight" onclick="rrSelectPacing(this)">⚠️ Slightly Off</button>
-            <button class="pacing-btn" data-pacing="0.50" data-cls="active-drags" onclick="rrSelectPacing(this)">🔴 Drags</button>
-          </div>
-        </div>
         <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--replay)">Replay Value <span style="color:var(--muted);font-weight:400;font-size:.55rem">28%</span></div><div class="rr-cat-val" id="rr-replay-val">—</div></div>
           <input type="range" min="0" max="10" step="0.5" value="0" id="rr-replay" class="rr-slider" oninput="rrUpdate()">
@@ -1496,6 +1465,11 @@
           <div class="rcat-desc" id="rr-flow-desc"></div>
         </div>
         <div class="rr-cat">
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--prod)">Beat <span id="rr-prod-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">18%</span></div><div class="rr-cat-val" id="rr-prod-val">—</div></div>
+          <input type="range" min="0" max="10" step="0.5" value="0" id="rr-prod" class="rr-slider" oninput="rrUpdate()">
+          <div class="rcat-desc" id="rr-prod-desc"></div>
+        </div>
+        <div class="rr-cat">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--chorus)">Chorus <span id="rr-chorus-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">16%</span></div><div style="display:flex;align-items:center;gap:.45rem"><button id="rr-no-hook-btn" class="no-hook-btn" onclick="rrToggleNoHook()">No Hook</button><div class="rr-cat-val" id="rr-chorus-val">—</div></div></div>
           <div id="rr-chorus-slider-row"><input type="range" min="0" max="10" step="0.5" value="0" id="rr-chorus" class="rr-slider" oninput="rrUpdate()"></div>
           <div class="rcat-desc" id="rr-chorus-desc"></div>
@@ -1504,11 +1478,6 @@
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--verses)">Verses <span id="rr-verses-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">14%</span></div><div class="rr-cat-val" id="rr-verses-val">—</div></div>
           <input type="range" min="0" max="10" step="0.5" value="0" id="rr-verses" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-verses-desc"></div>
-        </div>
-        <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--prod)">Beat <span id="rr-prod-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">18%</span></div><div class="rr-cat-val" id="rr-prod-val">—</div></div>
-          <input type="range" min="0" max="10" step="0.5" value="0" id="rr-prod" class="rr-slider" oninput="rrUpdate()">
-          <div class="rcat-desc" id="rr-prod-desc"></div>
         </div>
         <div class="rr-cat" id="rr-lyrics-cat-row">
           <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--lyrics)">Lyrics <span id="rr-lyrics-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">8%</span></div><div class="rr-cat-val" id="rr-lyrics-val">—</div></div>
@@ -1881,7 +1850,7 @@ db.from('profiles').select('id').limit(1).then(()=>console.log('Supabase awake')
 const SONG_CATALOG = []; // iTunes search only
 // ─────────────────────────────────────────────────────────────────────────────
 
-let currentUser=null,currentProfile=null,allRatings=[],pacingPen=0;
+let currentUser=null,currentProfile=null,allRatings=[];
 let selectedFolder=null,activeModalTab='existing',selectedColor='#c9a84c';
 let myFollows=[],feedMode='all',profileMap={},activeRatingId=null;
 let feedSubject='songs',feedListsData=[],questionsData=[],currentQuestion=null,currentQuestionEntries=[],currentQuestionProfiles={},_pqType='songs';
@@ -2274,7 +2243,6 @@ const SETTINGS_DEFAULTS={
   compactFeed:true,
   hideDescs:false,
   autoReady:false,
-  pacingDefault:'0',
   notifyFollows:true,
   notifyLikes:true,
   notifyComments:true,
@@ -2328,16 +2296,6 @@ function applyWeightLabels(nh,nl,rr=false){
   set('lyrics-weight-lbl',w.lyrics);
   document.getElementById(rr?'rr-lyrics-cat-row':'lyrics-cat-row')?.classList.toggle('no-lyrics-dim',nl);
 }
-function applyPacingDefault(rr=false){
-  const pen=parseFloat(settings.pacingDefault||'0');
-  const root=rr?document.getElementById('rr-rating'):document.getElementById('tab-rate');
-  if(!root)return;
-  root.querySelectorAll('.pacing-btn').forEach(b=>b.classList.remove('active-perfect','active-slight','active-drags'));
-  const target=[...root.querySelectorAll('.pacing-btn')].find(b=>parseFloat(b.dataset.pacing)===pen);
-  const chosen=target||root.querySelectorAll('.pacing-btn')[0];
-  if(chosen)chosen.classList.add(chosen.dataset.cls||'active-perfect');
-  if(rr)rrPacingPen=pen; else pacingPen=pen;
-}
 
 function renderSettings(){
   const el=document.getElementById('settings-body');
@@ -2370,7 +2328,6 @@ function renderSettings(){
     )}
     ${sec('Ratings',
       row('Show Descriptions','Text hints under each category slider',`<button class="settings-toggle${!settings.hideDescs?' on':''}" onclick="toggleSetting('hideDescs')"></button>`),
-      row('Pacing Default','Starting pacing selection',seg('pacingDefault',[['0','Perfect'],['0.20','Slight'],['0.50','Drags']])),
       row('we dont give a fuck about lyrics','Removes lyrics from the equation, weight redistributed to other categories',tog('noLyrics')),
       row('How the Formula Works','Category weights, bonuses & penalties',`<button class="settings-action-btn settings-muted-btn" onclick="openFormulaOverlay()">View →</button>`)
     )}
@@ -3326,11 +3283,6 @@ function editRating(row){
   document.getElementById('chorus').value        = row.chorus||0;
   document.getElementById('lyrics').value        = row.lyrics||0;
   document.getElementById('replay').value        = row.replay||0;
-  pacingPen  = parseFloat(row.pacing_penalty)||0;
-  document.querySelectorAll('.pacing-btn').forEach(b=>{
-    b.classList.remove('active-perfect','active-slight','active-drags');
-    if(parseFloat(b.dataset.pacing)===pacingPen)b.classList.add(b.dataset.cls);
-  });
   if(row.comment){document.getElementById('modal-comment').value=row.comment;}
   update();
   switchTab('rate');
@@ -4105,14 +4057,10 @@ function selectGenre(g){
   const isRap=g==='rap';
   document.getElementById('rap-cats').style.display=isRap?'':'none';
   document.getElementById('generic-cats').style.display=isRap?'none':'';
-  document.getElementById('rap-pacing').style.display=isRap?'':'none';
   if(!isRap){
     renderGenericCats(GENRE_PRESETS[g]);
     if(noHook){noHook=false;document.getElementById('no-hook-btn')?.classList.remove('active');}
   }
-  // reset Rap pacing to default if switching away
-  if(isRap) applyPacingDefault(false);
-  else pacingPen=0;
   update();
 }
 
@@ -4290,7 +4238,6 @@ function rrToggleNoHook(){
 // RATING
 function fillSlider(el,color){const pct=((+el.value-+el.min)/(+el.max-+el.min))*100;el.style.background=`linear-gradient(to right,${color} 0%,${color} ${pct}%,#1e1d42 ${pct}%,#1e1d42 100%)`;}
 function refreshFills(){Object.entries(SLIDER_COLORS).forEach(([id,col])=>{const el=document.getElementById(id);if(el)fillSlider(el,col);});}
-function selectPacing(btn){document.querySelectorAll('.pacing-btn').forEach(b=>b.classList.remove('active-perfect','active-slight','active-drags'));btn.classList.add(btn.dataset.cls);pacingPen=parseFloat(btn.dataset.pacing);update();}
 function getScores(){
   const fp=+document.getElementById('flow-peak').value;
   const vq=+document.getElementById('verse-quality').value,p=+document.getElementById('prod').value;
@@ -4309,7 +4256,7 @@ function calcFinal(F,V,p,ch,l,r,nh=false){
   const penalty=weakCats.length*.15,bonus=eliteCats.length*.20;
   const gap=Math.max(...scores)-Math.min(...scores);
   let dr=0;if(B>8){if(gap>=7)dr=.70;else if(gap>=5)dr=.40;else if(gap>=3)dr=.20;}
-  return{B,weakCats,eliteCats,penalty,bonus,gap,dr,final:Math.min(10,Math.max(1,B-penalty+bonus-dr-pacingPen))};
+  return{B,weakCats,eliteCats,penalty,bonus,gap,dr,final:Math.min(10,Math.max(1,B-penalty+bonus-dr))};
 }
 function update(){
   if(isInterlude){
@@ -4342,7 +4289,9 @@ function update(){
       document.getElementById('verdict').textContent='—';document.getElementById('verdict').style.color='var(--muted)';
       return;
     }
-    const{B,weakCats,eliteCats,penalty,bonus,gap,dr,final}=calcGenericFinal(scores,preset.weights,preset.cats);
+    const{B,weakCats,eliteCats,penalty,bonus,gap,dr,final:baseFinal}=calcGenericFinal(scores,preset.weights,preset.cats);
+    const featImp=featuresImpact(featureRating,hasFeatures);
+    const final=Math.min(10,Math.max(1,baseFinal+featImp));
     document.getElementById('b-base').textContent=B.toFixed(2);
     document.getElementById('b-pen').textContent=penalty>0?`−${penalty.toFixed(2)}`:'—';
     document.getElementById('b-bon').textContent=bonus>0?`+${bonus.toFixed(2)}`:'—';
@@ -4359,10 +4308,11 @@ function update(){
     document.getElementById('score-bar').style.width=`${(final/10)*100}%`;
     document.getElementById('score-bar').style.background=scoreColor(final);
     const modDiv=document.getElementById('modifiers');modDiv.innerHTML='';
-    if(!weakCats.length&&!eliteCats.length&&!dr)modDiv.innerHTML='<span class="mod-tag neutral">No modifiers</span>';
+    if(!weakCats.length&&!eliteCats.length&&!dr&&!featImp)modDiv.innerHTML='<span class="mod-tag neutral">No modifiers</span>';
     weakCats.forEach(c=>modDiv.innerHTML+=`<span class="mod-tag penalty">⚠ ${c} −0.15</span>`);
     eliteCats.forEach(c=>modDiv.innerHTML+=`<span class="mod-tag bonus">★ ${c} +0.20</span>`);
     if(dr>0)modDiv.innerHTML+=`<span class="mod-tag dr">↓ Gap ${gap.toFixed(1)} −${dr.toFixed(2)}</span>`;
+    if(hasFeatures&&featImp!==0)modDiv.innerHTML+=`<span class="mod-tag ${featImp>0?'bonus':'penalty'}">🎤 Features ${featImp>0?'+':''}${featImp.toFixed(1)}</span>`;
     const verdicts=[[9.5,'🏆 Classic — All Time'],[9,'🔥 Elite Tape'],[8.5,'💎 Hard — Heavy Rotation'],[8,'✅ Solid Song'],[7,'👍 Decent'],[6,'😐 Middle of the Road'],[5,'🙄 Skip Worthy'],[3,'👎 Weak'],[0,'🗑 Trash — Next']];
     const v=verdicts.find(([t])=>final>=t);
     const vEl=document.getElementById('verdict');if(vEl){vEl.textContent=v?v[1]:'🗑 Trash';vEl.style.color=scoreColor(final);}
@@ -4420,11 +4370,10 @@ function update(){
   document.getElementById('score-bar').style.width=`${(final/10)*100}%`;
   document.getElementById('score-bar').style.background=scoreColor(final);
   const modDiv=document.getElementById('modifiers');modDiv.innerHTML='';
-  if(!weakCats.length&&!eliteCats.length&&!dr&&!pacingPen)modDiv.innerHTML='<span class="mod-tag neutral">No modifiers</span>';
+  if(!weakCats.length&&!eliteCats.length&&!dr)modDiv.innerHTML='<span class="mod-tag neutral">No modifiers</span>';
   weakCats.forEach(c=>modDiv.innerHTML+=`<span class="mod-tag penalty">⚠ ${c} −0.15</span>`);
   eliteCats.forEach(c=>modDiv.innerHTML+=`<span class="mod-tag bonus">★ ${c} +0.20</span>`);
   if(dr>0)modDiv.innerHTML+=`<span class="mod-tag dr">↓ Gap ${gap.toFixed(1)} −${dr.toFixed(2)}</span>`;
-  if(pacingPen>0)modDiv.innerHTML+=`<span class="mod-tag ${pacingPen>=.5?'pacing-bad':'pacing'}">⏱ ${pacingPen>=.5?'Drags':'Slightly Off'} −${pacingPen.toFixed(2)}</span>`;
   if(hasFeatures&&featImp!==0)modDiv.innerHTML+=`<span class="mod-tag ${featImp>0?'bonus':'penalty'}">🎤 Features ${featImp>0?'+':''}${featImp.toFixed(1)}</span>`;
   const verdicts=[[9.5,'🏆 Classic — All Time'],[9,'🔥 Elite Tape'],[8.5,'💎 Hard — Heavy Rotation'],[8,'✅ Solid Song'],[7,'👍 Decent'],[6,'😐 Middle of the Road'],[5,'🙄 Skip Worthy'],[3,'👎 Weak'],[0,'🗑 Trash — Next']];
   const v=verdicts.find(([t])=>final>=t);
@@ -4529,12 +4478,12 @@ async function confirmSave(autoAlbum, autoArtist, autoComment){
     const{fp,vq,p,ch,l,r,F,V}=getScores();
     const{final:baseFinal}=calcFinal(F,V,p,ch,l,r,noHook);
     const final=Math.min(10,Math.max(1,baseFinal+featuresImpact(featureRating,hasFeatures)));
-    Object.assign(insertData,{flow_peak:fp,flow_score:F,verse_quality:vq,verse_score:V,production:p,chorus:ch,lyrics:l,replay:r,pacing_penalty:pacingPen,final_score:isInterlude?null:final,verdict:isInterlude?'Interlude':verdict});
+    Object.assign(insertData,{flow_peak:fp,flow_score:F,verse_quality:vq,verse_score:V,production:p,chorus:ch,lyrics:l,replay:r,final_score:isInterlude?null:final,verdict:isInterlude?'Interlude':verdict});
   } else {
     const scores=getGenreScores();
     const preset=GENRE_PRESETS[currentGenre];
     const{final}=calcGenericFinal(scores,preset.weights,preset.cats);
-    Object.assign(insertData,{flow_peak:scores[0],flow_score:scores[0],verse_quality:scores[1],verse_score:scores[1],production:scores[2],chorus:scores[3],lyrics:scores[4],replay:scores[5],pacing_penalty:0,final_score:isInterlude?null:final,verdict:isInterlude?'Interlude':verdict});
+    Object.assign(insertData,{flow_peak:scores[0],flow_score:scores[0],verse_quality:scores[1],verse_score:scores[1],production:scores[2],chorus:scores[3],lyrics:scores[4],replay:scores[5],final_score:isInterlude?null:final,verdict:isInterlude?'Interlude':verdict});
   }
   const errEl=document.getElementById('save-modal-err');
   if(errEl)errEl.textContent='';
@@ -4745,7 +4694,6 @@ function resetAll(){
   if(isInterlude){isInterlude=false;const btn=document.getElementById('interlude-btn');const banner=document.getElementById('interlude-banner');const body=document.getElementById('interlude-rating-body');btn?.classList.remove('active');if(banner)banner.style.display='none';if(body)body.classList.remove('interlude-dim');}
   if(noHook){noHook=false;document.getElementById('no-hook-btn')?.classList.remove('active');const cr=document.getElementById('chorus-slider-row');if(cr)cr.classList.remove('no-hook-dim');applyWeightLabels(false,!!settings.noLyrics,false);}
   clearSongPicker();
-  if(currentGenre==='rap')applyPacingDefault(false);
   update();
 }
 const _modalArtist=document.getElementById('modal-artist');
@@ -4870,7 +4818,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, rrBlindMode=false, rrGenre='rap';
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, rrBlindMode=false, rrGenre='rap';
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -5340,7 +5288,6 @@ function rrRenderRating(){
   document.getElementById('rr-chat-btn')?.classList.remove('has-unread');
   const rrcMsgs=document.getElementById('rr-rating-msgs');if(rrcMsgs)rrcMsgs.innerHTML='<div data-empty style="font-size:.58rem;color:var(--muted);font-style:italic;text-align:center;padding:.5rem 0">No messages yet. Say something!</div>';
   ['rr-flow','rr-verses','rr-prod','rr-chorus','rr-lyrics','rr-replay'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=0;});
-  applyPacingDefault(true);
   rrSubmitted=false;
   rrHasFeatures=false;rrFeatureRating=5;
   document.getElementById('rr-features-btn')?.classList.remove('active');
@@ -5352,11 +5299,6 @@ function rrRenderRating(){
   rrRenderGenreSliders();
   rrUpdate();
   rrRefreshProgress();
-}
-
-function rrSelectPacing(btn){
-  document.querySelectorAll('#rr-rating .pacing-btn').forEach(b=>b.classList.remove('active-perfect','active-slight','active-drags'));
-  btn.classList.add(btn.dataset.cls);rrPacingPen=parseFloat(btn.dataset.pacing);rrUpdate();
 }
 
 function rrUpdate(){
@@ -5389,7 +5331,7 @@ function rrUpdate(){
   const pen=scores.filter(s=>s<=5).length*.15,bon=scores.filter(s=>s>=9).length*.20;
   const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
   const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
-  const final=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
+  const final=Math.min(10,Math.max(1,B-pen+bon-dr));
   const rrFeatImp=featuresImpact(rrFeatureRating,rrHasFeatures);
   const finalWithFeat=Math.min(10,Math.max(1,final+rrFeatImp));
   if(rrBlindMode){
@@ -5403,7 +5345,7 @@ function rrUpdate(){
   }
   const _song=roomSongs[currentRoom?.current_song_idx];
   if(currentRoom&&_song&&!rrSubmitted){
-    localStorage.setItem('rr_draft_'+currentRoom.id+'_'+_song.id,JSON.stringify({flow:fp,verses:vq,prod:p,chorus:ch,lyrics:l,replay:r,pacing:rrPacingPen,noHook:rrNoHook}));
+    localStorage.setItem('rr_draft_'+currentRoom.id+'_'+_song.id,JSON.stringify({flow:fp,verses:vq,prod:p,chorus:ch,lyrics:l,replay:r,noHook:rrNoHook}));
   }
 }
 
@@ -5496,13 +5438,13 @@ async function rrSubmit(){
       const pen=scores.filter(s=>s<=5).length*.15,bon=scores.filter(s=>s>=9).length*.20;
       const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
       const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
-      const baseFinalRR=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
+      const baseFinalRR=Math.min(10,Math.max(1,B-pen+bon-dr));
       final=Math.min(10,Math.max(1,baseFinalRR+featuresImpact(rrFeatureRating,rrHasFeatures)));
     }
     const vds=[[9.5,'🏆 Classic — All Time'],[9,'🔥 Elite Tape'],[8.5,'💎 Hard — Heavy Rotation'],[8,'✅ Solid Song'],[7,'👍 Decent'],[6,'😐 Middle of the Road'],[5,'🙄 Skip Worthy'],[3,'👎 Weak'],[0,'🗑 Trash — Next']];
     verdict=(vds.find(([t])=>final>=t)||[0,'🗑 Trash — Next'])[1];
   }
-  const{error}=await db.from('rank_room_ratings').insert({room_id:currentRoom.id,song_id:song.id,user_id:currentUser.id,flow_peak:fp,flow_score:fp,verse_quality:vq,verse_score:vq,production:p,chorus:ch,lyrics:l,replay:r,pacing_penalty:rrPacingPen,final_score:final,verdict,is_interlude:rrIsInterlude});
+  const{error}=await db.from('rank_room_ratings').insert({room_id:currentRoom.id,song_id:song.id,user_id:currentUser.id,flow_peak:fp,flow_score:fp,verse_quality:vq,verse_score:vq,production:p,chorus:ch,lyrics:l,replay:r,final_score:final,verdict,is_interlude:rrIsInterlude});
   if(error&&!error.message.includes('duplicate')){alert('Submit failed: '+error.message);return;}
   localStorage.removeItem('rr_draft_'+currentRoom.id+'_'+song.id);
   rrSubmitted=true;
@@ -5626,7 +5568,6 @@ function rrOpenScoreDetail(userId){
     </div>
     <div class="rr-bd-grid" style="gap:.55rem .9rem">
       ${cats.map(([lbl,val,c])=>`<div><div style="display:flex;justify-content:space-between;margin-bottom:.22rem"><span style="font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;text-transform:uppercase">${lbl}</span><span style="font-size:.6rem;font-family:'DM Mono',monospace;color:${c};font-weight:500">${val||0}</span></div><div class="rr-bd-bar-track"><div class="rr-bd-bar-fill" style="background:${c};width:${(val||0)*10}%"></div></div></div>`).join('')}
-      ${r.pacing_penalty>0?`<div style="grid-column:span 2;font-size:.5rem;color:var(--red);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;margin-top:.2rem">Pacing Penalty −${r.pacing_penalty}</div>`:''}
     </div>`;
   document.getElementById('rr-score-detail-modal').classList.add('open');
 }
@@ -6178,10 +6119,6 @@ async function rrTryRejoin(){
           if(d.lyrics)document.getElementById('rr-lyrics').value=d.lyrics;
           if(d.replay)document.getElementById('rr-replay').value=d.replay;
           if(d.noHook&&!rrNoHook)rrToggleNoHook();
-          if(d.pacing!=null){
-            rrPacingPen=d.pacing;
-            document.querySelectorAll('#rr-rating .pacing-btn').forEach(b=>{b.classList.remove('active-perfect','active-slight','active-drags');if(parseFloat(b.dataset.pacing)===d.pacing)b.classList.add(b.dataset.cls);});
-          }
           rrUpdate();
         }catch(e){}}
       }
