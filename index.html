@@ -1129,6 +1129,7 @@
               <option value="rock">Rock</option>
               <option value="rnb">R&amp;B</option>
               <option value="edm">EDM</option>
+              <option value="hyperpop">Hyperpop</option>
             </select>
           </div>
         </div>
@@ -1406,6 +1407,21 @@
           </div>
           <button id="rr-blind-toggle" class="rr-blind-toggle" onclick="rrToggleBlindMode()">OFF</button>
         </div>
+        <div class="rr-blind-mode-row" style="margin-top:.5rem">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text)">🎵 Genre</div>
+            <div style="font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">Rating categories applied to everyone</div>
+          </div>
+          <select id="rr-genre-select" onchange="rrSetGenre(this.value)" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.06em;padding:.3rem .5rem;border-radius:4px;cursor:pointer">
+            <option value="rap">Rap</option>
+            <option value="pop">Pop</option>
+            <option value="country">Country</option>
+            <option value="rock">Rock</option>
+            <option value="rnb">R&amp;B</option>
+            <option value="edm">EDM</option>
+            <option value="hyperpop">Hyperpop</option>
+          </select>
+        </div>
         <div id="rr-waiting-msg" style="font-size:.6rem;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;padding:.3rem 0">Waiting for host to start…</div>
         <button id="rr-start-btn" style="display:none" class="rr-btn rr-btn-primary" onclick="rrStart()">Start Session</button>
       </div>
@@ -1461,6 +1477,7 @@
           </div>
         </div>
         <div id="rr-interlude-rating-body">
+        <div id="rr-rap-cats">
         <div class="rr-pacing-row">
           <div class="rc-pacing">
             <button class="pacing-btn active-perfect" data-pacing="0" data-cls="active-perfect" onclick="rrSelectPacing(this)">✅ Perfect</button>
@@ -1498,6 +1515,8 @@
           <input type="range" min="0" max="10" step="0.5" value="0" id="rr-lyrics" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-lyrics-desc"></div>
         </div>
+        </div><!-- /rr-rap-cats -->
+        <div id="rr-generic-cats" style="display:none"></div>
         </div><!-- /rr-interlude-rating-body -->
       </div>
       <div class="rr-react-bar">
@@ -2003,6 +2022,23 @@ replay:{
   10:"Never gets old"
 }};
 const SLIDER_COLORS={'flow-peak':'#c9a84c','verse-quality':'#d93025','prod':'#b07d3a','chorus':'#8b6db5','lyrics':'#5b8dd9','replay':'#2d9e6b'};
+const GENRE_CAT_DESCS={
+  'Production':DESCS.prod,
+  'Chorus':DESCS.chorus,
+  'Lyrics':DESCS.lyrics,
+  'Replay Value':DESCS.replay,
+  'Vocals':{0.5:"Painful to listen to",1:"Very hard to sit through",1.5:"Consistently off",2:"Weak and unpolished",2.5:"Often rough",3:"Below average",3.5:"Lacks range and control",4:"Unremarkable",4.5:"Passable but flat",5:"Average and fine",5.5:"Decent with a few good moments",6:"Solid and reliable",6.5:"Good with clear presence",7:"Confident and expressive",7.5:"Very strong delivery",8:"Impressive and controlled",8.5:"Excellent throughout",9:"Outstanding vocal performance",9.5:"Nearly flawless",10:"Perfect delivery"},
+  'Catchiness':{0.5:"Not catchy at all",1:"Nothing sticks",1.5:"Very forgettable",2:"Almost nothing hooks",2.5:"Hard to remember",3:"Below average",3.5:"Barely registers",4:"Mildly interesting at best",4.5:"Almost catches on",5:"Fine but forgettable",5.5:"Slightly catchy in spots",6:"Catches your ear a bit",6.5:"Pretty catchy",7:"Clearly hooks you",7.5:"Very catchy",8:"Sticks right away",8.5:"Hard to get out of your head",9:"Extremely catchy",9.5:"Near-impossible to forget",10:"Instant earworm"},
+  'Melody':{0.5:"No real melody",1:"Tonally painful",1.5:"Mostly off-key or aimless",2:"Very weak melodic ideas",2.5:"Melody barely registers",3:"Flat and uninspired",3.5:"Not much going on melodically",4:"Forgettable melody",4.5:"Okay but unmemorable",5:"Average melody",5.5:"Decent in parts",6:"Good melodic ideas",6.5:"Enjoyable and clear",7:"Strong and memorable melody",7.5:"Very well crafted",8:"Excellent melodic writing",8.5:"Sticks with you",9:"Exceptional melody",9.5:"Almost perfect",10:"Unforgettable"},
+  'Songwriting':{0.5:"No structure or idea",1:"Barely holds together",1.5:"Very poorly written",2:"Weak from start to finish",2.5:"Few moments that work",3:"Below average craftsmanship",3.5:"Lacks a clear direction",4:"Generic and uninspired",4.5:"Some ideas, not fully realized",5:"Average and functional",5.5:"Decent with a few highlights",6:"Solid structure and ideas",6.5:"Good writing throughout",7:"Clearly well-written",7.5:"Strong and intentional",8:"Excellent craftsmanship",8.5:"Very sharp and cohesive",9:"Exceptional songwriting",9.5:"Near-masterful",10:"Perfectly constructed"},
+  'Storytelling':{0.5:"No story present",1:"Nothing to follow",1.5:"Very hard to connect with",2:"Weak and vague narrative",2.5:"Barely a story",3:"Below average narrative",3.5:"Lacks depth or clarity",4:"Forgettable story",4.5:"Some seeds of a story",5:"Average narrative",5.5:"Decent, gets the point across",6:"Clear and engaging story",6.5:"Good with vivid moments",7:"Strong and well-told",7.5:"Very compelling",8:"Excellent storytelling",8.5:"Rich and immersive",9:"Exceptional narrative",9.5:"Deeply moving",10:"Among the best in the genre"},
+  'Emotion':{0.5:"Completely emotionless",1:"No feeling at all",1.5:"Very cold or hollow",2:"Hard to feel anything",2.5:"Barely resonates",3:"Flat delivery of emotion",3.5:"Doesn't really connect",4:"Somewhat flat",4.5:"Almost moves you",5:"Some emotional content",5.5:"Connects in parts",6:"Fairly emotional",6.5:"Resonates clearly",7:"Genuinely moving at times",7.5:"Very emotionally effective",8:"Hits hard",8.5:"Very powerful",9:"Deeply resonant",9.5:"Emotionally overwhelming at times",10:"Hits you to your core"},
+  'Instrumentation':{0.5:"Barely any playing",1:"Very sloppy or poorly performed",1.5:"Almost nothing works",2:"Weak throughout",2.5:"Lacks impact",3:"Below average",3.5:"Flat and generic",4:"Forgettable playing",4.5:"Okay but unremarkable",5:"Average",5.5:"Decent with some moments",6:"Solid performance",6.5:"Good and memorable in spots",7:"Strong playing throughout",7.5:"Very impressive",8:"Excellent technique and feel",8.5:"Really stands out",9:"Exceptional",9.5:"Near-flawless",10:"Legendary performance"},
+  'Energy':{0.5:"Completely lifeless",1:"No energy at all",1.5:"Flat throughout",2:"Very low energy",2.5:"Barely gets going",3:"Below average presence",3.5:"Doesn't pull you in",4:"Low but not awful",4.5:"Some moments of energy",5:"Average energy",5.5:"Picks up in parts",6:"Good energy level",6.5:"Keeps you engaged",7:"Strong drive",7.5:"High energy throughout",8:"Very intense and powerful",8.5:"Electrifying in places",9:"Relentless and gripping",9.5:"Barely containable",10:"Explosive from start to finish"},
+  'Build-Up':{0.5:"No build at all",1:"Completely flat",1.5:"Nothing building",2:"Very weak tension",2.5:"Barely any buildup",3:"Below average",3.5:"Doesn't create anticipation",4:"Weak buildup",4.5:"Some tension but not effective",5:"Average buildup",5.5:"Decent, sets things up",6:"Good tension and anticipation",6.5:"Pulls you in",7:"Strong and exciting build",7.5:"Very effective",8:"Excellent buildup",8.5:"Keeps you on the edge",9:"Exceptional tension",9.5:"Almost unbearable in the best way",10:"Perfect progression"},
+  'Drop / Payoff':{0.5:"Complete letdown",1:"Ruins the song",1.5:"Deeply unsatisfying",2:"Very weak payoff",2.5:"Falls flat",3:"Disappointing",3.5:"Doesn't deliver",4:"Below expectations",4.5:"Okay but not satisfying",5:"Average drop",5.5:"Decent payoff",6:"Satisfying",6.5:"Good drop",7:"Strong and well executed",7.5:"Very satisfying",8:"Excellent drop",8.5:"Hits exactly right",9:"Exceptional payoff",9.5:"Nearly perfect",10:"Perfectly executed"},
+  'Atmosphere':{0.5:"No atmosphere",1:"Hostile to any mood",1.5:"Almost no world-building",2:"Very thin and empty",2.5:"Barely creates a vibe",3:"Below average feel",3.5:"Doesn't draw you in",4:"Flat atmosphere",4.5:"Hints at a mood but not fully",5:"Some atmosphere",5.5:"Decent vibe",6:"Good atmospheric quality",6.5:"Creates a clear mood",7:"Immersive and engaging",7.5:"Very strong atmosphere",8:"Excellent world-building",8.5:"Pulls you into its world",9:"Exceptional atmosphere",9.5:"Almost tangible",10:"Completely transporting"}
+};
 const GENRE_PRESETS={
   rap:{label:'Rap',isRap:true},
   pop:{label:'Pop',
@@ -2024,7 +2060,11 @@ const GENRE_PRESETS={
   edm:{label:'EDM',
     colors:['#fb923c','#f472b6','#60a5fa','#a78bfa','#34d399','#facc15'],
     cats:['Production','Build-Up','Drop / Payoff','Energy','Atmosphere','Replay Value'],
-    weights:[0.30,0.20,0.20,0.15,0.10,0.05]}
+    weights:[0.30,0.20,0.20,0.15,0.10,0.05]},
+  hyperpop:{label:'Hyperpop',
+    colors:['#f472b6','#a78bfa','#60a5fa','#34d399','#facc15','#fb923c'],
+    cats:['Production','Vocals','Lyrics','Replay Value','Chorus'],
+    weights:[0.35,0.20,0.10,0.25,0.10]}
 };
 
 // AUTH
@@ -2406,6 +2446,7 @@ function scoreColor(s){if(s>=8.5)return'#34d399';if(s>=7)return'#a78bfa';if(s>=5
 function albumScore(songs){
   const scored=songs.filter(s=>!s.is_interlude&&s.final_score!=null);
   if(!scored.length)return 0;
+  if(scored.length===1)return parseFloat(scored[0].final_score);
   const sorted=[...scored].sort((a,b)=>parseFloat(b.final_score||0)-parseFloat(a.final_score||0));
   const half=Math.ceil(sorted.length/2);
   const topHalf=sorted.slice(0,half);
@@ -4089,6 +4130,12 @@ function renderGenericCats(preset){
 function updateGenericSlider(i,color){
   const el=document.getElementById('gc-cat-'+i);
   if(el)fillSlider(el,color);
+  const preset=GENRE_PRESETS[currentGenre];
+  if(preset?.cats){
+    const val=parseFloat(el?.value||0);
+    const descEl=document.getElementById('gc-desc-'+i);
+    if(descEl)descEl.textContent=val===0?'':(GENRE_CAT_DESCS[preset.cats[i]]?.[val]||'');
+  }
   update();
 }
 
@@ -4813,7 +4860,7 @@ const SFX=(()=>{
 })();
 
 // ── RANK ROOM ─────────────────────────────────────────────────────────────────
-let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, rrBlindMode=false;
+let currentRoom=null, roomMembers=[], roomSongs=[], roomPendingSongs=[], roomChannel=null, rrPacingPen=0, rrSubmitted=false, rrAlbumList=[], rrExpandedAlbumIdx=-1, rrExpandedTracks=[], rrIntroTimer=null, rrRevealRatings=[], rrRecapData=null, rrBlindMode=false, rrGenre='rap';
 
 function rrState(s){
   ['home','lobby','intro','rating','reveal','ended'].forEach(id=>{
@@ -4948,6 +4995,14 @@ function rrRenderLobby(){
     blindToggleBtn.disabled=!isHost;
     blindToggleBtn.style.cursor=isHost?'pointer':'default';
     blindToggleBtn.title=isHost?'Toggle blind mode':'Only the host can change this';
+  }
+  const genreSel=document.getElementById('rr-genre-select');
+  if(genreSel){
+    genreSel.value=rrGenre;
+    genreSel.disabled=!isHost;
+    genreSel.style.opacity=isHost?'1':'.55';
+    genreSel.style.cursor=isHost?'pointer':'default';
+    genreSel.title=isHost?'Set genre for all members':'Only the host can change this';
   }
 }
 
@@ -5152,6 +5207,7 @@ async function rrAddAlbum(idx){
 async function rrStart(){
   if(!roomSongs.length){alert('Add at least one song first.');return;}
   roomChannel.send({type:'broadcast',event:'blind_mode_set',payload:{enabled:rrBlindMode}});
+  roomChannel.send({type:'broadcast',event:'genre_set',payload:{genre:rrGenre}});
   const{error}=await db.from('rank_rooms').update({status:'rating',current_song_idx:0}).eq('id',currentRoom.id);
   if(error)alert('Failed: '+error.message);
 }
@@ -5161,6 +5217,74 @@ function rrToggleBlindMode(){
   rrBlindMode=!rrBlindMode;
   if(roomChannel)roomChannel.send({type:'broadcast',event:'blind_mode_set',payload:{enabled:rrBlindMode}});
   rrRenderLobby();
+}
+
+function rrSetGenre(g){
+  if(currentRoom?.host_id!==currentUser?.id)return;
+  rrGenre=g;
+  if(roomChannel)roomChannel.send({type:'broadcast',event:'genre_set',payload:{genre:g}});
+  rrRenderLobby();
+}
+
+function rrApplyGenre(g){
+  rrGenre=g||'rap';
+  const sel=document.getElementById('rr-genre-select');
+  if(sel)sel.value=rrGenre;
+}
+
+function rrRenderGenreSliders(){
+  const isRap=rrGenre==='rap';
+  document.getElementById('rr-rap-cats').style.display=isRap?'':'none';
+  const gc=document.getElementById('rr-generic-cats');
+  if(!isRap){
+    const preset=GENRE_PRESETS[rrGenre];
+    if(!preset){gc.style.display='none';return;}
+    gc.style.display='';
+    gc.innerHTML=preset.cats.map((name,i)=>`
+      <div class="rr-cat">
+        <div class="rr-cat-head">
+          <div class="rr-cat-name" style="color:${preset.colors[i]}">${name} <span style="color:var(--muted);font-weight:400;font-size:.55rem">${Math.round(preset.weights[i]*100)}%</span></div>
+          <div class="rr-cat-val" id="rr-gc-val-${i}">—</div>
+        </div>
+        <input type="range" min="0" max="10" step="0.5" value="0" id="rr-gc-cat-${i}" oninput="rrUpdateGeneric()" class="rr-slider">
+        <div class="rcat-desc" id="rr-gc-desc-${i}"></div>
+      </div>`).join('');
+  } else {
+    gc.style.display='none';
+  }
+}
+
+function rrUpdateGeneric(){
+  const preset=GENRE_PRESETS[rrGenre];
+  if(!preset)return;
+  const scores=preset.cats.map((_,i)=>{
+    const el=document.getElementById('rr-gc-cat-'+i);
+    if(el)fillSlider(el,preset.colors[i]);
+    return+(el?.value||0);
+  });
+  scores.forEach((v,i)=>{
+    const valEl=document.getElementById('rr-gc-val-'+i);
+    if(valEl)valEl.textContent=v||'—';
+    const descEl=document.getElementById('rr-gc-desc-'+i);
+    if(descEl)descEl.textContent=v===0?'':(GENRE_CAT_DESCS[preset.cats[i]]?.[v]||'');
+  });
+  const fEl=document.getElementById('rr-final-score'),vEl=document.getElementById('rr-verdict-txt');
+  if(scores.every(s=>s===0)){fEl.textContent='—';fEl.style.color='var(--muted)';vEl.textContent='—';return;}
+  const{final:baseFinal}=calcGenericFinal(scores,preset.weights,preset.cats);
+  const finalWithFeat=Math.min(10,Math.max(1,baseFinal+featuresImpact(rrFeatureRating,rrHasFeatures)));
+  if(rrBlindMode){
+    fEl.textContent='?';fEl.style.color='var(--muted)';fEl.classList.add('rr-blind-score');
+    vEl.textContent='Revealed at submit';
+  } else {
+    fEl.classList.remove('rr-blind-score');
+    fEl.textContent=finalWithFeat.toFixed(1);fEl.style.color=scoreColor(finalWithFeat);
+    const vds=[[9.5,'🏆 Classic'],[9,'🔥 Elite'],[8.5,'💎 Hard'],[8,'✅ Solid'],[7,'👍 Decent'],[6,'😐 Mid'],[5,'🙄 Skip'],[3,'👎 Weak'],[0,'🗑 Trash']];
+    vEl.textContent=(vds.find(([t])=>finalWithFeat>=t)||['','—'])[1];
+  }
+  const _song=roomSongs[currentRoom?.current_song_idx];
+  if(currentRoom&&_song&&!rrSubmitted){
+    localStorage.setItem('rr_draft_'+currentRoom.id+'_'+_song.id,JSON.stringify({genre:rrGenre,scores}));
+  }
 }
 
 function rrRenderIntro(){
@@ -5214,6 +5338,7 @@ function rrRenderRating(){
   const sb=document.getElementById('rr-submit-btn');sb.disabled=false;sb.textContent='Submit';
   const fb=document.getElementById('rr-force-btn');if(fb)fb.style.display=currentRoom.host_id===currentUser?.id?'block':'none';
   const fc=document.getElementById('rr-force-confirm');if(fc)fc.style.display='none';
+  rrRenderGenreSliders();
   rrUpdate();
   rrRefreshProgress();
 }
@@ -5338,21 +5463,31 @@ async function rrSubmit(){
   if(!song){alert('No active song.');return;}
   let fp=0,vq=0,p=0,ch=0,l=0,r=0,final=null,verdict='Interlude';
   if(!rrIsInterlude){
-    fp=+document.getElementById('rr-flow').value;vq=+document.getElementById('rr-verses').value;
-    p=+document.getElementById('rr-prod').value;ch=+document.getElementById('rr-chorus').value;
-    l=+document.getElementById('rr-lyrics').value;r=+document.getElementById('rr-replay').value;
-    if(rrNoHook?(fp+vq+p+l+r)===0:(fp+vq+p+ch+l+r)===0){alert('Rate at least one category first.');return;}
-    const _nl=settings.noLyrics;
-    const B=rrNoHook&&_nl?(r*24+fp*28+vq*22+p*18)/92:
-            rrNoHook?     (r*.24)+(fp*.28)+(vq*.22)+(p*.18)+(l*.08):
-            _nl?          (r*24+fp*20+ch*16+vq*14+p*18)/92:
-                          (r*.24)+(fp*.20)+(ch*.16)+(vq*.14)+(p*.18)+(l*.08);
-    const scores=rrNoHook?[fp,vq,p,l,r]:[fp,vq,p,ch,l,r];
-    const pen=scores.filter(s=>s<=5).length*.15,bon=scores.filter(s=>s>=9).length*.20;
-    const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
-    const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
-    const baseFinalRR=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
-    final=Math.min(10,Math.max(1,baseFinalRR+featuresImpact(rrFeatureRating,rrHasFeatures)));
+    if(rrGenre!=='rap'){
+      const preset=GENRE_PRESETS[rrGenre];
+      if(!preset){alert('Unknown genre.');return;}
+      const scores=preset.cats.map((_,i)=>+(document.getElementById('rr-gc-cat-'+i)?.value||0));
+      if(scores.every(s=>s===0)){alert('Rate at least one category first.');return;}
+      const{final:baseFinal}=calcGenericFinal(scores,preset.weights,preset.cats);
+      final=Math.min(10,Math.max(1,baseFinal+featuresImpact(rrFeatureRating,rrHasFeatures)));
+      fp=scores[0]||0;vq=scores[1]||0;p=scores[2]||0;ch=scores[3]||0;l=scores[4]||0;r=scores[5]||0;
+    } else {
+      fp=+document.getElementById('rr-flow').value;vq=+document.getElementById('rr-verses').value;
+      p=+document.getElementById('rr-prod').value;ch=+document.getElementById('rr-chorus').value;
+      l=+document.getElementById('rr-lyrics').value;r=+document.getElementById('rr-replay').value;
+      if(rrNoHook?(fp+vq+p+l+r)===0:(fp+vq+p+ch+l+r)===0){alert('Rate at least one category first.');return;}
+      const _nl=settings.noLyrics;
+      const B=rrNoHook&&_nl?(r*24+fp*28+vq*22+p*18)/92:
+              rrNoHook?     (r*.24)+(fp*.28)+(vq*.22)+(p*.18)+(l*.08):
+              _nl?          (r*24+fp*20+ch*16+vq*14+p*18)/92:
+                            (r*.24)+(fp*.20)+(ch*.16)+(vq*.14)+(p*.18)+(l*.08);
+      const scores=rrNoHook?[fp,vq,p,l,r]:[fp,vq,p,ch,l,r];
+      const pen=scores.filter(s=>s<=5).length*.15,bon=scores.filter(s=>s>=9).length*.20;
+      const sorted=[...scores].sort((a,b)=>b-a),gap=sorted[0]-sorted[sorted.length-1];
+      const dr=gap>5?Math.min(.5,(gap-5)*.1):0;
+      const baseFinalRR=Math.min(10,Math.max(1,B-pen+bon-dr-rrPacingPen));
+      final=Math.min(10,Math.max(1,baseFinalRR+featuresImpact(rrFeatureRating,rrHasFeatures)));
+    }
     const vds=[[9.5,'🏆 Classic — All Time'],[9,'🔥 Elite Tape'],[8.5,'💎 Hard — Heavy Rotation'],[8,'✅ Solid Song'],[7,'👍 Decent'],[6,'😐 Middle of the Road'],[5,'🙄 Skip Worthy'],[3,'👎 Weak'],[0,'🗑 Trash — Next']];
     verdict=(vds.find(([t])=>final>=t)||[0,'🗑 Trash — Next'])[1];
   }
@@ -5879,7 +6014,7 @@ async function rrSaveAll(postToFeed=true){
   if(error||!myRatings?.length){btn.textContent='Nothing to save';if(otherBtn)otherBtn.disabled=false;return;}
   const rows=myRatings.map(r=>{
     const s=roomSongs.find(x=>x.id===r.song_id);
-    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',genre:'rap',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,pacing_penalty:r.pacing_penalty,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false,comment:r.comment||null,is_private:!postToFeed};
+    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',genre:rrGenre||'rap',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,pacing_penalty:r.pacing_penalty,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false,comment:r.comment||null,is_private:!postToFeed};
   });
   const{error:e2}=await db.from('ratings').insert(rows);
   if(e2){btn.textContent='Save failed: '+e2.message;btn.style.color='#c0392b';btn.disabled=false;if(otherBtn)otherBtn.disabled=false;return;}
@@ -5946,6 +6081,9 @@ function rrSubscribe(roomId){
       const bt=document.getElementById('rr-blind-toggle');
       if(bt){bt.textContent=rrBlindMode?'ON':'OFF';bt.classList.toggle('on',rrBlindMode);}
     })
+    .on('broadcast',{event:'genre_set'},({payload})=>{
+      rrApplyGenre(payload.genre);
+    })
     .subscribe();
 }
 
@@ -5977,7 +6115,7 @@ function checkRoomInvite(){
 async function rrLeave(){
   if(roomChannel){db.removeChannel(roomChannel);roomChannel=null;}
   localStorage.removeItem('rr_room_id');
-  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;rrBlindMode=false;
+  currentRoom=null;roomMembers=[];roomSongs=[];roomPendingSongs=[];rrSubmitted=false;rrBlindMode=false;rrGenre='rap';
   document.getElementById('rr-join-input').value='';
   rrState('home');
 }
