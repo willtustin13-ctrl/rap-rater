@@ -1120,6 +1120,7 @@
               <option value="rnb">R&amp;B</option>
               <option value="edm">EDM</option>
               <option value="hyperpop">Hyperpop</option>
+              <option value="alternative">Alternative</option>
             </select>
           </div>
         </div>
@@ -1403,6 +1404,7 @@
             <option value="rnb">R&amp;B</option>
             <option value="edm">EDM</option>
             <option value="hyperpop">Hyperpop</option>
+            <option value="alternative">Alternative</option>
           </select>
         </div>
         <div id="rr-waiting-msg" style="font-size:.6rem;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;padding:.3rem 0">Waiting for host to start…</div>
@@ -2051,7 +2053,11 @@ const GENRE_PRESETS={
   hyperpop:{label:'Hyperpop',
     colors:['#f472b6','#a78bfa','#60a5fa','#34d399','#facc15','#fb923c'],
     cats:['Production','Vocals','Lyrics','Replay Value','Chorus'],
-    weights:[0.35,0.20,0.10,0.25,0.10]}
+    weights:[0.35,0.20,0.10,0.25,0.10]},
+  alternative:{label:'Alternative',
+    colors:['#facc15','#f472b6','#fb923c','#a78bfa','#34d399'],
+    cats:['Replay Value','Vocals','Production','Emotion','Lyrics'],
+    weights:[0.25,0.22,0.22,0.18,0.13]}
 };
 
 // AUTH
@@ -5868,9 +5874,11 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
   rrVotingActiveMembers=memberAvgs||[];
 
   const stage=document.getElementById('rr-podium-stage-content');
+  const stageWrap=document.getElementById('rr-podium-stage');
   const glow=document.getElementById('rr-podium-glow');
   const recapBtn=document.getElementById('rr-view-recap-btn');
   recapBtn.style.display='none';recapBtn.style.opacity='0';
+  function setVoteLayout(on){stageWrap.style.alignItems=on?'flex-start':'center';stage.style.padding=on?'1.25rem 1.5rem':'1.5rem 2.5rem';stage.style.maxWidth=on?'100%':'340px';stage.style.height=on?'100%':'';}
 
   const delay=ms=>new Promise(r=>setTimeout(r,ms));
   const scoreHex=n=>n>=9?'#34d399':n>=7?'#a78bfa':n>=5?'#fb923c':'#f472b6';
@@ -5906,6 +5914,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
 
   // ── 2. Voting Phase ──
   if(songStats.length>0){
+    setVoteLayout(false);
     setStage(`
       <div style="animation:pdSongIn .7s ease forwards">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.6rem">Before the reveals</div>
@@ -5917,6 +5926,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
     // Q1: Most Divisive Song
     if(songStats.length>1){
       const songChoices=songStats.map(ss=>({id:String(ss.song.id),label:ss.song.song,sub:ss.song.artist}));
+      setVoteLayout(true);
       setStage(renderMCVoteCard('divisive','Most Divisive Song?',songChoices));
       glow.style.background='radial-gradient(circle at 50% 38%,#60a5fa22 0%,transparent 62%)';
       await waitForVotes('divisive');
@@ -5931,12 +5941,14 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
         label:'@'+(profileMap[m.member.user_id]?.username||m.member.profiles?.username||'Unknown')
       }));
 
+      setVoteLayout(true);
       setStage(renderMCVoteCard('generous','Most Generous Rater?',memChoices));
       glow.style.background='radial-gradient(circle at 50% 38%,#34d39922 0%,transparent 62%)';
       await waitForVotes('generous');
       rrFlashAllVoted();await delay(1000);
       await fadeOut();await delay(200);
 
+      setVoteLayout(true);
       setStage(renderMCVoteCard('harshest','Harshest Critic?',memChoices));
       glow.style.background='radial-gradient(circle at 50% 38%,#f4727622 0%,transparent 62%)';
       await waitForVotes('harshest');
@@ -5945,6 +5957,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
     }
 
     // Q4: Album Score Prediction
+    setVoteLayout(false);
     setStage(renderSliderVoteCard());
     glow.style.background='radial-gradient(circle at 50% 38%,#c9a84c22 0%,transparent 62%)';
     await waitForVotes('albumScore');
@@ -5952,6 +5965,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
     await fadeOut();await delay(200);
 
     // Transition to reveals
+    setVoteLayout(false);
     setStage(`
       <div style="animation:pdSongIn .7s ease forwards">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.6rem">Votes locked in</div>
@@ -6382,12 +6396,14 @@ function renderMCVoteCard(key,label,choices){
     const isSelected=hasVoted&&String(c.id)===String(myVote);
     return`<button class="rr-vote-btn" data-choice="${c.id}" ${hasVoted?'disabled':''} onclick="rrSubmitVote('${key}','${c.id}')" style="display:block;width:100%;text-align:left;padding:.6rem .9rem;border-radius:.55rem;border:1px solid ${isSelected?'var(--gold)':'rgba(255,255,255,.1)'};background:${isSelected?'rgba(201,168,76,.15)':'rgba(255,255,255,.04)'};color:${hasVoted&&!isSelected?'rgba(255,255,255,.25)':'#fff'};font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:${hasVoted?'default':'pointer'};transition:border-color .15s,background .15s;-webkit-tap-highlight-color:transparent">${c.label}${c.sub?`<span style="display:block;font-size:.58rem;font-weight:400;opacity:.55;text-transform:none;font-family:sans-serif;letter-spacing:0;margin-top:.1rem">${c.sub}</span>`:''}</button>`;
   }).join('');
-  return`<div style="animation:pdStageFadeIn .6s ease forwards;width:100%;text-align:left">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.48rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.55rem">Cast your vote</div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:1rem">${label}</div>
-    <div id="rr-vote-choices" style="display:flex;flex-direction:column;gap:.4rem">${btns}</div>
-    <div id="rr-vote-status" style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-top:.9rem;min-height:1.1em">${hasVoted?'Waiting for others…':''}</div>
-    <div id="rr-vote-progress" style="font-family:'Barlow Condensed',sans-serif;font-size:.48rem;letter-spacing:.09em;color:rgba(255,255,255,.22);margin-top:.2rem">${voted}/${n} voted</div>
+  return`<div style="animation:pdStageFadeIn .6s ease forwards;width:100%;text-align:left;display:flex;flex-direction:column;max-height:calc(100dvh - 10rem);overflow:hidden">
+    <div style="flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:.48rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.55rem">Cast your vote</div>
+    <div style="flex-shrink:0;font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:.75rem">${label}</div>
+    <div id="rr-vote-choices" style="display:flex;flex-direction:column;gap:.4rem;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:0;flex:1;padding-bottom:.1rem">${btns}</div>
+    <div style="flex-shrink:0">
+      <div id="rr-vote-status" style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-top:.7rem;min-height:1.1em">${hasVoted?'Waiting for others…':''}</div>
+      <div id="rr-vote-progress" style="font-family:'Barlow Condensed',sans-serif;font-size:.48rem;letter-spacing:.09em;color:rgba(255,255,255,.22);margin-top:.2rem">${voted}/${n} voted</div>
+    </div>
   </div>`;
 }
 
