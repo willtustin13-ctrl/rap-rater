@@ -2459,6 +2459,7 @@ async function checkProfile(){
       loadFeed();
       checkRoomInvite();
       await rrTryRejoin();
+      await abTryRejoin();
     } else if(!data && !error){
       // No profile found - genuine new user
       setupColorGrid();
@@ -7119,6 +7120,7 @@ let currentAuxBattle=null, abChannel=null, abPicks=[], abRoundVotes=[], abRoundR
 let abSongMatches=[], abSongTimer=null, abPendingPick=null;
 let abMyRatingA=null, abMyRatingB=null, abRoomsSubject='rankroom';
 let _abSongCount=5, _abMode='audience', _abSecret=true, _abFeatures=false, _abPrivate=false;
+let abLobbyPoll=null;
 
 // ─── Tab switcher ────────────────────────────────────────────────────────────
 function setRoomsSubject(subj){
@@ -7222,6 +7224,7 @@ async function joinAuxBattleByCode(){
 
 // ─── Open battle ──────────────────────────────────────────────────────────────
 async function openAuxBattle(id){
+  localStorage.setItem('ab_battle_id',id);
   document.getElementById('ab-view').style.display='flex';
   await loadAuxBattleState(id);
   subscribeToAuxBattleRealtime(id);
@@ -7249,7 +7252,9 @@ async function loadAuxBattleState(id){
 }
 
 // ─── State switcher ───────────────────────────────────────────────────────────
+function _stopAbLobbyPoll(){if(abLobbyPoll){clearInterval(abLobbyPoll);abLobbyPoll=null;}}
 function abState(s){
+  if(s!=='lobby')_stopAbLobbyPoll();
   ['lobby','draft','round','result','final'].forEach(id=>{
     const el=document.getElementById('ab-'+id);
     if(!el)return;
@@ -7257,7 +7262,19 @@ function abState(s){
   });
   const el=document.getElementById('ab-'+s);
   if(el)el.style.display=['lobby','round','result','final'].includes(s)?'block':'flex';
-  if(s==='lobby')renderAuxBattleLobby();
+  if(s==='lobby'){
+    renderAuxBattleLobby();
+    _stopAbLobbyPoll();
+    abLobbyPoll=setInterval(async()=>{
+      if(!currentAuxBattle)return;
+      const{data}=await db.from('aux_battles').select('*').eq('id',currentAuxBattle.id).maybeSingle();
+      if(!data)return;
+      if(data.status!=='lobby'){_stopAbLobbyPoll();return;}
+      const changed=data.player_a_id!==currentAuxBattle.player_a_id||data.player_b_id!==currentAuxBattle.player_b_id;
+      currentAuxBattle=data;
+      if(changed)renderAuxBattleLobby();
+    },3000);
+  }
   else if(s==='draft')renderAuxBattleDraft();
   else if(s==='round')renderAuxBattleRound();
   else if(s==='result')renderAuxBattleResult();
@@ -7926,10 +7943,22 @@ function unsubscribeAuxBattleRealtime(){
 }
 
 function abLeave(){
+  _stopAbLobbyPoll();
   unsubscribeAuxBattleRealtime();
+  localStorage.removeItem('ab_battle_id');
   currentAuxBattle=null;abPicks=[];abRoundVotes=[];abRoundRatings=[];abRoundResults=[];
   abPendingPick=null;abMyRatingA=null;abMyRatingB=null;
   document.getElementById('ab-view').style.display='none';
+}
+
+async function abTryRejoin(){
+  const savedId=localStorage.getItem('ab_battle_id');
+  if(!savedId)return;
+  const{data:battle}=await db.from('aux_battles').select('*').eq('id',savedId).maybeSingle();
+  if(!battle||battle.status==='final'){localStorage.removeItem('ab_battle_id');return;}
+  document.getElementById('ab-view').style.display='flex';
+  await loadAuxBattleState(savedId);
+  subscribeToAuxBattleRealtime(savedId);
 }
 // ─── END AUX BATTLE ───────────────────────────────────────────────────────────
 
