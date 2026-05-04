@@ -832,6 +832,53 @@
     .list-move-btn:disabled{opacity:.2;cursor:default}
     .ali-type{flex:1;padding:.42rem .5rem;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.08em;cursor:pointer;border-radius:3px;transition:all .15s}
     .ali-type.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+
+    /* BATTLES */
+    .battle-card{background:var(--surface);border:1px solid var(--border2);border-radius:.75rem;margin:.65rem 1rem;overflow:hidden}
+    .battle-card-meta{display:flex;align-items:center;justify-content:space-between;padding:.55rem .85rem .4rem;border-bottom:1px solid var(--border)}
+    .battle-card-meta-left{display:flex;align-items:center;gap:.45rem}
+    .battle-card-meta-time{font-size:.52rem;color:var(--muted);font-family:'DM Mono',monospace}
+    .battle-card-meta-user{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.06em;color:var(--muted2)}
+    .battle-matchup{display:flex;align-items:stretch;gap:0;padding:.75rem .85rem .6rem}
+    .battle-song-panel{flex:1;display:flex;flex-direction:column;align-items:center;gap:.4rem;min-width:0}
+    .battle-song-art{width:72px;height:72px;border-radius:.45rem;object-fit:cover;background:var(--border2);flex-shrink:0}
+    .battle-song-art-placeholder{width:72px;height:72px;border-radius:.45rem;background:var(--border2);flex-shrink:0}
+    .battle-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;text-align:center;line-height:1.2;color:var(--text);word-break:break-word}
+    .battle-song-artist{font-size:.57rem;color:var(--muted);text-align:center;font-family:'DM Mono',monospace;margin-top:.05rem}
+    .battle-vs{display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 .65rem;font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 12px rgba(167,139,250,.5)}
+    .battle-vote-row{display:flex;gap:.5rem;padding:0 .85rem .75rem}
+    .battle-vote-btn{flex:1;padding:.55rem .4rem;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:.4rem;transition:all .18s;line-height:1.2}
+    .battle-vote-btn:active{transform:scale(.96)}
+    .battle-vote-btn.voted-a{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.1)}
+    .battle-vote-btn.voted-b{border-color:#f472b6;color:#f472b6;background:rgba(244,114,182,.1)}
+    .battle-bars{padding:0 .85rem .75rem;display:flex;flex-direction:column;gap:.45rem}
+    .battle-bar-row{display:flex;align-items:center;gap:.55rem}
+    .battle-bar-label{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 0 80px;text-transform:uppercase}
+    .battle-bar-track{flex:1;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
+    .battle-bar-fill-a{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#c084fc);transition:width .4s ease}
+    .battle-bar-fill-b{height:100%;border-radius:3px;background:linear-gradient(90deg,#f472b6,#fb7185);transition:width .4s ease}
+    .battle-bar-pct{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;flex-shrink:0;width:2.8rem;text-align:right}
+    .battle-result-footer{display:flex;align-items:center;justify-content:space-between;padding:.3rem .85rem .6rem;font-size:.57rem;font-family:'DM Mono',monospace;color:var(--muted);border-top:1px solid var(--border)}
+    .battle-winner-tag{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+    .battle-tied-tag{color:var(--muted2)}
+    .battle-sort-btns{display:flex;gap:.35rem;padding:.55rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0}
+    .battle-sort-btn{padding:.3rem .65rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:3px;transition:all .15s}
+    .battle-sort-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.08)}
+    .battle-create-btn{width:100%;padding:.6rem;background:transparent;border:1px dashed var(--border2);color:var(--gold);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer;transition:all .15s}
+    .battle-create-btn:active{background:rgba(167,139,250,.08)}
+    .battle-picker-slot{background:var(--surface2);border:1px solid var(--border2);border-radius:.45rem;padding:.6rem .75rem;margin-bottom:.15rem}
+    .battle-picker-slot-label{font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.35rem}
+    .battle-picker-selected{display:flex;align-items:center;gap:.55rem}
+    .battle-picker-sel-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .battle-picker-sel-meta{font-size:.57rem;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .battle-picker-clear{background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:0 .2rem;line-height:1;flex-shrink:0}
+    .battle-search-wrap{position:relative}
+    .battle-search-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:.35rem 0;outline:none;-webkit-appearance:none}
+    .battle-search-input::placeholder{color:var(--muted)}
+    .battle-search-input:focus{border-bottom-color:var(--gold)}
+    .battle-search-results{display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:50;max-height:45vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)}
+    .battle-result-row{padding:.5rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;cursor:pointer}
+    .battle-result-row:active{background:var(--border)}
   </style>
 </head>
 <body>
@@ -1036,9 +1083,10 @@
       </button>
     </div>
     <div class="feed-subj-tabs">
-      <button class="feed-subj-btn active" data-subj="songs" onclick="setFeedSubject('songs')">Songs</button>
+      <button class="feed-subj-btn active" data-subj="songs" onclick="setFeedSubject('songs')">Ratings</button>
       <button class="feed-subj-btn" data-subj="lists" onclick="setFeedSubject('lists')">Lists</button>
       <button class="feed-subj-btn" data-subj="questions" onclick="setFeedSubject('questions')">Questions</button>
+      <button class="feed-subj-btn" data-subj="battles" onclick="setFeedSubject('battles')">Battles</button>
     </div>
     <div id="feed-songs-controls" class="feed-controls">
       <div class="feed-mode-btns">
@@ -1063,6 +1111,17 @@
         <button onclick="openProposeQuestion()" style="width:100%;padding:.5rem;background:transparent;border:1px dashed var(--border2);color:var(--gold);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ Propose a Question</button>
       </div>
       <div id="feed-questions-list"><div class="feed-empty">Loading...</div></div>
+    </div>
+    <div id="feed-battles-area" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column">
+      <div style="padding:.55rem 1rem .4rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+        <div class="battle-sort-btns" style="padding:0;border:none;flex:1">
+          <button class="battle-sort-btn active" data-bsort="recent" onclick="setBattleSort('recent',this)">Recent</button>
+          <button class="battle-sort-btn" data-bsort="votes" onclick="setBattleSort('votes',this)">Most Votes</button>
+          <button class="battle-sort-btn" data-bsort="closest" onclick="setBattleSort('closest',this)">Closest</button>
+        </div>
+        <button class="battle-create-btn" style="width:auto;padding:.3rem .75rem;flex-shrink:0" onclick="openCreateBattleModal()">+ Create</button>
+      </div>
+      <div id="feed-battles-list" style="padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)"><div class="feed-empty">Loading…</div></div>
     </div>
   </div>
 
@@ -1784,6 +1843,58 @@
   </div>
 </div>
 
+<!-- CREATE BATTLE MODAL -->
+<div class="modal-overlay" id="create-battle-modal" onclick="if(event.target===this)closeCreateBattleModal()" style="z-index:320">
+  <div class="modal" style="padding-bottom:1.5rem;max-height:88vh;overflow-y:auto">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;color:var(--text)">Create Battle</div>
+
+    <div class="battle-picker-slot" style="margin-bottom:.75rem">
+      <div class="battle-picker-slot-label">Song A</div>
+      <div id="btl-a-selected" style="display:none">
+        <div class="battle-picker-selected">
+          <img id="btl-a-art" src="" style="width:36px;height:36px;border-radius:4px;object-fit:cover;flex-shrink:0;display:none">
+          <div style="flex:1;min-width:0">
+            <div id="btl-a-name" class="battle-picker-sel-name"></div>
+            <div id="btl-a-meta" class="battle-picker-sel-meta"></div>
+          </div>
+          <button class="battle-picker-clear" onclick="clearBattleSlot('a')">✕</button>
+        </div>
+      </div>
+      <div id="btl-a-search" class="battle-search-wrap">
+        <input id="btl-a-input" class="battle-search-input" type="text" autocomplete="off" placeholder="Search for a song…" oninput="battleSearch('a')" onfocus="battleSearch('a')">
+        <div id="btl-a-results" class="battle-search-results"></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;font-style:italic;color:var(--gold);margin:.1rem 0 .65rem;text-shadow:0 0 10px rgba(167,139,250,.4)">vs</div>
+
+    <div class="battle-picker-slot" style="margin-bottom:.75rem">
+      <div class="battle-picker-slot-label">Song B</div>
+      <div id="btl-b-selected" style="display:none">
+        <div class="battle-picker-selected">
+          <img id="btl-b-art" src="" style="width:36px;height:36px;border-radius:4px;object-fit:cover;flex-shrink:0;display:none">
+          <div style="flex:1;min-width:0">
+            <div id="btl-b-name" class="battle-picker-sel-name"></div>
+            <div id="btl-b-meta" class="battle-picker-sel-meta"></div>
+          </div>
+          <button class="battle-picker-clear" onclick="clearBattleSlot('b')">✕</button>
+        </div>
+      </div>
+      <div id="btl-b-search" class="battle-search-wrap">
+        <input id="btl-b-input" class="battle-search-input" type="text" autocomplete="off" placeholder="Search for a song…" oninput="battleSearch('b')" onfocus="battleSearch('b')">
+        <div id="btl-b-results" class="battle-search-results"></div>
+      </div>
+    </div>
+
+    <div id="create-battle-err" style="color:#f472b6;font-size:.6rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;min-height:1em;margin-bottom:.5rem"></div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-confirm" id="create-battle-btn" onclick="createBattle()">Create Battle</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeCreateBattleModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- USER PROFILE MODAL (kept for legacy close refs) -->
 <div class="modal-overlay" id="user-modal">
   <div class="modal"><div class="modal-handle"></div><div id="user-modal-body"></div></div>
@@ -2410,6 +2521,7 @@ async function refreshTab(tab){
       if(feedSubject==='songs')await loadFeed();
       else if(feedSubject==='lists')await loadFeedLists();
       else if(feedSubject==='questions')await loadQuestions();
+      else if(feedSubject==='battles')await loadBattles();
     }
     else if(tab==='rate'){resetAll();clearSongPicker();done();return;}
     else if(tab==='profile'){await loadProfile();}
@@ -2434,7 +2546,7 @@ function albumScore(songs){
   const botHalf=sorted.slice(half);
   const topHalfAvg=topHalf.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/topHalf.length;
   const botHalfAvg=botHalf.length?botHalf.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/botHalf.length:topHalfAvg;
-  const weighted=0.8*topHalfAvg+0.2*botHalfAvg;
+  const weighted=0.7*topHalfAvg+0.3*botHalfAvg;
   const t20Count=Math.max(1,Math.ceil(sorted.length*0.2));
   const t20=sorted.slice(0,t20Count).reduce((s,r)=>s+parseFloat(r.final_score||0),0)/t20Count;
   return t20>=8.5?Math.min(10,1.05*weighted):weighted;
@@ -3636,12 +3748,14 @@ function setFeedSubject(subj){
   document.querySelectorAll('.feed-subj-btn').forEach(b=>b.classList.toggle('active',b.dataset.subj===subj));
   document.getElementById('feed-songs-controls').style.display=subj==='songs'?'':'none';
   document.getElementById('feed-songs-area').style.display=subj==='songs'?'':'none';
-  const listsArea=document.getElementById('feed-lists-area');
-  listsArea.style.display=subj==='lists'?'block':'none';
+  document.getElementById('feed-lists-area').style.display=subj==='lists'?'block':'none';
   const qArea=document.getElementById('feed-questions-area');
   qArea.style.display=subj==='questions'?'flex':'none';
+  const bArea=document.getElementById('feed-battles-area');
+  bArea.style.display=subj==='battles'?'flex':'none';
   if(subj==='lists')loadFeedLists();
   if(subj==='questions')loadQuestions();
+  if(subj==='battles')loadBattles();
 }
 
 async function loadFeedLists(){
@@ -3854,6 +3968,243 @@ async function deleteQuestionEntry(id){
   await db.from('question_entries').delete().eq('id',id).eq('user_id',currentUser.id);
   await refreshQuestionEntries();
 }
+
+// ─── SONG BATTLES ─────────────────────────────────────────────────────────────
+let battlesData=[], battleVotes={}, battleSortMode='recent';
+let _btlAMatches=[], _btlBMatches=[], _btlATimer=null, _btlBTimer=null;
+let _btlASong=null, _btlBSong=null;
+
+function calculateBattleStats(battleId){
+  const bvotes=Object.values(battleVotes).filter(v=>v.battle_id===battleId);
+  const totalVotes=bvotes.length;
+  const votesA=bvotes.filter(v=>v.vote_choice==='A').length;
+  const votesB=bvotes.filter(v=>v.vote_choice==='B').length;
+  const percentA=totalVotes?Math.round((votesA/totalVotes)*100):50;
+  const percentB=totalVotes?100-percentA:50;
+  const margin=Math.abs(percentA-percentB);
+  let leader=null;
+  if(totalVotes>0&&votesA!==votesB)leader=votesA>votesB?'A':'B';
+  return{totalVotes,votesA,votesB,percentA,percentB,margin,leader};
+}
+
+async function loadBattles(){
+  const el=document.getElementById('feed-battles-list');
+  el.innerHTML='<div class="feed-empty">Loading…</div>';
+  const{data:battles,error}=await db.from('song_battles').select('*,profiles:created_by(id,username,avatar_color,avatar_url)').eq('is_private',false).order('created_at',{ascending:false}).limit(100);
+  if(error){el.innerHTML='<div class="feed-empty">Failed to load battles.</div>';console.error(error);return;}
+  battlesData=battles||[];
+  if(!battlesData.length){el.innerHTML='<div class="feed-empty" style="padding:2.5rem 1.25rem;text-align:center">No battles yet.<br>Create the first matchup.</div>';return;}
+  const ids=battlesData.map(b=>b.id);
+  const{data:votes}=await db.from('song_battle_votes').select('*').in('battle_id',ids);
+  battleVotes={};(votes||[]).forEach(v=>{battleVotes[v.battle_id+'_'+v.user_id]=v;});
+  renderBattles();
+}
+
+function renderBattles(){
+  const el=document.getElementById('feed-battles-list');
+  if(!battlesData.length){el.innerHTML='<div class="feed-empty" style="padding:2.5rem 1.25rem;text-align:center">No battles yet.<br>Create the first matchup.</div>';return;}
+  const statsMap=battlesData.reduce((m,b)=>{m[b.id]=calculateBattleStats(b.id);return m;},{});
+  let sorted=[...battlesData];
+  if(battleSortMode==='votes')sorted.sort((a,b)=>statsMap[b.id].totalVotes-statsMap[a.id].totalVotes);
+  else if(battleSortMode==='closest')sorted.sort((a,b)=>statsMap[a.id].margin-statsMap[b.id].margin);
+  else sorted.sort((a,b)=>new Date(b.created_at)-new Date(a.created_at));
+  el.innerHTML=sorted.map(b=>renderBattleCard(b,statsMap[b.id])).join('');
+}
+
+function renderBattleCard(b, stats){
+  const p=b.profiles||{};
+  const uname=p.username||'Unknown';
+  const myVote=currentUser?battleVotes[b.id+'_'+currentUser.id]:null;
+  const hasVoted=!!myVote;
+  const artA=b.song_a_artwork_url?`<img src="${itunesArtUrl(b.song_a_artwork_url,150)}" class="battle-song-art" loading="lazy">`:`<div class="battle-song-art-placeholder"></div>`;
+  const artB=b.song_b_artwork_url?`<img src="${itunesArtUrl(b.song_b_artwork_url,150)}" class="battle-song-art" loading="lazy">`:`<div class="battle-song-art-placeholder"></div>`;
+  const votedAClass=hasVoted&&myVote.vote_choice==='A'?' voted-a':'';
+  const votedBClass=hasVoted&&myVote.vote_choice==='B'?' voted-b':'';
+  const colorA=stats.leader==='A'?'var(--gold)':stats.leader==='B'?'var(--muted2)':'var(--text)';
+  const colorB=stats.leader==='B'?'#f472b6':stats.leader==='A'?'var(--muted2)':'var(--text)';
+  const winnerLine=stats.totalVotes===0
+    ?`<span class="battle-tied-tag">No votes yet</span>`
+    :stats.leader===null
+      ?`<span class="battle-tied-tag">Tied — ${stats.totalVotes} vote${stats.totalVotes!==1?'s':''}</span>`
+      :`<span class="battle-winner-tag">Leading: ${stats.leader==='A'?b.song_a_name:b.song_b_name}</span>`;
+  const barsOrButtons=hasVoted?`
+    <div class="battle-bars">
+      <div class="battle-bar-row">
+        <div class="battle-bar-label" style="color:${colorA}">${b.song_a_name}</div>
+        <div class="battle-bar-track"><div class="battle-bar-fill-a" style="width:${stats.percentA}%"></div></div>
+        <div class="battle-bar-pct" style="color:${colorA}">${stats.percentA}%</div>
+      </div>
+      <div class="battle-bar-row">
+        <div class="battle-bar-label" style="color:${colorB}">${b.song_b_name}</div>
+        <div class="battle-bar-track"><div class="battle-bar-fill-b" style="width:${stats.percentB}%"></div></div>
+        <div class="battle-bar-pct" style="color:${colorB}">${stats.percentB}%</div>
+      </div>
+    </div>`:`
+    <div class="battle-vote-row">
+      <button class="battle-vote-btn${votedAClass}" onclick="voteBattle('${b.id}','A')">${b.song_a_name}</button>
+      <button class="battle-vote-btn${votedBClass}" onclick="voteBattle('${b.id}','B')">${b.song_b_name}</button>
+    </div>`;
+  const isOwn=currentUser&&b.created_by===currentUser.id;
+  return`<div class="battle-card">
+    <div class="battle-card-meta">
+      <div class="battle-card-meta-left">
+        ${avatarHTML(p,null,20)}
+        <span class="battle-card-meta-user">@${uname}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.65rem">
+        <span class="battle-card-meta-time">${timeAgo(b.created_at)}</span>
+        ${isOwn?`<button onclick="deleteBattle('${b.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;cursor:pointer">DELETE</button>`:''}
+      </div>
+    </div>
+    <div class="battle-matchup">
+      <div class="battle-song-panel">
+        ${artA}
+        <div class="battle-song-name" style="color:${hasVoted?colorA:'var(--text)'}">${b.song_a_name}</div>
+        <div class="battle-song-artist">${b.song_a_artist}</div>
+      </div>
+      <div class="battle-vs">vs</div>
+      <div class="battle-song-panel">
+        ${artB}
+        <div class="battle-song-name" style="color:${hasVoted?colorB:'var(--text)'}">${b.song_b_name}</div>
+        <div class="battle-song-artist">${b.song_b_artist}</div>
+      </div>
+    </div>
+    ${barsOrButtons}
+    <div class="battle-result-footer">
+      ${winnerLine}
+      <span>${stats.totalVotes} vote${stats.totalVotes!==1?'s':''}</span>
+    </div>
+  </div>`;
+}
+
+function setBattleSort(mode,btn){
+  battleSortMode=mode;
+  document.querySelectorAll('.battle-sort-btn').forEach(b=>b.classList.toggle('active',b.dataset.bsort===mode));
+  renderBattles();
+}
+
+async function voteBattle(battleId, choice){
+  if(!currentUser){alert('Sign in to vote.');return;}
+  const key=battleId+'_'+currentUser.id;
+  const prev=battleVotes[key];
+  battleVotes[key]={battle_id:battleId,user_id:currentUser.id,vote_choice:choice};
+  renderBattles();
+  const{error}=await db.from('song_battle_votes').upsert({battle_id:battleId,user_id:currentUser.id,vote_choice:choice},{onConflict:'battle_id,user_id'});
+  if(error){
+    console.error(error);
+    if(prev)battleVotes[key]=prev;else delete battleVotes[key];
+    renderBattles();
+  }
+}
+
+async function deleteBattle(id){
+  if(!currentUser)return;
+  if(!confirm('Delete this battle?'))return;
+  const{error}=await db.from('song_battles').delete().eq('id',id).eq('created_by',currentUser.id);
+  if(error){console.error(error);return;}
+  battlesData=battlesData.filter(b=>b.id!==id);
+  renderBattles();
+}
+
+function openCreateBattleModal(){
+  if(!currentUser){alert('Sign in to create a battle.');return;}
+  _btlASong=null;_btlBSong=null;
+  document.getElementById('btl-a-input').value='';
+  document.getElementById('btl-b-input').value='';
+  document.getElementById('btl-a-results').style.display='none';
+  document.getElementById('btl-b-results').style.display='none';
+  document.getElementById('btl-a-selected').style.display='none';
+  document.getElementById('btl-b-selected').style.display='none';
+  document.getElementById('btl-a-search').style.display='';
+  document.getElementById('btl-b-search').style.display='';
+  document.getElementById('create-battle-err').textContent='';
+  document.getElementById('create-battle-modal').classList.add('open');
+}
+
+function closeCreateBattleModal(){
+  document.getElementById('create-battle-modal').classList.remove('open');
+  clearTimeout(_btlATimer);clearTimeout(_btlBTimer);
+}
+
+function battleSearch(slot){
+  const input=document.getElementById('btl-'+slot+'-input');
+  const resEl=document.getElementById('btl-'+slot+'-results');
+  const q=(input.value||'').trim();
+  if(!q){resEl.style.display='none';return;}
+  if(slot==='a'){clearTimeout(_btlATimer);}else{clearTimeout(_btlBTimer);}
+  const matches=slot==='a'?_btlAMatches:_btlBMatches;
+  resEl.innerHTML=`<div style="padding:.4rem .75rem;font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING…</div>`;
+  resEl.style.display='block';
+  const timerId=setTimeout(async()=>{
+    try{
+      const d=await deezerFetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=30');
+      const seen=new Set();
+      const results=(d.data||[]).filter(r=>{
+        if(!r.title||!r.artist?.name)return false;
+        const k=(r.title+r.artist.name).toLowerCase();
+        if(seen.has(k))return false;seen.add(k);return true;
+      }).map(r=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',artwork:r.album?.cover_medium||''}));
+      if(slot==='a')_btlAMatches=results;else _btlBMatches=results;
+      if(!results.length){resEl.innerHTML=`<div style="padding:.5rem .75rem;font-size:.6rem;color:var(--muted)">No results</div>`;return;}
+      resEl.innerHTML=results.slice(0,20).map((s,i)=>`<div class="battle-result-row" onclick="selectBattleSong('${slot}',${i})">
+        ${s.artwork?`<img src="${itunesArtUrl(s.artwork,80)}" style="width:36px;height:36px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:36px;height:36px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
+        <div style="flex:1;min-width:0">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div>
+          <div style="font-size:.57rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div>
+        </div>
+      </div>`).join('');
+    }catch(e){resEl.innerHTML=`<div style="padding:.5rem .75rem;font-size:.6rem;color:var(--muted)">Search failed</div>`;}
+  },350);
+  if(slot==='a')_btlATimer=timerId;else _btlBTimer=timerId;
+}
+
+function selectBattleSong(slot, idx){
+  const song=slot==='a'?_btlAMatches[idx]:_btlBMatches[idx];
+  if(!song)return;
+  if(slot==='a')_btlASong=song;else _btlBSong=song;
+  const nameEl=document.getElementById('btl-'+slot+'-name');
+  const metaEl=document.getElementById('btl-'+slot+'-meta');
+  const artEl=document.getElementById('btl-'+slot+'-art');
+  nameEl.textContent=song.song;
+  metaEl.textContent=song.artist+(song.album?' · '+song.album:'');
+  if(song.artwork){artEl.src=itunesArtUrl(song.artwork,100);artEl.style.display='block';}
+  else{artEl.style.display='none';}
+  document.getElementById('btl-'+slot+'-selected').style.display='block';
+  document.getElementById('btl-'+slot+'-search').style.display='none';
+  document.getElementById('btl-'+slot+'-results').style.display='none';
+  document.getElementById('create-battle-err').textContent='';
+}
+
+function clearBattleSlot(slot){
+  if(slot==='a')_btlASong=null;else _btlBSong=null;
+  document.getElementById('btl-'+slot+'-input').value='';
+  document.getElementById('btl-'+slot+'-results').style.display='none';
+  document.getElementById('btl-'+slot+'-selected').style.display='none';
+  document.getElementById('btl-'+slot+'-search').style.display='';
+}
+
+async function createBattle(){
+  const errEl=document.getElementById('create-battle-err');
+  if(!currentUser){errEl.textContent='Sign in first.';return;}
+  if(!_btlASong){errEl.textContent='Pick Song A first.';return;}
+  if(!_btlBSong){errEl.textContent='Pick Song B first.';return;}
+  const sameKey=(s)=>(s.song+s.artist).toLowerCase().replace(/\s/g,'');
+  if(sameKey(_btlASong)===sameKey(_btlBSong)){errEl.textContent='Pick two different songs for a battle.';return;}
+  const btn=document.getElementById('create-battle-btn');
+  btn.disabled=true;btn.textContent='Creating…';
+  const{data,error}=await db.from('song_battles').insert({
+    created_by:currentUser.id,
+    song_a_name:_btlASong.song,song_a_artist:_btlASong.artist,song_a_album:_btlASong.album||null,song_a_artwork_url:_btlASong.artwork||null,
+    song_b_name:_btlBSong.song,song_b_artist:_btlBSong.artist,song_b_album:_btlBSong.album||null,song_b_artwork_url:_btlBSong.artwork||null,
+    is_private:false
+  }).select('*,profiles:created_by(id,username,avatar_color,avatar_url)').single();
+  btn.disabled=false;btn.textContent='Create Battle';
+  if(error){errEl.textContent=error.message;console.error(error);return;}
+  closeCreateBattleModal();
+  battlesData=[data,...battlesData];
+  renderBattles();
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 let upoOpenFolders=new Set();
 
@@ -4918,6 +5269,7 @@ async function rrLoadData(){
 
 function rrRenderLobby(){
   if(currentRoom?.genre)rrApplyGenre(currentRoom.genre);
+  rrBlindMode=!!currentRoom?.blind_mode;
   const isHost=currentRoom?.host_id===currentUser?.id;
   const roomName=currentRoom?.name||'Rank Room';
   document.getElementById('rr-lobby-name').textContent=roomName;
@@ -5196,9 +5548,10 @@ async function rrStart(){
   if(error)alert('Failed: '+error.message);
 }
 
-function rrToggleBlindMode(){
+async function rrToggleBlindMode(){
   if(currentRoom?.host_id!==currentUser?.id)return;
   rrBlindMode=!rrBlindMode;
+  if(currentRoom)await db.from('rank_rooms').update({blind_mode:rrBlindMode}).eq('id',currentRoom.id);
   if(roomChannel)roomChannel.send({type:'broadcast',event:'blind_mode_set',payload:{enabled:rrBlindMode}});
   rrRenderLobby();
 }
@@ -5638,7 +5991,14 @@ async function rrRenderReveal(){
     vrdEl.style.color=avg==='—'?'var(--muted)':scoreColor(parseFloat(avg));
 
     if(scoredRatings.length){
-      const catDefs=[['Flow','flow_score','var(--flow)'],['Verses','verse_quality','var(--verses)'],['Production','production','var(--prod)'],['Chorus','chorus','var(--chorus)'],['Lyrics','lyrics','var(--lyrics)'],['Replay','replay','var(--replay)']];
+      const dbColOrder=['flow_score','verse_quality','production','chorus','lyrics','replay'];
+      let catDefs;
+      if(rrGenre==='rap'||!GENRE_PRESETS[rrGenre]){
+        catDefs=[['Flow','flow_score','var(--flow)'],['Verses','verse_quality','var(--verses)'],['Production','production','var(--prod)'],['Chorus','chorus','var(--chorus)'],['Lyrics','lyrics','var(--lyrics)'],['Replay','replay','var(--replay)']];
+      } else {
+        const preset=GENRE_PRESETS[rrGenre];
+        catDefs=preset.cats.map((name,i)=>[name,dbColOrder[i],preset.colors[i]]);
+      }
       const catAvgs=catDefs.map(([name,key,color])=>{
         const vals=scoredRatings.map(r=>parseFloat(r[key]||0)).filter(v=>v>0);
         const avg=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length):0;
@@ -6307,7 +6667,7 @@ async function rrSaveAll(postToFeed=true){
   if(error||!myRatings?.length){btn.textContent='Nothing to save';if(otherBtn)otherBtn.disabled=false;return;}
   const rows=myRatings.map(r=>{
     const s=roomSongs.find(x=>x.id===r.song_id);
-    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',genre:rrGenre||'rap',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,pacing_penalty:r.pacing_penalty,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false,comment:r.comment||null,is_private:!postToFeed};
+    return{user_id:currentUser.id,song_name:s?.song||'Unknown',artist_name:s?.artist||'',album:s?.album||'',folder:s?.album||'',genre:rrGenre||'rap',flow_peak:r.flow_peak,flow_score:r.flow_score,verse_quality:r.verse_quality,verse_score:r.verse_score,production:r.production,chorus:r.chorus,lyrics:r.lyrics,replay:r.replay,final_score:r.is_interlude?null:r.final_score,verdict:r.verdict,artwork_url:s?.artwork||null,is_interlude:r.is_interlude||false,comment:r.comment||null,is_private:!postToFeed};
   });
   const{error:e2}=await db.from('ratings').insert(rows);
   if(e2){btn.textContent='Save failed: '+e2.message;btn.style.color='#c0392b';btn.disabled=false;if(otherBtn)otherBtn.disabled=false;return;}
@@ -6543,6 +6903,8 @@ async function rrTryRejoin(){
   await rrLoadData();
   rrSubscribe(room.id);
   switchTab('room');
+  rrBlindMode=!!room.blind_mode;
+  if(room.genre)rrApplyGenre(room.genre);
   const s=room.status;
   if(s==='lobby'){rrState('lobby');rrRenderLobby();}
   else if(s==='rating'){
