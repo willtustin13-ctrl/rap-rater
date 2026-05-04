@@ -7906,15 +7906,17 @@ function renderAuxBattleFinal(){
 function subscribeToAuxBattleRealtime(battleId){
   if(abChannel)db.removeChannel(abChannel);
   abChannel=db.channel('ab:'+battleId)
-    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'aux_battles',filter:`id=eq.${battleId}`},async payload=>{
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'aux_battles',filter:`id=eq.${battleId}`},async()=>{
       const prev=currentAuxBattle?.status;
-      currentAuxBattle={...currentAuxBattle,...payload.new};
-      const s=currentAuxBattle.status;
-      if(s==='drafting'&&prev==='lobby'){abState('draft');}
+      const{data:battle}=await db.from('aux_battles').select('*').eq('id',battleId).maybeSingle();
+      if(!battle)return;
+      currentAuxBattle=battle;
+      const s=battle.status;
+      if(s==='drafting'&&prev==='lobby'){_stopAbLobbyPoll();abState('draft');}
       else if((s==='round_active'||s==='rating_tiebreaker')&&prev!==s){await loadAbRoundData();abState('round');}
       else if(s==='round_result'&&prev!=='round_result'){abState('result');}
       else if(s==='final'){const{data:r}=await db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number');abRoundResults=r||[];abState('final');}
-      else if(s==='lobby'){const{data:fresh}=await db.from('aux_battles').select('*').eq('id',battleId).single();if(fresh)currentAuxBattle=fresh;renderAuxBattleLobby();}
+      else if(s==='lobby'){renderAuxBattleLobby();}
     })
     .on('postgres_changes',{event:'INSERT',schema:'public',table:'aux_battle_picks',filter:`battle_id=eq.${battleId}`},payload=>{
       const p=payload.new;if(!abPicks.find(x=>x.id===p.id))abPicks=[...abPicks,p];
