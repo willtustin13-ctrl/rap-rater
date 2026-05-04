@@ -7383,7 +7383,7 @@ function renderAuxBattleDraft(){
   pickPanel.style.display=(isMyTurn&&!done)?'block':'none';
   if(isMyTurn){
     document.getElementById('ab-draft-pick-label').textContent=`Pick ${abPicks.filter(p=>p.side===currentSide).length+1} — ${currentSide==='A'?b.artist_a:b.artist_b}`;
-    clearAbPickSelection();
+    if(!abPendingPick)clearAbPickSelection();
   }
   // Draft board
   const colA=document.getElementById('ab-draft-col-a');
