@@ -7913,6 +7913,7 @@ function subscribeToAuxBattleRealtime(battleId){
       currentAuxBattle=battle;
       const s=battle.status;
       if(s==='drafting'&&prev==='lobby'){_stopAbLobbyPoll();abState('draft');}
+      else if(s==='drafting'){renderAuxBattleDraft();}
       else if((s==='round_active'||s==='rating_tiebreaker')&&prev!==s){await loadAbRoundData();abState('round');}
       else if(s==='round_result'&&prev!=='round_result'){abState('result');}
       else if(s==='final'){const{data:r}=await db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number');abRoundResults=r||[];abState('final');}
