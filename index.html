@@ -879,6 +879,68 @@
     .battle-search-results{display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:50;max-height:45vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)}
     .battle-result-row{padding:.5rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem;cursor:pointer}
     .battle-result-row:active{background:var(--border)}
+
+    /* AUX BATTLE */
+    .rooms-sub-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;width:100%}
+    .rooms-sub-tab{flex:1;padding:.55rem .25rem;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:color .18s,border-color .18s}
+    .rooms-sub-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .ab-card{background:var(--surface);border:1px solid var(--border2);border-radius:.75rem;padding:.85rem 1rem;margin-bottom:.65rem}
+    .ab-card-name{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);line-height:1.2;margin-bottom:.3rem}
+    .ab-card-artists{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;font-style:italic;color:var(--gold);margin-bottom:.45rem}
+    .ab-card-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+    .ab-pill{background:var(--surface2);border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .45rem;border-radius:3px}
+    .ab-pill.active{border-color:var(--gold);color:var(--gold)}
+    .ab-view-header{display:flex;align-items:center;padding:.85rem 1.25rem;padding-top:env(safe-area-inset-top,.85rem);background:var(--bg-nav);border-bottom:1px solid var(--border);flex-shrink:0;gap:.75rem;backdrop-filter:blur(16px)}
+    .ab-view-title{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ab-lobby-artist{background:var(--surface);border:1px solid var(--border2);border-radius:.65rem;padding:.85rem 1rem;flex:1}
+    .ab-lobby-artist-label{font-size:.5rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.25rem}
+    .ab-lobby-artist-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900;font-style:italic;color:var(--gold);margin-bottom:.45rem}
+    .ab-lobby-player{background:var(--surface2);border:1px solid var(--border2);border-radius:.45rem;padding:.55rem .75rem;margin-top:.45rem;display:flex;align-items:center;gap:.55rem}
+    .ab-lobby-player-empty{color:var(--muted);font-size:.6rem;font-family:'DM Mono',monospace;font-style:italic}
+    .ab-join-btn{width:100%;margin-top:.4rem;padding:.42rem;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;cursor:pointer;border-radius:3px;transition:all .15s}
+    .ab-join-btn:active{background:rgba(167,139,250,.08);border-color:var(--gold);color:var(--gold)}
+    .ab-draft-board{display:flex;gap:.65rem;padding:.75rem 1rem;flex:1;min-height:0}
+    .ab-draft-col{flex:1;display:flex;flex-direction:column;gap:.5rem;min-width:0}
+    .ab-draft-col-hdr{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:.35rem .5rem;border-radius:.35rem .35rem 0 0;flex-shrink:0}
+    .ab-draft-slot{background:var(--surface2);border:1px solid var(--border2);border-radius:.4rem;padding:.5rem .65rem;min-height:52px;display:flex;align-items:center;gap:.5rem;transition:border-color .2s}
+    .ab-draft-slot.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(167,139,250,.3)}
+    .ab-draft-slot.picked{border-color:var(--border2)}
+    .ab-draft-slot-num{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:900;color:var(--muted);flex-shrink:0;width:16px;text-align:center}
+    .ab-draft-slot-art{width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0;background:var(--border2)}
+    .ab-draft-slot-info{flex:1;min-width:0}
+    .ab-draft-slot-name{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+    .ab-draft-slot-meta{font-size:.52rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ab-draft-slot-hidden{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);font-style:italic}
+    .ab-round-song{background:var(--surface);border:1px solid var(--border2);border-radius:.75rem;padding:.85rem;flex:1;display:flex;flex-direction:column;align-items:center;gap:.5rem;min-width:0}
+    .ab-round-song-art{width:88px;height:88px;border-radius:.55rem;object-fit:cover;background:var(--border2);flex-shrink:0}
+    .ab-round-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;text-align:center;line-height:1.2;color:var(--text);word-break:break-word}
+    .ab-round-song-artist{font-size:.57rem;color:var(--muted);text-align:center;font-family:'DM Mono',monospace}
+    .ab-round-vs{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 14px rgba(167,139,250,.5);flex-shrink:0;padding:0 .2rem;align-self:center}
+    .ab-vote-btn{flex:1;padding:.65rem .4rem;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:.45rem;transition:all .18s;line-height:1.2}
+    .ab-vote-btn.voted-a{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.1)}
+    .ab-vote-btn.voted-b{border-color:#f472b6;color:#f472b6;background:rgba(244,114,182,.1)}
+    .ab-pct-bar{flex:1;height:7px;background:var(--border2);border-radius:4px;overflow:hidden}
+    .ab-pct-fill-a{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold),#c084fc);transition:width .4s}
+    .ab-pct-fill-b{height:100%;border-radius:4px;background:linear-gradient(90deg,#f472b6,#fb7185);transition:width .4s}
+    .ab-rating-panel{background:var(--surface2);border:1px solid var(--border2);border-radius:.5rem;padding:.65rem .75rem;margin-bottom:.5rem}
+    .ab-rating-cat{display:flex;align-items:center;gap:.55rem;margin-bottom:.35rem}
+    .ab-rating-cat-name{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.06em;color:var(--muted2);width:5.5rem;flex-shrink:0;text-transform:uppercase}
+    .ab-rating-cat-val{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:900;color:var(--gold);width:2.2rem;text-align:right;flex-shrink:0}
+    .ab-rating-slider{flex:1;accent-color:var(--gold)}
+    .ab-submit-rating-btn{width:100%;padding:.6rem;background:var(--gold);color:var(--bg);border:none;border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.1em;cursor:pointer;margin-top:.4rem;transition:opacity .2s}
+    .ab-submit-rating-btn:disabled{opacity:.35;cursor:default}
+    .ab-submit-rating-btn.submitted{background:var(--green);cursor:default}
+    .ab-result-winner{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--gold);text-align:center;line-height:1}
+    .ab-score-tally{display:flex;gap:.75rem;justify-content:center;align-items:center;margin:.75rem 0}
+    .ab-score-tally-side{text-align:center}
+    .ab-score-tally-num{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1}
+    .ab-score-tally-label{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .ab-score-tally-sep{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;color:var(--muted)}
+    .ab-round-row{display:flex;align-items:center;gap:.65rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
+    .ab-round-row:last-child{border:none}
+    .ab-finalize-btn{width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.45rem;font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:opacity .18s}
+    .ab-finalize-btn:disabled{opacity:.35;cursor:default}
+    .ab-section-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
   </style>
 </head>
 <body>
@@ -1389,21 +1451,44 @@
     </div>
 
     <!-- HOME -->
-    <div id="rr-home" style="flex:1;overflow-y:auto;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:.85rem;align-items:center">
-      <div style="text-align:center;margin-bottom:.75rem">
-        <div style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900">Rank <span style="color:var(--red)">Room</span></div>
-        <div style="font-size:.55rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:.35rem">Live group rating sessions</div>
+    <div id="rr-home" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+      <div class="rooms-sub-tabs">
+        <button class="rooms-sub-tab active" id="rsub-rankroom" onclick="setRoomsSubject('rankroom')">Rank Room</button>
+        <button class="rooms-sub-tab" id="rsub-auxbattle" onclick="setRoomsSubject('auxbattle')">Aux Battle</button>
       </div>
-      <div style="width:100%;max-width:340px">
-        <div class="rr-section-lbl" style="margin-bottom:.35rem">Room Name</div>
-        <input id="rr-create-name" class="modal-input" maxlength="40" placeholder="e.g. Carti Appreciation Night" style="font-size:.78rem;padding:.6rem .8rem;margin-bottom:.5rem">
-        <div class="rr-section-lbl" style="margin-bottom:.35rem">Description <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
-        <input id="rr-create-desc" class="modal-input" maxlength="80" placeholder="Best Carti leaks." style="font-size:.78rem;padding:.6rem .8rem;margin-bottom:.75rem">
-        <button class="rr-btn rr-btn-primary" onclick="rrCreate()">+ Create Room</button>
+
+      <!-- Rank Room panel -->
+      <div id="rr-home-rr" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:.85rem;align-items:center">
+        <div style="text-align:center;margin-bottom:.75rem">
+          <div style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900">Rank <span style="color:var(--red)">Room</span></div>
+          <div style="font-size:.55rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:.35rem">Live group rating sessions</div>
+        </div>
+        <div style="width:100%;max-width:340px">
+          <div class="rr-section-lbl" style="margin-bottom:.35rem">Room Name</div>
+          <input id="rr-create-name" class="modal-input" maxlength="40" placeholder="e.g. Carti Appreciation Night" style="font-size:.78rem;padding:.6rem .8rem;margin-bottom:.5rem">
+          <div class="rr-section-lbl" style="margin-bottom:.35rem">Description <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></div>
+          <input id="rr-create-desc" class="modal-input" maxlength="80" placeholder="Best Carti leaks." style="font-size:.78rem;padding:.6rem .8rem;margin-bottom:.75rem">
+          <button class="rr-btn rr-btn-primary" onclick="rrCreate()">+ Create Room</button>
+        </div>
+        <div style="font-size:.56rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">— or join one —</div>
+        <input id="rr-join-input" class="rr-code-input" maxlength="6" placeholder="ROOM CODE" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
+        <button class="rr-btn rr-btn-secondary" onclick="rrJoin()">Join Room</button>
       </div>
-      <div style="font-size:.56rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">— or join one —</div>
-      <input id="rr-join-input" class="rr-code-input" maxlength="6" placeholder="ROOM CODE" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')">
-      <button class="rr-btn rr-btn-secondary" onclick="rrJoin()">Join Room</button>
+
+      <!-- Aux Battle panel -->
+      <div id="rr-home-ab" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1.25rem 1rem;flex-direction:column;gap:.75rem;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)">
+        <div style="text-align:center;margin-bottom:.25rem">
+          <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900">Aux <span style="color:var(--red)">Battle</span></div>
+          <div style="font-size:.52rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:.25rem">Artist vs Artist draft wars</div>
+        </div>
+        <button onclick="openCreateAuxBattleModal()" style="width:100%;padding:.65rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer">+ Create Battle</button>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <input id="ab-join-input" class="rr-code-input" maxlength="6" placeholder="BATTLE CODE" oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')" style="flex:1;font-size:.72rem;padding:.55rem .75rem">
+          <button onclick="joinAuxBattleByCode()" style="padding:.55rem .85rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;cursor:pointer;border-radius:3px;white-space:nowrap">Join</button>
+        </div>
+        <div class="ab-section-lbl" style="margin-top:.25rem">Recent Battles</div>
+        <div id="ab-battles-list"><div class="feed-empty">Loading…</div></div>
+      </div>
     </div>
 
     <!-- LOBBY -->
@@ -1839,6 +1924,150 @@
       <input id="ali-manual-sub" type="text" maxlength="80" placeholder="Subtitle (artist, year…)" class="modal-input" style="margin-bottom:.5rem">
       <input id="ali-manual-note" type="text" maxlength="140" placeholder="Note (optional)…" class="modal-input" style="margin-bottom:.75rem">
       <button onclick="addManualItem()" style="width:100%;padding:.6rem;background:var(--gold);color:var(--bg);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUX BATTLE VIEW (full-screen overlay) -->
+<div id="ab-view" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:150;flex-direction:column;overflow:hidden">
+  <div class="ab-view-header">
+    <button onclick="abLeave()" style="background:transparent;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;line-height:1;padding:.2rem .3rem;flex-shrink:0">←</button>
+    <div id="ab-view-title" class="ab-view-title">Aux Battle</div>
+    <div id="ab-view-code" style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;color:var(--muted);flex-shrink:0"></div>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="ab-lobby" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem;padding-bottom:calc(var(--safe-b)+5rem)">
+    <div id="ab-lobby-body"></div>
+  </div>
+
+  <!-- DRAFT -->
+  <div id="ab-draft" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+    <div id="ab-draft-status" style="padding:.55rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)"></div>
+    <div id="ab-draft-pick-panel" style="display:none;flex-shrink:0;padding:.65rem 1rem;border-bottom:1px solid var(--border);background:var(--surface)">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem" id="ab-draft-pick-label">Your Turn</div>
+      <div id="ab-draft-pick-selected" style="display:none;margin-bottom:.5rem">
+        <div style="display:flex;align-items:center;gap:.55rem;background:var(--surface2);border:1px solid var(--border2);border-radius:.4rem;padding:.5rem .65rem">
+          <img id="ab-pick-sel-art" src="" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0;display:none">
+          <div style="flex:1;min-width:0">
+            <div id="ab-pick-sel-name" style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+            <div id="ab-pick-sel-meta" style="font-size:.55rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          </div>
+          <button onclick="clearAbPickSelection()" style="background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:0 .2rem;flex-shrink:0">✕</button>
+        </div>
+        <button id="ab-confirm-pick-btn" onclick="submitAuxBattlePick()" style="width:100%;margin-top:.4rem;padding:.55rem;background:var(--gold);color:var(--bg);border:none;border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:800;letter-spacing:.1em;cursor:pointer">Lock Pick</button>
+      </div>
+      <div id="ab-draft-search-wrap" style="position:relative">
+        <input id="ab-draft-search-input" type="text" autocomplete="off" placeholder="Search songs…" class="modal-input" style="font-size:.78rem;padding:.55rem .75rem" oninput="abSearchSongs()" onfocus="abSearchSongs()">
+        <div id="ab-draft-search-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
+      </div>
+      <div id="ab-draft-pick-err" style="color:#f472b6;font-size:.58rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;min-height:.9em;margin-top:.3rem"></div>
+    </div>
+    <div class="ab-draft-board" id="ab-draft-board-wrap" style="overflow-y:auto;flex:1">
+      <div class="ab-draft-col" id="ab-draft-col-a">
+        <div class="ab-draft-col-hdr" style="background:rgba(167,139,250,.12);color:var(--gold)" id="ab-draft-col-a-hdr">Artist A</div>
+      </div>
+      <div class="ab-draft-col" id="ab-draft-col-b">
+        <div class="ab-draft-col-hdr" style="background:rgba(244,114,182,.12);color:#f472b6" id="ab-draft-col-b-hdr">Artist B</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUND ACTIVE -->
+  <div id="ab-round" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+    <div id="ab-round-header" style="padding:.5rem 1rem .35rem;border-bottom:1px solid var(--border);flex-shrink:0">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem">
+        <div id="ab-round-label" style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)"></div>
+        <div id="ab-round-score-pill" style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;color:var(--muted2)"></div>
+      </div>
+      <div id="ab-round-tiebreaker-banner" style="display:none;background:rgba(244,114,182,.12);border:1px solid #f472b6;color:#f472b6;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:.3rem .5rem;border-radius:3px;margin-top:.3rem">Audience Vote Tied · SONGR Ratings Tiebreaker</div>
+    </div>
+    <div id="ab-round-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem;padding-bottom:calc(var(--safe-b)+5rem)">
+      <div style="display:flex;gap:.65rem;margin-bottom:.85rem" id="ab-round-songs-row">
+        <div class="ab-round-song" id="ab-round-song-a"></div>
+        <div class="ab-round-vs">vs</div>
+        <div class="ab-round-song" id="ab-round-song-b"></div>
+      </div>
+      <div id="ab-round-vote-section"></div>
+      <div id="ab-round-rating-section"></div>
+      <div id="ab-round-finalize-section" style="display:none;margin-top:.75rem">
+        <button class="ab-finalize-btn" id="ab-finalize-btn" onclick="finalizeAuxBattleRound()">Finalize Round</button>
+        <div id="ab-finalize-err" style="color:#f472b6;font-size:.58rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;min-height:.9em;margin-top:.3rem;text-align:center"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROUND RESULT -->
+  <div id="ab-result" style="display:none;flex-direction:column;flex:1;overflow-y:auto;padding:1.25rem 1rem;padding-bottom:calc(var(--safe-b)+5rem)">
+    <div id="ab-result-body"></div>
+  </div>
+
+  <!-- FINAL -->
+  <div id="ab-final" style="display:none;flex-direction:column;flex:1;overflow-y:auto;padding:1.25rem 1rem;padding-bottom:calc(var(--safe-b)+5rem)">
+    <div id="ab-final-body"></div>
+  </div>
+</div>
+
+<!-- CREATE AUX BATTLE MODAL -->
+<div class="modal-overlay" id="create-ab-modal" onclick="if(event.target===this)closeCreateAuxBattleModal()" style="z-index:320">
+  <div class="modal" style="padding-bottom:1.5rem;max-height:90vh;overflow-y:auto">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem">Create Aux Battle</div>
+    <label class="modal-lbl">Battle Name</label>
+    <input id="ab-create-name" class="modal-input" maxlength="60" placeholder="e.g. Drake vs The Weeknd" style="margin-bottom:.75rem">
+    <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+      <div style="flex:1">
+        <label class="modal-lbl">Artist A</label>
+        <input id="ab-create-artist-a" class="modal-input" maxlength="50" placeholder="e.g. Drake">
+      </div>
+      <div style="flex:1">
+        <label class="modal-lbl">Artist B</label>
+        <input id="ab-create-artist-b" class="modal-input" maxlength="50" placeholder="e.g. The Weeknd">
+      </div>
+    </div>
+    <label class="modal-lbl">Songs Per Side</label>
+    <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem" id="ab-song-count-btns">
+      <button class="ab-pill" style="cursor:pointer" data-count="3" onclick="setAbSongCount(3,this)">3</button>
+      <button class="ab-pill active" style="cursor:pointer" data-count="5" onclick="setAbSongCount(5,this)">5</button>
+      <button class="ab-pill" style="cursor:pointer" data-count="7" onclick="setAbSongCount(7,this)">7</button>
+      <button class="ab-pill" style="cursor:pointer" data-count="10" onclick="setAbSongCount(10,this)">10</button>
+      <button class="ab-pill" style="cursor:pointer" data-count="custom" onclick="setAbSongCount('custom',this)">Custom</button>
+    </div>
+    <div id="ab-custom-count-wrap" style="display:none;margin-bottom:.75rem">
+      <input id="ab-custom-count" type="number" min="1" max="20" class="modal-input" placeholder="Number of songs (1-20)" style="font-size:.82rem">
+    </div>
+    <label class="modal-lbl">Winner Mode</label>
+    <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+      <button id="ab-mode-audience" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbMode('audience',this)">Audience Vote</button>
+      <button id="ab-mode-ratings" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbMode('ratings',this)">Ratings</button>
+    </div>
+    <div style="display:flex;gap:.75rem;margin-bottom:.75rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:140px">
+        <label class="modal-lbl">Secret Draft</label>
+        <div style="display:flex;gap:.35rem">
+          <button id="ab-secret-on" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbToggle('secret',true)">On</button>
+          <button id="ab-secret-off" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbToggle('secret',false)">Off</button>
+        </div>
+      </div>
+      <div style="flex:1;min-width:140px">
+        <label class="modal-lbl">Allow Featured Songs</label>
+        <div style="display:flex;gap:.35rem">
+          <button id="ab-feat-on" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbToggle('features',true)">On</button>
+          <button id="ab-feat-off" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbToggle('features',false)">Off</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-bottom:.75rem">
+      <label class="modal-lbl">Private Battle</label>
+      <div style="display:flex;gap:.35rem">
+        <button id="ab-priv-on" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbToggle('private',true)">Private</button>
+        <button id="ab-priv-off" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbToggle('private',false)">Public</button>
+      </div>
+    </div>
+    <div id="create-ab-err" style="color:#f472b6;font-size:.6rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;min-height:1em;margin-bottom:.5rem"></div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-btn-confirm" id="create-ab-btn" onclick="createAuxBattle()">Create Battle</button>
+      <button class="modal-btn modal-btn-cancel" onclick="closeCreateAuxBattleModal()">Cancel</button>
     </div>
   </div>
 </div>
@@ -6884,6 +7113,824 @@ document.addEventListener('click',e=>{
   if(wrap&&!wrap.contains(e.target))document.getElementById('rr-song-results').style.display='none';
 });
 // ── END RANK ROOM ──────────────────────────────────────────────────────────────
+
+// ─── AUX BATTLE ───────────────────────────────────────────────────────────────
+let currentAuxBattle=null, abChannel=null, abPicks=[], abRoundVotes=[], abRoundRatings=[], abRoundResults=[];
+let abSongMatches=[], abSongTimer=null, abPendingPick=null;
+let abMyRatingA=null, abMyRatingB=null, abRoomsSubject='rankroom';
+let _abSongCount=5, _abMode='audience', _abSecret=true, _abFeatures=false, _abPrivate=false;
+
+// ─── Tab switcher ────────────────────────────────────────────────────────────
+function setRoomsSubject(subj){
+  abRoomsSubject=subj;
+  document.getElementById('rsub-rankroom').classList.toggle('active',subj==='rankroom');
+  document.getElementById('rsub-auxbattle').classList.toggle('active',subj==='auxbattle');
+  document.getElementById('rr-home-rr').style.display=subj==='rankroom'?'flex':'none';
+  const abPanel=document.getElementById('rr-home-ab');
+  abPanel.style.display=subj==='auxbattle'?'flex':'none';
+  if(subj==='auxbattle')loadAuxBattles();
+}
+
+// ─── List ────────────────────────────────────────────────────────────────────
+async function loadAuxBattles(){
+  const el=document.getElementById('ab-battles-list');
+  el.innerHTML='<div class="feed-empty">Loading…</div>';
+  const{data,error}=await db.from('aux_battles').select('*,player_a:player_a_id(id,username,avatar_color,avatar_url),player_b:player_b_id(id,username,avatar_color,avatar_url)').eq('is_private',false).order('created_at',{ascending:false}).limit(40);
+  if(error){el.innerHTML='<div class="feed-empty">Failed to load.</div>';console.error(error);return;}
+  if(!data?.length){el.innerHTML='<div class="feed-empty">No battles yet. Create the first!</div>';return;}
+  el.innerHTML=(data||[]).map(b=>`<div class="ab-card">
+    <div class="ab-card-name">${b.name}</div>
+    <div class="ab-card-artists">${b.artist_a} <span style="color:var(--muted);font-style:normal">vs</span> ${b.artist_b}</div>
+    <div class="ab-card-meta" style="margin-bottom:.55rem">
+      <span class="ab-pill">${b.song_count} songs</span>
+      <span class="ab-pill">${b.winner_mode==='audience'?'Audience Vote':'Ratings'}</span>
+      ${b.secret_draft?'<span class="ab-pill">Secret Draft</span>':''}
+      <span class="ab-pill ${b.status==='final'?'':'active'}">${b.status==='lobby'?'Lobby':b.status==='drafting'?'Drafting':b.status==='round_active'||b.status==='rating_tiebreaker'?'Live':b.status==='round_result'?'Round Result':b.status==='final'?'Final':'In Progress'}</span>
+    </div>
+    <button onclick="openAuxBattle('${b.id}')" style="width:100%;padding:.5rem;background:transparent;border:1px solid var(--border2);color:var(--gold);border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;cursor:pointer">${b.status==='final'?'View Results':'Join / View'}</button>
+  </div>`).join('');
+}
+
+// ─── Create modal helpers ────────────────────────────────────────────────────
+function setAbSongCount(val,btn){
+  _abSongCount=val;
+  document.querySelectorAll('#ab-song-count-btns .ab-pill').forEach(b=>b.classList.toggle('active',b===btn));
+  document.getElementById('ab-custom-count-wrap').style.display=val==='custom'?'block':'none';
+}
+function setAbMode(val,btn){
+  _abMode=val;
+  document.getElementById('ab-mode-audience').classList.toggle('active',val==='audience');
+  document.getElementById('ab-mode-ratings').classList.toggle('active',val==='ratings');
+}
+function setAbToggle(field,val){
+  if(field==='secret'){_abSecret=val;document.getElementById('ab-secret-on').classList.toggle('active',val);document.getElementById('ab-secret-off').classList.toggle('active',!val);}
+  else if(field==='features'){_abFeatures=val;document.getElementById('ab-feat-on').classList.toggle('active',val);document.getElementById('ab-feat-off').classList.toggle('active',!val);}
+  else if(field==='private'){_abPrivate=val;document.getElementById('ab-priv-on').classList.toggle('active',val);document.getElementById('ab-priv-off').classList.toggle('active',!val);}
+}
+function openCreateAuxBattleModal(){
+  if(!currentUser){alert('Sign in first.');return;}
+  document.getElementById('ab-create-name').value='';
+  document.getElementById('ab-create-artist-a').value='';
+  document.getElementById('ab-create-artist-b').value='';
+  document.getElementById('ab-custom-count').value='';
+  document.getElementById('ab-custom-count-wrap').style.display='none';
+  document.getElementById('create-ab-err').textContent='';
+  _abSongCount=5;_abMode='audience';_abSecret=true;_abFeatures=false;_abPrivate=false;
+  document.querySelectorAll('#ab-song-count-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.count==='5'));
+  setAbMode('audience');setAbToggle('secret',true);setAbToggle('features',false);setAbToggle('private',false);
+  document.getElementById('create-ab-modal').classList.add('open');
+}
+function closeCreateAuxBattleModal(){document.getElementById('create-ab-modal').classList.remove('open');}
+
+async function createAuxBattle(){
+  if(!currentUser){return;}
+  const errEl=document.getElementById('create-ab-err');
+  const name=(document.getElementById('ab-create-name').value||'').trim();
+  const artistA=(document.getElementById('ab-create-artist-a').value||'').trim();
+  const artistB=(document.getElementById('ab-create-artist-b').value||'').trim();
+  if(!name){errEl.textContent='Enter a battle name.';return;}
+  if(!artistA||!artistB){errEl.textContent='Enter both artists.';return;}
+  if(artistA.toLowerCase()===artistB.toLowerCase()){errEl.textContent='Artists must be different.';return;}
+  let songCount=_abSongCount;
+  if(songCount==='custom'){
+    songCount=parseInt(document.getElementById('ab-custom-count').value)||0;
+    if(songCount<1||songCount>20){errEl.textContent='Song count must be 1–20.';return;}
+  }
+  const code=rrGenCode();
+  const btn=document.getElementById('create-ab-btn');
+  btn.disabled=true;btn.textContent='Creating…';
+  const{data,error}=await db.from('aux_battles').insert({
+    host_id:currentUser.id,code,name,artist_a:artistA,artist_b:artistB,
+    song_count:songCount,winner_mode:_abMode,secret_draft:_abSecret,
+    allow_features:_abFeatures,is_private:_abPrivate,
+    player_a_id:currentUser.id,status:'lobby'
+  }).select('*').single();
+  btn.disabled=false;btn.textContent='Create Battle';
+  if(error){errEl.textContent=error.message;console.error(error);return;}
+  closeCreateAuxBattleModal();
+  await openAuxBattle(data.id);
+}
+
+// ─── Join by code ─────────────────────────────────────────────────────────────
+async function joinAuxBattleByCode(){
+  const code=(document.getElementById('ab-join-input').value||'').trim().toUpperCase();
+  if(code.length<4){alert('Enter a valid battle code.');return;}
+  const{data,error}=await db.from('aux_battles').select('*').eq('code',code).maybeSingle();
+  if(error||!data){alert('Battle not found. Check the code.');return;}
+  await openAuxBattle(data.id);
+}
+
+// ─── Open battle ──────────────────────────────────────────────────────────────
+async function openAuxBattle(id){
+  document.getElementById('ab-view').style.display='flex';
+  await loadAuxBattleState(id);
+  subscribeToAuxBattleRealtime(id);
+}
+
+async function loadAuxBattleState(id){
+  const{data:battle,error}=await db.from('aux_battles').select('*').eq('id',id).single();
+  if(error||!battle){alert('Battle not found.');document.getElementById('ab-view').style.display='none';return;}
+  currentAuxBattle=battle;
+  document.getElementById('ab-view-title').textContent=battle.name;
+  document.getElementById('ab-view-code').textContent=battle.code;
+  const[{data:picks},{data:results}]=await Promise.all([
+    db.from('aux_battle_picks').select('*').eq('battle_id',id).order('draft_pick_index'),
+    db.from('aux_battle_round_results').select('*').eq('battle_id',id).order('round_number')
+  ]);
+  abPicks=picks||[];
+  abRoundResults=results||[];
+  if(battle.status==='lobby')abState('lobby');
+  else if(battle.status==='drafting')abState('draft');
+  else if(battle.status==='round_active'||battle.status==='rating_tiebreaker'){
+    await loadAbRoundData();abState('round');
+  }
+  else if(battle.status==='round_result')abState('result');
+  else if(battle.status==='final')abState('final');
+}
+
+// ─── State switcher ───────────────────────────────────────────────────────────
+function abState(s){
+  ['lobby','draft','round','result','final'].forEach(id=>{
+    const el=document.getElementById('ab-'+id);
+    if(!el)return;
+    el.style.display='none';
+  });
+  const el=document.getElementById('ab-'+s);
+  if(el)el.style.display=['lobby','round','result','final'].includes(s)?'block':'flex';
+  if(s==='lobby')renderAuxBattleLobby();
+  else if(s==='draft')renderAuxBattleDraft();
+  else if(s==='round')renderAuxBattleRound();
+  else if(s==='result')renderAuxBattleResult();
+  else if(s==='final')renderAuxBattleFinal();
+}
+
+// ─── Lobby ────────────────────────────────────────────────────────────────────
+async function renderAuxBattleLobby(){
+  const b=currentAuxBattle;
+  const isHost=b.host_id===currentUser?.id;
+  const isPlayerA=b.player_a_id===currentUser?.id;
+  const isPlayerB=b.player_b_id===currentUser?.id;
+  let paProf=null,pbProf=null;
+  if(b.player_a_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_a_id).single();paProf=data;}
+  if(b.player_b_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_b_id).single();pbProf=data;}
+  const sideBtn=(side,prof,artist)=>{
+    const filled=!!prof;
+    const isMe=prof?.id===currentUser?.id;
+    const canJoin=!filled&&!isPlayerA&&!isPlayerB;
+    return`<div class="ab-lobby-artist">
+      <div class="ab-lobby-artist-label">Side ${side}</div>
+      <div class="ab-lobby-artist-name">${artist}</div>
+      <div class="ab-lobby-player">
+        ${filled?avatarHTML(prof,null,22):'<div style="width:22px;height:22px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>'}
+        <div style="flex:1;min-width:0">
+          ${filled?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;color:${isMe?'var(--gold)':'var(--text)'}">@${prof.username}${isMe?' ★':''}</div>`:
+          '<div class="ab-lobby-player-empty">Empty slot</div>'}
+        </div>
+      </div>
+      ${canJoin?`<button class="ab-join-btn" onclick="joinAuxBattleSide('${side}')">+ Join as ${artist}</button>`:''}
+    </div>`;
+  };
+  const canStart=isHost&&b.player_a_id&&b.player_b_id;
+  const el=document.getElementById('ab-lobby-body');
+  el.innerHTML=`
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem">Battle Code</div>
+      <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:.12em">${b.code}</div>
+      <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
+    </div>
+    <div style="display:flex;gap:.65rem;margin-bottom:1rem">${sideBtn('A',paProf,b.artist_a)}${sideBtn('B',pbProf,b.artist_b)}</div>
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.75rem .9rem;margin-bottom:.85rem">
+      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Songs per side</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text)">${b.song_count}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Winner mode</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text)">${b.winner_mode==='audience'?'Audience Vote':'Ratings'}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Secret draft</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${b.secret_draft?'var(--gold)':'var(--muted)'}">${b.secret_draft?'On':'Off'}</span></div>
+      <div style="display:flex;justify-content:space-between"><span class="ab-section-lbl">Featured songs</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">${b.allow_features?'Allowed':'Not Allowed'}</span></div>
+    </div>
+    ${canStart?`<button onclick="startAuxBattleDraft()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Start Draft</button>`
+    :isHost&&(!b.player_a_id||!b.player_b_id)?`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.5rem">Waiting for both players to join…</div>`
+    :'<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:\'DM Mono\',monospace;margin-top:.5rem">Waiting for host to start the draft…</div>'}
+  `;
+}
+
+async function joinAuxBattleSide(side){
+  if(!currentUser){alert('Sign in first.');return;}
+  const b=currentAuxBattle;
+  if(b.status!=='lobby'){alert('Battle has already started.');return;}
+  if(side==='A'&&b.player_a_id){alert('Side A is already taken.');return;}
+  if(side==='B'&&b.player_b_id){alert('Side B is already taken.');return;}
+  const field=side==='A'?'player_a_id':'player_b_id';
+  const{data,error}=await db.from('aux_battles').update({[field]:currentUser.id}).eq('id',b.id).select('*').single();
+  if(error){alert(error.message);return;}
+  currentAuxBattle=data;
+  renderAuxBattleLobby();
+}
+
+function abCopyCode(){
+  const code=currentAuxBattle?.code;if(!code)return;
+  navigator.clipboard.writeText(code).catch(()=>{});
+}
+
+async function startAuxBattleDraft(){
+  const b=currentAuxBattle;
+  if(b.host_id!==currentUser?.id)return;
+  if(!b.player_a_id||!b.player_b_id){alert('Both players must join first.');return;}
+  const{data,error}=await db.from('aux_battles').update({status:'drafting',current_pick_index:0}).eq('id',b.id).select('*').single();
+  if(error){alert(error.message);return;}
+  currentAuxBattle=data;
+  abState('draft');
+}
+
+// ─── Draft helpers ────────────────────────────────────────────────────────────
+function getDraftSideForPickIndex(index){
+  const pair=Math.floor(index/2);
+  const pos=index%2;
+  return (pair%2===0)?(pos===0?'A':'B'):(pos===0?'B':'A');
+}
+function getCurrentDraftSide(battle){return getDraftSideForPickIndex(battle.current_pick_index);}
+
+// ─── Draft render ─────────────────────────────────────────────────────────────
+function renderAuxBattleDraft(){
+  const b=currentAuxBattle;
+  const totalPicks=b.song_count*2;
+  const done=b.current_pick_index>=totalPicks;
+  const currentSide=done?null:getCurrentDraftSide(b);
+  const myId=currentUser?.id;
+  const isMyTurn=!done&&((currentSide==='A'&&b.player_a_id===myId)||(currentSide==='B'&&b.player_b_id===myId));
+  const isPlayer=b.player_a_id===myId||b.player_b_id===myId;
+  const mySide=b.player_a_id===myId?'A':b.player_b_id===myId?'B':null;
+  const statusEl=document.getElementById('ab-draft-status');
+  if(done){statusEl.textContent='Draft complete!';}
+  else if(isMyTurn){statusEl.textContent=`Your turn — Pick ${abPicks.filter(p=>p.side===currentSide).length+1} for ${currentSide==='A'?b.artist_a:b.artist_b}`;}
+  else{statusEl.textContent=`Waiting for ${currentSide==='A'?b.artist_a+' (A)':b.artist_b+' (B)'} to pick…`;}
+  const pickPanel=document.getElementById('ab-draft-pick-panel');
+  pickPanel.style.display=(isMyTurn&&!done)?'block':'none';
+  if(isMyTurn){
+    document.getElementById('ab-draft-pick-label').textContent=`Pick ${abPicks.filter(p=>p.side===currentSide).length+1} — ${currentSide==='A'?b.artist_a:b.artist_b}`;
+    clearAbPickSelection();
+  }
+  // Draft board
+  const colA=document.getElementById('ab-draft-col-a');
+  const colB=document.getElementById('ab-draft-col-b');
+  document.getElementById('ab-draft-col-a-hdr').textContent=b.artist_a;
+  document.getElementById('ab-draft-col-b-hdr').textContent=b.artist_b;
+  const slotsA=colA.querySelectorAll('.ab-draft-slot');
+  slotsA.forEach(s=>s.remove());
+  const slotsB=colB.querySelectorAll('.ab-draft-slot');
+  slotsB.forEach(s=>s.remove());
+  for(let i=0;i<b.song_count;i++){
+    const pickA=abPicks.find(p=>p.side==='A'&&p.pick_number===i+1);
+    const pickB=abPicks.find(p=>p.side==='B'&&p.pick_number===i+1);
+    const pickIndexA=Array.from({length:i*2+1},(_,x)=>x*2).find(x=>getDraftSideForPickIndex(x)==='A'&&Math.floor(abPicks.filter(p=>p.side==='A').findIndex(p=>p.pick_number===i+1))<0)||null;
+    colA.appendChild(buildDraftSlot(i+1,'A',pickA,mySide,b));
+    colB.appendChild(buildDraftSlot(i+1,'B',pickB,mySide,b));
+  }
+}
+
+function buildDraftSlot(num,side,pick,mySide,b){
+  const div=document.createElement('div');
+  div.className='ab-draft-slot'+(pick?' picked':'');
+  if(pick){
+    const isMyPick=pick.player_id===currentUser?.id;
+    const secret=b.secret_draft&&!isMyPick;
+    if(secret){
+      div.innerHTML=`<div class="ab-draft-slot-num">${num}</div><div class="ab-draft-slot-info"><div class="ab-draft-slot-name" style="color:var(--muted)">Locked Pick ${num}</div><div class="ab-draft-slot-hidden">Hidden until reveal</div></div>`;
+    } else {
+      div.innerHTML=`<div class="ab-draft-slot-num">${num}</div>${pick.artwork_url?`<img src="${itunesArtUrl(pick.artwork_url,80)}" class="ab-draft-slot-art" loading="lazy">`:`<div class="ab-draft-slot-art"></div>`}<div class="ab-draft-slot-info"><div class="ab-draft-slot-name">${pick.song_name}</div><div class="ab-draft-slot-meta">${pick.artist_name}</div></div>`;
+    }
+  } else {
+    div.innerHTML=`<div class="ab-draft-slot-num">${num}</div><div class="ab-draft-slot-info"><div style="font-size:.58rem;color:var(--muted);font-style:italic;font-family:'DM Mono',monospace">—</div></div>`;
+  }
+  return div;
+}
+
+// ─── Song search for draft ────────────────────────────────────────────────────
+function abSearchSongs(){
+  clearTimeout(abSongTimer);
+  const q=(document.getElementById('ab-draft-search-input').value||'').trim();
+  const resEl=document.getElementById('ab-draft-search-results');
+  if(!q){resEl.style.display='none';return;}
+  resEl.innerHTML='<div style="padding:.4rem .75rem;font-size:.55rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">Searching…</div>';
+  resEl.style.display='block';
+  abSongTimer=setTimeout(async()=>{
+    try{
+      const d=await deezerFetch('https://api.deezer.com/search/track?q='+encodeURIComponent(q)+'&limit=40');
+      const seen=new Set();
+      abSongMatches=(d.data||[]).filter(r=>{
+        if(!r.title||!r.artist?.name)return false;
+        const k=(r.title+r.artist.name).toLowerCase();
+        if(seen.has(k))return false;seen.add(k);return true;
+      }).map(r=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',artwork:r.album?.cover_medium||'',preview:r.preview||'',itunes_id:String(r.id||'')}));
+      renderAbSearchResults(resEl);
+    }catch(e){resEl.innerHTML='<div style="padding:.5rem .75rem;font-size:.6rem;color:var(--muted)">Search failed</div>';}
+  },350);
+}
+
+function renderAbSearchResults(resEl){
+  if(!abSongMatches.length){resEl.innerHTML='<div style="padding:.5rem .75rem;font-size:.6rem;color:var(--muted)">No results</div>';return;}
+  resEl.innerHTML=abSongMatches.slice(0,30).map((s,i)=>`<div style="padding:.5rem .7rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;cursor:pointer" onclick="selectAbPick(${i})">
+    ${s.artwork?`<img src="${itunesArtUrl(s.artwork,80)}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
+    <div style="flex:1;min-width:0">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div>
+      <div style="font-size:.55rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div>
+    </div>
+  </div>`).join('');
+}
+
+function validateAuxBattleSong(song,assignedArtist,allowFeatures){
+  const norm=s=>s.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim();
+  const sa=norm(song.artist),aa=norm(assignedArtist);
+  if(sa.includes(aa)||aa.includes(sa))return true;
+  if(allowFeatures){
+    const full=norm(song.song+' '+song.artist+' '+(song.album||''));
+    if(full.includes(aa))return true;
+    const words=aa.split(/\s+/).filter(w=>w.length>2);
+    if(words.length&&words.every(w=>full.includes(w)))return true;
+  }
+  return false;
+}
+
+function selectAbPick(idx){
+  const b=currentAuxBattle;
+  const song=abSongMatches[idx];
+  if(!song)return;
+  const errEl=document.getElementById('ab-draft-pick-err');
+  const side=getCurrentDraftSide(b);
+  const assignedArtist=side==='A'?b.artist_a:b.artist_b;
+  if(!validateAuxBattleSong(song,assignedArtist,b.allow_features)){
+    errEl.textContent=`This song doesn't match ${assignedArtist}. ${b.allow_features?'':'Enable "Allow Featured Songs" for features.'}`; return;
+  }
+  const dup=abPicks.find(p=>p.side===side&&p.song_name.toLowerCase()===song.song.toLowerCase()&&p.artist_name.toLowerCase()===song.artist.toLowerCase());
+  if(dup){errEl.textContent='You already picked this song.';return;}
+  errEl.textContent='';
+  abPendingPick=song;
+  document.getElementById('ab-draft-search-input').value='';
+  document.getElementById('ab-draft-search-results').style.display='none';
+  document.getElementById('ab-pick-sel-name').textContent=song.song;
+  document.getElementById('ab-pick-sel-meta').textContent=song.artist+(song.album?' · '+song.album:'');
+  const artEl=document.getElementById('ab-pick-sel-art');
+  if(song.artwork){artEl.src=itunesArtUrl(song.artwork,100);artEl.style.display='block';}else{artEl.style.display='none';}
+  document.getElementById('ab-draft-pick-selected').style.display='block';
+  document.getElementById('ab-draft-search-wrap').style.display='none';
+}
+
+function clearAbPickSelection(){
+  abPendingPick=null;
+  document.getElementById('ab-draft-pick-selected').style.display='none';
+  document.getElementById('ab-draft-search-wrap').style.display='';
+  document.getElementById('ab-draft-search-input').value='';
+  document.getElementById('ab-draft-search-results').style.display='none';
+  document.getElementById('ab-draft-pick-err').textContent='';
+}
+
+async function submitAuxBattlePick(){
+  const b=currentAuxBattle;
+  const song=abPendingPick;
+  if(!song){return;}
+  const side=getCurrentDraftSide(b);
+  const mySide=b.player_a_id===currentUser?.id?'A':b.player_b_id===currentUser?.id?'B':null;
+  if(side!==mySide){alert("It's not your turn.");return;}
+  const pickNum=abPicks.filter(p=>p.side===side).length+1;
+  const btn=document.getElementById('ab-confirm-pick-btn');
+  btn.disabled=true;btn.textContent='Locking…';
+  const newPickIndex=b.current_pick_index+1;
+  const allDone=newPickIndex>=b.song_count*2;
+  const{data:pickData,error}=await db.from('aux_battle_picks').insert({
+    battle_id:b.id,player_id:currentUser.id,side,pick_number:pickNum,
+    draft_pick_index:b.current_pick_index,song_name:song.song,artist_name:song.artist,
+    album_name:song.album||null,artwork_url:song.artwork||null,preview_url:song.preview||null,
+    itunes_track_id:song.itunes_id||null,is_revealed:false
+  }).select('*').single();
+  if(pickData){abPicks=[...abPicks,pickData];}
+  const updateData={current_pick_index:newPickIndex};
+  if(allDone){updateData.status='round_active';updateData.current_round=1;}
+  const{data:updatedBattle,error:ue}=await db.from('aux_battles').update(updateData).eq('id',b.id).select('*').single();
+  if(ue){alert(ue.message);btn.disabled=false;btn.textContent='Lock Pick';return;}
+  currentAuxBattle=updatedBattle;
+  btn.disabled=false;btn.textContent='Lock Pick';
+  if(allDone){await loadAbRoundData();abState('round');}
+  else{clearAbPickSelection();renderAuxBattleDraft();}
+}
+
+// ─── Round ─────────────────────────────────────────────────────────────────────
+async function loadAbRoundData(){
+  const b=currentAuxBattle;
+  const rn=b.current_round;
+  const[{data:votes},{data:ratings}]=await Promise.all([
+    db.from('aux_battle_round_votes').select('*').eq('battle_id',b.id).eq('round_number',rn),
+    db.from('aux_battle_round_ratings').select('*').eq('battle_id',b.id).eq('round_number',rn)
+  ]);
+  abRoundVotes=votes||[];
+  abRoundRatings=ratings||[];
+  abMyRatingA=abRoundRatings.find(r=>r.user_id===currentUser?.id&&r.side==='A')||null;
+  abMyRatingB=abRoundRatings.find(r=>r.user_id===currentUser?.id&&r.side==='B')||null;
+}
+
+function renderAuxBattleRound(){
+  const b=currentAuxBattle;
+  const rn=b.current_round;
+  const isHost=b.host_id===currentUser?.id;
+  const isTiebreaker=b.status==='rating_tiebreaker';
+  document.getElementById('ab-round-label').textContent=`Round ${rn} of ${b.song_count}`;
+  const pointsA=abRoundResults.reduce((s,r)=>s+(r.points_a||0),0);
+  const pointsB=abRoundResults.reduce((s,r)=>s+(r.points_b||0),0);
+  document.getElementById('ab-round-score-pill').textContent=`${b.artist_a} ${pointsA} – ${pointsB} ${b.artist_b}`;
+  document.getElementById('ab-round-tiebreaker-banner').style.display=isTiebreaker?'':'none';
+  const pickA=abPicks.find(p=>p.side==='A'&&p.pick_number===rn);
+  const pickB=abPicks.find(p=>p.side==='B'&&p.pick_number===rn);
+  const songCardHTML=(pick,side)=>{
+    if(!pick)return`<div class="ab-round-song"><div class="ab-round-song-name" style="color:var(--muted)">Pick ${rn}</div></div>`;
+    const revealed=!b.secret_draft||true; // always reveal in round view
+    return`<div class="ab-round-song">
+      ${pick.artwork_url?`<img src="${itunesArtUrl(pick.artwork_url,200)}" class="ab-round-song-art" loading="lazy">`:`<div class="ab-round-song-art"></div>`}
+      <div class="ab-round-song-name">${pick.song_name}</div>
+      <div class="ab-round-song-artist">${pick.artist_name}</div>
+    </div>`;
+  };
+  document.getElementById('ab-round-song-a').outerHTML=songCardHTML(pickA,'A').replace('class="ab-round-song"','class="ab-round-song" id="ab-round-song-a"');
+  document.getElementById('ab-round-song-b').outerHTML=songCardHTML(pickB,'B').replace('class="ab-round-song"','class="ab-round-song" id="ab-round-song-b"');
+  const voteSection=document.getElementById('ab-round-vote-section');
+  const ratingSection=document.getElementById('ab-round-rating-section');
+  const showVoting=(b.winner_mode==='audience'&&!isTiebreaker);
+  const showRatings=(b.winner_mode==='ratings'||isTiebreaker);
+  voteSection.style.display=showVoting?'block':'none';
+  ratingSection.style.display=showRatings?'block':'none';
+  if(showVoting)renderAbVoteSection(pickA,pickB);
+  if(showRatings)renderAbRatingSection(pickA,pickB);
+  const finSection=document.getElementById('ab-round-finalize-section');
+  finSection.style.display=isHost?'block':'none';
+}
+
+function renderAbVoteSection(pickA,pickB){
+  const b=currentAuxBattle;
+  const myVote=abRoundVotes.find(v=>v.user_id===currentUser?.id);
+  const totalVotes=abRoundVotes.length;
+  const votesA=abRoundVotes.filter(v=>v.vote_choice==='A').length;
+  const votesB=totalVotes-votesA;
+  const pctA=totalVotes?Math.round(votesA/totalVotes*100):50;
+  const pctB=totalVotes?100-pctA:50;
+  const voteSection=document.getElementById('ab-round-vote-section');
+  if(myVote){
+    voteSection.innerHTML=`<div class="ab-section-lbl" style="margin-bottom:.5rem">Audience Vote</div>
+    <div style="margin-bottom:.55rem">
+      <div style="display:flex;align-items:center;gap:.55rem;margin-bottom:.35rem">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='A'?'var(--gold)':'var(--muted2)'};flex:0 0 70px">${pickA?.song_name||'Song A'}</span>
+        <div class="ab-pct-bar"><div class="ab-pct-fill-a" style="width:${pctA}%"></div></div>
+        <span style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:var(--gold);width:2.5rem;text-align:right">${pctA}%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.55rem">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='B'?'#f472b6':'var(--muted2)'};flex:0 0 70px">${pickB?.song_name||'Song B'}</span>
+        <div class="ab-pct-bar"><div class="ab-pct-fill-b" style="width:${pctB}%"></div></div>
+        <span style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:#f472b6;width:2.5rem;text-align:right">${pctB}%</span>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace">${totalVotes} vote${totalVotes!==1?'s':''} · You voted ${myVote.vote_choice==='A'?(pickA?.song_name||'A'):(pickB?.song_name||'B')}</div>`;
+  } else {
+    voteSection.innerHTML=`<div class="ab-section-lbl" style="margin-bottom:.5rem">Cast Your Vote</div>
+    <div style="display:flex;gap:.5rem">
+      <button class="ab-vote-btn" onclick="submitAuxBattleVote('A')">${pickA?.song_name||b.artist_a}</button>
+      <button class="ab-vote-btn" onclick="submitAuxBattleVote('B')">${pickB?.song_name||b.artist_b}</button>
+    </div>
+    ${totalVotes>0?`<div style="text-align:center;font-size:.55rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.4rem">${totalVotes} vote${totalVotes!==1?'s':''} cast</div>`:''}`;
+  }
+}
+
+function renderAbRatingSection(pickA,pickB){
+  const b=currentAuxBattle;
+  const ratingSection=document.getElementById('ab-round-rating-section');
+  const ratedA=!!abMyRatingA;
+  const ratedB=!!abMyRatingB;
+  const cats=['Replay Value','Flow / Vocals','Production','Songwriting','Impression'];
+  const weights=[0.24,0.22,0.20,0.18,0.16];
+  const colors=['var(--replay)','var(--flow)','var(--prod)','var(--lyrics)','var(--gold)'];
+  const buildSliders=(side,label,disabled,existingRating)=>{
+    const vals=existingRating?[existingRating.score_1,existingRating.score_2,existingRating.score_3,existingRating.score_4,existingRating.score_5]:[5,5,5,5,5];
+    const finalScore=existingRating?existingRating.final_score:null;
+    return`<div class="ab-rating-panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${side==='A'?'var(--gold)':'#f472b6'}">${label}</span>
+        ${finalScore!==null?`<span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:${side==='A'?'var(--gold)':'#f472b6'}">${parseFloat(finalScore).toFixed(1)}</span>`:''}
+      </div>
+      ${cats.map((cat,i)=>`<div class="ab-rating-cat">
+        <div class="ab-rating-cat-name" style="color:${colors[i]}">${cat}</div>
+        <input type="range" min="0" max="10" step="0.5" value="${vals[i]||5}" class="ab-rating-slider" ${disabled?'disabled':''} id="ab-rate-${side}-${i}" oninput="updateAbRatingDisplay('${side}',${i},this.value)">
+        <div class="ab-rating-cat-val" id="ab-rate-${side}-${i}-val">${parseFloat(vals[i]||5).toFixed(1)}</div>
+      </div>`).join('')}
+      ${!disabled?`<button class="ab-submit-rating-btn" id="ab-submit-rate-${side}" onclick="submitAuxBattleRating('${side}')" ${disabled?'disabled':''}>Rate ${label}</button>`:''}
+    </div>`;
+  };
+  const labelA=pickA?.song_name||b.artist_a;
+  const labelB=pickB?.song_name||b.artist_b;
+  ratingSection.innerHTML=`<div class="ab-section-lbl" style="margin-bottom:.5rem">${b.status==='rating_tiebreaker'?'Tiebreaker — ':''}Rate Both Songs</div>
+    ${buildSliders('A',labelA,ratedA,abMyRatingA)}
+    ${buildSliders('B',labelB,ratedB,abMyRatingB)}`;
+}
+
+function updateAbRatingDisplay(side,idx,val){
+  const el=document.getElementById(`ab-rate-${side}-${idx}-val`);
+  if(el)el.textContent=parseFloat(val).toFixed(1);
+}
+
+function calcAbRating(scores){
+  const weights=[0.24,0.22,0.20,0.18,0.16];
+  const B=weights.reduce((s,w,i)=>s+(scores[i]||0)*w,0);
+  const weakCats=scores.filter(s=>s<=5).length;
+  const eliteCats=scores.filter(s=>s>=9).length;
+  const penalty=weakCats*.15,bonus=eliteCats*.20;
+  const gap=Math.max(...scores)-Math.min(...scores);
+  let dr=0;if(B>8){if(gap>=7)dr=.70;else if(gap>=5)dr=.40;else if(gap>=3)dr=.20;}
+  return Math.min(10,Math.max(1,B-penalty+bonus-dr));
+}
+
+async function submitAuxBattleRating(side){
+  const b=currentAuxBattle;
+  if(!currentUser)return;
+  const scores=Array.from({length:5},(_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value||5));
+  const finalScore=calcAbRating(scores);
+  const catKeys=['replay','flow_vocals','production','songwriting','impression'];
+  const breakdown={};catKeys.forEach((k,i)=>breakdown[k]=scores[i]);
+  const row={battle_id:b.id,round_number:b.current_round,user_id:currentUser.id,side,
+    score_1:scores[0],score_2:scores[1],score_3:scores[2],score_4:scores[3],score_5:scores[4],
+    final_score:finalScore,category_breakdown:breakdown};
+  const btn=document.getElementById(`ab-submit-rate-${side}`);
+  if(btn){btn.disabled=true;btn.textContent='Saving…';}
+  const{data,error}=await db.from('aux_battle_round_ratings').upsert(row,{onConflict:'battle_id,round_number,user_id,side'}).select('*').single();
+  if(error){console.error(error);if(btn){btn.disabled=false;btn.textContent='Rate '+side;}return;}
+  if(side==='A')abMyRatingA=data;else abMyRatingB=data;
+  abRoundRatings=[...abRoundRatings.filter(r=>!(r.user_id===currentUser.id&&r.side===side)),data];
+  if(btn){btn.classList.add('submitted');btn.textContent='✓ Rated';}
+}
+
+async function submitAuxBattleVote(choice){
+  if(!currentUser)return;
+  const b=currentAuxBattle;
+  const{data,error}=await db.from('aux_battle_round_votes').upsert({battle_id:b.id,round_number:b.current_round,user_id:currentUser.id,vote_choice:choice},{onConflict:'battle_id,round_number,user_id'}).select('*').single();
+  if(error){console.error(error);return;}
+  abRoundVotes=[...abRoundVotes.filter(v=>v.user_id!==currentUser.id),data];
+  renderAbVoteSection(abPicks.find(p=>p.side==='A'&&p.pick_number===b.current_round),abPicks.find(p=>p.side==='B'&&p.pick_number===b.current_round));
+}
+
+// ─── Finalize round ───────────────────────────────────────────────────────────
+function calculateAuxBattleVoteStats(){
+  const vA=abRoundVotes.filter(v=>v.vote_choice==='A').length;
+  const vB=abRoundVotes.filter(v=>v.vote_choice==='B').length;
+  return{vA,vB,total:vA+vB,tied:vA===vB};
+}
+
+function calculateAuxBattleRatingStats(){
+  const cats=['score_1','score_2','score_3','score_4','score_5'];
+  const calcAvg=(side)=>{
+    const rs=abRoundRatings.filter(r=>r.side===side);
+    if(!rs.length)return{final:0,cats:[0,0,0,0,0]};
+    const fin=rs.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/rs.length;
+    const catAvgs=cats.map(k=>rs.reduce((s,r)=>s+parseFloat(r[k]||0),0)/rs.length);
+    return{final:fin,cats:catAvgs};
+  };
+  const a=calcAvg('A'),b_=calcAvg('B');
+  let winner=a.final>b_.final?'A':a.final<b_.final?'B':null;
+  let tiebreaker=null;
+  if(!winner){
+    // Replay (0), Production (2), Songwriting (3)
+    for(const[ci,name] of [[0,'Replay Value'],[2,'Production'],[3,'Songwriting']]){
+      if(a.cats[ci]>b_.cats[ci]){winner='A';tiebreaker=name;break;}
+      if(b_.cats[ci]>a.cats[ci]){winner='B';tiebreaker=name;break;}
+    }
+    if(!winner)tiebreaker='split';
+  }
+  return{a,b:b_,winner,tiebreaker};
+}
+
+async function finalizeAuxBattleRound(){
+  const b=currentAuxBattle;
+  if(b.host_id!==currentUser?.id)return;
+  const btn=document.getElementById('ab-finalize-btn');
+  const errEl=document.getElementById('ab-finalize-err');
+  btn.disabled=true;btn.textContent='Finalizing…';
+  const isTiebreaker=b.status==='rating_tiebreaker';
+  const useVotes=b.winner_mode==='audience'&&!isTiebreaker;
+  let resultData={battle_id:b.id,round_number:b.current_round,points_a:0,points_b:0,winner_side:null};
+  if(useVotes){
+    const{vA,vB,total,tied}=calculateAuxBattleVoteStats();
+    if(total===0){errEl.textContent='No votes yet.';btn.disabled=false;btn.textContent='Finalize Round';return;}
+    resultData.vote_count_a=vA;resultData.vote_count_b=vB;
+    if(tied){
+      const{data:updBattle}=await db.from('aux_battles').update({status:'rating_tiebreaker'}).eq('id',b.id).select('*').single();
+      currentAuxBattle=updBattle;
+      await loadAbRoundData();
+      document.getElementById('ab-round-tiebreaker-banner').style.display='';
+      document.getElementById('ab-round-vote-section').style.display='none';
+      document.getElementById('ab-round-rating-section').style.display='block';
+      const pickA=abPicks.find(p=>p.side==='A'&&p.pick_number===b.current_round);
+      const pickB=abPicks.find(p=>p.side==='B'&&p.pick_number===b.current_round);
+      renderAbRatingSection(pickA,pickB);
+      btn.disabled=false;btn.textContent='Finalize Tiebreaker';
+      return;
+    }
+    const winner=vA>vB?'A':'B';
+    resultData.winner_side=winner;
+    resultData.points_a=winner==='A'?1:0;resultData.points_b=winner==='B'?1:0;
+    resultData.tiebreaker_used=null;
+  } else {
+    const{a,b:bStat,winner,tiebreaker}=calculateAuxBattleRatingStats();
+    if(abRoundRatings.length===0){errEl.textContent='No ratings submitted yet.';btn.disabled=false;btn.textContent='Finalize Round';return;}
+    resultData.rating_avg_a=a.final;resultData.rating_avg_b=bStat.final;
+    resultData.replay_avg_a=a.cats[0];resultData.replay_avg_b=bStat.cats[0];
+    resultData.production_avg_a=a.cats[2];resultData.production_avg_b=bStat.cats[2];
+    resultData.lyrics_avg_a=a.cats[3];resultData.lyrics_avg_b=bStat.cats[3];
+    const w=tiebreaker==='split'?null:winner;
+    resultData.winner_side=w||'split';
+    if(!w||tiebreaker==='split'){resultData.points_a=0.5;resultData.points_b=0.5;}
+    else{resultData.points_a=w==='A'?1:0;resultData.points_b=w==='B'?1:0;}
+    resultData.tiebreaker_used=tiebreaker;
+  }
+  const{data:roundRes,error:rErr}=await db.from('aux_battle_round_results').upsert(resultData,{onConflict:'battle_id,round_number'}).select('*').single();
+  if(rErr){console.error(rErr);errEl.textContent=rErr.message;btn.disabled=false;btn.textContent='Finalize Round';return;}
+  abRoundResults=[...abRoundResults.filter(r=>r.round_number!==b.current_round),roundRes];
+  const isLastRound=b.current_round>=b.song_count;
+  const finalScoreA=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_a)||0),0);
+  const finalScoreB=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_b)||0),0);
+  if(isLastRound){
+    const winSide=finalScoreA>finalScoreB?'A':finalScoreA<finalScoreB?'B':'tie';
+    const{data:fin}=await db.from('aux_battles').update({status:'final',final_score_a:finalScoreA,final_score_b:finalScoreB,winner_side:winSide}).eq('id',b.id).select('*').single();
+    currentAuxBattle=fin;
+    abState('final');
+  } else {
+    const{data:nextBattle}=await db.from('aux_battles').update({status:'round_result',final_score_a:finalScoreA,final_score_b:finalScoreB}).eq('id',b.id).select('*').single();
+    currentAuxBattle=nextBattle;
+    abState('result');
+  }
+}
+
+async function goToNextAuxBattleRound(){
+  const b=currentAuxBattle;
+  if(b.host_id!==currentUser?.id)return;
+  const nextRound=b.current_round+1;
+  const{data,error}=await db.from('aux_battles').update({status:'round_active',current_round:nextRound}).eq('id',b.id).select('*').single();
+  if(error){alert(error.message);return;}
+  currentAuxBattle=data;
+  await loadAbRoundData();
+  abState('round');
+}
+
+// ─── Round result screen ──────────────────────────────────────────────────────
+function renderAuxBattleResult(){
+  const b=currentAuxBattle;
+  const isHost=b.host_id===currentUser?.id;
+  const rn=b.current_round;
+  const rr=abRoundResults.find(r=>r.round_number===rn);
+  const pointsA=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_a)||0),0);
+  const pointsB=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_b)||0),0);
+  const pickA=abPicks.find(p=>p.side==='A'&&p.pick_number===rn);
+  const pickB=abPicks.find(p=>p.side==='B'&&p.pick_number===rn);
+  const winColor=rr?.winner_side==='A'?'var(--gold)':rr?.winner_side==='B'?'#f472b6':'var(--muted2)';
+  const winnerText=rr?.winner_side==='A'?pickA?.song_name||b.artist_a:rr?.winner_side==='B'?pickB?.song_name||b.artist_b:'Split';
+  const whyText=rr?.tiebreaker_used?`Tiebreaker: ${rr.tiebreaker_used}`
+    :rr?.vote_count_a!==undefined?`${rr.vote_count_a}–${rr.vote_count_b} votes`
+    :rr?.rating_avg_a!==undefined?`${parseFloat(rr.rating_avg_a||0).toFixed(1)} vs ${parseFloat(rr.rating_avg_b||0).toFixed(1)} avg rating`:'';
+  document.getElementById('ab-result-body').innerHTML=`
+    <div style="text-align:center;margin-bottom:1.25rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem">Round ${rn} Result</div>
+      <div class="ab-result-winner" style="color:${winColor}">${winnerText}</div>
+      <div style="font-size:.65rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.3rem">${whyText}</div>
+    </div>
+    <div class="ab-score-tally">
+      <div class="ab-score-tally-side">
+        <div class="ab-score-tally-num" style="color:var(--gold)">${pointsA}</div>
+        <div class="ab-score-tally-label">${b.artist_a}</div>
+      </div>
+      <div class="ab-score-tally-sep">–</div>
+      <div class="ab-score-tally-side">
+        <div class="ab-score-tally-num" style="color:#f472b6">${pointsB}</div>
+        <div class="ab-score-tally-label">${b.artist_b}</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.75rem .9rem;margin-bottom:1rem">
+      ${abRoundResults.map(r=>{
+        const pa=abPicks.find(p=>p.side==='A'&&p.pick_number===r.round_number);
+        const pb=abPicks.find(p=>p.side==='B'&&p.pick_number===r.round_number);
+        const wColor=r.winner_side==='A'?'var(--gold)':r.winner_side==='B'?'#f472b6':'var(--muted)';
+        return`<div class="ab-round-row">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;color:var(--muted);flex-shrink:0;width:1.5rem">R${r.round_number}</div>
+          <div style="flex:1;font-size:.62rem;color:var(--muted2);">${pa?.song_name||'A'} vs ${pb?.song_name||'B'}</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.06em;color:${wColor}">${r.winner_side==='split'?'SPLIT':r.winner_side==='A'?pa?.song_name||'A':pb?.song_name||'B'}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${isHost&&rn<b.song_count?`<button onclick="goToNextAuxBattleRound()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Round ${rn+1} →</button>`
+    :'<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:\'DM Mono\',monospace">Waiting for host to advance…</div>'}
+  `;
+}
+
+// ─── Final screen ─────────────────────────────────────────────────────────────
+function renderAuxBattleFinal(){
+  const b=currentAuxBattle;
+  const pointsA=parseFloat(b.final_score_a||0);
+  const pointsB=parseFloat(b.final_score_b||0);
+  const winSide=b.winner_side;
+  const winColor=winSide==='A'?'var(--gold)':winSide==='B'?'#f472b6':'var(--muted2)';
+  const winArtist=winSide==='A'?b.artist_a:winSide==='B'?b.artist_b:null;
+  const closestRound=abRoundResults.length?abRoundResults.reduce((a,r)=>{
+    const s1=r.rating_avg_a!=null?Math.abs(r.rating_avg_a-r.rating_avg_b):Math.abs((r.vote_count_a||0)-(r.vote_count_b||0));
+    const s2=a.diff;return s1<s2?{r,diff:s1}:a;
+  },{r:abRoundResults[0],diff:Infinity}).r:null;
+  const biggestRound=abRoundResults.length&&abRoundResults.some(r=>r.vote_count_a!=null)?
+    abRoundResults.reduce((a,r)=>{const d=Math.abs((r.vote_count_a||0)-(r.vote_count_b||0));return d>a.diff?{r,diff:d}:a;},{r:abRoundResults[0],diff:-1}).r:null;
+  const tiebreakerUsed=abRoundResults.some(r=>r.tiebreaker_used);
+  document.getElementById('ab-final-body').innerHTML=`
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">${winArtist?'Aux Battle Winner':'Aux Battle Result'}</div>
+      ${winArtist?`<div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:${winColor};line-height:1.1">${winArtist}</div>
+      <div style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.4rem">${pointsA} – ${pointsB}</div>`
+      :`<div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--muted)">Tie</div>`}
+    </div>
+    <div class="ab-score-tally" style="margin-bottom:1.25rem">
+      <div class="ab-score-tally-side"><div class="ab-score-tally-num" style="color:var(--gold)">${pointsA}</div><div class="ab-score-tally-label">${b.artist_a}</div></div>
+      <div class="ab-score-tally-sep">–</div>
+      <div class="ab-score-tally-side"><div class="ab-score-tally-num" style="color:#f472b6">${pointsB}</div><div class="ab-score-tally-label">${b.artist_b}</div></div>
+    </div>
+    <div class="ab-section-lbl" style="margin-bottom:.5rem">Round by Round</div>
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;overflow:hidden;margin-bottom:1rem">
+      ${abRoundResults.map(r=>{
+        const pa=abPicks.find(p=>p.side==='A'&&p.pick_number===r.round_number);
+        const pb=abPicks.find(p=>p.side==='B'&&p.pick_number===r.round_number);
+        const wColor=r.winner_side==='A'?'var(--gold)':r.winner_side==='B'?'#f472b6':'var(--muted)';
+        const detail=r.rating_avg_a!=null?`${parseFloat(r.rating_avg_a||0).toFixed(1)} vs ${parseFloat(r.rating_avg_b||0).toFixed(1)}`
+          :r.vote_count_a!=null?`${r.vote_count_a}–${r.vote_count_b} votes`:'';
+        return`<div class="ab-round-row" style="padding:.55rem .85rem">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;color:var(--muted);flex-shrink:0;width:1.8rem">R${r.round_number}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:.65rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pa?.song_name||'A'} vs ${pb?.song_name||'B'}</div>
+            ${detail?`<div style="font-size:.52rem;color:var(--muted)">${detail}${r.tiebreaker_used?' · Tiebreaker':''}</div>`:''}
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.06em;color:${wColor};flex-shrink:0">${r.winner_side==='split'?'SPLIT':r.winner_side==='A'?pa?.song_name||'A':pb?.song_name||'B'}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${closestRound?`<div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.65rem .85rem;margin-bottom:.6rem"><div class="ab-section-lbl">Closest Round</div><div style="font-size:.68rem;color:var(--text)">Round ${closestRound.round_number}</div></div>`:''}
+    ${tiebreakerUsed?`<div style="background:rgba(244,114,182,.08);border:1px solid #f472b6;border-radius:.55rem;padding:.55rem .85rem;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;color:#f472b6;text-align:center;margin-bottom:.6rem">⚡ Tiebreaker(s) used this battle</div>`:''}
+    <div class="ab-section-lbl" style="margin-bottom:.5rem">All Picks</div>
+    ${[...Array(b.song_count)].map((_,i)=>{
+      const pa=abPicks.find(p=>p.side==='A'&&p.pick_number===i+1);
+      const pb=abPicks.find(p=>p.side==='B'&&p.pick_number===i+1);
+      return`<div style="display:flex;gap:.5rem;margin-bottom:.4rem">
+        <div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.45rem .6rem;min-width:0">
+          <div style="font-size:.5rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase">A · ${i+1}</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pa?.song_name||'—'}</div>
+        </div>
+        <div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.45rem .6rem;min-width:0">
+          <div style="font-size:.5rem;color:#f472b6;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase">B · ${i+1}</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${pb?.song_name||'—'}</div>
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+// ─── Realtime ─────────────────────────────────────────────────────────────────
+function subscribeToAuxBattleRealtime(battleId){
+  if(abChannel)db.removeChannel(abChannel);
+  abChannel=db.channel('ab:'+battleId)
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'aux_battles',filter:`id=eq.${battleId}`},async payload=>{
+      const prev=currentAuxBattle?.status;
+      currentAuxBattle={...currentAuxBattle,...payload.new};
+      const s=currentAuxBattle.status;
+      if(s==='drafting'&&prev==='lobby'){abState('draft');}
+      else if((s==='round_active'||s==='rating_tiebreaker')&&prev!==s){await loadAbRoundData();abState('round');}
+      else if(s==='round_result'&&prev!=='round_result'){abState('result');}
+      else if(s==='final'){const{data:r}=await db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number');abRoundResults=r||[];abState('final');}
+      else if(s==='lobby'){renderAuxBattleLobby();}
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'aux_battle_picks',filter:`battle_id=eq.${battleId}`},payload=>{
+      const p=payload.new;if(!abPicks.find(x=>x.id===p.id))abPicks=[...abPicks,p];
+      if(currentAuxBattle?.status==='drafting')renderAuxBattleDraft();
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'aux_battle_round_votes',filter:`battle_id=eq.${battleId}`},payload=>{
+      const v=payload.new;if(!abRoundVotes.find(x=>x.id===v.id))abRoundVotes=[...abRoundVotes,v];
+      if(currentAuxBattle?.status==='round_active'){
+        const b=currentAuxBattle;const rn=b.current_round;
+        if(v.round_number===rn){
+          const pA=abPicks.find(p=>p.side==='A'&&p.pick_number===rn);
+          const pB=abPicks.find(p=>p.side==='B'&&p.pick_number===rn);
+          renderAbVoteSection(pA,pB);
+        }
+      }
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'aux_battle_round_ratings',filter:`battle_id=eq.${battleId}`},payload=>{
+      const r=payload.new;
+      abRoundRatings=[...abRoundRatings.filter(x=>!(x.battle_id===r.battle_id&&x.round_number===r.round_number&&x.user_id===r.user_id&&x.side===r.side)),r];
+    })
+    .subscribe();
+}
+
+function unsubscribeAuxBattleRealtime(){
+  if(abChannel){db.removeChannel(abChannel);abChannel=null;}
+}
+
+function abLeave(){
+  unsubscribeAuxBattleRealtime();
+  currentAuxBattle=null;abPicks=[];abRoundVotes=[];abRoundRatings=[];abRoundResults=[];
+  abPendingPick=null;abMyRatingA=null;abMyRatingB=null;
+  document.getElementById('ab-view').style.display='none';
+}
+// ─── END AUX BATTLE ───────────────────────────────────────────────────────────
 
 // ── AUTH INIT — must be last so all functions are defined ──
 function _hideLoading(){document.getElementById('loading').classList.add('hidden');}
