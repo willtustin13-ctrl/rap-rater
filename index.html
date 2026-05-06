@@ -1244,12 +1244,6 @@
         Refresh
       </button>
     </div>
-    <div class="feed-subj-tabs">
-      <button class="feed-subj-btn active" data-subj="songs" onclick="setFeedSubject('songs')">Ratings</button>
-      <button class="feed-subj-btn" data-subj="lists" onclick="setFeedSubject('lists')">Lists</button>
-      <button class="feed-subj-btn" data-subj="questions" onclick="setFeedSubject('questions')">Questions</button>
-      <button class="feed-subj-btn" data-subj="battles" onclick="setFeedSubject('battles')">Battles</button>
-    </div>
     <div id="feed-songs-controls" class="feed-controls">
       <div class="feed-mode-btns">
         <button class="feed-mode-btn active" id="fmode-all" onclick="setFeedMode('all',this)">All</button>
@@ -1267,8 +1261,24 @@
       </div>
     </div>
     <div id="feed-songs-area" class="scroll-area"><div id="feed-list"><div class="feed-empty">Loading...</div></div></div>
-    <div id="feed-lists-area" style="display:none;flex:1;overflow-y:auto"><div id="feed-lists-list"><div class="feed-empty">Loading...</div></div></div>
-    <div id="feed-questions-area" style="display:none;flex:1;overflow-y:auto;display:none;flex-direction:column">
+  </div>
+
+  <!-- SOCIAL TAB -->
+  <div id="tab-social" style="display:none;flex-direction:column;height:100%">
+    <div class="app-header">
+      <div class="app-header-title">Social</div>
+      <button id="refresh-btn-social" class="refresh-btn" onclick="refreshTab('social')">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Refresh
+      </button>
+    </div>
+    <div class="feed-subj-tabs">
+      <button class="feed-subj-btn active" data-ssubj="lists" onclick="setSocialSubject('lists')">Lists</button>
+      <button class="feed-subj-btn" data-ssubj="questions" onclick="setSocialSubject('questions')">Questions</button>
+      <button class="feed-subj-btn" data-ssubj="battles" onclick="setSocialSubject('battles')">Battles</button>
+    </div>
+    <div id="feed-lists-area" style="display:flex;flex:1;overflow-y:auto"><div id="feed-lists-list"><div class="feed-empty">Loading...</div></div></div>
+    <div id="feed-questions-area" style="display:none;flex:1;overflow-y:auto;flex-direction:column">
       <div style="padding:.65rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0">
         <button onclick="openProposeQuestion()" style="width:100%;padding:.5rem;background:transparent;border:1px dashed var(--border2);color:var(--gold);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ Propose a Question</button>
       </div>
@@ -1989,7 +1999,7 @@
             <div class="sw-venue-name">Rank Room Stadium</div>
             <div class="sw-venue-sub">Competitive Rooms</div>
           </div>
-          <div class="sw-venue" onclick="switchTab('feed');setTimeout(()=>setFeedSubject('battles'),80)">
+          <div class="sw-venue" onclick="switchTab('social');setTimeout(()=>setSocialSubject('battles'),80)">
             <div class="sw-venue-glow" style="background:var(--red)"></div>
             <span class="sw-venue-icon">⚡</span>
             <div class="sw-venue-name">Aux Arena</div>
@@ -2043,6 +2053,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       </div>
       <span>Rate</span>
+    </button>
+    <button class="nav-btn" id="nav-social" onclick="switchTab('social')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Social</span>
     </button>
     <button class="nav-btn" id="nav-profile" onclick="switchTab('profile')">
       <div class="nav-badge" id="nav-badge"></div>
@@ -2981,7 +2995,7 @@ function confirmDeleteAccount(){
 let currentTab='feed';
 function switchTab(n){
   currentTab=n;
-  ['feed','rate','room','profile','settings','world'].forEach(t=>{
+  ['feed','rate','room','profile','settings','world','social'].forEach(t=>{
     const el=document.getElementById('tab-'+t);
     if(!el)return;
     if(t===n){el.style.display='flex';el.classList.remove('hidden');}
@@ -2992,6 +3006,7 @@ function switchTab(n){
   if(n==='profile')loadProfile();
   else if(n==='settings')renderSettings();
   else if(n==='world')loadWorld();
+  else if(n==='social')initSocialTab();
   else{
     const bar=document.getElementById('profile-search-bar');
     if(bar?.classList.contains('open'))toggleProfileSearch();
@@ -3016,7 +3031,12 @@ async function refreshTab(tab){
       else{done();return;}
     }
     else if(tab==='settings'){renderSettings();}
-    else if(tab==='world'){worldData=null;await loadWorld();}
+    else if(tab==='world'){worldData=null;worldLoaded=false;swLimits={trending:5,hot:5,gems:5,friends:5};await loadWorld();}
+    else if(tab==='social'){
+      if(socialSubject==='lists')await loadFeedLists();
+      else if(socialSubject==='questions')await loadQuestions();
+      else if(socialSubject==='battles')await loadBattles();
+    }
   }catch(e){console.error('refresh error',e);}
   done();
 }
@@ -4232,17 +4252,24 @@ function setFeedMode(mode,btn){
 
 function setFeedSubject(subj){
   feedSubject=subj;
-  document.querySelectorAll('.feed-subj-btn').forEach(b=>b.classList.toggle('active',b.dataset.subj===subj));
-  document.getElementById('feed-songs-controls').style.display=subj==='songs'?'':'none';
-  document.getElementById('feed-songs-area').style.display=subj==='songs'?'':'none';
-  document.getElementById('feed-lists-area').style.display=subj==='lists'?'block':'none';
-  const qArea=document.getElementById('feed-questions-area');
-  qArea.style.display=subj==='questions'?'flex':'none';
-  const bArea=document.getElementById('feed-battles-area');
-  bArea.style.display=subj==='battles'?'flex':'none';
+}
+
+let socialSubject='lists';
+function setSocialSubject(subj){
+  socialSubject=subj;
+  document.querySelectorAll('[data-ssubj]').forEach(b=>b.classList.toggle('active',b.dataset.ssubj===subj));
+  const la=document.getElementById('feed-lists-area');
+  const qa=document.getElementById('feed-questions-area');
+  const ba=document.getElementById('feed-battles-area');
+  if(la)la.style.display=subj==='lists'?'flex':'none';
+  if(qa)qa.style.display=subj==='questions'?'flex':'none';
+  if(ba)ba.style.display=subj==='battles'?'flex':'none';
   if(subj==='lists')loadFeedLists();
   if(subj==='questions')loadQuestions();
   if(subj==='battles')loadBattles();
+}
+function initSocialTab(){
+  setSocialSubject(socialSubject);
 }
 
 async function loadFeedLists(){
@@ -8477,6 +8504,7 @@ db.auth.onAuthStateChange(async(event, session)=>{
 
 // ── SONGR WORLD ────────────────────────────────────────────────────────────
 let worldData=null,worldLoaded=false,worldFollowIds=new Set();
+let swLimits={trending:5,hot:5,gems:5,friends:5};
 
 const SW_GENRES={
   rap:        {icon:'🎤',color:'#a78bfa',glow:'rgba(167,139,250,.45)'},
@@ -8549,11 +8577,11 @@ function swProcessData(rows,profMapW,myRatedKeys,myScoreMap){
   });
   const genres=Object.values(genreMap).map(g=>({genre:g.genre,avg:g.scores.reduce((a,b)=>a+b,0)/g.scores.length,ratingCount:g.scores.length,songCount:g.songs.size,artistCount:g.artists.size})).sort((a,b)=>b.ratingCount-a.ratingCount);
   const recentKeys=[],seenTrend=new Set();
-  rows.slice(0,120).forEach(r=>{const k=(r.song_name+'||'+r.artist_name).toLowerCase();if(!seenTrend.has(k)){seenTrend.add(k);recentKeys.push(k);}});
-  const trending=recentKeys.slice(0,7).map(k=>songMap[k]).filter(Boolean).map(s=>{const n=s.scores.length;const avg=s.scores.reduce((a,b)=>a+b,0)/n;return{...s,n,avg};});
-  const hotTakes=songs.filter(s=>s.n>=2&&s.stddev>=1.4).sort((a,b)=>b.stddev-a.stddev).slice(0,5);
-  const gems=songs.filter(s=>s.avg>=7.5&&s.n>=1&&s.n<=4).sort((a,b)=>b.avg-a.avg).slice(0,5);
-  const friendActivity=rows.filter(r=>worldFollowIds.has(r.user_id)).slice(0,8).map(r=>({...r,profile:profMapW[r.user_id]||{username:'user',avatar_color:'#a78bfa'},score:parseFloat(r.final_score)}));
+  rows.slice(0,200).forEach(r=>{const k=(r.song_name+'||'+r.artist_name).toLowerCase();if(!seenTrend.has(k)){seenTrend.add(k);recentKeys.push(k);}});
+  const trending=recentKeys.slice(0,25).map(k=>songMap[k]).filter(Boolean).map(s=>{const n=s.scores.length;const avg=s.scores.reduce((a,b)=>a+b,0)/n;return{...s,n,avg};});
+  const hotTakes=songs.filter(s=>s.n>=2&&s.stddev>=1.4).sort((a,b)=>b.stddev-a.stddev).slice(0,20);
+  const gems=songs.filter(s=>s.avg>=7.5&&s.n>=1&&s.n<=4).sort((a,b)=>b.avg-a.avg).slice(0,20);
+  const friendActivity=rows.filter(r=>worldFollowIds.has(r.user_id)).slice(0,30).map(r=>({...r,profile:profMapW[r.user_id]||{username:'user',avatar_color:'#a78bfa'},score:parseFloat(r.final_score)}));
   const genreTopSongs={};
   Object.keys(genreMap).forEach(g=>{genreTopSongs[g]=songs.filter(s=>(s.genre||'rap')===g).sort((a,b)=>b.avg-a.avg).slice(0,10);});
   return{songs,genres,trending,hotTakes,gems,friendActivity,genreTopSongs,myRatedKeys,myScoreMap};
@@ -8604,33 +8632,49 @@ function swSongCard(s,extraClass,labelClass,labelText,rank){
   return`<div class="sw-song-card ${extraClass}" onclick="swOpenSong('${enc}')">${barHTML}${rankHTML}${artHTML}${phHTML}<div class="sw-song-info"><div class="sw-song-name">${s.song}</div><div class="sw-song-artist">${s.artist}${s.album?' · '+s.album:''}</div><div style="display:flex;align-items:center;gap:.3rem;margin-top:.15rem"><span style="font-size:.47rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">${s.n} rating${s.n!==1?'s':''}</span>${friendTag}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-song-score" style="color:${col};text-shadow:0 0 10px ${col}">${avg.toFixed(1)}</div>${myHTML}</div>${labelHTML}</div>`;
 }
 
+function swShowMoreBtn(section,shown,total){
+  if(shown>=total)return'';
+  return`<button onclick="swShowMore('${section}')" style="width:100%;margin-top:.45rem;padding:.65rem;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border-radius:4px;transition:border-color .18s,color .18s" onmouseenter="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseleave="this.style.borderColor='';this.style.color=''">Show 5 More (${total-shown} left)</button>`;
+}
+function swShowMore(section){
+  if(!worldData)return;
+  swLimits[section]+=5;
+  if(section==='trending')swRenderTrending(worldData.trending);
+  else if(section==='hot')swRenderHotTakes(worldData.hotTakes);
+  else if(section==='gems')swRenderGems(worldData.gems);
+  else if(section==='friends')swRenderFriends(worldData.friendActivity);
+}
 function swRenderTrending(songs){
   const el=document.getElementById('sw-trend-list');
   if(!el)return;
   if(!songs.length){el.innerHTML='<div class="sw-empty">No trending songs yet. Rate songs to populate the Trending Tower.</div>';return;}
-  el.innerHTML=songs.map((s,i)=>swSongCard(s,'sw-trend-card','sw-label-trend','Trending',i+1)).join('');
+  const visible=songs.slice(0,swLimits.trending);
+  el.innerHTML=visible.map((s,i)=>swSongCard(s,'sw-trend-card','sw-label-trend','Trending',i+1)).join('')+swShowMoreBtn('trending',visible.length,songs.length);
 }
 function swRenderHotTakes(songs){
   const el=document.getElementById('sw-hot-list');
   if(!el)return;
   if(!songs.length){el.innerHTML='<div class="sw-empty">No divisive songs found yet. The Hot Take Zone activates when songs have varied scores from different users.</div>';return;}
-  el.innerHTML=songs.map(s=>swSongCard(s,'sw-hot-card','sw-label-divisive','Divisive',null)).join('');
+  const visible=songs.slice(0,swLimits.hot);
+  el.innerHTML=visible.map(s=>swSongCard(s,'sw-hot-card','sw-label-divisive','Divisive',null)).join('')+swShowMoreBtn('hot',visible.length,songs.length);
 }
 function swRenderGems(songs){
   const el=document.getElementById('sw-gem-list');
   if(!el)return;
   if(!songs.length){el.innerHTML='<div class="sw-empty">No hidden gems found yet. Rate more songs to surface underrated tracks.</div>';return;}
-  el.innerHTML=songs.map(s=>swSongCard(s,'sw-gem-card','sw-label-gem','Hidden Gem',null)).join('');
+  const visible=songs.slice(0,swLimits.gems);
+  el.innerHTML=visible.map(s=>swSongCard(s,'sw-gem-card','sw-label-gem','Hidden Gem',null)).join('')+swShowMoreBtn('gems',visible.length,songs.length);
 }
 function swRenderFriends(activity){
   const el=document.getElementById('sw-friend-list');
   if(!el)return;
   if(!activity.length){el.innerHTML='<div class="sw-empty">Follow friends to activate the Friend Activity Trail and see what they\'re rating.</div>';return;}
-  el.innerHTML=activity.map(r=>{
+  const visible=activity.slice(0,swLimits.friends);
+  el.innerHTML=visible.map(r=>{
     const col=swScoreColor(r.score);
     const enc=encodeURIComponent(r.song_name+'||'+r.artist_name);
     return`<div class="sw-friend-card" onclick="swOpenSong('${enc}')"><div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${r.profile.username}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${r.song_name}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${r.artist_name}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
-  }).join('');
+  }).join('')+swShowMoreBtn('friends',visible.length,activity.length);
 }
 
 function swOpenGenre(genre){
