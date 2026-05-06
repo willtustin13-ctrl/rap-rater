@@ -1041,6 +1041,63 @@
     .sw-label-rated{background:rgba(52,211,153,.1);color:var(--green)}
     .sw-label-new{background:rgba(244,114,182,.1);color:var(--red)}
     .sw-label-divisive{background:rgba(251,146,60,.1);color:var(--prod)}
+    /* World section tabs */
+    .world-sect-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
+    .world-sect-btn{flex:1;padding:.52rem .25rem;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .18s,border-color .18s}
+    .world-sect-btn.active{color:var(--green);border-bottom-color:var(--green)}
+    /* ── ARTIST PAGES ─────────────────────────────────────────────────── */
+    @keyframes apSlideIn{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .ap-overlay{position:fixed;inset:0;z-index:500;background:var(--bg);display:none;flex-direction:column}
+    .ap-overlay.open{display:flex;animation:apSlideIn .3s cubic-bezier(.34,1.56,.64,1)}
+    .ap-header-bar{display:flex;align-items:center;padding:.85rem 1.25rem;padding-top:env(safe-area-inset-top,.85rem);background:var(--bg-nav);border-bottom:1px solid var(--border);flex-shrink:0;gap:.75rem;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+    .ap-back-btn{background:transparent;border:none;color:var(--text);font-size:1.25rem;cursor:pointer;padding:.15rem .3rem;line-height:1;flex-shrink:0}
+    .ap-breadcrumb{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ap-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1.5rem)}
+    .ap-hero{position:relative;padding:1.4rem 1.25rem 1.2rem;overflow:hidden;border-bottom:1px solid var(--border)}
+    .ap-hero-bg{position:absolute;inset:0;pointer-events:none}
+    .ap-avatar{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;flex-shrink:0;border:2px solid transparent}
+    .ap-hero-name{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:900;line-height:1;margin-top:.6rem}
+    .ap-hero-stats{display:flex;gap:1.25rem;margin-top:.8rem;flex-wrap:wrap}
+    .ap-hero-stat-val{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1}
+    .ap-hero-stat-lbl{font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem}
+    .ap-sec{padding:.85rem 1.25rem .35rem}
+    .ap-sec-title{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem}
+    .ap-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;margin-bottom:.4rem}
+    .ap-stat-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.6rem .7rem}
+    .ap-stat-card-lbl{font-size:.46rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-bottom:.22rem}
+    .ap-stat-card-val{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ap-stat-card-sub{font-size:.48rem;color:var(--muted2);margin-top:.12rem;font-family:'DM Mono',monospace}
+    .ap-personal{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:.8rem .95rem;margin:.35rem 0}
+    .ap-personal-compare{font-size:.66rem;color:var(--muted2);line-height:1.55;margin-top:.4rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em}
+    .ap-sort-row{display:flex;gap:.3rem;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:.05rem;margin-bottom:.5rem}
+    .ap-sort-row::-webkit-scrollbar{display:none}
+    .ap-sort-btn{flex-shrink:0;padding:.28rem .65rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .15s}
+    .ap-sort-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.08)}
+    .ap-album{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:.45rem;overflow:hidden;transition:border-color .2s}
+    .ap-album.expanded{border-color:var(--border2)}
+    .ap-album-head{display:flex;align-items:center;gap:.7rem;padding:.7rem .85rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
+    .ap-album-head:active{background:var(--surface2)}
+    .ap-album-art{width:48px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0;background:var(--surface2)}
+    .ap-album-art-ph{width:48px;height:48px;border-radius:4px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+    .ap-album-name{font-family:'Barlow Condensed',sans-serif;font-size:.92rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ap-album-meta{font-size:.48rem;color:var(--muted2);letter-spacing:.05em;margin-top:.1rem}
+    .ap-album-score{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;flex-shrink:0}
+    .ap-album-songs{border-top:1px solid var(--border)}
+    .ap-album-toggle{font-family:'Barlow Condensed',sans-serif;font-size:.55rem;color:var(--muted);flex-shrink:0;padding-left:.35rem}
+    .ap-song-row{display:flex;align-items:center;gap:.6rem;padding:.58rem .85rem;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
+    .ap-song-row:last-child{border-bottom:none}
+    .ap-song-row:active{background:var(--surface2)}
+    .ap-song-art{width:36px;height:36px;border-radius:3px;object-fit:cover;flex-shrink:0}
+    .ap-song-art-ph{width:36px;height:36px;border-radius:3px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+    .ap-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.86rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ap-song-meta{font-size:.48rem;color:var(--muted2);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ap-song-score{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;line-height:1;flex-shrink:0}
+    .ap-activity-item{display:flex;align-items:center;gap:.6rem;padding:.62rem .85rem;border-bottom:1px solid var(--border);-webkit-tap-highlight-color:transparent}
+    .ap-activity-item:last-child{border-bottom:none}
+    .ap-empty{padding:1.5rem;text-align:center;font-size:.6rem;color:var(--muted);letter-spacing:.08em;font-style:italic;line-height:1.9}
+    .ap-rate-btn{width:100%;padding:.8rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:var(--bg);border:none;border-radius:4px;cursor:pointer;margin-top:.6rem;transition:opacity .2s}
+    .ap-rate-btn:active{opacity:.8}
+    .ap-artist-link{background:transparent;border:none;color:var(--chorus);font-size:.55rem;font-family:'DM Mono',monospace;letter-spacing:.04em;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px;-webkit-tap-highlight-color:transparent}
   </style>
 </head>
 <body>
@@ -1232,68 +1289,131 @@
 
 <div class="view hidden" id="view-app">
 
-  <!-- FEED TAB -->
-  <div id="tab-feed" style="display:flex;flex-direction:column;height:100%">
+  <!-- WORLD TAB (unified: Discover + Ratings + Social) -->
+  <div id="tab-world" style="display:flex;flex-direction:column;height:100%">
     <div class="app-header">
       <div>
-        <div class="app-header-title" style="text-shadow:0 0 20px rgba(217,48,37,.35)">SONGR</div>
-        <div class="app-header-sub">Rap Review</div>
+        <div class="app-header-title">SONGR <span style="color:var(--green);-webkit-text-fill-color:var(--green)">WORLD</span></div>
+        <div class="app-header-sub" id="world-header-sub">Community ratings</div>
       </div>
-      <button id="refresh-btn-feed" class="refresh-btn" onclick="refreshTab('feed')">
+      <button id="refresh-btn-world" class="refresh-btn" onclick="refreshTab('world')">
         <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
         Refresh
       </button>
     </div>
-    <div id="feed-songs-controls" class="feed-controls">
-      <div class="feed-mode-btns">
-        <button class="feed-mode-btn active" id="fmode-all" onclick="setFeedMode('all',this)">All</button>
-        <button class="feed-mode-btn" id="fmode-following" onclick="setFeedMode('following',this)">Following</button>
-      </div>
-      <div class="feed-search-wrap">
-        <span class="feed-search-icon">⌕</span>
-        <input type="text" id="feed-search" class="feed-search-input" placeholder="Search songs, artists..." oninput="filterFeed()">
-      </div>
-      <div class="feed-sort-btns">
-        <button class="feed-sort-btn active" data-sort="likes" onclick="setFeedSort(this)">Most Liked</button>
-        <button class="feed-sort-btn" data-sort="recent" onclick="setFeedSort(this)">Recent</button>
-        <button class="feed-sort-btn" data-sort="score" onclick="setFeedSort(this)">Highest</button>
-        <button class="feed-sort-btn" data-sort="lowest" onclick="setFeedSort(this)">Lowest</button>
-      </div>
-    </div>
-    <div id="feed-songs-area" class="scroll-area"><div id="feed-list"><div class="feed-empty">Loading...</div></div></div>
-  </div>
 
-  <!-- SOCIAL TAB -->
-  <div id="tab-social" style="display:none;flex-direction:column;height:100%">
-    <div class="app-header">
-      <div class="app-header-title">Social</div>
-      <button id="refresh-btn-social" class="refresh-btn" onclick="refreshTab('social')">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-        Refresh
-      </button>
+    <!-- Section switcher -->
+    <div class="world-sect-tabs">
+      <button class="world-sect-btn" data-wsect="discover" onclick="setWorldSection('discover')">🌍 Discover</button>
+      <button class="world-sect-btn active" data-wsect="ratings" onclick="setWorldSection('ratings')">🎧 Ratings</button>
+      <button class="world-sect-btn" data-wsect="social" onclick="setWorldSection('social')">💬 Social</button>
     </div>
-    <div class="feed-subj-tabs">
-      <button class="feed-subj-btn active" data-ssubj="lists" onclick="setSocialSubject('lists')">Lists</button>
-      <button class="feed-subj-btn" data-ssubj="questions" onclick="setSocialSubject('questions')">Questions</button>
-      <button class="feed-subj-btn" data-ssubj="battles" onclick="setSocialSubject('battles')">Battles</button>
-    </div>
-    <div id="feed-lists-area" style="display:flex;flex:1;overflow-y:auto"><div id="feed-lists-list"><div class="feed-empty">Loading...</div></div></div>
-    <div id="feed-questions-area" style="display:none;flex:1;overflow-y:auto;flex-direction:column">
-      <div style="padding:.65rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0">
-        <button onclick="openProposeQuestion()" style="width:100%;padding:.5rem;background:transparent;border:1px dashed var(--border2);color:var(--gold);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ Propose a Question</button>
+
+    <!-- ── DISCOVER ── -->
+    <div id="world-discover-wrap" class="sw-wrap" style="display:none">
+      <div id="sw-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh">
+        <div style="font-size:2rem;animation:swFloat 2s ease-in-out infinite">🌍</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.75rem">Loading World...</div>
       </div>
-      <div id="feed-questions-list"><div class="feed-empty">Loading...</div></div>
-    </div>
-    <div id="feed-battles-area" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column">
-      <div style="padding:.55rem 1rem .4rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:.5rem">
-        <div class="battle-sort-btns" style="padding:0;border:none;flex:1">
-          <button class="battle-sort-btn active" data-bsort="recent" onclick="setBattleSort('recent',this)">Recent</button>
-          <button class="battle-sort-btn" data-bsort="votes" onclick="setBattleSort('votes',this)">Most Votes</button>
-          <button class="battle-sort-btn" data-bsort="closest" onclick="setBattleSort('closest',this)">Closest</button>
+      <div id="sw-content" style="display:none">
+        <div class="sw-hero">
+          <div class="sw-hero-bg"></div>
+          <div class="sw-hero-nodes">
+            <div class="sw-node-dot"></div><div class="sw-node-dot"></div><div class="sw-node-dot"></div><div class="sw-node-dot"></div><div class="sw-node-dot"></div>
+          </div>
+          <div class="sw-hero-title">SONGR <span>WORLD</span></div>
+          <div class="sw-hero-sub" id="sw-hero-sub">Interactive music universe</div>
         </div>
-        <button class="battle-create-btn" style="width:auto;padding:.3rem .75rem;flex-shrink:0" onclick="openCreateBattleModal()">+ Create</button>
+        <div class="sw-sec"><div class="sw-sec-head"><span class="sw-sec-title">🗺 Genre District</span><span class="sw-sec-badge" id="sw-genre-badge">—</span></div></div>
+        <div class="sw-genre-strip" id="sw-genre-strip"></div>
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+        <div class="sw-sec"><div class="sw-sec-head"><span class="sw-sec-title">📡 Trending Tower</span><span class="sw-sec-badge" style="color:var(--red)">Live</span></div><div class="sw-node-list" id="sw-trend-list"></div></div>
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+        <div class="sw-sec"><div class="sw-sec-head"><span class="sw-sec-title" style="color:var(--prod)">🔥 Hot Take Zone</span><span class="sw-sec-badge">Divisive</span></div><div class="sw-node-list" id="sw-hot-list"></div></div>
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+        <div class="sw-sec"><div class="sw-sec-head"><span class="sw-sec-title" style="color:var(--green)">💎 Hidden Gems</span><span class="sw-sec-badge">Underrated</span></div><div class="sw-node-list" id="sw-gem-list"></div></div>
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+        <div class="sw-sec"><div class="sw-sec-head"><span class="sw-sec-title" style="color:var(--chorus)">👣 Friend Activity Trail</span></div><div class="sw-node-list" id="sw-friend-list"></div></div>
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+        <div class="sw-sec"><div class="sw-sec-head"><span class="sw-sec-title">🏟 Special Venues</span></div></div>
+        <div class="sw-venue-row">
+          <div class="sw-venue" onclick="switchTab('room')">
+            <div class="sw-venue-glow" style="background:var(--gold)"></div>
+            <span class="sw-venue-icon">🏟</span>
+            <div class="sw-venue-name">Rank Room Stadium</div>
+            <div class="sw-venue-sub">Competitive Rooms</div>
+          </div>
+          <div class="sw-venue" onclick="setWorldSection('social');setSocialSubject('battles')">
+            <div class="sw-venue-glow" style="background:var(--red)"></div>
+            <span class="sw-venue-icon">⚡</span>
+            <div class="sw-venue-name">Aux Arena</div>
+            <div class="sw-venue-sub">Head-to-Head Battles</div>
+          </div>
+        </div>
+        <div class="sw-venue-row">
+          <div class="sw-venue" onclick="switchTab('rate')">
+            <div class="sw-venue-glow" style="background:var(--gold)"></div>
+            <span class="sw-venue-icon">🎵</span>
+            <div class="sw-venue-name">Rate a Song</div>
+            <div class="sw-venue-sub">Add your score to the map</div>
+          </div>
+          <div class="sw-venue" onclick="setWorldSection('ratings')">
+            <div class="sw-venue-glow" style="background:var(--chorus)"></div>
+            <span class="sw-venue-icon">🏠</span>
+            <div class="sw-venue-name">Community Ratings</div>
+            <div class="sw-venue-sub">Latest scores</div>
+          </div>
+        </div>
+        <div style="height:.5rem"></div>
       </div>
-      <div id="feed-battles-list" style="padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)"><div class="feed-empty">Loading…</div></div>
+    </div>
+
+    <!-- ── RATINGS ── -->
+    <div id="world-ratings-wrap" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <div id="feed-songs-controls" class="feed-controls">
+        <div class="feed-mode-btns">
+          <button class="feed-mode-btn active" id="fmode-all" onclick="setFeedMode('all',this)">All</button>
+          <button class="feed-mode-btn" id="fmode-following" onclick="setFeedMode('following',this)">Following</button>
+        </div>
+        <div class="feed-search-wrap">
+          <span class="feed-search-icon">⌕</span>
+          <input type="text" id="feed-search" class="feed-search-input" placeholder="Search songs, artists..." oninput="filterFeed()">
+        </div>
+        <div class="feed-sort-btns">
+          <button class="feed-sort-btn active" data-sort="likes" onclick="setFeedSort(this)">Most Liked</button>
+          <button class="feed-sort-btn" data-sort="recent" onclick="setFeedSort(this)">Recent</button>
+          <button class="feed-sort-btn" data-sort="score" onclick="setFeedSort(this)">Highest</button>
+          <button class="feed-sort-btn" data-sort="lowest" onclick="setFeedSort(this)">Lowest</button>
+        </div>
+      </div>
+      <div id="feed-songs-area" class="scroll-area"><div id="feed-list"><div class="feed-empty">Loading...</div></div></div>
+    </div>
+
+    <!-- ── SOCIAL ── -->
+    <div id="world-social-wrap" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div class="feed-subj-tabs">
+        <button class="feed-subj-btn active" data-ssubj="lists" onclick="setSocialSubject('lists')">Lists</button>
+        <button class="feed-subj-btn" data-ssubj="questions" onclick="setSocialSubject('questions')">Questions</button>
+        <button class="feed-subj-btn" data-ssubj="battles" onclick="setSocialSubject('battles')">Battles</button>
+      </div>
+      <div id="feed-lists-area" style="display:flex;flex:1;overflow-y:auto"><div id="feed-lists-list"><div class="feed-empty">Loading...</div></div></div>
+      <div id="feed-questions-area" style="display:none;flex:1;overflow-y:auto;flex-direction:column">
+        <div style="padding:.65rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0">
+          <button onclick="openProposeQuestion()" style="width:100%;padding:.5rem;background:transparent;border:1px dashed var(--border2);color:var(--gold);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ Propose a Question</button>
+        </div>
+        <div id="feed-questions-list"><div class="feed-empty">Loading...</div></div>
+      </div>
+      <div id="feed-battles-area" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column">
+        <div style="padding:.55rem 1rem .4rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:.5rem">
+          <div class="battle-sort-btns" style="padding:0;border:none;flex:1">
+            <button class="battle-sort-btn active" data-bsort="recent" onclick="setBattleSort('recent',this)">Recent</button>
+            <button class="battle-sort-btn" data-bsort="votes" onclick="setBattleSort('votes',this)">Most Votes</button>
+            <button class="battle-sort-btn" data-bsort="closest" onclick="setBattleSort('closest',this)">Closest</button>
+          </div>
+          <button class="battle-create-btn" style="width:auto;padding:.3rem .75rem;flex-shrink:0" onclick="openCreateBattleModal()">+ Create</button>
+        </div>
+        <div id="feed-battles-list" style="padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)"><div class="feed-empty">Loading…</div></div>
+      </div>
     </div>
   </div>
 
@@ -1900,128 +2020,18 @@
     </div>
   </div>
 
-  <!-- WORLD TAB -->
-  <div id="tab-world" style="display:none;flex-direction:column;height:100%">
-    <div class="app-header">
-      <div>
-        <div class="app-header-title">SONGR <span style="color:var(--green);-webkit-text-fill-color:var(--green)">WORLD</span></div>
-        <div class="app-header-sub">Explore the music universe</div>
-      </div>
-      <button id="refresh-btn-world" class="refresh-btn" onclick="refreshTab('world')">
-        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-        Refresh
-      </button>
+  <!-- ARTIST PAGE -->
+  <div class="ap-overlay" id="ap-overlay">
+    <div class="ap-header-bar">
+      <button class="ap-back-btn" onclick="swCloseArtist()">←</button>
+      <div class="ap-breadcrumb" id="ap-breadcrumb">World</div>
     </div>
-    <div class="sw-wrap" id="sw-wrap">
-      <div id="sw-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh">
-        <div style="font-size:2rem;animation:swFloat 2s ease-in-out infinite">🌍</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.75rem">Loading World...</div>
+    <div class="ap-body" id="ap-body">
+      <div id="ap-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 1.25rem">
+        <div style="font-size:2rem;animation:swFloat 2s ease-in-out infinite">🎤</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.75rem">Loading Artist...</div>
       </div>
-      <div id="sw-content" style="display:none">
-        <!-- Hero -->
-        <div class="sw-hero">
-          <div class="sw-hero-bg"></div>
-          <div class="sw-hero-nodes">
-            <div class="sw-node-dot"></div>
-            <div class="sw-node-dot"></div>
-            <div class="sw-node-dot"></div>
-            <div class="sw-node-dot"></div>
-            <div class="sw-node-dot"></div>
-          </div>
-          <div class="sw-hero-title">SONGR <span>WORLD</span></div>
-          <div class="sw-hero-sub" id="sw-hero-sub">Interactive music universe</div>
-        </div>
-
-        <!-- Genre District -->
-        <div class="sw-sec">
-          <div class="sw-sec-head">
-            <span class="sw-sec-title">🗺 Genre District</span>
-            <span class="sw-sec-badge" id="sw-genre-badge">—</span>
-          </div>
-        </div>
-        <div class="sw-genre-strip" id="sw-genre-strip"></div>
-
-        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
-
-        <!-- Trending Tower -->
-        <div class="sw-sec">
-          <div class="sw-sec-head">
-            <span class="sw-sec-title">📡 Trending Tower</span>
-            <span class="sw-sec-badge" style="color:var(--red)">Live</span>
-          </div>
-          <div class="sw-node-list" id="sw-trend-list"></div>
-        </div>
-
-        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
-
-        <!-- Hot Take Zone -->
-        <div class="sw-sec">
-          <div class="sw-sec-head">
-            <span class="sw-sec-title" style="color:var(--prod)">🔥 Hot Take Zone</span>
-            <span class="sw-sec-badge">Divisive</span>
-          </div>
-          <div class="sw-node-list" id="sw-hot-list"></div>
-        </div>
-
-        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
-
-        <!-- Hidden Gems -->
-        <div class="sw-sec">
-          <div class="sw-sec-head">
-            <span class="sw-sec-title" style="color:var(--green)">💎 Hidden Gems</span>
-            <span class="sw-sec-badge">Underrated</span>
-          </div>
-          <div class="sw-node-list" id="sw-gem-list"></div>
-        </div>
-
-        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
-
-        <!-- Friend Activity Trail -->
-        <div class="sw-sec">
-          <div class="sw-sec-head">
-            <span class="sw-sec-title" style="color:var(--chorus)">👣 Friend Activity Trail</span>
-          </div>
-          <div class="sw-node-list" id="sw-friend-list"></div>
-        </div>
-
-        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
-
-        <!-- Special Venues -->
-        <div class="sw-sec">
-          <div class="sw-sec-head">
-            <span class="sw-sec-title">🏟 Special Venues</span>
-          </div>
-        </div>
-        <div class="sw-venue-row">
-          <div class="sw-venue" onclick="switchTab('room')">
-            <div class="sw-venue-glow" style="background:var(--gold)"></div>
-            <span class="sw-venue-icon">🏟</span>
-            <div class="sw-venue-name">Rank Room Stadium</div>
-            <div class="sw-venue-sub">Competitive Rooms</div>
-          </div>
-          <div class="sw-venue" onclick="switchTab('social');setTimeout(()=>setSocialSubject('battles'),80)">
-            <div class="sw-venue-glow" style="background:var(--red)"></div>
-            <span class="sw-venue-icon">⚡</span>
-            <div class="sw-venue-name">Aux Arena</div>
-            <div class="sw-venue-sub">Head-to-Head Battles</div>
-          </div>
-        </div>
-        <div class="sw-venue-row">
-          <div class="sw-venue" onclick="switchTab('rate')">
-            <div class="sw-venue-glow" style="background:var(--gold)"></div>
-            <span class="sw-venue-icon">🎵</span>
-            <div class="sw-venue-name">Rate a Song</div>
-            <div class="sw-venue-sub">Add your score to the map</div>
-          </div>
-          <div class="sw-venue" onclick="switchTab('feed')">
-            <div class="sw-venue-glow" style="background:var(--chorus)"></div>
-            <span class="sw-venue-icon">🏠</span>
-            <div class="sw-venue-name">Community Feed</div>
-            <div class="sw-venue-sub">Latest ratings</div>
-          </div>
-        </div>
-        <div style="height:.5rem"></div>
-      </div>
+      <div id="ap-content" style="display:none"></div>
     </div>
   </div>
 
@@ -2036,15 +2046,11 @@
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
-    <button class="nav-btn active" id="nav-feed" onclick="switchTab('feed')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span>Feed</span>
-    </button>
     <button class="nav-btn" id="nav-room" onclick="switchTab('room')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       <span>Room</span>
     </button>
-    <button class="nav-btn" id="nav-world" onclick="switchTab('world')">
+    <button class="nav-btn active" id="nav-world" onclick="switchTab('world')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       <span>World</span>
     </button>
@@ -2053,10 +2059,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
       </div>
       <span>Rate</span>
-    </button>
-    <button class="nav-btn" id="nav-social" onclick="switchTab('social')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span>Social</span>
     </button>
     <button class="nav-btn" id="nav-profile" onclick="switchTab('profile')">
       <div class="nav-badge" id="nav-badge"></div>
@@ -2726,7 +2728,7 @@ async function checkProfile(){
       currentProfile=data;
       loadSettings();
       showView('app');
-      switchTab('feed');
+      switchTab('world');
       loadFeed();
       checkRoomInvite();
       await rrTryRejoin();
@@ -2803,7 +2805,7 @@ function onboardNext(){
 function finishOnboarding(){
   localStorage.setItem('onboarded','1');
   showView('app');
-  switchTab('feed');
+  switchTab('world');
   loadFeed();
   checkRoomInvite();
 }
@@ -2995,7 +2997,7 @@ function confirmDeleteAccount(){
 let currentTab='feed';
 function switchTab(n){
   currentTab=n;
-  ['feed','rate','room','profile','settings','world','social'].forEach(t=>{
+  ['rate','room','profile','settings','world'].forEach(t=>{
     const el=document.getElementById('tab-'+t);
     if(!el)return;
     if(t===n){el.style.display='flex';el.classList.remove('hidden');}
@@ -3005,8 +3007,7 @@ function switchTab(n){
   });
   if(n==='profile')loadProfile();
   else if(n==='settings')renderSettings();
-  else if(n==='world')loadWorld();
-  else if(n==='social')initSocialTab();
+  else if(n==='world')initWorldTab();
   else{
     const bar=document.getElementById('profile-search-bar');
     if(bar?.classList.contains('open'))toggleProfileSearch();
@@ -3031,11 +3032,14 @@ async function refreshTab(tab){
       else{done();return;}
     }
     else if(tab==='settings'){renderSettings();}
-    else if(tab==='world'){worldData=null;worldLoaded=false;swLimits={trending:5,hot:5,gems:5,friends:5};await loadWorld();}
-    else if(tab==='social'){
-      if(socialSubject==='lists')await loadFeedLists();
-      else if(socialSubject==='questions')await loadQuestions();
-      else if(socialSubject==='battles')await loadBattles();
+    else if(tab==='world'){
+      if(worldSection==='discover'){worldData=null;worldLoaded=false;swLimits={trending:5,hot:5,gems:5,friends:5};await loadWorld();}
+      else if(worldSection==='ratings')await loadFeed();
+      else if(worldSection==='social'){
+        if(socialSubject==='lists')await loadFeedLists();
+        else if(socialSubject==='questions')await loadQuestions();
+        else if(socialSubject==='battles')await loadBattles();
+      }
     }
   }catch(e){console.error('refresh error',e);}
   done();
@@ -4250,9 +4254,7 @@ function setFeedMode(mode,btn){
   renderFeed();
 }
 
-function setFeedSubject(subj){
-  feedSubject=subj;
-}
+function setFeedSubject(subj){feedSubject=subj;}
 
 let socialSubject='lists';
 function setSocialSubject(subj){
@@ -4268,8 +4270,29 @@ function setSocialSubject(subj){
   if(subj==='questions')loadQuestions();
   if(subj==='battles')loadBattles();
 }
-function initSocialTab(){
-  setSocialSubject(socialSubject);
+
+let worldSection='ratings';
+function setWorldSection(sect){
+  worldSection=sect;
+  document.querySelectorAll('[data-wsect]').forEach(b=>b.classList.toggle('active',b.dataset.wsect===sect));
+  const discoverEl=document.getElementById('world-discover-wrap');
+  const ratingsEl=document.getElementById('world-ratings-wrap');
+  const socialEl=document.getElementById('world-social-wrap');
+  const subEl=document.getElementById('world-header-sub');
+  if(discoverEl)discoverEl.style.display=sect==='discover'?'block':'none';
+  if(ratingsEl)ratingsEl.style.display=sect==='ratings'?'flex':'none';
+  if(socialEl)socialEl.style.display=sect==='social'?'flex':'none';
+  if(subEl){
+    if(sect==='discover')subEl.textContent='Explore the music universe';
+    else if(sect==='ratings')subEl.textContent='Community ratings';
+    else subEl.textContent='Lists · Questions · Battles';
+  }
+  if(sect==='discover')loadWorld();
+  else if(sect==='ratings'){if(!document.getElementById('feed-list').children.length||document.getElementById('feed-list').querySelector('.feed-empty'))loadFeed();}
+  else if(sect==='social')setSocialSubject(socialSubject);
+}
+function initWorldTab(){
+  setWorldSection(worldSection);
 }
 
 async function loadFeedLists(){
@@ -5399,7 +5422,7 @@ async function confirmSave(autoAlbum, autoArtist, autoComment){
   if(editingRatingId){
     const{error}=await db.from('ratings').update(insertData).eq('id',editingRatingId).eq('user_id',currentUser.id);
     if(error){if(errEl)errEl.textContent='Save failed: '+error.message;}
-    else{closeSaveModal();resetAll();loadFeed();loadProfile();switchTab('feed');}
+    else{closeSaveModal();resetAll();loadFeed();loadProfile();switchTab('world');}
   } else {
     // new rating — save as private, then ask if they want to post
     const{data,error}=await db.from('ratings').insert({...insertData,is_private:true}).select('id').single();
@@ -5423,7 +5446,7 @@ async function postToFeed(yes){
   if(yes && _lastSavedRatingId){
     await db.from('ratings').update({is_private:false}).eq('id',_lastSavedRatingId).eq('user_id',currentUser.id);
     await loadFeed();
-    switchTab('feed');
+    switchTab('world');
   } else {
     switchTab('profile');
   }
@@ -8576,9 +8599,20 @@ function swProcessData(rows,profMapW,myRatedKeys,myScoreMap){
     genreMap[g].artists.add(r.artist_name.toLowerCase());
   });
   const genres=Object.values(genreMap).map(g=>({genre:g.genre,avg:g.scores.reduce((a,b)=>a+b,0)/g.scores.length,ratingCount:g.scores.length,songCount:g.songs.size,artistCount:g.artists.size})).sort((a,b)=>b.ratingCount-a.ratingCount);
-  const recentKeys=[],seenTrend=new Set();
-  rows.slice(0,200).forEach(r=>{const k=(r.song_name+'||'+r.artist_name).toLowerCase();if(!seenTrend.has(k)){seenTrend.add(k);recentKeys.push(k);}});
-  const trending=recentKeys.slice(0,25).map(k=>songMap[k]).filter(Boolean).map(s=>{const n=s.scores.length;const avg=s.scores.reduce((a,b)=>a+b,0)/n;return{...s,n,avg};});
+  const cutoff=new Date(Date.now()-7*24*60*60*1000).toISOString();
+  const recentCounts={},recentLatest={};
+  rows.forEach(r=>{
+    if(r.created_at<cutoff)return;
+    const k=(r.song_name+'||'+r.artist_name).toLowerCase();
+    recentCounts[k]=(recentCounts[k]||0)+1;
+    if(!recentLatest[k]||r.created_at>recentLatest[k])recentLatest[k]=r.created_at;
+  });
+  const trending=Object.entries(recentCounts)
+    .sort((a,b)=>b[1]-a[1]||recentLatest[b[0]].localeCompare(recentLatest[a[0]]))
+    .slice(0,25)
+    .map(([k])=>songMap[k])
+    .filter(Boolean)
+    .map(s=>{const n=s.scores.length;const avg=s.scores.reduce((a,b)=>a+b,0)/n;return{...s,n,avg};});
   const hotTakes=songs.filter(s=>s.n>=2&&s.stddev>=1.4).sort((a,b)=>b.stddev-a.stddev).slice(0,20);
   const gems=songs.filter(s=>s.avg>=7.5&&s.n>=1&&s.n<=4).sort((a,b)=>b.avg-a.avg).slice(0,20);
   const friendActivity=rows.filter(r=>worldFollowIds.has(r.user_id)).slice(0,30).map(r=>({...r,profile:profMapW[r.user_id]||{username:'user',avatar_color:'#a78bfa'},score:parseFloat(r.final_score)}));
@@ -8629,7 +8663,8 @@ function swSongCard(s,extraClass,labelClass,labelText,rank){
   const barHTML=extraClass.includes('hot')?'<div class="sw-hot-bar"></div>':extraClass.includes('gem')?'<div class="sw-gem-bar"></div>':'';
   const friendTag=s.isFriendRated?`<span style="font-size:.43rem;color:var(--chorus);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">· Friend</span>`:'';
   const enc=encodeURIComponent(s.song+'||'+s.artist);
-  return`<div class="sw-song-card ${extraClass}" onclick="swOpenSong('${enc}')">${barHTML}${rankHTML}${artHTML}${phHTML}<div class="sw-song-info"><div class="sw-song-name">${s.song}</div><div class="sw-song-artist">${s.artist}${s.album?' · '+s.album:''}</div><div style="display:flex;align-items:center;gap:.3rem;margin-top:.15rem"><span style="font-size:.47rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">${s.n} rating${s.n!==1?'s':''}</span>${friendTag}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-song-score" style="color:${col};text-shadow:0 0 10px ${col}">${avg.toFixed(1)}</div>${myHTML}</div>${labelHTML}</div>`;
+  const artEnc=encodeURIComponent(s.artist);
+  return`<div class="sw-song-card ${extraClass}" onclick="swOpenSong('${enc}')">${barHTML}${rankHTML}${artHTML}${phHTML}<div class="sw-song-info"><div class="sw-song-name">${s.song}</div><div class="sw-song-artist"><button class="ap-artist-link" onclick="event.stopPropagation();swOpenArtist('${artEnc}','World Map')">${s.artist}</button>${s.album?' · '+s.album:''}</div><div style="display:flex;align-items:center;gap:.3rem;margin-top:.15rem"><span style="font-size:.47rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">${s.n} rating${s.n!==1?'s':''}</span>${friendTag}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-song-score" style="color:${col};text-shadow:0 0 10px ${col}">${avg.toFixed(1)}</div>${myHTML}</div>${labelHTML}</div>`;
 }
 
 function swShowMoreBtn(section,shown,total){
@@ -8685,10 +8720,22 @@ function swOpenGenre(genre){
   const stats=worldData.genres.find(g=>g.genre===genre);
   const avg=stats?stats.avg.toFixed(1):'—';
   const count=stats?stats.ratingCount:0;
+  // Top artists in this genre
+  const artistInGenre={};
+  gSongs.forEach(s=>{
+    const k=s.artist.toLowerCase();
+    if(!artistInGenre[k])artistInGenre[k]={artist:s.artist,scores:[],n:0};
+    artistInGenre[k].scores.push(s.avg);
+    artistInGenre[k].n+=s.n;
+  });
+  const topArtists=Object.values(artistInGenre).map(a=>({...a,avg:a.scores.reduce((x,y)=>x+y,0)/a.scores.length})).sort((a,b)=>b.n-a.n).slice(0,6);
+  const artistItems=topArtists.length
+    ?topArtists.map(a=>{const col=swScoreColor(a.avg);const enc=encodeURIComponent(a.artist);return`<div class="sw-detail-item" onclick="swCloseDetail();setTimeout(()=>swOpenArtist('${enc}','${label}'),280)"><div style="flex:1;min-width:0"><div class="sw-detail-item-name">${a.artist}</div><div style="font-size:.5rem;color:var(--muted)">${a.scores.length} song${a.scores.length!==1?'s':''} · ${a.n} ratings</div></div><div class="sw-detail-item-score" style="color:${col}">${a.avg.toFixed(1)}</div></div>`;}).join('')
+    :'<div class="sw-empty" style="font-size:.58rem">No artists yet.</div>';
   const songItems=gSongs.length
-    ?gSongs.map(s=>{const col=swScoreColor(s.avg);const enc=encodeURIComponent(s.song+'||'+s.artist);return`<div class="sw-detail-item" onclick="swCloseDetail();setTimeout(()=>swOpenSong('${enc}'),300)"><div style="flex:1;min-width:0"><div class="sw-detail-item-name">${s.song}</div><div style="font-size:.5rem;color:var(--muted)">${s.artist}</div></div><div class="sw-detail-item-score" style="color:${col}">${s.avg.toFixed(1)}</div></div>`;}).join('')
+    ?gSongs.slice(0,8).map(s=>{const col=swScoreColor(s.avg);const enc=encodeURIComponent(s.song+'||'+s.artist);return`<div class="sw-detail-item" onclick="swCloseDetail();setTimeout(()=>swOpenSong('${enc}'),280)"><div style="flex:1;min-width:0"><div class="sw-detail-item-name">${s.song}</div><div style="font-size:.5rem;color:var(--muted)">${s.artist}</div></div><div class="sw-detail-item-score" style="color:${col}">${s.avg.toFixed(1)}</div></div>`;}).join('')
     :'<div class="sw-empty" style="font-size:.58rem">No songs rated in this genre yet.</div>';
-  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header" style="border-left:4px solid ${cfg.color}"><div class="sw-detail-label">Genre District</div><div style="display:flex;align-items:center;gap:.7rem"><span style="font-size:2rem">${cfg.icon}</span><div><div class="sw-detail-title" style="color:${cfg.color}">${label}</div><div class="sw-detail-meta">${count} ratings</div></div><div style="margin-left:auto;text-align:right"><div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${cfg.color};text-shadow:0 0 14px ${cfg.color}">${avg}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Avg Score</div></div></div></div><div class="sw-detail-body"><div style="display:flex;gap:.7rem;margin-bottom:.9rem"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.songCount:'—'}</div><div class="sw-detail-stat-lbl">Songs</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.artistCount:'—'}</div><div class="sw-detail-stat-lbl">Artists</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${count}</div><div class="sw-detail-stat-lbl">Ratings</div></div></div><div class="sw-detail-section-title">Top Songs in ${label}</div>${songItems}<button class="sw-detail-rate-btn" onclick="swCloseDetail();switchTab('rate')">Rate a ${label} Song</button></div>`;
+  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header" style="border-left:4px solid ${cfg.color}"><div class="sw-detail-label">Genre District</div><div style="display:flex;align-items:center;gap:.7rem"><span style="font-size:2rem">${cfg.icon}</span><div><div class="sw-detail-title" style="color:${cfg.color}">${label}</div><div class="sw-detail-meta">${count} ratings</div></div><div style="margin-left:auto;text-align:right"><div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${cfg.color};text-shadow:0 0 14px ${cfg.color}">${avg}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Avg Score</div></div></div></div><div class="sw-detail-body"><div style="display:flex;gap:.7rem;margin-bottom:.9rem"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.songCount:'—'}</div><div class="sw-detail-stat-lbl">Songs</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.artistCount:'—'}</div><div class="sw-detail-stat-lbl">Artists</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${count}</div><div class="sw-detail-stat-lbl">Ratings</div></div></div><div class="sw-detail-section-title">Artists in ${label}</div>${artistItems}<div class="sw-detail-section-title" style="margin-top:.75rem">Top Songs</div>${songItems}<button class="sw-detail-rate-btn" onclick="swCloseDetail();switchTab('rate')">Rate a ${label} Song</button></div>`;
   swOpenDetail();
 }
 
@@ -8710,7 +8757,7 @@ function swOpenSong(enc){
   const hi=song.scores.length>1?Math.max(...song.scores).toFixed(1):'—';
   const lo=song.scores.length>1?Math.min(...song.scores).toFixed(1):'—';
   const sEnc=encodeURIComponent(song.song);const aEnc=encodeURIComponent(song.artist);
-  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header"><div class="sw-detail-label">Song</div><div style="display:flex;gap:.8rem;align-items:flex-start"><div style="flex:1;min-width:0">${artHTML}</div><div style="flex:2;min-width:0"><div class="sw-detail-title" style="font-size:1.2rem">${song.song}</div><div class="sw-detail-meta">${song.artist}${song.album?' · '+song.album:''}</div>${myHTML?`<div style="margin-top:.3rem">${myHTML}</div>`:''}<div style="margin-top:.35rem">${tags.join('')}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-detail-score" style="color:${col};text-shadow:0 0 18px ${col}">${avg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">SONGR avg</div></div></div></div><div class="sw-detail-body"><div class="sw-detail-stat-row"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${song.n}</div><div class="sw-detail-stat-lbl">Ratings</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${hi}</div><div class="sw-detail-stat-lbl">Highest</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${lo}</div><div class="sw-detail-stat-lbl">Lowest</div></div></div><button class="sw-detail-rate-btn" onclick="swRateSong('${sEnc}','${aEnc}')">${song.iMyRated?'✎ Update My Rating':'＋ Rate This Song'}</button><div class="sw-rate-label">${song.iMyRated?'You have already rated this song':'Add your take to the map'}</div></div>`;
+  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header"><div class="sw-detail-label">Song</div><div style="display:flex;gap:.8rem;align-items:flex-start"><div style="flex:1;min-width:0">${artHTML}</div><div style="flex:2;min-width:0"><div class="sw-detail-title" style="font-size:1.2rem">${song.song}</div><div class="sw-detail-meta"><button class="ap-artist-link" onclick="swCloseDetail();setTimeout(()=>swOpenArtist('${aEnc}','World Map'),280)">${song.artist}</button>${song.album?' · '+song.album:''}</div>${myHTML?`<div style="margin-top:.3rem">${myHTML}</div>`:''}<div style="margin-top:.35rem">${tags.join('')}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-detail-score" style="color:${col};text-shadow:0 0 18px ${col}">${avg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">SONGR avg</div></div></div></div><div class="sw-detail-body"><div class="sw-detail-stat-row"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${song.n}</div><div class="sw-detail-stat-lbl">Ratings</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${hi}</div><div class="sw-detail-stat-lbl">Highest</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${lo}</div><div class="sw-detail-stat-lbl">Lowest</div></div></div><button class="sw-detail-rate-btn" onclick="swRateSong('${sEnc}','${aEnc}')">${song.iMyRated?'✎ Update My Rating':'＋ Rate This Song'}</button><div class="sw-rate-label">${song.iMyRated?'You have already rated this song':'Add your take to the map'}</div></div>`;
   swOpenDetail();
 }
 
@@ -8734,6 +8781,196 @@ function swOpenDetail(){
 function swCloseDetail(){
   const ov=document.getElementById('sw-detail-overlay');
   if(ov)ov.style.display='none';
+}
+
+// ── ARTIST PAGES ──────────────────────────────────────────────────────────
+let apCurrentSort='highest',apCurrentArtist=null,apCurrentData=null,apExpandedAlbums=new Set();
+
+function swOpenArtist(encodedArtist,context){
+  const artist=decodeURIComponent(encodedArtist);
+  apCurrentArtist=artist;apExpandedAlbums=new Set();apCurrentSort='highest';
+  const overlay=document.getElementById('ap-overlay');
+  const breadEl=document.getElementById('ap-breadcrumb');
+  const loadEl=document.getElementById('ap-loading');
+  const contEl=document.getElementById('ap-content');
+  if(overlay)overlay.classList.add('open');
+  if(breadEl)breadEl.textContent=context?`World · ${context}`:'World';
+  if(loadEl){loadEl.style.display='flex';loadEl.innerHTML='<div style="font-size:2rem;animation:swFloat 2s ease-in-out infinite">🎤</div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.75rem">Loading Artist...</div>';}
+  if(contEl)contEl.style.display='none';
+  const body=document.getElementById('ap-body');if(body)body.scrollTop=0;
+  apLoadArtist(artist);
+}
+function swCloseArtist(){
+  const ov=document.getElementById('ap-overlay');
+  if(ov)ov.classList.remove('open');
+}
+
+async function apLoadArtist(artist){
+  try{
+    const[pubRes,myRes]=await Promise.all([
+      db.from('ratings').select('id,song_name,artist_name,album,genre,final_score,artwork_url,user_id,created_at,is_interlude,is_private,comment,verdict').ilike('artist_name',artist).or('is_private.is.null,is_private.eq.false').not('final_score','is',null).eq('is_interlude',false).order('created_at',{ascending:false}).limit(400),
+      db.from('ratings').select('id,song_name,artist_name,album,final_score,artwork_url,created_at').ilike('artist_name',artist).eq('user_id',currentUser.id).not('final_score','is',null).eq('is_interlude',false)
+    ]);
+    const pubRatings=pubRes.data||[];
+    const myRatings=myRes.data||[];
+    const uids=[...new Set(pubRatings.slice(0,20).map(r=>r.user_id))];
+    let profMapA={};
+    if(uids.length){const{data:profs}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',uids);(profs||[]).forEach(p=>{profMapA[p.id]=p;});}
+    apCurrentData=apProcessArtist(artist,pubRatings,myRatings,profMapA);
+    apRenderPage();
+  }catch(e){
+    console.error('Artist page error',e);
+    const loadEl=document.getElementById('ap-loading');
+    if(loadEl)loadEl.innerHTML='<div style="font-size:1.5rem">⚠️</div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.68rem;letter-spacing:.12em;color:var(--muted);margin-top:.6rem">Failed to load. Try again.</div>';
+  }
+}
+
+function apProcessArtist(artist,pubRatings,myRatings,profMapA){
+  const songMap={};
+  pubRatings.forEach(r=>{
+    const k=r.song_name.toLowerCase();
+    if(!songMap[k])songMap[k]={song:r.song_name,album:r.album||'',artwork_url:r.artwork_url||'',scores:[],userIds:new Set(),latestAt:r.created_at};
+    songMap[k].scores.push(parseFloat(r.final_score));
+    songMap[k].userIds.add(r.user_id);
+    if(r.created_at>songMap[k].latestAt)songMap[k].latestAt=r.created_at;
+    if(!songMap[k].artwork_url&&r.artwork_url)songMap[k].artwork_url=r.artwork_url;
+  });
+  const songs=Object.values(songMap).map(s=>{
+    const n=s.scores.length;const avg=s.scores.reduce((a,b)=>a+b,0)/n;
+    const variance=n>1?s.scores.reduce((sum,sc)=>sum+Math.pow(sc-avg,2),0)/n:0;
+    return{...s,n,avg,stddev:Math.sqrt(variance)};
+  });
+  // Albums from community data
+  const albumMap={};
+  songs.forEach(s=>{
+    const k=(s.album||'Singles').toLowerCase();
+    if(!albumMap[k])albumMap[k]={album:s.album||'Singles',songs:[],artwork_url:''};
+    albumMap[k].songs.push(s);
+    if(!albumMap[k].artwork_url&&s.artwork_url)albumMap[k].artwork_url=s.artwork_url;
+  });
+  const albums=Object.values(albumMap).map(a=>{
+    const fakeRatings=a.songs.map(s=>({final_score:s.avg,is_interlude:false}));
+    const albumAvg=fakeRatings.length?albumScore(fakeRatings):null;
+    return{...a,albumAvg,songCount:a.songs.length,ratingCount:a.songs.reduce((t,s)=>t+s.n,0)};
+  }).sort((a,b)=>(b.albumAvg||0)-(a.albumAvg||0));
+  // My ratings
+  const mySongs={};
+  myRatings.forEach(r=>{const k=r.song_name.toLowerCase();mySongs[k]={song:r.song_name,album:r.album||'',score:parseFloat(r.final_score),artwork_url:r.artwork_url||''};});
+  const myScores=Object.values(mySongs).map(s=>s.score);
+  const myAvg=myScores.length?myScores.reduce((a,b)=>a+b,0)/myScores.length:null;
+  const mySortedByScore=[...Object.values(mySongs)].sort((a,b)=>b.score-a.score);
+  // My album scores
+  const myAlbMap={};
+  Object.values(mySongs).forEach(s=>{const k=(s.album||'Singles').toLowerCase();if(!myAlbMap[k])myAlbMap[k]={album:s.album||'Singles',songs:[]};myAlbMap[k].songs.push(s);});
+  const myAlbumsSorted=Object.values(myAlbMap).map(a=>{const avg=a.songs.reduce((s,x)=>s+x.score,0)/a.songs.length;return{...a,avg};}).sort((a,b)=>b.avg-a.avg);
+  // Community stats
+  const communityAvg=pubRatings.length?pubRatings.reduce((s,r)=>s+parseFloat(r.final_score),0)/pubRatings.length:null;
+  const sortedByAvg=[...songs].sort((a,b)=>b.avg-a.avg);
+  const sortedByN=[...songs].sort((a,b)=>b.n-a.n);
+  const sortedByDiv=[...songs].filter(s=>s.n>=2).sort((a,b)=>b.stddev-a.stddev);
+  // Hot take
+  let myHotTake=null;
+  if(myScores.length&&communityAvg!==null){
+    let maxDiff=0;
+    Object.values(mySongs).forEach(ms=>{
+      const commSong=songs.find(s=>s.song.toLowerCase()===ms.song.toLowerCase());
+      if(commSong&&commSong.n>=2){const diff=Math.abs(ms.score-commSong.avg);if(diff>maxDiff){maxDiff=diff;myHotTake={...ms,commAvg:commSong.avg,diff};}}
+    });
+  }
+  const recentActivity=pubRatings.slice(0,12).map(r=>({...r,profile:profMapA[r.user_id]||{username:'user',avatar_color:'#a78bfa'},score:parseFloat(r.final_score)}));
+  return{artist,songs,albums,communityAvg,totalRatings:pubRatings.length,sortedByAvg,sortedByN,sortedByDiv,myAvg,myCount:myScores.length,mySortedByScore,myAlbumsSorted,myHotTake,mySongs,recentActivity};
+}
+
+function apRenderPage(){
+  const d=apCurrentData;if(!d)return;
+  const loadEl=document.getElementById('ap-loading');
+  const contEl=document.getElementById('ap-content');
+  if(loadEl)loadEl.style.display='none';
+  if(!contEl)return;
+  contEl.style.display='block';
+  const col=d.communityAvg?swScoreColor(d.communityAvg):'var(--muted)';
+  const initial=d.artist[0]?.toUpperCase()||'?';
+  const heroHTML=`<div class="ap-hero"><div class="ap-hero-bg" style="background:radial-gradient(ellipse at 0% 120%,${col}28 0%,transparent 65%)"></div><div class="ap-avatar" style="background:${col}1a;border-color:${col}66;color:${col}">${initial}</div><div class="ap-hero-name" style="text-shadow:0 0 28px ${col}44">${d.artist}</div><div class="ap-hero-stats"><div><div class="ap-hero-stat-val" style="color:${col};text-shadow:0 0 14px ${col}88">${d.communityAvg?d.communityAvg.toFixed(1):'—'}</div><div class="ap-hero-stat-lbl">SONGR Avg</div></div>${d.myAvg!==null?`<div><div class="ap-hero-stat-val" style="color:var(--green);text-shadow:0 0 14px rgba(52,211,153,.5)">${d.myAvg.toFixed(1)}</div><div class="ap-hero-stat-lbl">Your Avg</div></div>`:''}<div><div class="ap-hero-stat-val">${d.totalRatings}</div><div class="ap-hero-stat-lbl">Total Ratings</div></div><div><div class="ap-hero-stat-val">${d.songs.length}</div><div class="ap-hero-stat-lbl">Songs</div></div></div></div>`;
+  contEl.innerHTML=heroHTML+apCommStats(d)+apMyStats(d)+apAlbumsSection(d)+apSongsSection(d,apCurrentSort)+apActivitySection(d);
+}
+
+function apCommStats(d){
+  if(!d.songs.length)return`<div class="ap-sec"><div class="ap-empty">Not enough ratings yet for community stats.</div></div>`;
+  const best=d.sortedByAvg[0],worst=d.sortedByAvg[d.sortedByAvg.length-1],top=d.sortedByN[0],div=d.sortedByDiv[0],topAlb=d.albums[0];
+  const card=(lbl,val,sub)=>val?`<div class="ap-stat-card"><div class="ap-stat-card-lbl">${lbl}</div><div class="ap-stat-card-val">${val}</div>${sub?`<div class="ap-stat-card-sub">${sub}</div>`:''}</div>`:'';
+  return`<div class="ap-sec"><div class="ap-sec-title">Community Stats</div><div class="ap-stat-grid">${card('Highest Rated',best?.song,best?.avg.toFixed(1))}${card('Most Rated',top?.song,top?`${top.n} ratings`:'')}${best!==worst?card('Lowest Rated',worst?.song,worst?.avg.toFixed(1)):''}${div?card('Most Divisive',div.song,`±${div.stddev.toFixed(1)} spread`):''}${topAlb?.albumAvg?card('Top Album',topAlb.album,topAlb.albumAvg.toFixed(1)):''}</div></div>`;
+}
+
+function apMyStats(d){
+  if(d.myCount===0){return`<div class="ap-sec"><div class="ap-sec-title">Your Stats</div><div class="ap-personal"><div style="font-size:.63rem;color:var(--muted);font-style:italic">You haven't rated this artist yet.</div><button class="ap-rate-btn" onclick="swCloseArtist();switchTab('rate')">Rate a Song by ${d.artist}</button></div></div>`;}
+  const myBest=d.mySortedByScore[0],myWorst=d.mySortedByScore[d.mySortedByScore.length-1],myBestAlb=d.myAlbumsSorted[0];
+  const diff=d.myAvg!==null&&d.communityAvg!==null?d.myAvg-d.communityAvg:null;
+  const diffText=diff!==null?(diff>0.1?`You rate ${d.artist} <strong style="color:var(--green)">${diff.toFixed(1)} higher</strong> than the SONGR average.`:diff<-0.1?`You rate ${d.artist} <strong style="color:var(--red)">${Math.abs(diff).toFixed(1)} lower</strong> than the SONGR average.`:'Your ratings match the SONGR average almost exactly.'):'';
+  const col=swScoreColor(d.myAvg);
+  const card=(lbl,val,sub)=>val?`<div class="ap-stat-card"><div class="ap-stat-card-lbl">${lbl}</div><div class="ap-stat-card-val">${val}</div>${sub?`<div class="ap-stat-card-sub">${sub}</div>`:''}</div>`:'';
+  return`<div class="ap-sec"><div class="ap-sec-title">Your Stats</div><div class="ap-personal"><div style="display:flex;gap:1rem;flex-wrap:wrap"><div><div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900;color:${col};text-shadow:0 0 14px ${col}88">${d.myAvg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Your Avg</div></div><div><div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900">${d.myCount}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Songs Rated</div></div></div><div class="ap-stat-grid" style="margin-top:.6rem">${card('Your Best',myBest?.song,myBest?.score.toFixed(1))}${myWorst&&myWorst.song!==myBest?.song?card('Your Lowest',myWorst.song,myWorst.score.toFixed(1)):''}${myBestAlb?card('Fav Album',myBestAlb.album,myBestAlb.avg.toFixed(1)):''}${d.myHotTake?card('Hot Take',d.myHotTake.song,`You: ${d.myHotTake.score.toFixed(1)} · Avg: ${d.myHotTake.commAvg.toFixed(1)}`):''}</div>${diffText?`<div class="ap-personal-compare">${diffText}</div>`:''}</div></div>`;
+}
+
+function apAlbumsSection(d){
+  if(!d.albums.length)return'';
+  return`<div class="ap-sec"><div class="ap-sec-title">Albums</div>${d.albums.map(a=>apAlbumCard(a,d)).join('')}</div>`;
+}
+function apAlbumCard(a,d){
+  const col=a.albumAvg?swScoreColor(a.albumAvg):'var(--muted)';
+  const artHTML=a.artwork_url?`<img class="ap-album-art" src="${a.artwork_url}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';
+  const phHTML=`<div class="ap-album-art-ph" style="${a.artwork_url?'display:none':''}">💿</div>`;
+  const isExp=apExpandedAlbums.has(a.album);
+  const encAlb=encodeURIComponent(a.album);
+  const myAlb=d.myAlbumsSorted.find(x=>x.album===a.album);
+  const myStr=myAlb?` · Yours: ${myAlb.avg.toFixed(1)}`:'';
+  const songRows=isExp?a.songs.sort((x,y)=>y.avg-x.avg).map(s=>{const sc=swScoreColor(s.avg);const mySong=d.mySongs[s.song.toLowerCase()];const enc=encodeURIComponent(s.song+'||'+d.artist);return`<div class="ap-song-row" onclick="swCloseArtist();setTimeout(()=>swOpenSong('${enc}'),300)">${s.artwork_url?`<img class="ap-song-art" src="${s.artwork_url}" loading="lazy" onerror="this.style.display='none'">`:`<div class="ap-song-art-ph">🎵</div>`}<div style="flex:1;min-width:0"><div class="ap-song-name">${s.song}</div><div class="ap-song-meta">${s.n} rating${s.n!==1?'s':''}</div></div><div style="text-align:right;flex-shrink:0"><div class="ap-song-score" style="color:${sc};text-shadow:0 0 10px ${sc}">${s.avg.toFixed(1)}</div>${mySong?`<div style="font-size:.42rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">MY ${mySong.score.toFixed(1)}</div>`:''}</div></div>`;}).join(''):'';
+  return`<div class="ap-album${isExp?' expanded':''}"><div class="ap-album-head" onclick="apToggleAlbum('${encAlb}')">${artHTML}${phHTML}<div style="flex:1;min-width:0"><div class="ap-album-name">${a.album}</div><div class="ap-album-meta">${a.ratingCount} rating${a.ratingCount!==1?'s':''} · ${a.songCount} song${a.songCount!==1?'s':''}${myStr}</div></div><div style="text-align:right;flex-shrink:0;margin-right:.3rem"><div class="ap-album-score" style="color:${col};text-shadow:0 0 10px ${col}">${a.albumAvg?a.albumAvg.toFixed(1):'—'}</div><div style="font-size:.42rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Album</div></div><div class="ap-album-toggle">${isExp?'▲':'▼'}</div></div>${isExp?`<div class="ap-album-songs">${songRows}</div>`:''}</div>`;
+}
+function apToggleAlbum(encAlb){
+  const alb=decodeURIComponent(encAlb);
+  const body=document.getElementById('ap-body');const scrollY=body?body.scrollTop:0;
+  if(apExpandedAlbums.has(alb))apExpandedAlbums.delete(alb);else apExpandedAlbums.add(alb);
+  apRenderPage();
+  if(body)requestAnimationFrame(()=>{body.scrollTop=scrollY;});
+}
+
+function apSongsSection(d,sort){
+  const allSongs=[...d.songs];
+  const sortMap={
+    highest:[...allSongs].sort((a,b)=>b.avg-a.avg),
+    lowest:[...allSongs].sort((a,b)=>a.avg-b.avg),
+    most:[...allSongs].sort((a,b)=>b.n-a.n),
+    divisive:[...allSongs].filter(s=>s.n>=2).sort((a,b)=>b.stddev-a.stddev),
+    recent:[...allSongs].sort((a,b)=>(b.latestAt||'').localeCompare(a.latestAt||'')),
+    mine:Object.values(d.mySongs).sort((a,b)=>b.score-a.score)
+  };
+  const sorted=(sortMap[sort]||sortMap.highest).slice(0,30);
+  const sortBtns=[['highest','Highest'],['lowest','Lowest'],['most','Most Rated'],['divisive','Divisive'],['recent','Recent'],['mine','Yours']].map(([k,l])=>`<button class="ap-sort-btn${sort===k?' active':''}" onclick="apSetSort('${k}')">${l}</button>`).join('');
+  if(!sorted.length)return`<div class="ap-sec"><div class="ap-sec-title">Songs</div><div class="ap-sort-row">${sortBtns}</div><div class="ap-empty">No songs found for this filter.</div></div>`;
+  const rows=sorted.map(s=>{
+    const sc=s.avg!=null?swScoreColor(s.avg):s.score!=null?swScoreColor(s.score):'var(--muted)';
+    const displayScore=s.avg!=null?s.avg.toFixed(1):s.score!=null?s.score.toFixed(1):'—';
+    const mySong=d.mySongs[(s.song||'').toLowerCase()];
+    const enc=encodeURIComponent((s.song||'')+'||'+d.artist);
+    return`<div class="ap-song-row" onclick="swCloseArtist();setTimeout(()=>swOpenSong('${enc}'),300)">${s.artwork_url?`<img class="ap-song-art" src="${s.artwork_url}" loading="lazy" onerror="this.style.display='none'">`:`<div class="ap-song-art-ph">🎵</div>`}<div style="flex:1;min-width:0"><div class="ap-song-name">${s.song||'—'}</div><div class="ap-song-meta">${s.album||''}${s.n?` · ${s.n} rating${s.n!==1?'s':''}`:''}</div></div><div style="text-align:right;flex-shrink:0"><div class="ap-song-score" style="color:${sc};text-shadow:0 0 10px ${sc}">${displayScore}</div>${mySong&&sort!=='mine'?`<div style="font-size:.42rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">MY ${mySong.score.toFixed(1)}</div>`:''}</div></div>`;
+  }).join('');
+  return`<div class="ap-sec"><div class="ap-sec-title">Songs</div><div class="ap-sort-row">${sortBtns}</div><div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden" id="ap-songs-list">${rows}</div></div>`;
+}
+function apSetSort(sort){
+  apCurrentSort=sort;
+  if(!apCurrentData)return;
+  const body=document.getElementById('ap-body');const scrollY=body?body.scrollTop:0;
+  apRenderPage();
+  if(body)requestAnimationFrame(()=>{body.scrollTop=scrollY;});
+}
+
+function apActivitySection(d){
+  if(!d.recentActivity.length)return`<div class="ap-sec"><div class="ap-sec-title">Recent Activity</div><div class="ap-empty">No recent public ratings for this artist.</div></div>`;
+  const items=d.recentActivity.map(r=>{
+    const col=swScoreColor(r.score);
+    return`<div class="ap-activity-item">${avatarHTML(r.profile,null,32)}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text)">${r.profile.username||'user'}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.song_name}</div><div style="font-size:.48rem;color:var(--muted);margin-top:.06rem">${timeAgo(r.created_at)}</div></div><div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:${col};text-shadow:0 0 10px ${col};flex-shrink:0">${r.score.toFixed(1)}</div></div>`;
+  }).join('');
+  return`<div class="ap-sec"><div class="ap-sec-title">Recent Activity</div><div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">${items}</div></div>`;
 }
 </script>
 <div id="milestone-toast-container" style="position:fixed;bottom:calc(var(--nav-h) + var(--safe-b) + .75rem);left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:.5rem;z-index:600;pointer-events:none"></div>
