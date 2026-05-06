@@ -949,6 +949,98 @@
     @keyframes abAntFlash{0%,100%{opacity:1}50%{opacity:.25}}
     @keyframes abAntNum{0%{opacity:0;transform:scale(1.6)}15%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.7)}}
     .ab-ant-art{width:88px;height:88px;border-radius:.75rem;object-fit:cover;flex-shrink:0;background:var(--surface2);border:2px solid var(--border2)}
+
+    /* ── SONGR WORLD ─────────────────────────────────────────────────── */
+    @keyframes swFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes swPulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+    @keyframes swFire{0%,100%{box-shadow:0 0 12px rgba(251,146,60,.5),0 0 24px rgba(251,146,60,.25)}50%{box-shadow:0 0 22px rgba(251,146,60,.8),0 0 44px rgba(251,146,60,.4),0 0 60px rgba(244,114,182,.2)}}
+    @keyframes swTrendPulse{0%,100%{border-left-color:var(--gold)}50%{border-left-color:var(--red)}}
+    @keyframes swSlideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+    .sw-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)}
+    .sw-hero{padding:1.4rem 1.25rem .9rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+    .sw-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(167,139,250,.13) 0%,transparent 70%);pointer-events:none}
+    .sw-hero-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1;position:relative}
+    .sw-hero-title span{color:var(--green);text-shadow:0 0 20px rgba(52,211,153,.5)}
+    .sw-hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.2rem;position:relative}
+    .sw-hero-nodes{position:absolute;right:1rem;top:.6rem;width:80px;height:70px;pointer-events:none}
+    .sw-node-dot{position:absolute;border-radius:50%}
+    .sw-node-dot:nth-child(1){width:10px;height:10px;background:var(--gold);top:0;right:10px;animation:swFloat 3.2s ease-in-out infinite}
+    .sw-node-dot:nth-child(2){width:7px;height:7px;background:var(--red);top:22px;right:32px;animation:swFloat 2.8s ease-in-out infinite .6s}
+    .sw-node-dot:nth-child(3){width:12px;height:12px;background:var(--green);top:42px;right:6px;animation:swFloat 3.5s ease-in-out infinite 1.2s}
+    .sw-node-dot:nth-child(4){width:6px;height:6px;background:var(--chorus);top:10px;right:56px;animation:swFloat 2.5s ease-in-out infinite .3s}
+    .sw-node-dot:nth-child(5){width:9px;height:9px;background:var(--prod);top:52px;right:42px;animation:swFloat 3s ease-in-out infinite .9s}
+    .sw-sec{padding:1rem 1.25rem .5rem}
+    .sw-sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.55rem}
+    .sw-sec-title{font-family:'Barlow Condensed',sans-serif;font-size:.76rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2)}
+    .sw-sec-badge{font-family:'DM Mono',monospace;font-size:.52rem;color:var(--muted);padding:.12rem .38rem;border:1px solid var(--border2);border-radius:2px}
+    .sw-genre-strip{display:flex;gap:.7rem;overflow-x:auto;padding:0 1.25rem .85rem;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch}
+    .sw-genre-strip::-webkit-scrollbar{display:none}
+    .sw-genre-card{flex-shrink:0;width:124px;border-radius:8px;padding:.9rem .8rem;cursor:pointer;position:relative;overflow:hidden;border:1px solid var(--border);transition:transform .18s;-webkit-tap-highlight-color:transparent}
+    .sw-genre-card:active{transform:scale(.93)}
+    .sw-genre-card-bg{position:absolute;inset:0;opacity:.12;border-radius:8px}
+    .sw-genre-card-glow{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);width:55px;height:36px;border-radius:50%;filter:blur(14px);opacity:.5;animation:swPulse 2.5s ease-in-out infinite}
+    .sw-genre-icon{font-size:1.7rem;margin-bottom:.35rem;display:block}
+    .sw-genre-name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1}
+    .sw-genre-avg{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;margin-top:.3rem}
+    .sw-genre-count{font-size:.48rem;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-top:.08rem;font-family:'Barlow Condensed',sans-serif}
+    .sw-node-list{display:flex;flex-direction:column;gap:.45rem}
+    .sw-song-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;display:flex;align-items:center;gap:.7rem;cursor:pointer;transition:background .15s,transform .15s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden}
+    .sw-song-card:active{transform:scale(.98);background:var(--surface2)}
+    .sw-song-art{width:42px;height:42px;border-radius:4px;object-fit:cover;flex-shrink:0;background:var(--surface2)}
+    .sw-song-art-ph{width:42px;height:42px;border-radius:4px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .sw-song-info{flex:1;min-width:0}
+    .sw-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+    .sw-song-artist{font-size:.56rem;color:var(--muted2);letter-spacing:.04em;margin-top:.12rem}
+    .sw-song-score{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;flex-shrink:0}
+    .sw-song-label{font-size:.44rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.12rem .36rem;border-radius:2px;position:absolute;top:.45rem;right:.45rem}
+    .sw-hot-card{border-color:rgba(251,146,60,.3)!important;animation:swFire 2.5s ease-in-out infinite}
+    .sw-hot-bar{position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#fb923c,#f472b6);border-radius:3px 0 0 3px}
+    .sw-gem-card{border-color:rgba(52,211,153,.3)!important;box-shadow:0 0 10px rgba(52,211,153,.1)}
+    .sw-gem-bar{position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#34d399,#60a5fa);border-radius:3px 0 0 3px}
+    .sw-trend-card{border-left:3px solid var(--gold);animation:swTrendPulse 2s ease-in-out infinite}
+    .sw-trend-rank{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:900;color:var(--muted);min-width:2rem;text-align:center;flex-shrink:0;line-height:1}
+    .sw-friend-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.6rem .9rem;display:flex;align-items:center;gap:.6rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
+    .sw-friend-card:active{background:var(--surface2)}
+    .sw-venue-row{display:flex;gap:.7rem;padding:0 1.25rem;margin-bottom:.7rem}
+    .sw-venue{flex:1;border-radius:8px;padding:.9rem .75rem;cursor:pointer;text-align:center;border:1px solid var(--border2);background:var(--surface);transition:transform .18s;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent}
+    .sw-venue:active{transform:scale(.93)}
+    .sw-venue-icon{font-size:1.5rem;display:block;margin-bottom:.28rem}
+    .sw-venue-name{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
+    .sw-venue-sub{font-size:.48rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.18rem}
+    .sw-venue-glow{position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);width:75px;height:45px;border-radius:50%;filter:blur(18px);opacity:.3;animation:swPulse 3s ease-in-out infinite}
+    .sw-empty{padding:1.4rem;text-align:center;font-size:.6rem;color:var(--muted);letter-spacing:.08em;font-style:italic;line-height:2}
+    .sw-divider{height:1px;background:linear-gradient(to right,transparent,var(--border2),transparent);margin:.1rem 0}
+    .sw-detail-overlay{position:fixed;inset:0;z-index:400;background:rgba(7,7,26,.78);display:none;align-items:flex-end;-webkit-tap-highlight-color:transparent}
+    .sw-detail-overlay.open{display:flex}
+    .sw-detail-panel{background:var(--surface);border-radius:16px 16px 0 0;width:100%;max-height:84vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:swSlideUp .26s cubic-bezier(.34,1.56,.64,1);padding-bottom:calc(var(--safe-b) + 1rem);position:relative}
+    .sw-detail-handle{width:38px;height:4px;background:var(--border2);border-radius:2px;margin:.6rem auto .45rem}
+    .sw-detail-header{padding:.45rem 1.25rem .9rem;border-bottom:1px solid var(--border)}
+    .sw-detail-label{font-size:.48rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-bottom:.18rem}
+    .sw-detail-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1.1}
+    .sw-detail-meta{font-size:.6rem;color:var(--muted2);margin-top:.22rem}
+    .sw-detail-score{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:900;line-height:1}
+    .sw-detail-body{padding:.9rem 1.25rem}
+    .sw-detail-stat-row{display:flex;gap:.85rem;margin-bottom:.9rem}
+    .sw-detail-stat{text-align:center;flex:1;background:var(--surface2);border-radius:6px;padding:.55rem .35rem}
+    .sw-detail-stat-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1}
+    .sw-detail-stat-lbl{font-size:.45rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.12rem}
+    .sw-detail-section-title{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin:.8rem 0 .38rem}
+    .sw-detail-item{display:flex;align-items:center;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--border);cursor:pointer}
+    .sw-detail-item:last-child{border-bottom:none}
+    .sw-detail-item:active{opacity:.7}
+    .sw-detail-item-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;margin-right:.4rem}
+    .sw-detail-item-score{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900;flex-shrink:0}
+    .sw-detail-close{position:absolute;top:.65rem;right:.9rem;background:transparent;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:.2rem .35rem;line-height:1;z-index:1}
+    .sw-detail-rate-btn{width:100%;padding:.88rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:var(--bg);border:none;border-radius:4px;cursor:pointer;margin-top:.9rem;transition:opacity .2s}
+    .sw-detail-rate-btn:active{opacity:.8}
+    .sw-rate-label{font-size:.5rem;color:var(--muted);letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;margin-top:.35rem;text-align:center}
+    .sw-label-gem{background:rgba(52,211,153,.15);color:var(--green)}
+    .sw-label-hot{background:rgba(251,146,60,.15);color:var(--prod)}
+    .sw-label-trend{background:rgba(167,139,250,.15);color:var(--gold)}
+    .sw-label-friend{background:rgba(96,165,250,.15);color:var(--chorus)}
+    .sw-label-rated{background:rgba(52,211,153,.1);color:var(--green)}
+    .sw-label-new{background:rgba(244,114,182,.1);color:var(--red)}
+    .sw-label-divisive{background:rgba(251,146,60,.1);color:var(--prod)}
   </style>
 </head>
 <body>
@@ -1004,16 +1096,16 @@
       <!-- Slide 1 -->
       <div class="onboard-slide">
         <div class="onboard-badge">01 / 03</div>
-        <div class="onboard-icon">🎤</div>
-        <h2 class="onboard-title">Flow First</h2>
-        <p class="onboard-body">SONGR rates rap using a 6-category equation built around what actually matters. Not just lyrics — the full picture.</p>
+        <div class="onboard-icon">🔁</div>
+        <h2 class="onboard-title">Replay First</h2>
+        <p class="onboard-body">SONGR rates rap using a 6-category equation. Replay Value leads — if a song keeps pulling you back, that matters most.</p>
         <div class="onboard-cats">
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Flow &amp; Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:28%;background:var(--flow)"></div></div><span class="onboard-cat-pct">28%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--verses)">Verses</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:22%;background:var(--verses)"></div></div><span class="onboard-cat-pct">22%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--prod)">Production</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--prod)"></div></div><span class="onboard-cat-pct">20%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--chorus)">Chorus</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:14%;background:var(--chorus)"></div></div><span class="onboard-cat-pct">14%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--replay)">Replay Value</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:24%;background:var(--replay)"></div></div><span class="onboard-cat-pct">24%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Flow &amp; Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--flow)"></div></div><span class="onboard-cat-pct">20%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--prod)">Beat</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:18%;background:var(--prod)"></div></div><span class="onboard-cat-pct">18%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--chorus)">Chorus</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:16%;background:var(--chorus)"></div></div><span class="onboard-cat-pct">16%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--verses)">Verses</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:14%;background:var(--verses)"></div></div><span class="onboard-cat-pct">14%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--lyrics)">Lyrics</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:8%;background:var(--lyrics)"></div></div><span class="onboard-cat-pct">8%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--replay)">Replay</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:8%;background:var(--replay)"></div></div><span class="onboard-cat-pct">8%</span></div>
         </div>
       </div>
 
@@ -1051,18 +1143,18 @@
       <!-- Slide 3 -->
       <div class="onboard-slide">
         <div class="onboard-badge">03 / 03</div>
-        <div class="onboard-icon">📊</div>
-        <h2 class="onboard-title">Flow &amp; Delivery</h2>
-        <p class="onboard-body">Flow is the most important category. Rate the <strong>peak</strong> moment of flow and delivery in the track.</p>
+        <div class="onboard-icon">🔁</div>
+        <h2 class="onboard-title">Replay Value</h2>
+        <p class="onboard-body">Replay Value is the top category at 24%. Ask yourself — does this song make you want to hit play again?</p>
         <div class="onboard-flow-ex">
           <div class="onboard-flow-row">
-            <span class="onboard-flow-lbl">Peak Flow</span>
-            <div class="onboard-flow-bar-wrap"><div class="onboard-flow-bar" style="width:90%;background:var(--flow)"></div></div>
-            <span class="onboard-flow-val" style="color:var(--flow)">9</span>
+            <span class="onboard-flow-lbl">Replay Value</span>
+            <div class="onboard-flow-bar-wrap"><div class="onboard-flow-bar" style="width:90%;background:var(--replay)"></div></div>
+            <span class="onboard-flow-val" style="color:var(--replay)">9</span>
           </div>
-          <div class="onboard-flow-result">Flow Score = <span style="color:var(--flow);font-weight:700">9</span></div>
+          <div class="onboard-flow-result">Replay Score = <span style="color:var(--replay);font-weight:700">9</span></div>
         </div>
-        <p class="onboard-body" style="margin-top:.75rem">Verses are rated on overall quality — how strong the writing and delivery are throughout.</p>
+        <p class="onboard-body" style="margin-top:.75rem">Flow &amp; Delivery follows at 20% — rate the peak moment of flow in the track.</p>
       </div>
 
     </div>
@@ -1091,15 +1183,15 @@
     <div class="onboard-slides" id="formula-slides">
       <div class="onboard-slide active">
         <div class="onboard-badge">01 / 03</div>
-        <div class="onboard-icon">🎤</div>
-        <h2 class="onboard-title">Flow First</h2>
-        <p class="onboard-body">SONGR rates rap using a 6-category equation built around what actually matters. Not just lyrics — the full picture.</p>
+        <div class="onboard-icon">🔁</div>
+        <h2 class="onboard-title">Replay First</h2>
+        <p class="onboard-body">SONGR rates rap using a 6-category equation. Replay Value leads — if a song keeps pulling you back, that matters most.</p>
         <div class="onboard-cats">
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--replay)">Replay Value</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:28%;background:var(--replay)"></div></div><span class="onboard-cat-pct">28%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Flow &amp; Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:22%;background:var(--flow)"></div></div><span class="onboard-cat-pct">22%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--chorus)">Chorus</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--chorus)"></div></div><span class="onboard-cat-pct">20%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--replay)">Replay Value</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:24%;background:var(--replay)"></div></div><span class="onboard-cat-pct">24%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Flow &amp; Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--flow)"></div></div><span class="onboard-cat-pct">20%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--prod)">Beat</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:18%;background:var(--prod)"></div></div><span class="onboard-cat-pct">18%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--chorus)">Chorus</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:16%;background:var(--chorus)"></div></div><span class="onboard-cat-pct">16%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--verses)">Verses</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:14%;background:var(--verses)"></div></div><span class="onboard-cat-pct">14%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--prod)">Beat</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:8%;background:var(--prod)"></div></div><span class="onboard-cat-pct">8%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--lyrics)">Lyrics</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:8%;background:var(--lyrics)"></div></div><span class="onboard-cat-pct">8%</span></div>
         </div>
       </div>
@@ -1116,14 +1208,14 @@
       </div>
       <div class="onboard-slide">
         <div class="onboard-badge">03 / 03</div>
-        <div class="onboard-icon">📊</div>
-        <h2 class="onboard-title">Flow &amp; Delivery</h2>
-        <p class="onboard-body">Flow is weighted at 22%. Rate the <strong>peak</strong> moment of flow and delivery in the track.</p>
+        <div class="onboard-icon">🔁</div>
+        <h2 class="onboard-title">Replay Value</h2>
+        <p class="onboard-body">Replay Value is the top category at 24%. Ask yourself — does this song make you want to hit play again?</p>
         <div class="onboard-flow-ex">
-          <div class="onboard-flow-row"><span class="onboard-flow-lbl">Peak Flow</span><div class="onboard-flow-bar-wrap"><div class="onboard-flow-bar" style="width:90%;background:var(--flow)"></div></div><span class="onboard-flow-val" style="color:var(--flow)">9</span></div>
-          <div class="onboard-flow-result">Flow Score = <span style="color:var(--flow);font-weight:700">9</span></div>
+          <div class="onboard-flow-row"><span class="onboard-flow-lbl">Replay Value</span><div class="onboard-flow-bar-wrap"><div class="onboard-flow-bar" style="width:90%;background:var(--replay)"></div></div><span class="onboard-flow-val" style="color:var(--replay)">9</span></div>
+          <div class="onboard-flow-result">Replay Score = <span style="color:var(--replay);font-weight:700">9</span></div>
         </div>
-        <p class="onboard-body" style="margin-top:.75rem">Replay Value leads the formula at 28% — if a song keeps pulling you back, that matters most.</p>
+        <p class="onboard-body" style="margin-top:.75rem">Flow &amp; Delivery follows at 20% — rate the peak moment of flow in the track.</p>
       </div>
     </div>
     <div class="onboard-dots">
@@ -1798,6 +1890,140 @@
     </div>
   </div>
 
+  <!-- WORLD TAB -->
+  <div id="tab-world" style="display:none;flex-direction:column;height:100%">
+    <div class="app-header">
+      <div>
+        <div class="app-header-title">SONGR <span style="color:var(--green);-webkit-text-fill-color:var(--green)">WORLD</span></div>
+        <div class="app-header-sub">Explore the music universe</div>
+      </div>
+      <button id="refresh-btn-world" class="refresh-btn" onclick="refreshTab('world')">
+        <svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+        Refresh
+      </button>
+    </div>
+    <div class="sw-wrap" id="sw-wrap">
+      <div id="sw-loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh">
+        <div style="font-size:2rem;animation:swFloat 2s ease-in-out infinite">🌍</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.75rem">Loading World...</div>
+      </div>
+      <div id="sw-content" style="display:none">
+        <!-- Hero -->
+        <div class="sw-hero">
+          <div class="sw-hero-bg"></div>
+          <div class="sw-hero-nodes">
+            <div class="sw-node-dot"></div>
+            <div class="sw-node-dot"></div>
+            <div class="sw-node-dot"></div>
+            <div class="sw-node-dot"></div>
+            <div class="sw-node-dot"></div>
+          </div>
+          <div class="sw-hero-title">SONGR <span>WORLD</span></div>
+          <div class="sw-hero-sub" id="sw-hero-sub">Interactive music universe</div>
+        </div>
+
+        <!-- Genre District -->
+        <div class="sw-sec">
+          <div class="sw-sec-head">
+            <span class="sw-sec-title">🗺 Genre District</span>
+            <span class="sw-sec-badge" id="sw-genre-badge">—</span>
+          </div>
+        </div>
+        <div class="sw-genre-strip" id="sw-genre-strip"></div>
+
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+
+        <!-- Trending Tower -->
+        <div class="sw-sec">
+          <div class="sw-sec-head">
+            <span class="sw-sec-title">📡 Trending Tower</span>
+            <span class="sw-sec-badge" style="color:var(--red)">Live</span>
+          </div>
+          <div class="sw-node-list" id="sw-trend-list"></div>
+        </div>
+
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+
+        <!-- Hot Take Zone -->
+        <div class="sw-sec">
+          <div class="sw-sec-head">
+            <span class="sw-sec-title" style="color:var(--prod)">🔥 Hot Take Zone</span>
+            <span class="sw-sec-badge">Divisive</span>
+          </div>
+          <div class="sw-node-list" id="sw-hot-list"></div>
+        </div>
+
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+
+        <!-- Hidden Gems -->
+        <div class="sw-sec">
+          <div class="sw-sec-head">
+            <span class="sw-sec-title" style="color:var(--green)">💎 Hidden Gems</span>
+            <span class="sw-sec-badge">Underrated</span>
+          </div>
+          <div class="sw-node-list" id="sw-gem-list"></div>
+        </div>
+
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+
+        <!-- Friend Activity Trail -->
+        <div class="sw-sec">
+          <div class="sw-sec-head">
+            <span class="sw-sec-title" style="color:var(--chorus)">👣 Friend Activity Trail</span>
+          </div>
+          <div class="sw-node-list" id="sw-friend-list"></div>
+        </div>
+
+        <div class="sw-divider" style="margin:.5rem 1.25rem"></div>
+
+        <!-- Special Venues -->
+        <div class="sw-sec">
+          <div class="sw-sec-head">
+            <span class="sw-sec-title">🏟 Special Venues</span>
+          </div>
+        </div>
+        <div class="sw-venue-row">
+          <div class="sw-venue" onclick="switchTab('room')">
+            <div class="sw-venue-glow" style="background:var(--gold)"></div>
+            <span class="sw-venue-icon">🏟</span>
+            <div class="sw-venue-name">Rank Room Stadium</div>
+            <div class="sw-venue-sub">Competitive Rooms</div>
+          </div>
+          <div class="sw-venue" onclick="switchTab('feed');setTimeout(()=>setFeedSubject('battles'),80)">
+            <div class="sw-venue-glow" style="background:var(--red)"></div>
+            <span class="sw-venue-icon">⚡</span>
+            <div class="sw-venue-name">Aux Arena</div>
+            <div class="sw-venue-sub">Head-to-Head Battles</div>
+          </div>
+        </div>
+        <div class="sw-venue-row">
+          <div class="sw-venue" onclick="switchTab('rate')">
+            <div class="sw-venue-glow" style="background:var(--gold)"></div>
+            <span class="sw-venue-icon">🎵</span>
+            <div class="sw-venue-name">Rate a Song</div>
+            <div class="sw-venue-sub">Add your score to the map</div>
+          </div>
+          <div class="sw-venue" onclick="switchTab('feed')">
+            <div class="sw-venue-glow" style="background:var(--chorus)"></div>
+            <span class="sw-venue-icon">🏠</span>
+            <div class="sw-venue-name">Community Feed</div>
+            <div class="sw-venue-sub">Latest ratings</div>
+          </div>
+        </div>
+        <div style="height:.5rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORLD DETAIL PANEL -->
+  <div class="sw-detail-overlay" id="sw-detail-overlay" onclick="if(event.target===this)swCloseDetail()">
+    <div class="sw-detail-panel" id="sw-detail-panel">
+      <button class="sw-detail-close" onclick="swCloseDetail()">✕</button>
+      <div class="sw-detail-handle"></div>
+      <div id="sw-detail-content"></div>
+    </div>
+  </div>
+
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-feed" onclick="switchTab('feed')">
@@ -1807,6 +2033,10 @@
     <button class="nav-btn" id="nav-room" onclick="switchTab('room')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       <span>Room</span>
+    </button>
+    <button class="nav-btn" id="nav-world" onclick="switchTab('world')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span>World</span>
     </button>
     <button class="nav-btn-center pressable" id="nav-rate" onclick="switchTab('rate')">
       <div class="nav-center-disc">
@@ -2751,7 +2981,7 @@ function confirmDeleteAccount(){
 let currentTab='feed';
 function switchTab(n){
   currentTab=n;
-  ['feed','rate','room','profile','settings'].forEach(t=>{
+  ['feed','rate','room','profile','settings','world'].forEach(t=>{
     const el=document.getElementById('tab-'+t);
     if(!el)return;
     if(t===n){el.style.display='flex';el.classList.remove('hidden');}
@@ -2761,6 +2991,7 @@ function switchTab(n){
   });
   if(n==='profile')loadProfile();
   else if(n==='settings')renderSettings();
+  else if(n==='world')loadWorld();
   else{
     const bar=document.getElementById('profile-search-bar');
     if(bar?.classList.contains('open'))toggleProfileSearch();
@@ -2785,6 +3016,7 @@ async function refreshTab(tab){
       else{done();return;}
     }
     else if(tab==='settings'){renderSettings();}
+    else if(tab==='world'){worldData=null;await loadWorld();}
   }catch(e){console.error('refresh error',e);}
   done();
 }
@@ -8242,6 +8474,223 @@ db.auth.onAuthStateChange(async(event, session)=>{
     // Don't force a view change on error — leave the user wherever they were.
   }
 });
+
+// ── SONGR WORLD ────────────────────────────────────────────────────────────
+let worldData=null,worldLoaded=false,worldFollowIds=new Set();
+
+const SW_GENRES={
+  rap:        {icon:'🎤',color:'#a78bfa',glow:'rgba(167,139,250,.45)'},
+  pop:        {icon:'🌟',color:'#f472b6',glow:'rgba(244,114,182,.45)'},
+  rnb:        {icon:'🎷',color:'#fb923c',glow:'rgba(251,146,60,.45)'},
+  rock:       {icon:'🎸',color:'#60a5fa',glow:'rgba(96,165,250,.45)'},
+  country:    {icon:'🤠',color:'#facc15',glow:'rgba(250,204,21,.45)'},
+  edm:        {icon:'⚡',color:'#34d399',glow:'rgba(52,211,153,.45)'},
+  hyperpop:   {icon:'💥',color:'#f472b6',glow:'rgba(244,114,182,.45)'},
+  alternative:{icon:'🌿',color:'#34d399',glow:'rgba(52,211,153,.45)'},
+};
+
+function swScoreColor(s){if(s>=8.5)return'#34d399';if(s>=7)return'#a78bfa';if(s>=5)return'#fb923c';return'#f472b6';}
+
+async function loadWorld(){
+  if(worldLoaded&&worldData){swRender(worldData);return;}
+  const loadEl=document.getElementById('sw-loading');
+  const contEl=document.getElementById('sw-content');
+  if(loadEl){loadEl.style.display='flex';loadEl.innerHTML='<div style="font-size:2rem;animation:swFloat 2s ease-in-out infinite">🌍</div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.75rem">Loading World...</div>';}
+  if(contEl)contEl.style.display='none';
+  try{
+    const[ratingsRes,followRes,myRes]=await Promise.all([
+      db.from('ratings').select('id,song_name,artist_name,album,genre,final_score,artwork_url,user_id,created_at,is_interlude,is_private').or('is_private.is.null,is_private.eq.false').not('final_score','is',null).order('created_at',{ascending:false}).limit(600),
+      db.from('follows').select('addressee_id').eq('requester_id',currentUser.id).eq('status','accepted'),
+      db.from('ratings').select('song_name,artist_name,final_score').eq('user_id',currentUser.id).not('final_score','is',null)
+    ]);
+    worldFollowIds=new Set((followRes.data||[]).map(f=>f.addressee_id));
+    let profMapW={};
+    if(worldFollowIds.size>0){
+      const{data:profs}=await db.from('profiles').select('id,username,avatar_color').in('id',[...worldFollowIds]);
+      (profs||[]).forEach(p=>{profMapW[p.id]=p;});
+    }
+    const myRatings=myRes.data||[];
+    const myRatedKeys=new Set(myRatings.map(r=>(r.song_name+'||'+r.artist_name).toLowerCase()));
+    const myScoreMap={};
+    myRatings.forEach(r=>{myScoreMap[(r.song_name+'||'+r.artist_name).toLowerCase()]=parseFloat(r.final_score);});
+    const rows=(ratingsRes.data||[]).filter(r=>!r.is_interlude);
+    worldData=swProcessData(rows,profMapW,myRatedKeys,myScoreMap);
+    worldLoaded=true;
+    swRender(worldData);
+  }catch(e){
+    console.error('World load error',e);
+    if(loadEl)loadEl.innerHTML='<div style="font-size:1.5rem">⚠️</div><div style="font-family:\'Barlow Condensed\',sans-serif;font-size:.68rem;letter-spacing:.12em;color:var(--muted);margin-top:.6rem">Failed to load. Pull to refresh.</div>';
+  }
+}
+
+function swProcessData(rows,profMapW,myRatedKeys,myScoreMap){
+  const songMap={};
+  rows.forEach(r=>{
+    const k=(r.song_name+'||'+r.artist_name).toLowerCase();
+    if(!songMap[k])songMap[k]={song:r.song_name,artist:r.artist_name,album:r.album||'',genre:r.genre||'rap',artwork_url:r.artwork_url||'',scores:[],userIds:new Set(),latestAt:r.created_at};
+    songMap[k].scores.push(parseFloat(r.final_score));
+    songMap[k].userIds.add(r.user_id);
+    if(r.created_at>songMap[k].latestAt)songMap[k].latestAt=r.created_at;
+  });
+  const songs=Object.values(songMap).map(s=>{
+    const n=s.scores.length;
+    const avg=s.scores.reduce((a,b)=>a+b,0)/n;
+    const variance=n>1?s.scores.reduce((sum,sc)=>sum+Math.pow(sc-avg,2),0)/n:0;
+    const k=(s.song+'||'+s.artist).toLowerCase();
+    return{...s,n,avg,stddev:Math.sqrt(variance),iMyRated:myRatedKeys.has(k),myScore:myScoreMap[k]||null,isFriendRated:[...s.userIds].some(uid=>worldFollowIds.has(uid))};
+  });
+  const genreMap={};
+  rows.forEach(r=>{
+    const g=r.genre||'rap';
+    if(!genreMap[g])genreMap[g]={genre:g,scores:[],songs:new Set(),artists:new Set()};
+    genreMap[g].scores.push(parseFloat(r.final_score));
+    genreMap[g].songs.add((r.song_name+'||'+r.artist_name).toLowerCase());
+    genreMap[g].artists.add(r.artist_name.toLowerCase());
+  });
+  const genres=Object.values(genreMap).map(g=>({genre:g.genre,avg:g.scores.reduce((a,b)=>a+b,0)/g.scores.length,ratingCount:g.scores.length,songCount:g.songs.size,artistCount:g.artists.size})).sort((a,b)=>b.ratingCount-a.ratingCount);
+  const recentKeys=[],seenTrend=new Set();
+  rows.slice(0,120).forEach(r=>{const k=(r.song_name+'||'+r.artist_name).toLowerCase();if(!seenTrend.has(k)){seenTrend.add(k);recentKeys.push(k);}});
+  const trending=recentKeys.slice(0,7).map(k=>songMap[k]).filter(Boolean).map(s=>{const n=s.scores.length;const avg=s.scores.reduce((a,b)=>a+b,0)/n;return{...s,n,avg};});
+  const hotTakes=songs.filter(s=>s.n>=2&&s.stddev>=1.4).sort((a,b)=>b.stddev-a.stddev).slice(0,5);
+  const gems=songs.filter(s=>s.avg>=7.5&&s.n>=1&&s.n<=4).sort((a,b)=>b.avg-a.avg).slice(0,5);
+  const friendActivity=rows.filter(r=>worldFollowIds.has(r.user_id)).slice(0,8).map(r=>({...r,profile:profMapW[r.user_id]||{username:'user',avatar_color:'#a78bfa'},score:parseFloat(r.final_score)}));
+  const genreTopSongs={};
+  Object.keys(genreMap).forEach(g=>{genreTopSongs[g]=songs.filter(s=>(s.genre||'rap')===g).sort((a,b)=>b.avg-a.avg).slice(0,10);});
+  return{songs,genres,trending,hotTakes,gems,friendActivity,genreTopSongs,myRatedKeys,myScoreMap};
+}
+
+function swRender(d){
+  const sub=document.getElementById('sw-hero-sub');
+  if(sub){const total=d.songs.reduce((s,x)=>s+x.n,0);sub.textContent=total+' ratings · '+d.songs.length+' songs · '+d.genres.length+' genres';}
+  const gb=document.getElementById('sw-genre-badge');
+  if(gb)gb.textContent=d.genres.length+' zones';
+  swRenderGenres(d.genres);
+  swRenderTrending(d.trending);
+  swRenderHotTakes(d.hotTakes);
+  swRenderGems(d.gems);
+  swRenderFriends(d.friendActivity);
+  const loadEl=document.getElementById('sw-loading');
+  const contEl=document.getElementById('sw-content');
+  if(loadEl)loadEl.style.display='none';
+  if(contEl)contEl.style.display='block';
+}
+
+function swRenderGenres(genres){
+  const strip=document.getElementById('sw-genre-strip');
+  if(!strip)return;
+  const all=['rap','pop','rnb','rock','country','edm','hyperpop','alternative'];
+  const byKey={};genres.forEach(g=>{byKey[g.genre]=g;});
+  strip.innerHTML=all.map(gk=>{
+    const cfg=SW_GENRES[gk]||{icon:'🎵',color:'#a78bfa',glow:'rgba(167,139,250,.4)'};
+    const g=byKey[gk];
+    const avg=g?g.avg.toFixed(1):'—';
+    const count=g?g.ratingCount:0;
+    const label=gk==='rnb'?'R&B':gk.charAt(0).toUpperCase()+gk.slice(1);
+    return`<div class="sw-genre-card" onclick="swOpenGenre('${gk}')"><div class="sw-genre-card-bg" style="background:${cfg.color}"></div><div class="sw-genre-card-glow" style="background:${cfg.color}"></div><span class="sw-genre-icon">${cfg.icon}</span><div class="sw-genre-name" style="color:${cfg.color}">${label}</div><div class="sw-genre-avg" style="color:${cfg.color};text-shadow:0 0 12px ${cfg.glow}">${avg}</div><div class="sw-genre-count">${count} ratings</div></div>`;
+  }).join('');
+}
+
+function swSongCard(s,extraClass,labelClass,labelText,rank){
+  const avg=s.avg||0;
+  const col=swScoreColor(avg);
+  const artHTML=s.artwork_url?`<img class="sw-song-art" src="${s.artwork_url}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';
+  const phHTML=`<div class="sw-song-art-ph" style="${s.artwork_url?'display:none':''}">🎵</div>`;
+  const rankHTML=rank!=null?`<div class="sw-trend-rank" style="color:${rank<=2?'var(--gold)':'var(--muted)'}">${rank}</div>`:'';
+  const labelHTML=labelText?`<span class="sw-song-label ${labelClass}">${labelText}</span>`:'';
+  const myHTML=s.iMyRated&&s.myScore!=null?`<div style="font-size:.45rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em;margin-top:.1rem">MY ${parseFloat(s.myScore).toFixed(1)}</div>`:'';
+  const barHTML=extraClass.includes('hot')?'<div class="sw-hot-bar"></div>':extraClass.includes('gem')?'<div class="sw-gem-bar"></div>':'';
+  const friendTag=s.isFriendRated?`<span style="font-size:.43rem;color:var(--chorus);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">· Friend</span>`:'';
+  const enc=encodeURIComponent(s.song+'||'+s.artist);
+  return`<div class="sw-song-card ${extraClass}" onclick="swOpenSong('${enc}')">${barHTML}${rankHTML}${artHTML}${phHTML}<div class="sw-song-info"><div class="sw-song-name">${s.song}</div><div class="sw-song-artist">${s.artist}${s.album?' · '+s.album:''}</div><div style="display:flex;align-items:center;gap:.3rem;margin-top:.15rem"><span style="font-size:.47rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">${s.n} rating${s.n!==1?'s':''}</span>${friendTag}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-song-score" style="color:${col};text-shadow:0 0 10px ${col}">${avg.toFixed(1)}</div>${myHTML}</div>${labelHTML}</div>`;
+}
+
+function swRenderTrending(songs){
+  const el=document.getElementById('sw-trend-list');
+  if(!el)return;
+  if(!songs.length){el.innerHTML='<div class="sw-empty">No trending songs yet. Rate songs to populate the Trending Tower.</div>';return;}
+  el.innerHTML=songs.map((s,i)=>swSongCard(s,'sw-trend-card','sw-label-trend','Trending',i+1)).join('');
+}
+function swRenderHotTakes(songs){
+  const el=document.getElementById('sw-hot-list');
+  if(!el)return;
+  if(!songs.length){el.innerHTML='<div class="sw-empty">No divisive songs found yet. The Hot Take Zone activates when songs have varied scores from different users.</div>';return;}
+  el.innerHTML=songs.map(s=>swSongCard(s,'sw-hot-card','sw-label-divisive','Divisive',null)).join('');
+}
+function swRenderGems(songs){
+  const el=document.getElementById('sw-gem-list');
+  if(!el)return;
+  if(!songs.length){el.innerHTML='<div class="sw-empty">No hidden gems found yet. Rate more songs to surface underrated tracks.</div>';return;}
+  el.innerHTML=songs.map(s=>swSongCard(s,'sw-gem-card','sw-label-gem','Hidden Gem',null)).join('');
+}
+function swRenderFriends(activity){
+  const el=document.getElementById('sw-friend-list');
+  if(!el)return;
+  if(!activity.length){el.innerHTML='<div class="sw-empty">Follow friends to activate the Friend Activity Trail and see what they\'re rating.</div>';return;}
+  el.innerHTML=activity.map(r=>{
+    const col=swScoreColor(r.score);
+    const enc=encodeURIComponent(r.song_name+'||'+r.artist_name);
+    return`<div class="sw-friend-card" onclick="swOpenSong('${enc}')"><div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${r.profile.username}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${r.song_name}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${r.artist_name}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
+  }).join('');
+}
+
+function swOpenGenre(genre){
+  if(!worldData)return;
+  const cfg=SW_GENRES[genre]||{icon:'🎵',color:'#a78bfa'};
+  const label=genre==='rnb'?'R&B':genre.charAt(0).toUpperCase()+genre.slice(1);
+  const gSongs=worldData.genreTopSongs[genre]||[];
+  const stats=worldData.genres.find(g=>g.genre===genre);
+  const avg=stats?stats.avg.toFixed(1):'—';
+  const count=stats?stats.ratingCount:0;
+  const songItems=gSongs.length
+    ?gSongs.map(s=>{const col=swScoreColor(s.avg);const enc=encodeURIComponent(s.song+'||'+s.artist);return`<div class="sw-detail-item" onclick="swCloseDetail();setTimeout(()=>swOpenSong('${enc}'),300)"><div style="flex:1;min-width:0"><div class="sw-detail-item-name">${s.song}</div><div style="font-size:.5rem;color:var(--muted)">${s.artist}</div></div><div class="sw-detail-item-score" style="color:${col}">${s.avg.toFixed(1)}</div></div>`;}).join('')
+    :'<div class="sw-empty" style="font-size:.58rem">No songs rated in this genre yet.</div>';
+  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header" style="border-left:4px solid ${cfg.color}"><div class="sw-detail-label">Genre District</div><div style="display:flex;align-items:center;gap:.7rem"><span style="font-size:2rem">${cfg.icon}</span><div><div class="sw-detail-title" style="color:${cfg.color}">${label}</div><div class="sw-detail-meta">${count} ratings</div></div><div style="margin-left:auto;text-align:right"><div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${cfg.color};text-shadow:0 0 14px ${cfg.color}">${avg}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Avg Score</div></div></div></div><div class="sw-detail-body"><div style="display:flex;gap:.7rem;margin-bottom:.9rem"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.songCount:'—'}</div><div class="sw-detail-stat-lbl">Songs</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.artistCount:'—'}</div><div class="sw-detail-stat-lbl">Artists</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${count}</div><div class="sw-detail-stat-lbl">Ratings</div></div></div><div class="sw-detail-section-title">Top Songs in ${label}</div>${songItems}<button class="sw-detail-rate-btn" onclick="swCloseDetail();switchTab('rate')">Rate a ${label} Song</button></div>`;
+  swOpenDetail();
+}
+
+function swOpenSong(enc){
+  if(!worldData)return;
+  const key=decodeURIComponent(enc);
+  const[sn,an]=key.split('||');
+  const song=worldData.songs.find(s=>s.song.toLowerCase()===sn.toLowerCase()&&s.artist.toLowerCase()===an.toLowerCase());
+  if(!song)return;
+  const avg=song.avg;const col=swScoreColor(avg);
+  const artHTML=song.artwork_url?`<img src="${song.artwork_url}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0" onerror="this.style.display='none'">`:`<div style="width:60px;height:60px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">🎵</div>`;
+  const myHTML=song.myScore!=null?`<span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Your score: </span><span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:${swScoreColor(song.myScore)}">${parseFloat(song.myScore).toFixed(1)}</span>`:'';
+  const tags=[];
+  if(song.iMyRated)tags.push(`<span class="sw-song-label sw-label-rated" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">You Rated</span>`);
+  else tags.push(`<span class="sw-song-label sw-label-new" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">Not Rated</span>`);
+  if(song.isFriendRated)tags.push(`<span class="sw-song-label sw-label-friend" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">Friend Rated</span>`);
+  if(song.stddev>=1.4&&song.n>=2)tags.push(`<span class="sw-song-label sw-label-divisive" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">Divisive</span>`);
+  if(song.avg>=7.5&&song.n<=4)tags.push(`<span class="sw-song-label sw-label-gem" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">Hidden Gem</span>`);
+  const hi=song.scores.length>1?Math.max(...song.scores).toFixed(1):'—';
+  const lo=song.scores.length>1?Math.min(...song.scores).toFixed(1):'—';
+  const sEnc=encodeURIComponent(song.song);const aEnc=encodeURIComponent(song.artist);
+  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header"><div class="sw-detail-label">Song</div><div style="display:flex;gap:.8rem;align-items:flex-start"><div style="flex:1;min-width:0">${artHTML}</div><div style="flex:2;min-width:0"><div class="sw-detail-title" style="font-size:1.2rem">${song.song}</div><div class="sw-detail-meta">${song.artist}${song.album?' · '+song.album:''}</div>${myHTML?`<div style="margin-top:.3rem">${myHTML}</div>`:''}<div style="margin-top:.35rem">${tags.join('')}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-detail-score" style="color:${col};text-shadow:0 0 18px ${col}">${avg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">SONGR avg</div></div></div></div><div class="sw-detail-body"><div class="sw-detail-stat-row"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${song.n}</div><div class="sw-detail-stat-lbl">Ratings</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${hi}</div><div class="sw-detail-stat-lbl">Highest</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${lo}</div><div class="sw-detail-stat-lbl">Lowest</div></div></div><button class="sw-detail-rate-btn" onclick="swRateSong('${sEnc}','${aEnc}')">${song.iMyRated?'✎ Update My Rating':'＋ Rate This Song'}</button><div class="sw-rate-label">${song.iMyRated?'You have already rated this song':'Add your take to the map'}</div></div>`;
+  swOpenDetail();
+}
+
+function swRateSong(sEnc,aEnc){
+  swCloseDetail();
+  const song=decodeURIComponent(sEnc);
+  const artist=decodeURIComponent(aEnc);
+  setTimeout(()=>{
+    switchTab('rate');
+    setTimeout(()=>{
+      const inp=document.getElementById('song-picker-input');
+      if(inp){inp.value=song+' '+artist;inp.dispatchEvent(new Event('input'));inp.focus();}
+    },180);
+  },300);
+}
+
+function swOpenDetail(){
+  const ov=document.getElementById('sw-detail-overlay');
+  if(ov)ov.style.display='flex';
+}
+function swCloseDetail(){
+  const ov=document.getElementById('sw-detail-overlay');
+  if(ov)ov.style.display='none';
+}
 </script>
 <div id="milestone-toast-container" style="position:fixed;bottom:calc(var(--nav-h) + var(--safe-b) + .75rem);left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:.5rem;z-index:600;pointer-events:none"></div>
 <div id="preview-bar" class="preview-bar hidden">
