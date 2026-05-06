@@ -3126,6 +3126,9 @@ async function refreshTab(tab){
 
 // FEED
 function scoreColor(s){if(s>=8.5)return'#34d399';if(s>=7)return'#a78bfa';if(s>=5)return'#fb923c';return'#f472b6';}
+function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function escAttr(s){return esc(s);}
+function escJs(s){if(s==null)return'';return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,'\\n').replace(/\r/g,'\\r').replace(/</g,'\\u003c').replace(/>/g,'\\u003e');}
 function albumScore(songs){
   const scored=songs.filter(s=>!s.is_interlude&&s.final_score!=null);
   if(!scored.length)return 0;
@@ -3145,16 +3148,16 @@ function timeAgo(ts){const d=Date.now()-new Date(ts).getTime(),m=Math.floor(d/60
 function avatarInitial(u){return(u||'?')[0].toUpperCase();}
 
 function avatarHTML(p, cls, size, xStyle=''){
-  const col=(p?.avatar_color)||'#c9a84c';
+  const col=esc((p?.avatar_color)||'#c9a84c');
   const u=p?.username||'?';
   const url=p?.avatar_url;
   if(url){
-    if(cls) return`<img class="${cls}" src="${url}" style="object-fit:cover;${xStyle}" loading="lazy">`;
-    return`<img src="${url}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0;${xStyle}" loading="lazy">`;
+    if(cls) return`<img class="${esc(cls)}" src="${esc(url)}" style="object-fit:cover;${xStyle}" loading="lazy">`;
+    return`<img src="${esc(url)}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;flex-shrink:0;${xStyle}" loading="lazy">`;
   }
-  if(cls) return`<div class="${cls}" style="background:${col};${xStyle}">${avatarInitial(u)}</div>`;
+  if(cls) return`<div class="${esc(cls)}" style="background:${col};${xStyle}">${esc(avatarInitial(u))}</div>`;
   const fs=Math.max(Math.round(size*.38),9);
-  return`<div style="width:${size}px;height:${size}px;background:${col};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:${fs}px;font-weight:800;color:var(--bg);flex-shrink:0;${xStyle}">${avatarInitial(u)}</div>`;
+  return`<div style="width:${size}px;height:${size}px;background:${col};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:${fs}px;font-weight:800;color:var(--bg);flex-shrink:0;${xStyle}">${esc(avatarInitial(u))}</div>`;
 }
 
 function compressAvatarImage(file){
@@ -3250,10 +3253,10 @@ function renderFeed() {
       <div class="feed-card-gradient" style="background:${scolor}"></div>
       <div class="feed-card-accent" style="background:${scolor}"></div>
       <div class="feed-card-top">
-        <div class="feed-user" onclick="event.stopPropagation();openUserModal('${row.user_id}')" style="cursor:pointer">
+        <div class="feed-user" onclick="event.stopPropagation();openUserModal('${escAttr(row.user_id)}')" style="cursor:pointer">
           ${avatarHTML(p,'feed-avatar')}
           <div>
-            <div class="feed-username">@${u}</div>
+            <div class="feed-username">@${esc(u)}</div>
             <div class="feed-time">${timeAgo(row.created_at)}</div>
           </div>
         </div>
@@ -3264,24 +3267,24 @@ function renderFeed() {
       </div>
       <div class="feed-main">
         ${row.artwork_url
-          ?`<img src="${itunesArtUrl(row.artwork_url,60)}" style="width:48px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`
-          :`<div data-art-key="${(row.artist_name||'unknown')}|||${row.album||row.artist_name||'unknown'}" data-art-size="60" style="width:48px;height:48px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`
+          ?`<img src="${esc(itunesArtUrl(row.artwork_url,60))}" style="width:48px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`
+          :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="60" style="width:48px;height:48px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`
         }
         <div class="feed-song-info">
-          <div class="feed-song">${row.song_name||'Unknown'}</div>
-          ${row.artist_name?`<div class="feed-artist">${row.artist_name}${row.album?` · <em>${row.album}</em>`:''}</div>`:''}
+          <div class="feed-song">${esc(row.song_name||'Unknown')}</div>
+          ${row.artist_name?`<div class="feed-artist">${esc(row.artist_name)}${row.album?` · <em>${esc(row.album)}</em>`:''}</div>`:''}
         </div>
       </div>
       <div class="feed-card-footer">
         <div class="feed-card-footer-left">
-          ${row.verdict?`<div class="feed-verdict">${row.verdict}</div>`:''}
-          ${row.comment?`<div class="feed-comment">${row.comment}</div>`:''}
+          ${row.verdict?`<div class="feed-verdict">${esc(row.verdict)}</div>`:''}
+          ${row.comment?`<div class="feed-comment">${esc(row.comment)}</div>`:''}
           ${count>1?`<div class="feed-rating-count">🎯 ${count} ratings</div>`:''}
         </div>
         <div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">
-          <button class="preview-btn" data-song="${(row.song_name||'').replace(/"/g,'&quot;')}" data-artist="${(row.artist_name||'').replace(/"/g,'&quot;')}" onclick="playFeedSong(this)" title="Preview" style="width:30px;height:30px">${previewPlayIcon()}</button>
+          <button class="preview-btn" data-song="${escAttr(row.song_name||'')}" data-artist="${escAttr(row.artist_name||'')}" onclick="playFeedSong(this)" title="Preview" style="width:30px;height:30px">${previewPlayIcon()}</button>
           <span style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.04em">💬 ${commentCounts[row.id]||0}</span>
-          <button class="like-btn${liked?' liked':''}" data-rid="${row.id}" onclick="event.stopPropagation();toggleLike('${row.id}')">♥ <span class="like-count">${likeCount}</span></button>
+          <button class="like-btn${liked?' liked':''}" data-rid="${escAttr(row.id)}" onclick="event.stopPropagation();toggleLike('${escJs(row.id)}')">♥ <span class="like-count">${likeCount}</span></button>
         </div>
       </div>
     `;
@@ -3314,30 +3317,30 @@ function openRatingDetail(row){
     cats=preset.cats.map((name,i)=>({name,key:dbColOrder[i],weight:Math.round(preset.weights[i]*100)+'%',color:preset.colors[i]}));
   }
   document.getElementById('rd-header').innerHTML=`
-    <div class="rd-song">${row.song_name||'Unknown'}</div>
-    <div class="rd-meta">${row.artist_name||''}${row.album?' · <em>'+row.album+'</em>':''}</div>
+    <div class="rd-song">${esc(row.song_name||'Unknown')}</div>
+    <div class="rd-meta">${esc(row.artist_name||'')}${row.album?' · <em>'+esc(row.album)+'</em>':''}</div>
     <div class="rd-top">
       <div class="feed-user">
         ${avatarHTML(p,'feed-avatar')}
         <div>
-          <div class="feed-username">@${u}</div>
+          <div class="feed-username">@${esc(u)}</div>
           <div class="feed-time">${timeAgo(row.created_at)}</div>
         </div>
       </div>
       <div class="rd-score-col">
         <div class="rd-score-big" style="color:${scolor}">${score.toFixed(1)}</div>
         <div class="rd-score-sub">/ 10</div>
-        <button class="like-btn${liked?' liked':''}" data-rid="${row.id}" style="margin-top:.3rem;justify-content:flex-end" onclick="toggleLike('${row.id}')">♥ <span class="like-count">${likeCount}</span></button>
+        <button class="like-btn${liked?' liked':''}" data-rid="${escAttr(row.id)}" style="margin-top:.3rem;justify-content:flex-end" onclick="toggleLike('${escJs(row.id)}')">♥ <span class="like-count">${likeCount}</span></button>
       </div>
     </div>
-    ${row.verdict?`<div class="rd-verdict">${row.verdict}</div>`:''}
-    ${row.comment?`<div class="rd-comment">${row.comment}</div>`:''}`;
+    ${row.verdict?`<div class="rd-verdict">${esc(row.verdict)}</div>`:''}
+    ${row.comment?`<div class="rd-comment">${esc(row.comment)}</div>`:''}`;
   document.getElementById('rd-categories').innerHTML=cats.map(c=>{
     const v=parseFloat(row[c.key])||0;
     return`<div class="rd-cat">
       <div class="rd-cat-head">
         <div>
-          <div class="rd-cat-name" style="color:${c.color}">${c.name}</div>
+          <div class="rd-cat-name" style="color:${c.color}">${esc(c.name)}</div>
           <div class="rd-cat-weight">${c.weight} weight</div>
         </div>
         <div class="rd-cat-score" style="color:${c.color}">${v%1===0?v:v.toFixed(1)}</div>
@@ -3501,10 +3504,10 @@ async function loadProfile(){
     <div class="profile-header" style="position:relative">
       ${avatarHTML(currentProfile,'profile-avatar')}
       <div class="profile-info">
-        <div class="profile-username">${username}</div>
-        <div class="profile-handle">@${username}</div>
-        ${joinedStr?`<div class="pf-joined">Joined ${joinedStr}</div>`:''}
-        ${bio?`<div class="profile-bio">${bio}</div>`:''}
+        <div class="profile-username">${esc(username)}</div>
+        <div class="profile-handle">@${esc(username)}</div>
+        ${joinedStr?`<div class="pf-joined">Joined ${esc(joinedStr)}</div>`:''}
+        ${bio?`<div class="profile-bio">${esc(bio)}</div>`:''}
       </div>
       <button class="pf-edit-btn" onclick="openProfileEdit()">✎ Edit</button>
     </div>`;
@@ -3551,12 +3554,12 @@ async function loadProfile(){
       <div class="pf-artist-stats">
         <div class="pf-astat">
           <div class="pf-astat-lbl">Top Artist</div>
-          <div class="pf-astat-name">${topArtist[0]}</div>
+          <div class="pf-astat-name">${esc(topArtist[0])}</div>
           <div class="pf-astat-val" style="color:${scoreColor(topAvg)}">${topAvg.toFixed(1)} avg</div>
         </div>
         <div class="pf-astat">
           <div class="pf-astat-lbl">Most Rated</div>
-          <div class="pf-astat-name">${mostRated[0]}</div>
+          <div class="pf-astat-name">${esc(mostRated[0])}</div>
           <div class="pf-astat-val">${mostRated[1].count} song${mostRated[1].count!==1?'s':''}</div>
         </div>
       </div>`;
@@ -3649,7 +3652,7 @@ async function loadLists(){
   if(!currentUser){el.innerHTML='';return;}
   el.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.7rem">Loading…</div>';
   const{data,error}=await db.from('lists').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
-  if(error){el.innerHTML=`<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.7rem">${error.message}</div>`;return;}
+  if(error){el.innerHTML=`<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.7rem">${esc(error.message)}</div>`;return;}
   renderListsSection(data||[],el);
 }
 
@@ -3669,13 +3672,13 @@ async function renderListsSection(lists,el){
   if(!lists.length){el.innerHTML=newBtn+'<div style="padding:2.5rem 1.25rem;text-align:center;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;font-size:.75rem;letter-spacing:.08em">NO LISTS YET</div>';return;}
   el.innerHTML=newBtn+lists.map(l=>{
     const count=itemCounts[l.id]||0;
-    const thumbs=(artworks[l.id]||[]).map(u=>`<img src="${itunesArtUrl(u,44)}" class="list-card-thumb" loading="lazy">`).join('')+
+    const thumbs=(artworks[l.id]||[]).map(u=>`<img src="${esc(itunesArtUrl(u,44))}" class="list-card-thumb" loading="lazy">`).join('')+
       (count>3?`<div class="list-card-thumb" style="display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted)">+${count-3}</div>`:'');
-    return`<div class="list-card" onclick="openListOverlay('${l.id}')">
+    return`<div class="list-card" onclick="openListOverlay('${escJs(l.id)}')">
       <div class="list-card-thumbs">${thumbs||'<div class="list-card-thumb"></div>'}</div>
       <div class="list-card-info">
-        <div class="list-card-title">${l.title}</div>
-        <div class="list-card-meta">${count} item${count!==1?'s':''}${l.description?' · '+l.description:''}</div>
+        <div class="list-card-title">${esc(l.title)}</div>
+        <div class="list-card-meta">${count} item${count!==1?'s':''}${l.description?' · '+esc(l.description):''}</div>
       </div>
       <div style="color:var(--muted);font-size:1rem;flex-shrink:0">›</div>
     </div>`;
@@ -3722,19 +3725,19 @@ function renderListItems(isOwn){
   if(!currentListItems.length){el.innerHTML='';empty.style.display='';return;}
   empty.style.display='none';
   el.innerHTML=currentListItems.map((it,i)=>`
-    <div class="list-item-row" id="li-row-${it.id}">
+    <div class="list-item-row" id="li-row-${escAttr(it.id)}">
       <div class="list-item-num">${i+1}</div>
-      ${it.artwork_url?`<img src="${itunesArtUrl(it.artwork_url,60)}" class="list-item-art" loading="lazy">`:`<div class="list-item-art"></div>`}
+      ${it.artwork_url?`<img src="${esc(itunesArtUrl(it.artwork_url,60))}" class="list-item-art" loading="lazy">`:`<div class="list-item-art"></div>`}
       <div class="list-item-info">
-        <div class="list-item-title">${it.title}</div>
-        ${it.subtitle?`<div class="list-item-sub">${it.subtitle}</div>`:''}
-        ${it.note?`<div class="list-item-note">${it.note}</div>`:''}
+        <div class="list-item-title">${esc(it.title)}</div>
+        ${it.subtitle?`<div class="list-item-sub">${esc(it.subtitle)}</div>`:''}
+        ${it.note?`<div class="list-item-note">${esc(it.note)}</div>`:''}
       </div>
       ${isOwn?`<div style="display:flex;flex-direction:column;gap:0;flex-shrink:0">
-        <button class="list-move-btn" onclick="moveItem('${it.id}',-1)" ${i===0?'disabled':''}>▲</button>
-        <button class="list-move-btn" onclick="moveItem('${it.id}',1)" ${i===currentListItems.length-1?'disabled':''}>▼</button>
+        <button class="list-move-btn" onclick="moveItem('${escJs(it.id)}',-1)" ${i===0?'disabled':''}>▲</button>
+        <button class="list-move-btn" onclick="moveItem('${escJs(it.id)}',1)" ${i===currentListItems.length-1?'disabled':''}>▼</button>
       </div>
-      <button onclick="removeListItem('${it.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:.2rem .3rem;flex-shrink:0">✕</button>`:''}
+      <button onclick="removeListItem('${escJs(it.id)}')" style="background:transparent;border:none;color:var(--muted);font-size:.85rem;cursor:pointer;padding:.2rem .3rem;flex-shrink:0">✕</button>`:''}
     </div>`).join('');
 }
 
@@ -3907,7 +3910,7 @@ function renderProfileFolders(ratings, container){
     artistHeader.innerHTML=`
       <div class="pf-folder-left">
         <span class="pf-folder-arrow">▶</span>
-        <span class="pf-folder-nm">${artistName}</span>
+        <span class="pf-folder-nm">${esc(artistName)}</span>
         <span class="pf-folder-count">${totalSongs} song${totalSongs!==1?'s':''}</span>
       </div>
       <div class="pf-folder-right">
@@ -3937,7 +3940,7 @@ function renderProfileFolders(ratings, container){
       albumHeader.innerHTML=`
         <div class="pf-folder-left">
           <span class="pf-album-arrow">▶</span>
-          <span class="pf-album-nm">💿 ${albumName}</span>
+          <span class="pf-album-nm">💿 ${esc(albumName)}</span>
           <span class="pf-folder-count">${songs.length} song${songs.length!==1?'s':''}</span>
         </div>
         <span class="pf-folder-avg" style="color:${scoreColor(albumAvg)}">${albumAvg.toFixed(1)}</span>`;
@@ -3958,21 +3961,21 @@ function renderProfileFolders(ratings, container){
         const div=document.createElement('div');
         div.className='pf-rating-row';
         const artThumbPf=row.artwork_url
-          ?`<img src="${itunesArtUrl(row.artwork_url,44)}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`
-          :`<div data-art-key="${(row.artist_name||'unknown')}|||${row.album||row.artist_name||'unknown'}" data-art-size="44" style="width:32px;height:32px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`;
+          ?`<img src="${esc(itunesArtUrl(row.artwork_url,44))}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`
+          :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="44" style="width:32px;height:32px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`;
         div.innerHTML=`
           <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0">
             ${artThumbPf}
             <div style="flex:1;min-width:0">
-              <div class="pf-song">${row.song_name}</div>
+              <div class="pf-song">${esc(row.song_name)}</div>
               ${row.is_private?`<div style="font-size:.45rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">🔒 Private</div>`:''}
             </div>
           </div>
           <div style="display:flex;align-items:center;gap:.5rem;flex-shrink:0">
             <div class="pf-score" style="color:${scoreColor(score)}">${score.toFixed(1)}</div>
-            ${row.is_private?`<button onclick="publishRating('${row.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:.2rem .3rem" title="Post to feed">Post</button>`:''}
-            <button onclick="editRatingById('${row.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.65rem;cursor:pointer;padding:.2rem .3rem;transition:color .15s" title="Edit">✎</button>
-            <button onclick="deleteProfileRating('${row.id}',event)" style="background:transparent;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;padding:.2rem .3rem;transition:color .15s" title="Delete">✕</button>
+            ${row.is_private?`<button onclick="publishRating('${escJs(row.id)}')" style="background:transparent;border:none;color:var(--muted);font-size:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;padding:.2rem .3rem" title="Post to feed">Post</button>`:''}
+            <button onclick="editRatingById('${escJs(row.id)}')" style="background:transparent;border:none;color:var(--muted);font-size:.65rem;cursor:pointer;padding:.2rem .3rem;transition:color .15s" title="Edit">✎</button>
+            <button onclick="deleteProfileRating('${escJs(row.id)}',event)" style="background:transparent;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;padding:.2rem .3rem;transition:color .15s" title="Delete">✕</button>
           </div>`;
         albumBody.appendChild(div);
       });
@@ -4182,7 +4185,7 @@ async function exportRating(row){
 }
 
 // COMMENTS
-function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escHtml(s){return esc(s);}
 
 async function loadComments(ratingId){
   const el=document.getElementById('rd-thread');
@@ -4210,22 +4213,22 @@ async function loadComments(ratingId){
   });
 
   function cmtHTML(c,rid){
-    const p=cMap[c.user_id]||{};const u=p.username||'anon';const col=p.avatar_color||'#c9a84c';
+    const p=cMap[c.user_id]||{};const u=p.username||'anon';const col=esc(p.avatar_color||'#c9a84c');
     const own=c.user_id===currentUser?.id;
     return`<div class="cmt">
       <div class="cmt-row">
         ${avatarHTML(p,'cmt-av')}
         <div class="cmt-main">
           <div class="cmt-meta">
-            <span class="cmt-user" style="color:${col}">@${u}</span>
+            <span class="cmt-user" style="color:${col}">@${esc(u)}</span>
             <span class="cmt-ts">${timeAgo(c.created_at)}</span>
-            ${own?`<button class="cmt-del" onclick="deleteComment('${c.id}','${ratingId}')">✕</button>`:''}
+            ${own?`<button class="cmt-del" onclick="deleteComment('${escJs(c.id)}','${escJs(ratingId)}')">✕</button>`:''}
           </div>
-          <div class="cmt-body">${escHtml(c.body)}</div>
-          <button class="cmt-reply-btn" onclick="toggleReplyInput('${c.id}')">Reply</button>
-          <div class="cmt-iw" id="ri-${c.id}">
-            <textarea class="cmt-inp" id="rt-${c.id}" placeholder="Reply..." rows="2" maxlength="300"></textarea>
-            <button class="cmt-send" onclick="submitComment('${ratingId}','${rid||c.id}')">↑</button>
+          <div class="cmt-body">${esc(c.body)}</div>
+          <button class="cmt-reply-btn" onclick="toggleReplyInput('${escJs(c.id)}')">Reply</button>
+          <div class="cmt-iw" id="ri-${escAttr(c.id)}">
+            <textarea class="cmt-inp" id="rt-${escAttr(c.id)}" placeholder="Reply..." rows="2" maxlength="300"></textarea>
+            <button class="cmt-send" onclick="submitComment('${escJs(ratingId)}','${escJs(rid||c.id)}')">↑</button>
           </div>
         </div>
       </div>
@@ -4243,7 +4246,7 @@ async function loadComments(ratingId){
       :'<div class="cmt-empty">No comments yet. Start the discussion.</div>'}
     <div class="cmt-compose">
       <textarea class="cmt-inp" id="new-cmt-inp" placeholder="Add a comment..." rows="2" maxlength="300"></textarea>
-      <button class="cmt-send" onclick="submitComment('${ratingId}',null)">↑</button>
+      <button class="cmt-send" onclick="submitComment('${escJs(ratingId)}',null)">↑</button>
     </div>`;
 }
 
@@ -4303,11 +4306,11 @@ async function searchProfiles(){
       if(isMe) badge=`<span class="ps-status" style="border-color:var(--border2);color:var(--muted)">You</span>`;
       else if(fwd) badge=`<span class="ps-status" style="border-color:var(--green);color:var(--green)">Following</span>`;
       else if(bwd) badge=`<span class="ps-status" style="border-color:var(--muted2);color:var(--muted2)">Follows you</span>`;
-      const clickAttr=isMe?'':`onclick="openUserModal('${p.id}');toggleProfileSearch()"`;
+      const clickAttr=isMe?'':`onclick="openUserModal('${escJs(p.id)}');toggleProfileSearch()"`;
       return`<div class="ps-result pressable" ${clickAttr} style="cursor:${isMe?'default':'pointer'}">
         <div class="feed-user">
           ${avatarHTML(p,'feed-avatar')}
-          <div><div class="feed-username">@${p.username}</div></div>
+          <div><div class="feed-username">@${esc(p.username)}</div></div>
         </div>
         ${badge}
       </div>`;
@@ -4397,14 +4400,14 @@ async function loadFeedLists(){
   el.innerHTML=lists.map(l=>{
     const count=itemCounts[l.id]||0;
     const uname=pmap[l.user_id]?.username||'Unknown';
-    const thumbs=(artworks[l.id]||[]).map(u=>`<img src="${itunesArtUrl(u,44)}" class="list-card-thumb" loading="lazy">`).join('')+
+    const thumbs=(artworks[l.id]||[]).map(u=>`<img src="${esc(itunesArtUrl(u,44))}" class="list-card-thumb" loading="lazy">`).join('')+
       (count>3?`<div class="list-card-thumb" style="display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted)">+${count-3}</div>`:'');
-    return`<div class="feed-list-card" onclick="openListOverlay('${l.id}')">
+    return`<div class="feed-list-card" onclick="openListOverlay('${escJs(l.id)}')">
       <div class="list-card-thumbs">${thumbs||'<div class="list-card-thumb"></div>'}</div>
       <div class="list-card-info">
-        <div class="feed-list-card-author">@${uname}</div>
-        <div class="list-card-title">${l.title}</div>
-        <div class="list-card-meta">${count} item${count!==1?'s':''}${l.description?' · '+l.description:''}</div>
+        <div class="feed-list-card-author">@${esc(uname)}</div>
+        <div class="list-card-title">${esc(l.title)}</div>
+        <div class="list-card-meta">${count} item${count!==1?'s':''}${l.description?' · '+esc(l.description):''}</div>
       </div>
       <div style="color:var(--muted);font-size:1rem;flex-shrink:0">›</div>
     </div>`;
@@ -4434,11 +4437,11 @@ async function loadQuestions(){
   el.innerHTML=qs.map(q=>{
     const uname=pmap[q.user_id]?.username||'Unknown';
     const count=ecMap[q.id]||0;
-    return`<div class="q-card" onclick="openQuestionOverlay('${q.id}')">
-      <div class="q-card-text">${q.question_text}</div>
+    return`<div class="q-card" onclick="openQuestionOverlay('${escJs(q.id)}')">
+      <div class="q-card-text">${esc(q.question_text)}</div>
       <div class="q-card-meta">
         <span class="q-type-pill">${q.type==='albums'?'Albums':'Songs'}</span>
-        <span>@${uname}</span>
+        <span>@${esc(uname)}</span>
         <span>· ${count} answer${count!==1?'s':''}</span>
       </div>
     </div>`;
@@ -4480,14 +4483,14 @@ async function refreshQuestionEntries(){
     const isOwn=e.user_id===currentUser?.id;
     return`<div class="q-entry-card">
       ${e.artwork_url
-        ?`<img src="${itunesArtUrl(e.artwork_url,300)}" class="q-entry-card-art" loading="lazy">`
+        ?`<img src="${esc(itunesArtUrl(e.artwork_url,300))}" class="q-entry-card-art" loading="lazy">`
         :`<div class="q-entry-card-art"></div>`}
       <div class="q-entry-card-num">${i+1}</div>
-      ${isOwn?`<button class="q-entry-card-del" onclick="deleteQuestionEntry('${e.id}')">✕</button>`:''}
+      ${isOwn?`<button class="q-entry-card-del" onclick="deleteQuestionEntry('${escJs(e.id)}')">✕</button>`:''}
       <div class="q-entry-card-body">
-        <div class="q-entry-card-user">@${uname}</div>
-        <div class="q-entry-card-title">${e.title}</div>
-        ${e.subtitle?`<div class="q-entry-card-sub">${e.subtitle}</div>`:''}
+        <div class="q-entry-card-user">@${esc(uname)}</div>
+        <div class="q-entry-card-title">${esc(e.title)}</div>
+        ${e.subtitle?`<div class="q-entry-card-sub">${esc(e.subtitle)}</div>`:''}
       </div>
     </div>`;
   }).join('')}</div>`;
@@ -4636,8 +4639,8 @@ function renderBattleCard(b, stats){
   const uname=p.username||'Unknown';
   const myVote=currentUser?battleVotes[b.id+'_'+currentUser.id]:null;
   const hasVoted=!!myVote;
-  const artA=b.song_a_artwork_url?`<img src="${itunesArtUrl(b.song_a_artwork_url,150)}" class="battle-song-art" loading="lazy">`:`<div class="battle-song-art-placeholder"></div>`;
-  const artB=b.song_b_artwork_url?`<img src="${itunesArtUrl(b.song_b_artwork_url,150)}" class="battle-song-art" loading="lazy">`:`<div class="battle-song-art-placeholder"></div>`;
+  const artA=b.song_a_artwork_url?`<img src="${esc(itunesArtUrl(b.song_a_artwork_url,150))}" class="battle-song-art" loading="lazy">`:`<div class="battle-song-art-placeholder"></div>`;
+  const artB=b.song_b_artwork_url?`<img src="${esc(itunesArtUrl(b.song_b_artwork_url,150))}" class="battle-song-art" loading="lazy">`:`<div class="battle-song-art-placeholder"></div>`;
   const votedAClass=hasVoted&&myVote.vote_choice==='A'?' voted-a':'';
   const votedBClass=hasVoted&&myVote.vote_choice==='B'?' voted-b':'';
   const colorA=stats.leader==='A'?'var(--gold)':stats.leader==='B'?'var(--muted2)':'var(--text)';
@@ -4646,47 +4649,47 @@ function renderBattleCard(b, stats){
     ?`<span class="battle-tied-tag">No votes yet</span>`
     :stats.leader===null
       ?`<span class="battle-tied-tag">Tied — ${stats.totalVotes} vote${stats.totalVotes!==1?'s':''}</span>`
-      :`<span class="battle-winner-tag">Leading: ${stats.leader==='A'?b.song_a_name:b.song_b_name}</span>`;
+      :`<span class="battle-winner-tag">Leading: ${esc(stats.leader==='A'?b.song_a_name:b.song_b_name)}</span>`;
   const barsOrButtons=hasVoted?`
     <div class="battle-bars">
       <div class="battle-bar-row">
-        <div class="battle-bar-label" style="color:${colorA}">${b.song_a_name}</div>
+        <div class="battle-bar-label" style="color:${colorA}">${esc(b.song_a_name)}</div>
         <div class="battle-bar-track"><div class="battle-bar-fill-a" style="width:${stats.percentA}%"></div></div>
         <div class="battle-bar-pct" style="color:${colorA}">${stats.percentA}%</div>
       </div>
       <div class="battle-bar-row">
-        <div class="battle-bar-label" style="color:${colorB}">${b.song_b_name}</div>
+        <div class="battle-bar-label" style="color:${colorB}">${esc(b.song_b_name)}</div>
         <div class="battle-bar-track"><div class="battle-bar-fill-b" style="width:${stats.percentB}%"></div></div>
         <div class="battle-bar-pct" style="color:${colorB}">${stats.percentB}%</div>
       </div>
     </div>`:`
     <div class="battle-vote-row">
-      <button class="battle-vote-btn${votedAClass}" onclick="voteBattle('${b.id}','A')">${b.song_a_name}</button>
-      <button class="battle-vote-btn${votedBClass}" onclick="voteBattle('${b.id}','B')">${b.song_b_name}</button>
+      <button class="battle-vote-btn${votedAClass}" onclick="voteBattle('${escJs(b.id)}','A')">${esc(b.song_a_name)}</button>
+      <button class="battle-vote-btn${votedBClass}" onclick="voteBattle('${escJs(b.id)}','B')">${esc(b.song_b_name)}</button>
     </div>`;
   const isOwn=currentUser&&b.created_by===currentUser.id;
   return`<div class="battle-card">
     <div class="battle-card-meta">
       <div class="battle-card-meta-left">
         ${avatarHTML(p,null,20)}
-        <span class="battle-card-meta-user">@${uname}</span>
+        <span class="battle-card-meta-user">@${esc(uname)}</span>
       </div>
       <div style="display:flex;align-items:center;gap:.65rem">
         <span class="battle-card-meta-time">${timeAgo(b.created_at)}</span>
-        ${isOwn?`<button onclick="deleteBattle('${b.id}')" style="background:transparent;border:none;color:var(--muted);font-size:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;cursor:pointer">DELETE</button>`:''}
+        ${isOwn?`<button onclick="deleteBattle('${escJs(b.id)}')" style="background:transparent;border:none;color:var(--muted);font-size:.55rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;cursor:pointer">DELETE</button>`:''}
       </div>
     </div>
     <div class="battle-matchup">
       <div class="battle-song-panel">
         ${artA}
-        <div class="battle-song-name" style="color:${hasVoted?colorA:'var(--text)'}">${b.song_a_name}</div>
-        <div class="battle-song-artist">${b.song_a_artist}</div>
+        <div class="battle-song-name" style="color:${hasVoted?colorA:'var(--text)'}">${esc(b.song_a_name)}</div>
+        <div class="battle-song-artist">${esc(b.song_a_artist)}</div>
       </div>
       <div class="battle-vs">vs</div>
       <div class="battle-song-panel">
         ${artB}
-        <div class="battle-song-name" style="color:${hasVoted?colorB:'var(--text)'}">${b.song_b_name}</div>
-        <div class="battle-song-artist">${b.song_b_artist}</div>
+        <div class="battle-song-name" style="color:${hasVoted?colorB:'var(--text)'}">${esc(b.song_b_name)}</div>
+        <div class="battle-song-artist">${esc(b.song_b_artist)}</div>
       </div>
     </div>
     ${barsOrButtons}
@@ -4870,15 +4873,15 @@ async function openUserModal(userId){
   const fwd=myFollows.find(f=>f.requester_id===currentUser.id&&f.addressee_id===userId);
   const bwd=myFollows.find(f=>f.requester_id===userId&&f.addressee_id===currentUser.id);
   const btnHtml=fwd
-    ?`<button class="follow-btn follow-btn-friends" onclick="unfollow('${fwd.id}')">Following ✓ — Unfollow</button>`
-    :`<button class="follow-btn follow-btn-add" onclick="followUser('${userId}')">+ Follow</button>`;
+    ?`<button class="follow-btn follow-btn-friends" onclick="unfollow('${escJs(fwd.id)}')">Following ✓ — Unfollow</button>`
+    :`<button class="follow-btn follow-btn-add" onclick="followUser('${escJs(userId)}')">+ Follow</button>`;
   const followsYou=bwd?`<div style="font-size:.55rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;text-align:center;margin-top:.4rem">Follows you</div>`:'';
 
   document.getElementById('upo-header').innerHTML=`
     <div class="um-center">
       ${avatarHTML(p,'um-avatar')}
-      <div class="um-name">${u}</div>
-      <div class="um-handle">@${u}</div>
+      <div class="um-name">${esc(u)}</div>
+      <div class="um-handle">@${esc(u)}</div>
     </div>`;
   document.getElementById('upo-stats').innerHTML=`
     <div><span class="um-stat-val">${count}</span><span class="um-stat-lbl">Ratings</span></div>
@@ -4927,7 +4930,7 @@ function renderUserProfileFolders(ratings,container){
     artistHeader.innerHTML=`
       <div class="pf-folder-left">
         <span class="pf-folder-arrow">▶</span>
-        <span class="pf-folder-nm">${artistName}</span>
+        <span class="pf-folder-nm">${esc(artistName)}</span>
         <span class="pf-folder-count">${totalSongs} song${totalSongs!==1?'s':''}</span>
       </div>
       <div class="pf-folder-right">
@@ -4956,7 +4959,7 @@ function renderUserProfileFolders(ratings,container){
       albumHeader.innerHTML=`
         <div class="pf-folder-left">
           <span class="pf-album-arrow">▶</span>
-          <span class="pf-album-nm">💿 ${albumName}</span>
+          <span class="pf-album-nm">💿 ${esc(albumName)}</span>
           <span class="pf-folder-count">${songs.length} song${songs.length!==1?'s':''}</span>
         </div>
         <span class="pf-folder-avg" style="color:${scoreColor(albumAvg)}">${albumAvg.toFixed(1)}</span>`;
@@ -4977,12 +4980,12 @@ function renderUserProfileFolders(ratings,container){
         const div=document.createElement('div');
         div.className='pf-rating-row';
         const artThumbUpo=row.artwork_url
-          ?`<img src="${itunesArtUrl(row.artwork_url,44)}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`
-          :`<div data-art-key="${(row.artist_name||'unknown')}|||${row.album||row.artist_name||'unknown'}" data-art-size="44" style="width:32px;height:32px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`;
+          ?`<img src="${esc(itunesArtUrl(row.artwork_url,44))}" style="width:32px;height:32px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`
+          :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="44" style="width:32px;height:32px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`;
         div.innerHTML=`
           <div style="display:flex;align-items:center;gap:.5rem;flex:1;min-width:0">
             ${artThumbUpo}
-            <div class="pf-song" style="flex:1;min-width:0">${row.song_name}</div>
+            <div class="pf-song" style="flex:1;min-width:0">${esc(row.song_name)}</div>
           </div>
           <div class="pf-score" style="color:${score!=null?scoreColor(score):'var(--muted)'};flex-shrink:0">${score!=null?score.toFixed(1):'—'}</div>`;
         albumBody.appendChild(div);
@@ -5016,9 +5019,9 @@ async function openFollowersModal(){
   list.innerHTML=followerIds.map(id=>{
     const p=profileMap[id];
     const u=p?.username||'Unknown',col=p?.avatar_color||'#c9a84c';
-    return `<div onclick="closeFollowersModal();openUserModal('${id}')" style="display:flex;align-items:center;gap:.85rem;padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer">
+    return `<div onclick="closeFollowersModal();openUserModal('${escJs(id)}')" style="display:flex;align-items:center;gap:.85rem;padding:.75rem 0;border-bottom:1px solid var(--border);cursor:pointer">
       ${avatarHTML(p,null,36)}
-      <div style="font-size:.82rem;font-weight:700;color:var(--text)">@${u}</div>
+      <div style="font-size:.82rem;font-weight:700;color:var(--text)">@${esc(u)}</div>
     </div>`;
   }).join('');
   document.getElementById('followers-modal').classList.add('open');
@@ -5619,8 +5622,8 @@ async function filterSongPicker(){
 function renderSongDropdown(resultsEl,matches,loading){
   const manualLink=`<div onclick="showManualEntry()" style="padding:.5rem .85rem;font-size:.6rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;cursor:pointer;text-align:center;border-bottom:1px solid var(--border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">+ CAN'T FIND IT? ENTER MANUALLY</div>`;
   if(!matches.length&&!loading){resultsEl.innerHTML=manualLink;resultsEl.style.display='block';return;}
-  const artThumb=(s,sz)=>s.artwork?`<img src="${itunesArtUrl(s.artwork,sz)}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div data-art-key="${s.artist}|||${s.album||s.artist}" data-art-size="${sz}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`;
-  resultsEl.innerHTML=manualLink+matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'');
+  const artThumb=(s,sz)=>s.artwork?`<img src="${esc(itunesArtUrl(s.artwork,sz))}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div data-art-key="${esc(s.artist+'|||'+(s.album||s.artist))}" data-art-size="${sz}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`;
+  resultsEl.innerHTML=manualLink+matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.song)}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'');
   loadMissingArtwork(resultsEl);
   resultsEl.style.display='block';
 }
@@ -5912,7 +5915,7 @@ function rrRenderLobby(){
   const isHost=currentRoom?.host_id===currentUser?.id;
   const roomName=currentRoom?.name||'Rank Room';
   document.getElementById('rr-lobby-name').textContent=roomName;
-  document.getElementById('rr-header-title').innerHTML=roomName;
+  document.getElementById('rr-header-title').textContent=roomName;
   const descEl=document.getElementById('rr-lobby-desc');
   if(currentRoom?.description){descEl.textContent=currentRoom.description;descEl.style.display='block';}
   else{descEl.style.display='none';}
@@ -5928,13 +5931,13 @@ function rrRenderLobby(){
     const pill=isSelf
       ?`<button class="rr-ready-pill ${readyClass} clickable" onclick="rrToggleReady()">${readyLabel}</button>`
       :`<div class="rr-ready-pill ${readyClass}">${readyLabel}</div>`;
-    return`<div class="rr-member-row">${avatarHTML(m.profile,'rr-member-av')}<div class="rr-member-name">${u}${host?'<span class="rr-host-tag">host</span>':''}</div>${pill}</div>`;
+    return`<div class="rr-member-row">${avatarHTML(m.profile,'rr-member-av')}<div class="rr-member-name">${esc(u)}${host?'<span class="rr-host-tag">host</span>':''}</div>${pill}</div>`;
   }).join('');
   document.getElementById('rr-queue-count').textContent=roomSongs.length;
   document.getElementById('rr-queue-list').innerHTML=roomSongs.length
     ?roomSongs.map((s,i)=>{
         const by=s.suggested_by?profileMap[s.suggested_by]?.username:null;
-        return`<div class="rr-song-row"><div class="rr-song-num">${i+1}</div>${s.artwork?`<img src="${itunesArtUrl(s.artwork,44)}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:'<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>'}<div class="rr-song-info"><div class="rr-song-name">${s.song}</div><div class="rr-song-meta">${s.artist}${s.album?' · '+s.album:''}${by?' · by @'+by:''}</div></div>${isHost?`<button class="rr-rm-btn" onclick="rrRemoveSong('${s.id}')">✕</button>`:''}</div>`;
+        return`<div class="rr-song-row"><div class="rr-song-num">${i+1}</div>${s.artwork?`<img src="${esc(itunesArtUrl(s.artwork,44))}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:'<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>'}<div class="rr-song-info"><div class="rr-song-name">${esc(s.song)}</div><div class="rr-song-meta">${esc(s.artist)}${s.album?' · '+esc(s.album):''}${by?' · by @'+esc(by):''}</div></div>${isHost?`<button class="rr-rm-btn" onclick="rrRemoveSong('${escJs(s.id)}')">✕</button>`:''}</div>`;
       }).join('')
     :'<div style="font-size:.6rem;color:var(--muted);padding:.5rem 0;font-style:italic">No songs approved yet.</div>';
 
@@ -5946,14 +5949,14 @@ function rrRenderLobby(){
         <div class="rr-section-lbl" style="color:var(--gold)">Suggestions (${roomPendingSongs.length})</div>
         ${roomPendingSongs.map(s=>{
           const by=s.suggested_by?(profileMap[s.suggested_by]?.username||'someone'):'someone';
-          return`<div class="rr-pending-row"><div class="rr-song-info" style="flex:1;min-width:0"><div class="rr-song-name">${s.song}</div><div class="rr-song-meta">${s.artist}${s.album?' · '+s.album:''} · by @${by}</div></div><button class="rr-approve-btn" onclick="rrApproveSong('${s.id}')">✓</button><button class="rr-rm-btn" onclick="rrRejectSong('${s.id}')">✕</button></div>`;
+          return`<div class="rr-pending-row"><div class="rr-song-info" style="flex:1;min-width:0"><div class="rr-song-name">${esc(s.song)}</div><div class="rr-song-meta">${esc(s.artist)}${s.album?' · '+esc(s.album):''} · by @${esc(by)}</div></div><button class="rr-approve-btn" onclick="rrApproveSong('${escJs(s.id)}')">✓</button><button class="rr-rm-btn" onclick="rrRejectSong('${escJs(s.id)}')">✕</button></div>`;
         }).join('')}
       </div>`;
   } else if(!isHost&&myPending.length){
     document.getElementById('rr-pending-list').innerHTML=`
       <div style="margin-top:.75rem">
         <div class="rr-section-lbl">Your Suggestions (${myPending.length})</div>
-        ${myPending.map(s=>`<div class="rr-pending-row"><div class="rr-song-info" style="flex:1;min-width:0"><div class="rr-song-name">${s.song}</div><div class="rr-song-meta">${s.artist}${s.album?' · '+s.album:''}</div></div><div class="rr-awaiting-lbl">Awaiting</div></div>`).join('')}
+        ${myPending.map(s=>`<div class="rr-pending-row"><div class="rr-song-info" style="flex:1;min-width:0"><div class="rr-song-name">${esc(s.song)}</div><div class="rr-song-meta">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div></div><div class="rr-awaiting-lbl">Awaiting</div></div>`).join('')}
       </div>`;
   } else {
     document.getElementById('rr-pending-list').innerHTML='';
@@ -6013,8 +6016,8 @@ async function rrFilterSongs(){
 
 function renderRRSongDropdown(resEl,matches,loading){
   if(!matches.length&&!loading){resEl.style.display='none';return;}
-  const rrArtThumb=(s,sz)=>s.artwork?`<img src="${itunesArtUrl(s.artwork,sz)}" style="width:${sz-8}px;height:${sz-8}px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div data-art-key="${s.artist}|||${s.album||s.artist}" data-art-size="${sz}" style="width:${sz-8}px;height:${sz-8}px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`;
-  resEl.innerHTML=matches.slice(0,40).map((s,i)=>`<div style="padding:.45rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem">${rrArtThumb(s,44)}<div style="flex:1;min-width:0;cursor:pointer" onclick="rrAddSong(${i})"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.song}</div><div style="font-size:.54rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.artist}${s.album?' · '+s.album:''}</div></div>${s.preview?`<button class="preview-btn" id="rrbtn-${i}" onclick="event.stopPropagation();playPreviewFromRR(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.35rem .85rem;font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING…</div>`:'');
+  const rrArtThumb=(s,sz)=>s.artwork?`<img src="${esc(itunesArtUrl(s.artwork,sz))}" style="width:${sz-8}px;height:${sz-8}px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div data-art-key="${esc(s.artist+'|||'+(s.album||s.artist))}" data-art-size="${sz}" style="width:${sz-8}px;height:${sz-8}px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`;
+  resEl.innerHTML=matches.slice(0,40).map((s,i)=>`<div style="padding:.45rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.6rem">${rrArtThumb(s,44)}<div style="flex:1;min-width:0;cursor:pointer" onclick="rrAddSong(${i})"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.song)}</div><div style="font-size:.54rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div></div>${s.preview?`<button class="preview-btn" id="rrbtn-${i}" onclick="event.stopPropagation();playPreviewFromRR(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.35rem .85rem;font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING…</div>`:'');
   loadMissingArtwork(resEl);
   resEl.style.display='block';
 }
@@ -6289,10 +6292,10 @@ function rrRenderRating(){
   if(!song)return;
   const total=roomSongs.length,idx=currentRoom.current_song_idx;
   const rrArtThumb=song.artwork
-    ?`<img src="${itunesArtUrl(song.artwork,80)}" style="width:56px;height:56px;border-radius:5px;object-fit:cover;flex-shrink:0" loading="lazy">`
-    :`<div data-art-key="${song.artist}|||${song.album||song.artist}" data-art-size="80" style="width:56px;height:56px;border-radius:5px;background:var(--border2);flex-shrink:0"></div>`;
+    ?`<img src="${esc(itunesArtUrl(song.artwork,80))}" style="width:56px;height:56px;border-radius:5px;object-fit:cover;flex-shrink:0" loading="lazy">`
+    :`<div data-art-key="${esc(song.artist+'|||'+(song.album||song.artist))}" data-art-size="80" style="width:56px;height:56px;border-radius:5px;background:var(--border2);flex-shrink:0"></div>`;
   const rrSongBarEl=document.getElementById('rr-current-song-bar');
-  rrSongBarEl.innerHTML=`<div style="display:flex;align-items:center;gap:.75rem">${rrArtThumb}<div style="flex:1;min-width:0"><div class="rr-current-lbl">Song ${idx+1} of ${total}</div><div class="rr-current-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${song.song}</div><div class="rr-current-meta">${song.artist}${song.album?' · '+song.album:''}</div></div></div>`;
+  rrSongBarEl.innerHTML=`<div style="display:flex;align-items:center;gap:.75rem">${rrArtThumb}<div style="flex:1;min-width:0"><div class="rr-current-lbl">Song ${idx+1} of ${total}</div><div class="rr-current-title" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(song.song)}</div><div class="rr-current-meta">${esc(song.artist)}${song.album?' · '+esc(song.album):''}</div></div></div>`;
   loadMissingArtwork(rrSongBarEl);
   rrIsInterlude=false;
   const rrIBtn=document.getElementById('rr-interlude-btn');const rrIBanner=document.getElementById('rr-interlude-banner');const rrIBody=document.getElementById('rr-interlude-rating-body');
@@ -6427,7 +6430,7 @@ function rrSpawnReactFloat(emoji,username){
   el.className='rr-react-float';
   el.style.left=(8+Math.random()*76)+'%';
   el.style.bottom=(55+Math.random()*35)+'px';
-  el.innerHTML=`<span class="rr-react-float-word">${emoji}</span><span class="rr-react-float-name">${username}</span>`;
+  el.innerHTML=`<span class="rr-react-float-word">${esc(emoji)}</span><span class="rr-react-float-name">${esc(username)}</span>`;
   c.appendChild(el);
   setTimeout(()=>el.remove(),2300);
 }
@@ -6525,7 +6528,7 @@ async function rrSendRatingMsg(){
 function rrMessageHTML(m){
   const p=profileMap[m.user_id],u=p?.username||'Unknown',col=p?.avatar_color||'#c9a84c';
   const isMe=m.user_id===currentUser?.id;
-  return`<div class="rr-msg">${avatarHTML(p,'rr-msg-av')}<div style="flex:1;min-width:0"><div class="rr-msg-name" style="${isMe?'color:var(--gold)':''}">@${u}</div><div class="rr-msg-text">${m.message.replace(/</g,'&lt;')}</div></div></div>`;
+  return`<div class="rr-msg">${avatarHTML(p,'rr-msg-av')}<div style="flex:1;min-width:0"><div class="rr-msg-name" style="${isMe?'color:var(--gold)':''}">@${esc(u)}</div><div class="rr-msg-text">${esc(m.message)}</div></div></div>`;
 }
 
 async function rrLoadMessages(songId){
@@ -6610,7 +6613,7 @@ async function rrRenderReveal(){
   const song=roomSongs[currentRoom.current_song_idx];
   if(!song)return;
   const adder=song.suggested_by?profileMap[song.suggested_by]?.username:null;
-  document.getElementById('rr-reveal-song-name').innerHTML=`${song.song} — ${song.artist}${adder?`<span style="display:block;font-size:.48rem;color:var(--muted);letter-spacing:.12em;font-weight:600;margin-top:.25rem">added by @${adder}</span>`:''}`;
+  document.getElementById('rr-reveal-song-name').innerHTML=`${esc(song.song)} — ${esc(song.artist)}${adder?`<span style="display:block;font-size:.48rem;color:var(--muted);letter-spacing:.12em;font-weight:600;margin-top:.25rem">added by @${esc(adder)}</span>`:''}`;
 
   const{data:ratings}=await db.from('rank_room_ratings').select('*').eq('room_id',currentRoom.id).eq('song_id',song.id);
   const scoredRatings=(ratings||[]).filter(r=>!r.is_interlude&&r.final_score!=null);
@@ -7830,7 +7833,7 @@ function buildDraftSlot(num,side,pick,mySide,b){
     if(secret){
       div.innerHTML=`<div class="ab-draft-slot-num">${num}</div><div class="ab-draft-slot-info"><div class="ab-draft-slot-name" style="color:var(--muted)">Locked Pick ${num}</div><div class="ab-draft-slot-hidden">Hidden until reveal</div></div>`;
     } else {
-      div.innerHTML=`<div class="ab-draft-slot-num">${num}</div>${pick.artwork_url?`<img src="${itunesArtUrl(pick.artwork_url,80)}" class="ab-draft-slot-art" loading="lazy">`:`<div class="ab-draft-slot-art"></div>`}<div class="ab-draft-slot-info"><div class="ab-draft-slot-name">${pick.song_name}</div><div class="ab-draft-slot-meta">${pick.artist_name}</div></div>`;
+      div.innerHTML=`<div class="ab-draft-slot-num">${num}</div>${pick.artwork_url?`<img src="${esc(itunesArtUrl(pick.artwork_url,80))}" class="ab-draft-slot-art" loading="lazy">`:`<div class="ab-draft-slot-art"></div>`}<div class="ab-draft-slot-info"><div class="ab-draft-slot-name">${esc(pick.song_name)}</div><div class="ab-draft-slot-meta">${esc(pick.artist_name)}</div></div>`;
     }
   } else {
     div.innerHTML=`<div class="ab-draft-slot-num">${num}</div><div class="ab-draft-slot-info"><div style="font-size:.58rem;color:var(--muted);font-style:italic;font-family:'DM Mono',monospace">—</div></div>`;
@@ -7979,9 +7982,9 @@ function renderAuxBattleRound(){
     if(!pick)return`<div class="ab-round-song"><div class="ab-round-song-name" style="color:var(--muted)">Pick ${rn}</div></div>`;
     const revealed=!b.secret_draft||true; // always reveal in round view
     return`<div class="ab-round-song">
-      ${pick.artwork_url?`<img src="${itunesArtUrl(pick.artwork_url,200)}" class="ab-round-song-art" loading="lazy">`:`<div class="ab-round-song-art"></div>`}
-      <div class="ab-round-song-name">${pick.song_name}</div>
-      <div class="ab-round-song-artist">${pick.artist_name}</div>
+      ${pick.artwork_url?`<img src="${esc(itunesArtUrl(pick.artwork_url,200))}" class="ab-round-song-art" loading="lazy">`:`<div class="ab-round-song-art"></div>`}
+      <div class="ab-round-song-name">${esc(pick.song_name)}</div>
+      <div class="ab-round-song-artist">${esc(pick.artist_name)}</div>
     </div>`;
   };
   document.getElementById('ab-round-song-a').outerHTML=songCardHTML(pickA,'A').replace('class="ab-round-song"','class="ab-round-song" id="ab-round-song-a"');
@@ -8015,22 +8018,22 @@ function renderAbVoteSection(pickA,pickB){
     voteSection.innerHTML=`<div class="ab-section-lbl" style="margin-bottom:.5rem">Audience Vote</div>
     <div style="margin-bottom:.55rem">
       <div style="display:flex;align-items:center;gap:.55rem;margin-bottom:.35rem">
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='A'?'var(--gold)':'var(--muted2)'};flex:0 0 70px">${pickA?.song_name||'Song A'}</span>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='A'?'var(--gold)':'var(--muted2)'};flex:0 0 70px">${esc(pickA?.song_name||'Song A')}</span>
         <div class="ab-pct-bar"><div class="ab-pct-fill-a" style="width:${pctA}%"></div></div>
         <span style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:var(--gold);width:2.5rem;text-align:right">${pctA}%</span>
       </div>
       <div style="display:flex;align-items:center;gap:.55rem">
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='B'?'#f472b6':'var(--muted2)'};flex:0 0 70px">${pickB?.song_name||'Song B'}</span>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='B'?'#f472b6':'var(--muted2)'};flex:0 0 70px">${esc(pickB?.song_name||'Song B')}</span>
         <div class="ab-pct-bar"><div class="ab-pct-fill-b" style="width:${pctB}%"></div></div>
         <span style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:#f472b6;width:2.5rem;text-align:right">${pctB}%</span>
       </div>
     </div>
-    <div style="text-align:center;font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace">${totalVotes} vote${totalVotes!==1?'s':''} · You voted ${myVote.vote_choice==='A'?(pickA?.song_name||'A'):(pickB?.song_name||'B')}</div>`;
+    <div style="text-align:center;font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace">${totalVotes} vote${totalVotes!==1?'s':''} · You voted ${esc(myVote.vote_choice==='A'?(pickA?.song_name||'A'):(pickB?.song_name||'B'))}</div>`;
   } else {
     voteSection.innerHTML=`<div class="ab-section-lbl" style="margin-bottom:.5rem">Cast Your Vote</div>
     <div style="display:flex;gap:.5rem">
-      <button class="ab-vote-btn" onclick="submitAuxBattleVote('A')">${pickA?.song_name||b.artist_a}</button>
-      <button class="ab-vote-btn" onclick="submitAuxBattleVote('B')">${pickB?.song_name||b.artist_b}</button>
+      <button class="ab-vote-btn" onclick="submitAuxBattleVote('A')">${esc(pickA?.song_name||b.artist_a)}</button>
+      <button class="ab-vote-btn" onclick="submitAuxBattleVote('B')">${esc(pickB?.song_name||b.artist_b)}</button>
     </div>
     ${totalVotes>0?`<div style="text-align:center;font-size:.55rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.4rem">${totalVotes} vote${totalVotes!==1?'s':''} cast</div>`:''}`;
   }
@@ -8073,16 +8076,16 @@ function renderAbRatingSection(pickA,pickB){
     </div>
     <div class="ab-rating-panel">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${color}">${label}</span>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${color}">${esc(label)}</span>
         ${finalScore!==null?`<span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:${color}">${parseFloat(finalScore).toFixed(1)}</span>`:''}
       </div>
-      ${pick?.artwork_url?`<img src="${itunesArtUrl(pick.artwork_url,160)}" style="width:64px;height:64px;border-radius:.5rem;object-fit:cover;margin-bottom:.65rem;display:block" loading="lazy">`:''}
+      ${pick?.artwork_url?`<img src="${esc(itunesArtUrl(pick.artwork_url,160))}" style="width:64px;height:64px;border-radius:.5rem;object-fit:cover;margin-bottom:.65rem;display:block" loading="lazy">`:''}
       ${cats.map((cat,i)=>`<div class="ab-rating-cat">
-        <div class="ab-rating-cat-name" style="color:${colors[i]}">${cat}</div>
+        <div class="ab-rating-cat-name" style="color:${colors[i]}">${esc(cat)}</div>
         <input type="range" min="0" max="10" step="0.5" value="${vals[i]||5}" class="ab-rating-slider" id="ab-rate-${side}-${i}" oninput="updateAbRatingDisplay('${side}',${i},this.value)">
         <div class="ab-rating-cat-val" id="ab-rate-${side}-${i}-val">${parseFloat(vals[i]||5).toFixed(1)}</div>
       </div>`).join('')}
-      <button class="ab-submit-rating-btn" id="ab-submit-rate-${side}" onclick="submitAuxBattleRating('${side}')">Rate ${label}</button>
+      <button class="ab-submit-rating-btn" id="ab-submit-rate-${side}" onclick="submitAuxBattleRating('${side}')">Rate ${esc(label)}</button>
     </div>`;
 }
 
@@ -8739,17 +8742,17 @@ function swSongCard(s,extraClass,labelClass,labelText,rank){
   const avg=s.avg||0;
   const col=swScoreColor(avg);
   const artHTML=s.artwork_url
-    ?`<img class="sw-song-art" src="${itunesArtUrl(s.artwork_url,84)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sw-song-art-ph" style="display:none">🎵</div>`
-    :`<div class="sw-song-art" data-art-key="${(s.artist||'unknown')}|||${s.album||s.artist||'unknown'}" data-art-size="84"></div>`;
+    ?`<img class="sw-song-art" src="${esc(itunesArtUrl(s.artwork_url,84))}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sw-song-art-ph" style="display:none">🎵</div>`
+    :`<div class="sw-song-art" data-art-key="${esc((s.artist||'unknown')+'|||'+(s.album||s.artist||'unknown'))}" data-art-size="84"></div>`;
   const phHTML='';
   const rankHTML=rank!=null?`<div class="sw-trend-rank" style="color:${rank<=2?'var(--gold)':'var(--muted)'}">${rank}</div>`:'';
-  const labelHTML=labelText?`<span class="sw-song-label ${labelClass}">${labelText}</span>`:'';
+  const labelHTML=labelText?`<span class="sw-song-label ${esc(labelClass)}">${esc(labelText)}</span>`:'';
   const myHTML=s.iMyRated&&s.myScore!=null?`<div style="font-size:.45rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em;margin-top:.1rem">MY ${parseFloat(s.myScore).toFixed(1)}</div>`:'';
   const barHTML=extraClass.includes('hot')?'<div class="sw-hot-bar"></div>':extraClass.includes('gem')?'<div class="sw-gem-bar"></div>':'';
   const friendTag=s.isFriendRated?`<span style="font-size:.43rem;color:var(--chorus);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">· Friend</span>`:'';
   const enc=encodeURIComponent(s.song+'||'+s.artist);
   const artEnc=encodeURIComponent(s.artist);
-  return`<div class="sw-song-card ${extraClass}" onclick="swOpenSong('${enc}')">${barHTML}${rankHTML}${artHTML}${phHTML}<div class="sw-song-info"><div class="sw-song-name">${s.song}</div><div class="sw-song-artist"><button class="ap-artist-link" onclick="event.stopPropagation();swOpenArtist('${artEnc}','World Map')">${s.artist}</button>${s.album?' · '+s.album:''}</div><div style="display:flex;align-items:center;gap:.3rem;margin-top:.15rem"><span style="font-size:.47rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">${s.n} rating${s.n!==1?'s':''}</span>${friendTag}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-song-score" style="color:${col};text-shadow:0 0 10px ${col}">${avg.toFixed(1)}</div>${myHTML}</div>${labelHTML}</div>`;
+  return`<div class="sw-song-card ${esc(extraClass)}" onclick="swOpenSong('${esc(enc)}')">${barHTML}${rankHTML}${artHTML}${phHTML}<div class="sw-song-info"><div class="sw-song-name">${esc(s.song)}</div><div class="sw-song-artist"><button class="ap-artist-link" onclick="event.stopPropagation();swOpenArtist('${esc(artEnc)}','World Map')">${esc(s.artist)}</button>${s.album?' · '+esc(s.album):''}</div><div style="display:flex;align-items:center;gap:.3rem;margin-top:.15rem"><span style="font-size:.47rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">${s.n} rating${s.n!==1?'s':''}</span>${friendTag}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-song-score" style="color:${col};text-shadow:0 0 10px ${col}">${avg.toFixed(1)}</div>${myHTML}</div>${labelHTML}</div>`;
 }
 
 function swShowMoreBtn(section,shown,total){
@@ -8797,9 +8800,9 @@ function swRenderFriends(activity){
     const col=swScoreColor(r.score);
     const enc=encodeURIComponent(r.song_name+'||'+r.artist_name);
     const artHTML=r.artwork_url
-      ?`<img class="sw-song-art" src="${itunesArtUrl(r.artwork_url,84)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sw-song-art-ph" style="display:none">🎵</div>`
-      :`<div class="sw-song-art" data-art-key="${(r.artist_name||'unknown')}|||${r.album||r.artist_name||'unknown'}" data-art-size="84"></div>`;
-    return`<div class="sw-friend-card" onclick="swOpenSong('${enc}')">${artHTML}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${r.profile.username}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${r.song_name}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${r.artist_name}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
+      ?`<img class="sw-song-art" src="${esc(itunesArtUrl(r.artwork_url,84))}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sw-song-art-ph" style="display:none">🎵</div>`
+      :`<div class="sw-song-art" data-art-key="${esc((r.artist_name||'unknown')+'|||'+(r.album||r.artist_name||'unknown'))}" data-art-size="84"></div>`;
+    return`<div class="sw-friend-card" onclick="swOpenSong('${esc(enc)}')">${artHTML}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${esc(r.profile.username)}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${esc(r.song_name)}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${esc(r.artist_name)}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
   }).join('')+swShowMoreBtn('friends',visible.length,activity.length);
   loadMissingArtwork(el);
 }
@@ -8838,7 +8841,7 @@ function swOpenSong(enc){
   const song=worldData.songs.find(s=>s.song.toLowerCase()===sn.toLowerCase()&&s.artist.toLowerCase()===an.toLowerCase());
   if(!song)return;
   const avg=song.avg;const col=swScoreColor(avg);
-  const artHTML=song.artwork_url?`<img src="${song.artwork_url}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0" onerror="this.style.display='none'">`:`<div style="width:60px;height:60px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">🎵</div>`;
+  const artHTML=song.artwork_url?`<img src="${esc(song.artwork_url)}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0" onerror="this.style.display='none'">`:`<div style="width:60px;height:60px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">🎵</div>`;
   const myHTML=song.myScore!=null?`<span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Your score: </span><span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:${swScoreColor(song.myScore)}">${parseFloat(song.myScore).toFixed(1)}</span>`:'';
   const tags=[];
   if(song.iMyRated)tags.push(`<span class="sw-song-label sw-label-rated" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">You Rated</span>`);
@@ -8849,7 +8852,7 @@ function swOpenSong(enc){
   const hi=song.scores.length>1?Math.max(...song.scores).toFixed(1):'—';
   const lo=song.scores.length>1?Math.min(...song.scores).toFixed(1):'—';
   const sEnc=encodeURIComponent(song.song);const aEnc=encodeURIComponent(song.artist);
-  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header"><div class="sw-detail-label">Song</div><div style="display:flex;gap:.8rem;align-items:flex-start"><div style="flex:1;min-width:0">${artHTML}</div><div style="flex:2;min-width:0"><div class="sw-detail-title" style="font-size:1.2rem">${song.song}</div><div class="sw-detail-meta"><button class="ap-artist-link" onclick="swCloseDetail();setTimeout(()=>swOpenArtist('${aEnc}','World Map'),280)">${song.artist}</button>${song.album?' · '+song.album:''}</div>${myHTML?`<div style="margin-top:.3rem">${myHTML}</div>`:''}<div style="margin-top:.35rem">${tags.join('')}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-detail-score" style="color:${col};text-shadow:0 0 18px ${col}">${avg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">SONGR avg</div></div></div></div><div class="sw-detail-body"><div class="sw-detail-stat-row"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${song.n}</div><div class="sw-detail-stat-lbl">Ratings</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${hi}</div><div class="sw-detail-stat-lbl">Highest</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${lo}</div><div class="sw-detail-stat-lbl">Lowest</div></div></div><button class="sw-detail-rate-btn" onclick="swRateSong('${sEnc}','${aEnc}')">${song.iMyRated?'✎ Update My Rating':'＋ Rate This Song'}</button><div class="sw-rate-label">${song.iMyRated?'You have already rated this song':'Add your take to the map'}</div></div>`;
+  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header"><div class="sw-detail-label">Song</div><div style="display:flex;gap:.8rem;align-items:flex-start"><div style="flex:1;min-width:0">${artHTML}</div><div style="flex:2;min-width:0"><div class="sw-detail-title" style="font-size:1.2rem">${esc(song.song)}</div><div class="sw-detail-meta"><button class="ap-artist-link" onclick="swCloseDetail();setTimeout(()=>swOpenArtist('${esc(aEnc)}','World Map'),280)">${esc(song.artist)}</button>${song.album?' · '+esc(song.album):''}</div>${myHTML?`<div style="margin-top:.3rem">${myHTML}</div>`:''}<div style="margin-top:.35rem">${tags.join('')}</div></div><div style="text-align:right;flex-shrink:0"><div class="sw-detail-score" style="color:${col};text-shadow:0 0 18px ${col}">${avg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">SONGR avg</div></div></div></div><div class="sw-detail-body"><div class="sw-detail-stat-row"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${song.n}</div><div class="sw-detail-stat-lbl">Ratings</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${hi}</div><div class="sw-detail-stat-lbl">Highest</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${lo}</div><div class="sw-detail-stat-lbl">Lowest</div></div></div><button class="sw-detail-rate-btn" onclick="swRateSong('${esc(sEnc)}','${esc(aEnc)}')">${song.iMyRated?'✎ Update My Rating':'＋ Rate This Song'}</button><div class="sw-rate-label">${song.iMyRated?'You have already rated this song':'Add your take to the map'}</div></div>`;
   swOpenDetail();
 }
 
@@ -9142,9 +9145,9 @@ function teComputeRecommendations(profile,w){
 
 function teArtHTML(url,artist,album,fallback){
   const fb=fallback||'🎵';
-  if(url)return`<img class="te-card-art" src="${itunesArtUrl(url,96)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="te-card-art-ph" style="display:none">${fb}</div>`;
-  if(artist){const a=artist||'unknown';const al=album||artist||'unknown';return`<div class="te-card-art" data-art-key="${a}|||${al}" data-art-size="96"></div>`;}
-  return`<div class="te-card-art-ph">${fb}</div>`;
+  if(url)return`<img class="te-card-art" src="${esc(itunesArtUrl(url,96))}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="te-card-art-ph" style="display:none">${esc(fb)}</div>`;
+  if(artist){const a=artist||'unknown';const al=album||artist||'unknown';return`<div class="te-card-art" data-art-key="${esc(a+'|||'+al)}" data-art-size="96"></div>`;}
+  return`<div class="te-card-art-ph">${esc(fb)}</div>`;
 }
 
 function teSongCardHTML(s,opts){
@@ -9155,7 +9158,7 @@ function teSongCardHTML(s,opts){
   if(s.isFriendRated&&!opts.noFriendTag)tags.push('<span class="te-card-tag te-tag-friend">Friend</span>');
   if(opts.gem)tags.push('<span class="te-card-tag te-tag-gem">Gem</span>');
   if(opts.hot)tags.push('<span class="te-card-tag te-tag-hot">Divisive</span>');
-  return`<div class="te-card" onclick="swOpenSong('${enc}')"><div class="te-card-accent"></div>${teArtHTML(s.artwork_url,s.artist,s.album)}<div class="te-card-info"><div class="te-card-name">${s.song}</div><div class="te-card-artist">${s.artist}${s.album?' · '+s.album:''}</div><div class="te-card-reason">${s._reason||''}</div>${tags.length?`<div style="margin-top:.25rem">${tags.join(' ')}</div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${s.avg.toFixed(1)}</div><div class="te-card-meta">${s.n} rating${s.n!==1?'s':''}</div></div></div>`;
+  return`<div class="te-card" onclick="swOpenSong('${esc(enc)}')"><div class="te-card-accent"></div>${teArtHTML(s.artwork_url,s.artist,s.album)}<div class="te-card-info"><div class="te-card-name">${esc(s.song)}</div><div class="te-card-artist">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div><div class="te-card-reason">${esc(s._reason||'')}</div>${tags.length?`<div style="margin-top:.25rem">${tags.join(' ')}</div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${s.avg.toFixed(1)}</div><div class="te-card-meta">${s.n} rating${s.n!==1?'s':''}</div></div></div>`;
 }
 
 function teRender(d){
@@ -9173,9 +9176,9 @@ function teRender(d){
   const insightEl=document.getElementById('te-insight-row');
   if(insightEl){
     const insights=[];
-    if(d.profile.topArtists[0]){const a=d.profile.topArtists[0];insights.push({icon:'🎤',text:`Top artist · <b>${a.artist}</b> · ${a.n} rating${a.n===1?'':'s'} · ${a.avg.toFixed(1)} avg`});}
-    if(d.profile.topGenres[0]){const cfg=SW_GENRES[d.profile.topGenres[0].genre]||{icon:'🎵'};insights.push({icon:cfg.icon,text:`Favorite · <b>${teGenreLabel(d.profile.topGenres[0].genre)}</b>`});}
-    if(d.profile.topCategories[0])insights.push({icon:'⚡',text:`Values <b>${d.profile.topCategories[0].label}</b>`});
+    if(d.profile.topArtists[0]){const a=d.profile.topArtists[0];insights.push({icon:'🎤',text:`Top artist · <b>${esc(a.artist)}</b> · ${a.n} rating${a.n===1?'':'s'} · ${a.avg.toFixed(1)} avg`});}
+    if(d.profile.topGenres[0]){const cfg=SW_GENRES[d.profile.topGenres[0].genre]||{icon:'🎵'};insights.push({icon:cfg.icon,text:`Favorite · <b>${esc(teGenreLabel(d.profile.topGenres[0].genre))}</b>`});}
+    if(d.profile.topCategories[0])insights.push({icon:'⚡',text:`Values <b>${esc(d.profile.topCategories[0].label)}</b>`});
     if(d.profile.albums.length)insights.push({icon:'💿',text:`<b>${d.profile.albums.length}</b> album${d.profile.albums.length===1?'':'s'} explored`});
     if(!insights.length)insights.push({icon:'🌱',text:'Rate songs to grow your taste profile'});
     insightEl.innerHTML=insights.map(i=>`<div class="te-insight"><span class="te-insight-icon">${i.icon}</span><span class="te-insight-text">${i.text}</span></div>`).join('');
@@ -9226,8 +9229,8 @@ function teRenderFriends(items){
     const score=parseFloat(r.score!=null?r.score:r.final_score);
     const col=swScoreColor(score);
     const enc=encodeURIComponent((r.song_name||'')+'||'+(r.artist_name||''));
-    const friend=r.profile&&r.profile.username?`@${r.profile.username}`:'A friend';
-    return`<div class="te-card" onclick="swOpenSong('${enc}')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#60a5fa,#a78bfa)"></div>${teArtHTML(r.artwork_url,r.artist_name,r.album)}<div class="te-card-info"><div class="te-card-name">${r.song_name||'Unknown'}</div><div class="te-card-artist">${r.artist_name||''}${r.album?' · '+r.album:''}</div><div class="te-card-reason">${friend} rated this <b style="color:${col}">${score.toFixed(1)}</b></div></div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${score.toFixed(1)}</div><div class="te-card-meta">Friend</div></div></div>`;
+    const friend=r.profile&&r.profile.username?`@${esc(r.profile.username)}`:'A friend';
+    return`<div class="te-card" onclick="swOpenSong('${esc(enc)}')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#60a5fa,#a78bfa)"></div>${teArtHTML(r.artwork_url,r.artist_name,r.album)}<div class="te-card-info"><div class="te-card-name">${esc(r.song_name||'Unknown')}</div><div class="te-card-artist">${esc(r.artist_name||'')}${r.album?' · '+esc(r.album):''}</div><div class="te-card-reason">${friend} rated this <b style="color:${col}">${score.toFixed(1)}</b></div></div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${score.toFixed(1)}</div><div class="te-card-meta">Friend</div></div></div>`;
   }).join('');
   loadMissingArtwork(el);
 }
@@ -9239,7 +9242,7 @@ function teRenderBlindSpots(items){
   el.innerHTML=items.map((b,i)=>{
     const clickable=b.actionType?`onclick="teRunBlindSpotAction(${i})"`:'';
     const cursor=b.actionType?'':'cursor:default';
-    return`<div class="te-card te-blind-card" ${clickable} style="${cursor}"><div class="te-blind-icon">${b.icon}</div><div class="te-card-info"><div class="te-blind-title">${b.title}</div><div class="te-blind-body">${b.body}</div></div>${b.actionType?'<div class="te-card-meta" style="font-size:.5rem;color:var(--gold)">View →</div>':''}</div>`;
+    return`<div class="te-card te-blind-card" ${clickable} style="${cursor}"><div class="te-blind-icon">${esc(b.icon)}</div><div class="te-card-info"><div class="te-blind-title">${esc(b.title)}</div><div class="te-blind-body">${esc(b.body)}</div></div>${b.actionType?'<div class="te-card-meta" style="font-size:.5rem;color:var(--gold)">View →</div>':''}</div>`;
   }).join('');
 }
 function teRunBlindSpotAction(idx){
@@ -9256,7 +9259,7 @@ function teRenderAlbums(items){
     const col=swScoreColor(a._avg);
     const pct=a._progress>0?Math.round(a._progress*100):0;
     const aEnc=encodeURIComponent(a.artist);
-    return`<div class="te-card" onclick="swOpenArtist('${aEnc}','Taste Engine')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#c9a84c,#a78bfa)"></div>${teArtHTML(a.artwork_url,a.artist,a.album,'💿')}<div class="te-card-info"><div class="te-card-name">${a.album}</div><div class="te-card-artist">${a.artist} · ${a.songs.length} song${a.songs.length===1?'':'s'}</div><div class="te-card-reason">${a._reason}</div>${pct>0?`<div class="te-card-progress" title="${a._userRated}/${a.songs.length} rated"><div class="te-card-progress-bar" style="width:${pct}%"></div></div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${a._avg.toFixed(1)}</div><div class="te-card-meta">${pct>0?pct+'%':'Album'}</div></div></div>`;
+    return`<div class="te-card" onclick="swOpenArtist('${esc(aEnc)}','Taste Engine')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#c9a84c,#a78bfa)"></div>${teArtHTML(a.artwork_url,a.artist,a.album,'💿')}<div class="te-card-info"><div class="te-card-name">${esc(a.album)}</div><div class="te-card-artist">${esc(a.artist)} · ${a.songs.length} song${a.songs.length===1?'':'s'}</div><div class="te-card-reason">${esc(a._reason)}</div>${pct>0?`<div class="te-card-progress" title="${escAttr(a._userRated+'/'+a.songs.length+' rated')}"><div class="te-card-progress-bar" style="width:${pct}%"></div></div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${a._avg.toFixed(1)}</div><div class="te-card-meta">${pct>0?pct+'%':'Album'}</div></div></div>`;
   }).join('');
   loadMissingArtwork(el);
 }
@@ -9274,7 +9277,7 @@ function teRenderArtists(items){
   el.innerHTML=items.map(a=>{
     const col=swScoreColor(a.avg);
     const aEnc=encodeURIComponent(a.artist);
-    return`<div class="te-card" onclick="swOpenArtist('${aEnc}','Taste Engine')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#a78bfa,#f472b6)"></div><div class="te-blind-icon" style="font-size:1.4rem">🎤</div><div class="te-card-info"><div class="te-card-name">${a.artist}</div><div class="te-card-artist">${a._ratingCount} community rating${a._ratingCount===1?'':'s'} · ${teGenreLabel(a._genre)}</div><div class="te-card-reason">${a._reason}</div></div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${a.avg.toFixed(1)}</div><div class="te-card-meta">Artist</div></div></div>`;
+    return`<div class="te-card" onclick="swOpenArtist('${esc(aEnc)}','Taste Engine')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#a78bfa,#f472b6)"></div><div class="te-blind-icon" style="font-size:1.4rem">🎤</div><div class="te-card-info"><div class="te-card-name">${esc(a.artist)}</div><div class="te-card-artist">${a._ratingCount} community rating${a._ratingCount===1?'':'s'} · ${esc(teGenreLabel(a._genre))}</div><div class="te-card-reason">${esc(a._reason)}</div></div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${a.avg.toFixed(1)}</div><div class="te-card-meta">Artist</div></div></div>`;
   }).join('');
 }
 
@@ -9385,24 +9388,25 @@ function apRenderPage(){
   contEl.style.display='block';
   const col=d.communityAvg?swScoreColor(d.communityAvg):'var(--muted)';
   const initial=d.artist[0]?.toUpperCase()||'?';
-  const heroHTML=`<div class="ap-hero"><div class="ap-hero-bg" style="background:radial-gradient(ellipse at 0% 120%,${col}28 0%,transparent 65%)"></div><div class="ap-avatar" style="background:${col}1a;border-color:${col}66;color:${col}">${initial}</div><div class="ap-hero-name" style="text-shadow:0 0 28px ${col}44">${d.artist}</div><div class="ap-hero-stats"><div><div class="ap-hero-stat-val" style="color:${col};text-shadow:0 0 14px ${col}88">${d.communityAvg?d.communityAvg.toFixed(1):'—'}</div><div class="ap-hero-stat-lbl">SONGR Avg</div></div>${d.myAvg!==null?`<div><div class="ap-hero-stat-val" style="color:var(--green);text-shadow:0 0 14px rgba(52,211,153,.5)">${d.myAvg.toFixed(1)}</div><div class="ap-hero-stat-lbl">Your Avg</div></div>`:''}<div><div class="ap-hero-stat-val">${d.totalRatings}</div><div class="ap-hero-stat-lbl">Total Ratings</div></div><div><div class="ap-hero-stat-val">${d.songs.length}</div><div class="ap-hero-stat-lbl">Songs</div></div></div></div>`;
+  const heroHTML=`<div class="ap-hero"><div class="ap-hero-bg" style="background:radial-gradient(ellipse at 0% 120%,${col}28 0%,transparent 65%)"></div><div class="ap-avatar" style="background:${col}1a;border-color:${col}66;color:${col}">${esc(initial)}</div><div class="ap-hero-name" style="text-shadow:0 0 28px ${col}44">${esc(d.artist)}</div><div class="ap-hero-stats"><div><div class="ap-hero-stat-val" style="color:${col};text-shadow:0 0 14px ${col}88">${d.communityAvg?d.communityAvg.toFixed(1):'—'}</div><div class="ap-hero-stat-lbl">SONGR Avg</div></div>${d.myAvg!==null?`<div><div class="ap-hero-stat-val" style="color:var(--green);text-shadow:0 0 14px rgba(52,211,153,.5)">${d.myAvg.toFixed(1)}</div><div class="ap-hero-stat-lbl">Your Avg</div></div>`:''}<div><div class="ap-hero-stat-val">${d.totalRatings}</div><div class="ap-hero-stat-lbl">Total Ratings</div></div><div><div class="ap-hero-stat-val">${d.songs.length}</div><div class="ap-hero-stat-lbl">Songs</div></div></div></div>`;
   contEl.innerHTML=heroHTML+apCommStats(d)+apMyStats(d)+apAlbumsSection(d)+apSongsSection(d,apCurrentSort)+apActivitySection(d);
 }
 
 function apCommStats(d){
   if(!d.songs.length)return`<div class="ap-sec"><div class="ap-empty">Not enough ratings yet for community stats.</div></div>`;
   const best=d.sortedByAvg[0],worst=d.sortedByAvg[d.sortedByAvg.length-1],top=d.sortedByN[0],div=d.sortedByDiv[0],topAlb=d.albums[0];
-  const card=(lbl,val,sub)=>val?`<div class="ap-stat-card"><div class="ap-stat-card-lbl">${lbl}</div><div class="ap-stat-card-val">${val}</div>${sub?`<div class="ap-stat-card-sub">${sub}</div>`:''}</div>`:'';
+  const card=(lbl,val,sub)=>val?`<div class="ap-stat-card"><div class="ap-stat-card-lbl">${esc(lbl)}</div><div class="ap-stat-card-val">${esc(val)}</div>${sub?`<div class="ap-stat-card-sub">${esc(sub)}</div>`:''}</div>`:'';
   return`<div class="ap-sec"><div class="ap-sec-title">Community Stats</div><div class="ap-stat-grid">${card('Highest Rated',best?.song,best?.avg.toFixed(1))}${card('Most Rated',top?.song,top?`${top.n} ratings`:'')}${best!==worst?card('Lowest Rated',worst?.song,worst?.avg.toFixed(1)):''}${div?card('Most Divisive',div.song,`±${div.stddev.toFixed(1)} spread`):''}${topAlb?.albumAvg?card('Top Album',topAlb.album,topAlb.albumAvg.toFixed(1)):''}</div></div>`;
 }
 
 function apMyStats(d){
-  if(d.myCount===0){return`<div class="ap-sec"><div class="ap-sec-title">Your Stats</div><div class="ap-personal"><div style="font-size:.63rem;color:var(--muted);font-style:italic">You haven't rated this artist yet.</div><button class="ap-rate-btn" onclick="swCloseArtist();switchTab('rate')">Rate a Song by ${d.artist}</button></div></div>`;}
+  if(d.myCount===0){return`<div class="ap-sec"><div class="ap-sec-title">Your Stats</div><div class="ap-personal"><div style="font-size:.63rem;color:var(--muted);font-style:italic">You haven't rated this artist yet.</div><button class="ap-rate-btn" onclick="swCloseArtist();switchTab('rate')">Rate a Song by ${esc(d.artist)}</button></div></div>`;}
   const myBest=d.mySortedByScore[0],myWorst=d.mySortedByScore[d.mySortedByScore.length-1],myBestAlb=d.myAlbumsSorted[0];
   const diff=d.myAvg!==null&&d.communityAvg!==null?d.myAvg-d.communityAvg:null;
-  const diffText=diff!==null?(diff>0.1?`You rate ${d.artist} <strong style="color:var(--green)">${diff.toFixed(1)} higher</strong> than the SONGR average.`:diff<-0.1?`You rate ${d.artist} <strong style="color:var(--red)">${Math.abs(diff).toFixed(1)} lower</strong> than the SONGR average.`:'Your ratings match the SONGR average almost exactly.'):'';
+  const aEsc=esc(d.artist);
+  const diffText=diff!==null?(diff>0.1?`You rate ${aEsc} <strong style="color:var(--green)">${diff.toFixed(1)} higher</strong> than the SONGR average.`:diff<-0.1?`You rate ${aEsc} <strong style="color:var(--red)">${Math.abs(diff).toFixed(1)} lower</strong> than the SONGR average.`:'Your ratings match the SONGR average almost exactly.'):'';
   const col=swScoreColor(d.myAvg);
-  const card=(lbl,val,sub)=>val?`<div class="ap-stat-card"><div class="ap-stat-card-lbl">${lbl}</div><div class="ap-stat-card-val">${val}</div>${sub?`<div class="ap-stat-card-sub">${sub}</div>`:''}</div>`:'';
+  const card=(lbl,val,sub)=>val?`<div class="ap-stat-card"><div class="ap-stat-card-lbl">${esc(lbl)}</div><div class="ap-stat-card-val">${esc(val)}</div>${sub?`<div class="ap-stat-card-sub">${esc(sub)}</div>`:''}</div>`:'';
   return`<div class="ap-sec"><div class="ap-sec-title">Your Stats</div><div class="ap-personal"><div style="display:flex;gap:1rem;flex-wrap:wrap"><div><div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900;color:${col};text-shadow:0 0 14px ${col}88">${d.myAvg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Your Avg</div></div><div><div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900">${d.myCount}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Songs Rated</div></div></div><div class="ap-stat-grid" style="margin-top:.6rem">${card('Your Best',myBest?.song,myBest?.score.toFixed(1))}${myWorst&&myWorst.song!==myBest?.song?card('Your Lowest',myWorst.song,myWorst.score.toFixed(1)):''}${myBestAlb?card('Fav Album',myBestAlb.album,myBestAlb.avg.toFixed(1)):''}${d.myHotTake?card('Hot Take',d.myHotTake.song,`You: ${d.myHotTake.score.toFixed(1)} · Avg: ${d.myHotTake.commAvg.toFixed(1)}`):''}</div>${diffText?`<div class="ap-personal-compare">${diffText}</div>`:''}</div></div>`;
 }
 
@@ -9412,14 +9416,14 @@ function apAlbumsSection(d){
 }
 function apAlbumCard(a,d){
   const col=a.albumAvg?swScoreColor(a.albumAvg):'var(--muted)';
-  const artHTML=a.artwork_url?`<img class="ap-album-art" src="${a.artwork_url}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';
+  const artHTML=a.artwork_url?`<img class="ap-album-art" src="${esc(a.artwork_url)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';
   const phHTML=`<div class="ap-album-art-ph" style="${a.artwork_url?'display:none':''}">💿</div>`;
   const isExp=apExpandedAlbums.has(a.album);
   const encAlb=encodeURIComponent(a.album);
   const myAlb=d.myAlbumsSorted.find(x=>x.album===a.album);
   const myStr=myAlb?` · Yours: ${myAlb.avg.toFixed(1)}`:'';
-  const songRows=isExp?a.songs.sort((x,y)=>y.avg-x.avg).map(s=>{const sc=swScoreColor(s.avg);const mySong=d.mySongs[s.song.toLowerCase()];const enc=encodeURIComponent(s.song+'||'+d.artist);return`<div class="ap-song-row" onclick="swCloseArtist();setTimeout(()=>swOpenSong('${enc}'),300)">${s.artwork_url?`<img class="ap-song-art" src="${s.artwork_url}" loading="lazy" onerror="this.style.display='none'">`:`<div class="ap-song-art-ph">🎵</div>`}<div style="flex:1;min-width:0"><div class="ap-song-name">${s.song}</div><div class="ap-song-meta">${s.n} rating${s.n!==1?'s':''}</div></div><div style="text-align:right;flex-shrink:0"><div class="ap-song-score" style="color:${sc};text-shadow:0 0 10px ${sc}">${s.avg.toFixed(1)}</div>${mySong?`<div style="font-size:.42rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">MY ${mySong.score.toFixed(1)}</div>`:''}</div></div>`;}).join(''):'';
-  return`<div class="ap-album${isExp?' expanded':''}"><div class="ap-album-head" onclick="apToggleAlbum('${encAlb}')">${artHTML}${phHTML}<div style="flex:1;min-width:0"><div class="ap-album-name">${a.album}</div><div class="ap-album-meta">${a.ratingCount} rating${a.ratingCount!==1?'s':''} · ${a.songCount} song${a.songCount!==1?'s':''}${myStr}</div></div><div style="text-align:right;flex-shrink:0;margin-right:.3rem"><div class="ap-album-score" style="color:${col};text-shadow:0 0 10px ${col}">${a.albumAvg?a.albumAvg.toFixed(1):'—'}</div><div style="font-size:.42rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Album</div></div><div class="ap-album-toggle">${isExp?'▲':'▼'}</div></div>${isExp?`<div class="ap-album-songs">${songRows}</div>`:''}</div>`;
+  const songRows=isExp?a.songs.sort((x,y)=>y.avg-x.avg).map(s=>{const sc=swScoreColor(s.avg);const mySong=d.mySongs[s.song.toLowerCase()];const enc=encodeURIComponent(s.song+'||'+d.artist);return`<div class="ap-song-row" onclick="swCloseArtist();setTimeout(()=>swOpenSong('${esc(enc)}'),300)">${s.artwork_url?`<img class="ap-song-art" src="${esc(s.artwork_url)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="ap-song-art-ph">🎵</div>`}<div style="flex:1;min-width:0"><div class="ap-song-name">${esc(s.song)}</div><div class="ap-song-meta">${s.n} rating${s.n!==1?'s':''}</div></div><div style="text-align:right;flex-shrink:0"><div class="ap-song-score" style="color:${sc};text-shadow:0 0 10px ${sc}">${s.avg.toFixed(1)}</div>${mySong?`<div style="font-size:.42rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">MY ${mySong.score.toFixed(1)}</div>`:''}</div></div>`;}).join(''):'';
+  return`<div class="ap-album${isExp?' expanded':''}"><div class="ap-album-head" onclick="apToggleAlbum('${esc(encAlb)}')">${artHTML}${phHTML}<div style="flex:1;min-width:0"><div class="ap-album-name">${esc(a.album)}</div><div class="ap-album-meta">${a.ratingCount} rating${a.ratingCount!==1?'s':''} · ${a.songCount} song${a.songCount!==1?'s':''}${esc(myStr)}</div></div><div style="text-align:right;flex-shrink:0;margin-right:.3rem"><div class="ap-album-score" style="color:${col};text-shadow:0 0 10px ${col}">${a.albumAvg?a.albumAvg.toFixed(1):'—'}</div><div style="font-size:.42rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Album</div></div><div class="ap-album-toggle">${isExp?'▲':'▼'}</div></div>${isExp?`<div class="ap-album-songs">${songRows}</div>`:''}</div>`;
 }
 function apToggleAlbum(encAlb){
   const alb=decodeURIComponent(encAlb);
@@ -9447,7 +9451,7 @@ function apSongsSection(d,sort){
     const displayScore=s.avg!=null?s.avg.toFixed(1):s.score!=null?s.score.toFixed(1):'—';
     const mySong=d.mySongs[(s.song||'').toLowerCase()];
     const enc=encodeURIComponent((s.song||'')+'||'+d.artist);
-    return`<div class="ap-song-row" onclick="swCloseArtist();setTimeout(()=>swOpenSong('${enc}'),300)">${s.artwork_url?`<img class="ap-song-art" src="${s.artwork_url}" loading="lazy" onerror="this.style.display='none'">`:`<div class="ap-song-art-ph">🎵</div>`}<div style="flex:1;min-width:0"><div class="ap-song-name">${s.song||'—'}</div><div class="ap-song-meta">${s.album||''}${s.n?` · ${s.n} rating${s.n!==1?'s':''}`:''}</div></div><div style="text-align:right;flex-shrink:0"><div class="ap-song-score" style="color:${sc};text-shadow:0 0 10px ${sc}">${displayScore}</div>${mySong&&sort!=='mine'?`<div style="font-size:.42rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">MY ${mySong.score.toFixed(1)}</div>`:''}</div></div>`;
+    return`<div class="ap-song-row" onclick="swCloseArtist();setTimeout(()=>swOpenSong('${esc(enc)}'),300)">${s.artwork_url?`<img class="ap-song-art" src="${esc(s.artwork_url)}" loading="lazy" onerror="this.style.display='none'">`:`<div class="ap-song-art-ph">🎵</div>`}<div style="flex:1;min-width:0"><div class="ap-song-name">${esc(s.song||'—')}</div><div class="ap-song-meta">${esc(s.album||'')}${s.n?` · ${s.n} rating${s.n!==1?'s':''}`:''}</div></div><div style="text-align:right;flex-shrink:0"><div class="ap-song-score" style="color:${sc};text-shadow:0 0 10px ${sc}">${displayScore}</div>${mySong&&sort!=='mine'?`<div style="font-size:.42rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">MY ${mySong.score.toFixed(1)}</div>`:''}</div></div>`;
   }).join('');
   return`<div class="ap-sec"><div class="ap-sec-title">Songs</div><div class="ap-sort-row">${sortBtns}</div><div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden" id="ap-songs-list">${rows}</div></div>`;
 }
@@ -9463,7 +9467,7 @@ function apActivitySection(d){
   if(!d.recentActivity.length)return`<div class="ap-sec"><div class="ap-sec-title">Recent Activity</div><div class="ap-empty">No recent public ratings for this artist.</div></div>`;
   const items=d.recentActivity.map(r=>{
     const col=swScoreColor(r.score);
-    return`<div class="ap-activity-item">${avatarHTML(r.profile,null,32)}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text)">${r.profile.username||'user'}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.song_name}</div><div style="font-size:.48rem;color:var(--muted);margin-top:.06rem">${timeAgo(r.created_at)}</div></div><div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:${col};text-shadow:0 0 10px ${col};flex-shrink:0">${r.score.toFixed(1)}</div></div>`;
+    return`<div class="ap-activity-item">${avatarHTML(r.profile,null,32)}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text)">${esc(r.profile.username||'user')}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.song_name)}</div><div style="font-size:.48rem;color:var(--muted);margin-top:.06rem">${timeAgo(r.created_at)}</div></div><div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:${col};text-shadow:0 0 10px ${col};flex-shrink:0">${r.score.toFixed(1)}</div></div>`;
   }).join('');
   return`<div class="ap-sec"><div class="ap-sec-title">Recent Activity</div><div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">${items}</div></div>`;
 }
