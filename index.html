@@ -3137,9 +3137,9 @@ function albumScore(songs){
   const topHalfAvg=topHalf.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/topHalf.length;
   const botHalfAvg=botHalf.length?botHalf.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/botHalf.length:topHalfAvg;
   const weighted=0.7*topHalfAvg+0.3*botHalfAvg;
-  const t20Count=Math.max(1,Math.ceil(sorted.length*0.2));
-  const t20=sorted.slice(0,t20Count).reduce((s,r)=>s+parseFloat(r.final_score||0),0)/t20Count;
-  return t20>=8.5?Math.min(10,1.05*weighted):weighted;
+  const t25Count=Math.max(1,Math.ceil(sorted.length*0.25));
+  const t25=sorted.slice(0,t25Count).reduce((s,r)=>s+parseFloat(r.final_score||0),0)/t25Count;
+  return t25>=8?Math.min(10,1.05*weighted):weighted;
 }
 function timeAgo(ts){const d=Date.now()-new Date(ts).getTime(),m=Math.floor(d/60000);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago';}
 function avatarInitial(u){return(u||'?')[0].toUpperCase();}
@@ -8738,8 +8738,10 @@ function swRenderGenres(genres){
 function swSongCard(s,extraClass,labelClass,labelText,rank){
   const avg=s.avg||0;
   const col=swScoreColor(avg);
-  const artHTML=s.artwork_url?`<img class="sw-song-art" src="${s.artwork_url}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';
-  const phHTML=`<div class="sw-song-art-ph" style="${s.artwork_url?'display:none':''}">🎵</div>`;
+  const artHTML=s.artwork_url
+    ?`<img class="sw-song-art" src="${itunesArtUrl(s.artwork_url,84)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sw-song-art-ph" style="display:none">🎵</div>`
+    :`<div class="sw-song-art" data-art-key="${(s.artist||'unknown')}|||${s.album||s.artist||'unknown'}" data-art-size="84"></div>`;
+  const phHTML='';
   const rankHTML=rank!=null?`<div class="sw-trend-rank" style="color:${rank<=2?'var(--gold)':'var(--muted)'}">${rank}</div>`:'';
   const labelHTML=labelText?`<span class="sw-song-label ${labelClass}">${labelText}</span>`:'';
   const myHTML=s.iMyRated&&s.myScore!=null?`<div style="font-size:.45rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em;margin-top:.1rem">MY ${parseFloat(s.myScore).toFixed(1)}</div>`:'';
@@ -8768,6 +8770,7 @@ function swRenderTrending(songs){
   if(!songs.length){el.innerHTML='<div class="sw-empty">No trending songs yet. Rate songs to populate the Trending Tower.</div>';return;}
   const visible=songs.slice(0,swLimits.trending);
   el.innerHTML=visible.map((s,i)=>swSongCard(s,'sw-trend-card','sw-label-trend','Trending',i+1)).join('')+swShowMoreBtn('trending',visible.length,songs.length);
+  loadMissingArtwork(el);
 }
 function swRenderHotTakes(songs){
   const el=document.getElementById('sw-hot-list');
@@ -8775,6 +8778,7 @@ function swRenderHotTakes(songs){
   if(!songs.length){el.innerHTML='<div class="sw-empty">No divisive songs found yet. The Hot Take Zone activates when songs have varied scores from different users.</div>';return;}
   const visible=songs.slice(0,swLimits.hot);
   el.innerHTML=visible.map(s=>swSongCard(s,'sw-hot-card','sw-label-divisive','Divisive',null)).join('')+swShowMoreBtn('hot',visible.length,songs.length);
+  loadMissingArtwork(el);
 }
 function swRenderGems(songs){
   const el=document.getElementById('sw-gem-list');
@@ -8782,6 +8786,7 @@ function swRenderGems(songs){
   if(!songs.length){el.innerHTML='<div class="sw-empty">No hidden gems found yet. Rate more songs to surface underrated tracks.</div>';return;}
   const visible=songs.slice(0,swLimits.gems);
   el.innerHTML=visible.map(s=>swSongCard(s,'sw-gem-card','sw-label-gem','Hidden Gem',null)).join('')+swShowMoreBtn('gems',visible.length,songs.length);
+  loadMissingArtwork(el);
 }
 function swRenderFriends(activity){
   const el=document.getElementById('sw-friend-list');
@@ -8791,10 +8796,12 @@ function swRenderFriends(activity){
   el.innerHTML=visible.map(r=>{
     const col=swScoreColor(r.score);
     const enc=encodeURIComponent(r.song_name+'||'+r.artist_name);
-    const artHTML=r.artwork_url?`<img class="sw-song-art" src="${itunesArtUrl(r.artwork_url,60)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';
-    const phHTML=`<div class="sw-song-art-ph" style="${r.artwork_url?'display:none':''}">🎵</div>`;
-    return`<div class="sw-friend-card" onclick="swOpenSong('${enc}')">${artHTML}${phHTML}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${r.profile.username}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${r.song_name}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${r.artist_name}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
+    const artHTML=r.artwork_url
+      ?`<img class="sw-song-art" src="${itunesArtUrl(r.artwork_url,84)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sw-song-art-ph" style="display:none">🎵</div>`
+      :`<div class="sw-song-art" data-art-key="${(r.artist_name||'unknown')}|||${r.album||r.artist_name||'unknown'}" data-art-size="84"></div>`;
+    return`<div class="sw-friend-card" onclick="swOpenSong('${enc}')">${artHTML}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${r.profile.username}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${r.song_name}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${r.artist_name}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
   }).join('')+swShowMoreBtn('friends',visible.length,activity.length);
+  loadMissingArtwork(el);
 }
 
 function swOpenGenre(genre){
@@ -8914,6 +8921,7 @@ function teBuildProfile(myRatings){
     .sort((a,b)=>b.avg-a.avg)
     .slice(0,3);
 
+  const userMean=totalRatings>0?myRatings.reduce((s,r)=>s+parseFloat(r.final_score),0)/totalRatings:7;
   const artistMap={};
   myRatings.forEach(r=>{
     if(!r.artist_name)return;
@@ -8921,10 +8929,15 @@ function teBuildProfile(myRatings){
     if(!artistMap[k])artistMap[k]={artist:r.artist_name,scores:[]};
     artistMap[k].scores.push(parseFloat(r.final_score));
   });
-  const artists=Object.values(artistMap).map(a=>({artist:a.artist,n:a.scores.length,avg:a.scores.reduce((s,x)=>s+x,0)/a.scores.length}));
-  const topArtists=artists.filter(a=>a.avg>=7)
-    .map(a=>({...a,_rank:a.avg+0.3*Math.log(a.n+1)}))
-    .sort((a,b)=>b._rank-a._rank)
+  const PRIOR=3;
+  const artists=Object.values(artistMap).map(a=>{
+    const n=a.scores.length;
+    const avg=a.scores.reduce((s,x)=>s+x,0)/n;
+    const _rank=(PRIOR*userMean+n*avg)/(PRIOR+n);
+    return{artist:a.artist,n,avg,_rank};
+  });
+  const topArtists=artists.filter(a=>a.avg>=7&&a._rank>=userMean)
+    .sort((a,b)=>b._rank-a._rank||b.n-a.n)
     .slice(0,8);
 
   const albumMap={};
@@ -9127,9 +9140,11 @@ function teComputeRecommendations(profile,w){
   return{foryou,gems,friendPicks,blindspots,albumRecs,controversial,artistRecs};
 }
 
-function teArtHTML(url,fallback){
-  if(url)return`<img class="te-card-art" src="${itunesArtUrl(url,80)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="te-card-art-ph" style="display:none">${fallback||'🎵'}</div>`;
-  return`<div class="te-card-art-ph">${fallback||'🎵'}</div>`;
+function teArtHTML(url,artist,album,fallback){
+  const fb=fallback||'🎵';
+  if(url)return`<img class="te-card-art" src="${itunesArtUrl(url,96)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="te-card-art-ph" style="display:none">${fb}</div>`;
+  if(artist){const a=artist||'unknown';const al=album||artist||'unknown';return`<div class="te-card-art" data-art-key="${a}|||${al}" data-art-size="96"></div>`;}
+  return`<div class="te-card-art-ph">${fb}</div>`;
 }
 
 function teSongCardHTML(s,opts){
@@ -9140,7 +9155,7 @@ function teSongCardHTML(s,opts){
   if(s.isFriendRated&&!opts.noFriendTag)tags.push('<span class="te-card-tag te-tag-friend">Friend</span>');
   if(opts.gem)tags.push('<span class="te-card-tag te-tag-gem">Gem</span>');
   if(opts.hot)tags.push('<span class="te-card-tag te-tag-hot">Divisive</span>');
-  return`<div class="te-card" onclick="swOpenSong('${enc}')"><div class="te-card-accent"></div>${teArtHTML(s.artwork_url)}<div class="te-card-info"><div class="te-card-name">${s.song}</div><div class="te-card-artist">${s.artist}${s.album?' · '+s.album:''}</div><div class="te-card-reason">${s._reason||''}</div>${tags.length?`<div style="margin-top:.25rem">${tags.join(' ')}</div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${s.avg.toFixed(1)}</div><div class="te-card-meta">${s.n} rating${s.n!==1?'s':''}</div></div></div>`;
+  return`<div class="te-card" onclick="swOpenSong('${enc}')"><div class="te-card-accent"></div>${teArtHTML(s.artwork_url,s.artist,s.album)}<div class="te-card-info"><div class="te-card-name">${s.song}</div><div class="te-card-artist">${s.artist}${s.album?' · '+s.album:''}</div><div class="te-card-reason">${s._reason||''}</div>${tags.length?`<div style="margin-top:.25rem">${tags.join(' ')}</div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${s.avg.toFixed(1)}</div><div class="te-card-meta">${s.n} rating${s.n!==1?'s':''}</div></div></div>`;
 }
 
 function teRender(d){
@@ -9158,7 +9173,7 @@ function teRender(d){
   const insightEl=document.getElementById('te-insight-row');
   if(insightEl){
     const insights=[];
-    if(d.profile.topArtists[0])insights.push({icon:'🎤',text:`Top artist · <b>${d.profile.topArtists[0].artist}</b>`});
+    if(d.profile.topArtists[0]){const a=d.profile.topArtists[0];insights.push({icon:'🎤',text:`Top artist · <b>${a.artist}</b> · ${a.n} rating${a.n===1?'':'s'} · ${a.avg.toFixed(1)} avg`});}
     if(d.profile.topGenres[0]){const cfg=SW_GENRES[d.profile.topGenres[0].genre]||{icon:'🎵'};insights.push({icon:cfg.icon,text:`Favorite · <b>${teGenreLabel(d.profile.topGenres[0].genre)}</b>`});}
     if(d.profile.topCategories[0])insights.push({icon:'⚡',text:`Values <b>${d.profile.topCategories[0].label}</b>`});
     if(d.profile.albums.length)insights.push({icon:'💿',text:`<b>${d.profile.albums.length}</b> album${d.profile.albums.length===1?'':'s'} explored`});
@@ -9193,12 +9208,14 @@ function teRenderForYou(items){
   if(!el)return;
   if(!items.length){el.innerHTML='<div class="te-empty">Rate more songs to unlock personalized picks.</div>';return;}
   el.innerHTML=items.map(s=>teSongCardHTML(s)).join('');
+  loadMissingArtwork(el);
 }
 function teRenderGems(items){
   const el=document.getElementById('te-gems-list');
   if(!el)return;
   if(!items.length){el.innerHTML='<div class="te-empty">No hidden gems found for your taste yet.</div>';return;}
   el.innerHTML=items.map(s=>teSongCardHTML(s,{gem:true})).join('');
+  loadMissingArtwork(el);
 }
 function teRenderFriends(items){
   const el=document.getElementById('te-friends-list');
@@ -9210,8 +9227,9 @@ function teRenderFriends(items){
     const col=swScoreColor(score);
     const enc=encodeURIComponent((r.song_name||'')+'||'+(r.artist_name||''));
     const friend=r.profile&&r.profile.username?`@${r.profile.username}`:'A friend';
-    return`<div class="te-card" onclick="swOpenSong('${enc}')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#60a5fa,#a78bfa)"></div>${teArtHTML(r.artwork_url)}<div class="te-card-info"><div class="te-card-name">${r.song_name||'Unknown'}</div><div class="te-card-artist">${r.artist_name||''}${r.album?' · '+r.album:''}</div><div class="te-card-reason">${friend} rated this <b style="color:${col}">${score.toFixed(1)}</b></div></div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${score.toFixed(1)}</div><div class="te-card-meta">Friend</div></div></div>`;
+    return`<div class="te-card" onclick="swOpenSong('${enc}')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#60a5fa,#a78bfa)"></div>${teArtHTML(r.artwork_url,r.artist_name,r.album)}<div class="te-card-info"><div class="te-card-name">${r.song_name||'Unknown'}</div><div class="te-card-artist">${r.artist_name||''}${r.album?' · '+r.album:''}</div><div class="te-card-reason">${friend} rated this <b style="color:${col}">${score.toFixed(1)}</b></div></div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${score.toFixed(1)}</div><div class="te-card-meta">Friend</div></div></div>`;
   }).join('');
+  loadMissingArtwork(el);
 }
 function teRenderBlindSpots(items){
   const el=document.getElementById('te-blindspots-list');
@@ -9238,14 +9256,16 @@ function teRenderAlbums(items){
     const col=swScoreColor(a._avg);
     const pct=a._progress>0?Math.round(a._progress*100):0;
     const aEnc=encodeURIComponent(a.artist);
-    return`<div class="te-card" onclick="swOpenArtist('${aEnc}','Taste Engine')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#c9a84c,#a78bfa)"></div>${teArtHTML(a.artwork_url,'💿')}<div class="te-card-info"><div class="te-card-name">${a.album}</div><div class="te-card-artist">${a.artist} · ${a.songs.length} song${a.songs.length===1?'':'s'}</div><div class="te-card-reason">${a._reason}</div>${pct>0?`<div class="te-card-progress" title="${a._userRated}/${a.songs.length} rated"><div class="te-card-progress-bar" style="width:${pct}%"></div></div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${a._avg.toFixed(1)}</div><div class="te-card-meta">${pct>0?pct+'%':'Album'}</div></div></div>`;
+    return`<div class="te-card" onclick="swOpenArtist('${aEnc}','Taste Engine')"><div class="te-card-accent" style="background:linear-gradient(to bottom,#c9a84c,#a78bfa)"></div>${teArtHTML(a.artwork_url,a.artist,a.album,'💿')}<div class="te-card-info"><div class="te-card-name">${a.album}</div><div class="te-card-artist">${a.artist} · ${a.songs.length} song${a.songs.length===1?'':'s'}</div><div class="te-card-reason">${a._reason}</div>${pct>0?`<div class="te-card-progress" title="${a._userRated}/${a.songs.length} rated"><div class="te-card-progress-bar" style="width:${pct}%"></div></div>`:''}</div><div class="te-card-right"><div class="te-card-score" style="color:${col};text-shadow:0 0 10px ${col}">${a._avg.toFixed(1)}</div><div class="te-card-meta">${pct>0?pct+'%':'Album'}</div></div></div>`;
   }).join('');
+  loadMissingArtwork(el);
 }
 function teRenderControversial(items){
   const el=document.getElementById('te-controversial-list');
   if(!el)return;
   if(!items.length){el.innerHTML='<div class="te-empty">No controversial picks fit your taste yet.</div>';return;}
   el.innerHTML=items.map(s=>teSongCardHTML(s,{hot:true,noFriendTag:true})).join('');
+  loadMissingArtwork(el);
 }
 function teRenderArtists(items){
   const el=document.getElementById('te-artists-list');
