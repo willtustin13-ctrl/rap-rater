@@ -948,6 +948,13 @@
     @keyframes abAntBar{from{width:0}to{width:100%}}
     @keyframes abAntFlash{0%,100%{opacity:1}50%{opacity:.25}}
     @keyframes abAntNum{0%{opacity:0;transform:scale(1.6)}15%{opacity:1;transform:scale(1)}80%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.7)}}
+    @keyframes abTlPulse{0%,100%{box-shadow:0 0 0 rgba(167,139,250,0)}50%{box-shadow:0 0 14px rgba(167,139,250,.55)}}
+    @keyframes abTlPop{0%{transform:scale(.6);opacity:0}60%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
+    @keyframes abTlGlowFinal{0%,100%{box-shadow:0 0 6px rgba(250,204,21,.2)}50%{box-shadow:0 0 22px rgba(250,204,21,.6)}}
+    .ab-tl-node{flex-shrink:0;padding:.32rem .5rem;border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;text-align:center;border:1px solid var(--border);background:var(--surface2);color:var(--muted);min-width:2.6rem;transition:background .25s ease,border-color .25s ease,color .25s ease}
+    .ab-tl-node.current{animation:abTlPulse 1.8s ease-in-out infinite}
+    .ab-tl-node.just-resolved{animation:abTlPop .5s cubic-bezier(.22,1,.36,1)}
+    #ab-tl-nodes::-webkit-scrollbar{display:none}
     .ab-ant-art{width:88px;height:88px;border-radius:.75rem;object-fit:cover;flex-shrink:0;background:var(--surface2);border:2px solid var(--border2)}
 
     /* ── SONGR WORLD ─────────────────────────────────────────────────── */
@@ -1350,9 +1357,8 @@
     <!-- Section switcher -->
     <div class="world-sect-tabs">
       <button class="world-sect-btn" data-wsect="discover" onclick="setWorldSection('discover')">🌍 Discover</button>
-      <button class="world-sect-btn active" data-wsect="ratings" onclick="setWorldSection('ratings')">🎧 Ratings</button>
+      <button class="world-sect-btn active" data-wsect="ratings" onclick="setWorldSection('ratings')">📰 Feed</button>
       <button class="world-sect-btn" data-wsect="taste" onclick="setWorldSection('taste')">✨ Taste</button>
-      <button class="world-sect-btn" data-wsect="social" onclick="setWorldSection('social')">💬 Social</button>
     </div>
 
     <!-- ── DISCOVER ── -->
@@ -1389,12 +1395,6 @@
             <div class="sw-venue-name">Rank Room Stadium</div>
             <div class="sw-venue-sub">Competitive Rooms</div>
           </div>
-          <div class="sw-venue" onclick="setWorldSection('social');setSocialSubject('battles')">
-            <div class="sw-venue-glow" style="background:var(--red)"></div>
-            <span class="sw-venue-icon">⚡</span>
-            <div class="sw-venue-name">Aux Arena</div>
-            <div class="sw-venue-sub">Head-to-Head Battles</div>
-          </div>
         </div>
         <div class="sw-venue-row">
           <div class="sw-venue" onclick="switchTab('rate')">
@@ -1414,18 +1414,24 @@
       </div>
     </div>
 
-    <!-- ── RATINGS ── -->
+    <!-- ── FEED (Ratings + Lists + Questions) ── -->
     <div id="world-ratings-wrap" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
       <div id="feed-songs-controls" class="feed-controls">
-        <div class="feed-mode-btns">
-          <button class="feed-mode-btn active" id="fmode-all" onclick="setFeedMode('all',this)">All</button>
-          <button class="feed-mode-btn" id="fmode-following" onclick="setFeedMode('following',this)">Following</button>
+        <div style="display:flex;gap:.45rem;padding:.6rem 1rem .35rem;align-items:center">
+          <button id="feed-compose-btn" onclick="openFeedComposer()" style="flex:1;padding:.55rem .7rem;background:var(--surface);border:1px dashed var(--border2);color:var(--muted);border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;cursor:pointer;text-align:left">+ What do you want to post?</button>
+          <button id="fmode-following-btn" onclick="setFeedMode(feedMode==='following'?'all':'following',this)" style="padding:.55rem .65rem;background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.08em;cursor:pointer;text-transform:uppercase;flex-shrink:0">Following</button>
+        </div>
+        <div class="feed-mode-btns" id="feed-type-btns" style="padding:0 1rem .3rem">
+          <button class="feed-mode-btn active" id="ftype-all" data-ftype="all" onclick="setFeedType('all',this)">All</button>
+          <button class="feed-mode-btn" id="ftype-ratings" data-ftype="ratings" onclick="setFeedType('ratings',this)">Ratings</button>
+          <button class="feed-mode-btn" id="ftype-lists" data-ftype="lists" onclick="setFeedType('lists',this)">Lists</button>
+          <button class="feed-mode-btn" id="ftype-questions" data-ftype="questions" onclick="setFeedType('questions',this)">Questions</button>
         </div>
         <div class="feed-search-wrap">
           <span class="feed-search-icon">⌕</span>
-          <input type="text" id="feed-search" class="feed-search-input" placeholder="Search songs, artists..." oninput="filterFeed()">
+          <input type="text" id="feed-search" class="feed-search-input" placeholder="Search songs, artists, lists, questions..." oninput="filterFeed()">
         </div>
-        <div class="feed-sort-btns">
+        <div class="feed-sort-btns" id="feed-sort-row">
           <button class="feed-sort-btn active" data-sort="likes" onclick="setFeedSort(this)">Most Liked</button>
           <button class="feed-sort-btn" data-sort="recent" onclick="setFeedSort(this)">Recent</button>
           <button class="feed-sort-btn" data-sort="score" onclick="setFeedSort(this)">Highest</button>
@@ -1467,32 +1473,6 @@
       </div>
     </div>
 
-    <!-- ── SOCIAL ── -->
-    <div id="world-social-wrap" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-      <div class="feed-subj-tabs">
-        <button class="feed-subj-btn active" data-ssubj="lists" onclick="setSocialSubject('lists')">Lists</button>
-        <button class="feed-subj-btn" data-ssubj="questions" onclick="setSocialSubject('questions')">Questions</button>
-        <button class="feed-subj-btn" data-ssubj="battles" onclick="setSocialSubject('battles')">Battles</button>
-      </div>
-      <div id="feed-lists-area" style="display:flex;flex:1;overflow-y:auto"><div id="feed-lists-list"><div class="feed-empty">Loading...</div></div></div>
-      <div id="feed-questions-area" style="display:none;flex:1;overflow-y:auto;flex-direction:column">
-        <div style="padding:.65rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0">
-          <button onclick="openProposeQuestion()" style="width:100%;padding:.5rem;background:transparent;border:1px dashed var(--border2);color:var(--gold);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ Propose a Question</button>
-        </div>
-        <div id="feed-questions-list"><div class="feed-empty">Loading...</div></div>
-      </div>
-      <div id="feed-battles-area" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;flex-direction:column">
-        <div style="padding:.55rem 1rem .4rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:.5rem">
-          <div class="battle-sort-btns" style="padding:0;border:none;flex:1">
-            <button class="battle-sort-btn active" data-bsort="recent" onclick="setBattleSort('recent',this)">Recent</button>
-            <button class="battle-sort-btn" data-bsort="votes" onclick="setBattleSort('votes',this)">Most Votes</button>
-            <button class="battle-sort-btn" data-bsort="closest" onclick="setBattleSort('closest',this)">Closest</button>
-          </div>
-          <button class="battle-create-btn" style="width:auto;padding:.3rem .75rem;flex-shrink:0" onclick="openCreateBattleModal()">+ Create</button>
-        </div>
-        <div id="feed-battles-list" style="padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)"><div class="feed-empty">Loading…</div></div>
-      </div>
-    </div>
   </div>
 
   <!-- RATE TAB -->
@@ -1742,9 +1722,11 @@
       <div class="pst-bar">
         <button class="pst-btn active" id="pst-ratings" onclick="switchProfileSection('ratings')">Ratings</button>
         <button class="pst-btn" id="pst-lists" onclick="switchProfileSection('lists')">Lists</button>
+        <button class="pst-btn" id="pst-questions" onclick="switchProfileSection('questions')">Questions</button>
       </div>
       <div id="profile-ratings"></div>
       <div id="profile-lists" style="display:none"></div>
+      <div id="profile-questions" style="display:none"></div>
     </div>
   </div>
 
@@ -2227,6 +2209,30 @@
 </div>
 
 <!-- LIST META MODAL -->
+<!-- FEED COMPOSER MODAL -->
+<div class="modal-overlay" id="feed-composer-modal" style="z-index:320" onclick="if(event.target===this)closeFeedComposer()">
+  <div class="modal" style="padding-bottom:1rem">
+    <div class="modal-handle"></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.85rem">What do you want to post?</div>
+    <button onclick="closeFeedComposer();switchTab('rate')" style="width:100%;display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--border2);color:var(--text);border-radius:.5rem;cursor:pointer;margin-bottom:.5rem;text-align:left">
+      <div style="width:36px;height:36px;border-radius:8px;background:rgba(167,139,250,.16);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">🎧</div>
+      <div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)">New Rating</div><div style="font-size:.6rem;color:var(--muted)">Score a song with SONGR's rubric</div></div>
+      <div style="color:var(--muted);font-size:1rem;flex-shrink:0">›</div>
+    </button>
+    <button onclick="closeFeedComposer();openListMeta(true)" style="width:100%;display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--border2);color:var(--text);border-radius:.5rem;cursor:pointer;margin-bottom:.5rem;text-align:left">
+      <div style="width:36px;height:36px;border-radius:8px;background:rgba(250,204,21,.14);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">📋</div>
+      <div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#facc15">New List</div><div style="font-size:.6rem;color:var(--muted)">Rank songs, albums, or anything</div></div>
+      <div style="color:var(--muted);font-size:1rem;flex-shrink:0">›</div>
+    </button>
+    <button onclick="closeFeedComposer();openProposeQuestion()" style="width:100%;display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;background:var(--surface);border:1px solid var(--border2);color:var(--text);border-radius:.5rem;cursor:pointer;margin-bottom:.6rem;text-align:left">
+      <div style="width:36px;height:36px;border-radius:8px;background:rgba(244,114,182,.14);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0">❓</div>
+      <div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#f472b6">New Question</div><div style="font-size:.6rem;color:var(--muted)">Ask the community</div></div>
+      <div style="color:var(--muted);font-size:1rem;flex-shrink:0">›</div>
+    </button>
+    <button onclick="closeFeedComposer()" class="modal-btn modal-btn-cancel" style="width:100%">Cancel</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="list-meta-modal" style="z-index:320" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal" style="padding-bottom:1.5rem">
     <div class="modal-handle"></div>
@@ -2269,6 +2275,23 @@
     <button onclick="abLeave()" style="background:transparent;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;line-height:1;padding:.2rem .3rem;flex-shrink:0">←</button>
     <div id="ab-view-title" class="ab-view-title">Aux Battle</div>
     <div id="ab-view-code" style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;color:var(--muted);flex-shrink:0"></div>
+  </div>
+
+  <!-- BATTLE TIMELINE (persistent during active phases) -->
+  <div id="ab-timeline" style="display:none;flex-shrink:0;background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);padding:.55rem .85rem .65rem">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;gap:.6rem">
+      <div id="ab-tl-phase-label" style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></div>
+      <div id="ab-tl-badge" style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;flex-shrink:0;padding:.15rem .4rem;border-radius:3px"></div>
+    </div>
+    <div id="ab-tl-nodes" style="display:flex;gap:.3rem;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:.15rem;margin-bottom:.5rem"></div>
+    <div id="ab-tl-score" style="display:flex;align-items:center;justify-content:center;gap:.55rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem"></div>
+    <div style="position:relative;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden">
+      <div id="ab-tl-mom-fill-a" style="position:absolute;left:50%;top:0;bottom:0;background:var(--gold);transition:width .55s cubic-bezier(.22,1,.36,1);width:0"></div>
+      <div id="ab-tl-mom-fill-b" style="position:absolute;right:50%;top:0;bottom:0;background:#f472b6;transition:width .55s cubic-bezier(.22,1,.36,1);width:0"></div>
+      <div style="position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:var(--border2);transform:translateX(-.5px)"></div>
+    </div>
+    <div id="ab-tl-mom-label" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-top:.25rem"></div>
+    <div id="ab-tl-drama" style="text-align:center;font-size:.62rem;color:var(--muted);font-style:italic;font-family:'Playfair Display',serif;margin-top:.2rem;line-height:1.3"></div>
   </div>
 
   <!-- LOBBY -->
@@ -3166,12 +3189,7 @@ async function refreshTab(tab){
   if(btn){btn.classList.add('spinning');btn.disabled=true;}
   const done=()=>{if(btn){btn.classList.remove('spinning');btn.disabled=false;}};
   try{
-    if(tab==='feed'){
-      if(feedSubject==='songs')await loadFeed();
-      else if(feedSubject==='lists')await loadFeedLists();
-      else if(feedSubject==='questions')await loadQuestions();
-      else if(feedSubject==='battles')await loadBattles();
-    }
+    if(tab==='feed'){await loadFeed();}
     else if(tab==='rate'){resetAll();clearSongPicker();done();return;}
     else if(tab==='profile'){await loadProfile();}
     else if(tab==='room'){
@@ -3183,11 +3201,6 @@ async function refreshTab(tab){
       if(worldSection==='discover'){worldData=null;worldLoaded=false;swLimits={trending:5,hot:5,gems:5,friends:5};await loadWorld();}
       else if(worldSection==='ratings')await loadFeed();
       else if(worldSection==='taste'){tasteEngineLoaded=false;await loadTasteEngine();}
-      else if(worldSection==='social'){
-        if(socialSubject==='lists')await loadFeedLists();
-        else if(socialSubject==='questions')await loadQuestions();
-        else if(socialSubject==='battles')await loadBattles();
-      }
     }
   }catch(e){console.error('refresh error',e);}
   done();
@@ -3271,12 +3284,36 @@ async function removeAvatarPhoto(){
 
 let feedData = [];
 let feedSort = 'likes';
+let feedType = 'all'; // 'all' | 'ratings' | 'lists' | 'questions'
+let feedListsAll = [];
+let feedListItemsByList = {};
+let feedListProfilesById = {};
+let feedQuestionsAll = [];
+let feedQuestionEntryCounts = {};
+let feedQuestionProfilesById = {};
 
 function setFeedSort(btn) {
   document.querySelectorAll('.feed-sort-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   feedSort = btn.dataset.sort;
   renderFeed();
+}
+
+function setFeedType(t,btn){
+  feedType=t;
+  document.querySelectorAll('[data-ftype]').forEach(b=>b.classList.toggle('active',b.dataset.ftype===t));
+  // Hide rating-only sort options when not viewing ratings
+  const sortRow=document.getElementById('feed-sort-row');
+  if(sortRow)sortRow.style.display=(t==='ratings'||t==='all')?'':'none';
+  renderFeed();
+}
+
+function openFeedComposer(){
+  if(!currentUser){alert('Sign in first.');return;}
+  document.getElementById('feed-composer-modal').classList.add('open');
+}
+function closeFeedComposer(){
+  document.getElementById('feed-composer-modal').classList.remove('open');
 }
 
 function filterFeed() { renderFeed(); }
@@ -3289,76 +3326,200 @@ function sortedFeed(data) {
   return d.sort((a,b)=>parseFloat(b.final_score)-parseFloat(a.final_score));
 }
 
-function renderFeed() {
-  const q = (document.getElementById('feed-search')?.value||'').trim().toLowerCase();
-  const list = document.getElementById('feed-list');
-  document.getElementById('fmode-all')?.classList.toggle('active',feedMode==='all');
-  document.getElementById('fmode-following')?.classList.toggle('active',feedMode==='following');
-  let data = sortedFeed(feedData);
-  if(q) data = data.filter(r=>(r.song_name||'').toLowerCase().includes(q)||(r.artist_name||'').toLowerCase().includes(q));
-  if(feedMode==='following'){
-    const followingIds=new Set(myFollows.filter(f=>f.requester_id===currentUser?.id).map(f=>f.addressee_id));
-    if(currentUser)followingIds.add(currentUser.id);
-    data=data.filter(r=>followingIds.has(r.user_id));
-  }
-
-  if(!data.length){list.innerHTML='<div class="feed-empty">'+(feedMode==='following'?'No ratings from people you follow yet.<br>Find people to follow on the Profile tab.':(q?'No results found.':'No ratings yet.<br>Be the first to rate a song.'))+'</div>';return;}
-
-  const songCounts={};
-  feedData.forEach(r=>{const k=(r.song_name||'').toLowerCase();songCounts[k]=(songCounts[k]||0)+1;});
-
-  list.innerHTML='';
-  data.forEach(row=>{
-    const p=row.profiles||{};
-    const u=p.username||'anonymous',col=p.avatar_color||'#c9a84c',score=parseFloat(row.final_score);
-    const scolor=scoreColor(score);
-    const count=songCounts[(row.song_name||'').toLowerCase()]||1;
-    const isOwn=row.user_id===currentUser?.id;
-    const liked=myLikes.has(row.id);
-    const likeCount=likeCounts[row.id]||0;
-    const card=document.createElement('div');card.className='feed-card pressable';card.style.cursor='pointer';
-    card.onclick=()=>openRatingDetail(row);
-    card.innerHTML=`
-      <div class="feed-card-gradient" style="background:${scolor}"></div>
-      <div class="feed-card-accent" style="background:${scolor}"></div>
-      <div class="feed-card-top">
-        <div class="feed-user" onclick="event.stopPropagation();openUserModal('${escAttr(row.user_id)}')" style="cursor:pointer">
-          ${avatarHTML(p,'feed-avatar')}
-          <div>
-            <div class="feed-username">@${esc(u)}</div>
-            <div class="feed-time">${timeAgo(row.created_at)}</div>
-          </div>
+function buildRatingCard(row,songCounts){
+  const p=row.profiles||{};
+  const u=p.username||'anonymous',score=parseFloat(row.final_score);
+  const scolor=scoreColor(score);
+  const count=songCounts[(row.song_name||'').toLowerCase()]||1;
+  const liked=myLikes.has(row.id);
+  const likeCount=likeCounts[row.id]||0;
+  const card=document.createElement('div');card.className='feed-card pressable';card.style.cursor='pointer';
+  card.onclick=()=>openRatingDetail(row);
+  card.innerHTML=`
+    <div class="feed-card-gradient" style="background:${scolor}"></div>
+    <div class="feed-card-accent" style="background:${scolor}"></div>
+    <div class="feed-card-top">
+      <div class="feed-user" onclick="event.stopPropagation();openUserModal('${escAttr(row.user_id)}')" style="cursor:pointer">
+        ${avatarHTML(p,'feed-avatar')}
+        <div>
+          <div class="feed-username">@${esc(u)}</div>
+          <div class="feed-time">${timeAgo(row.created_at)}</div>
         </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;color:var(--gold);background:rgba(167,139,250,.12);border:1px solid var(--gold);padding:.2rem .45rem;border-radius:3px">RATING</div>
         <div class="feed-score-wrap">
           <div class="feed-score" style="color:${scolor}">${score.toFixed(1)}</div>
           <div class="feed-score-label">/ 10</div>
         </div>
       </div>
-      <div class="feed-main">
-        ${row.artwork_url
-          ?`<img src="${esc(itunesArtUrl(row.artwork_url,60))}" style="width:48px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`
-          :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="60" style="width:48px;height:48px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`
-        }
-        <div class="feed-song-info">
-          <div class="feed-song">${esc(row.song_name||'Unknown')}</div>
-          ${row.artist_name?`<div class="feed-artist">${esc(row.artist_name)}${row.album?` · <em>${esc(row.album)}</em>`:''}</div>`:''}
+    </div>
+    <div class="feed-main">
+      ${row.artwork_url
+        ?`<img src="${esc(itunesArtUrl(row.artwork_url,60))}" style="width:48px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`
+        :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="60" style="width:48px;height:48px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`
+      }
+      <div class="feed-song-info">
+        <div class="feed-song">${esc(row.song_name||'Unknown')}</div>
+        ${row.artist_name?`<div class="feed-artist">${esc(row.artist_name)}${row.album?` · <em>${esc(row.album)}</em>`:''}</div>`:''}
+      </div>
+    </div>
+    <div class="feed-card-footer">
+      <div class="feed-card-footer-left">
+        ${row.verdict?`<div class="feed-verdict">${esc(row.verdict)}</div>`:''}
+        ${row.comment?`<div class="feed-comment">${esc(row.comment)}</div>`:''}
+        ${count>1?`<div class="feed-rating-count">🎯 ${count} ratings</div>`:''}
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">
+        <button class="preview-btn" data-song="${escAttr(row.song_name||'')}" data-artist="${escAttr(row.artist_name||'')}" onclick="playFeedSong(this)" title="Preview" style="width:30px;height:30px">${previewPlayIcon()}</button>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.04em">💬 ${commentCounts[row.id]||0}</span>
+        <button class="like-btn${liked?' liked':''}" data-rid="${escAttr(row.id)}" onclick="event.stopPropagation();toggleLike('${escJs(row.id)}')">♥ <span class="like-count">${likeCount}</span></button>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function renderFeedListCard(l){
+  const p=feedListProfilesById[l.user_id]||{};
+  const uname=p.username||'Unknown';
+  const items=(feedListItemsByList[l.id]||[]).slice().sort((a,b)=>(a.position||0)-(b.position||0));
+  const top=items.slice(0,3);
+  const count=items.length;
+  const thumbs=top.filter(i=>i.artwork_url).slice(0,3).map(i=>`<img src="${esc(itunesArtUrl(i.artwork_url,80))}" style="width:36px;height:36px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`).join('');
+  const preview=top.map((i,n)=>`<div style="display:flex;gap:.45rem;font-size:.62rem;color:var(--text);padding:.18rem 0"><span style="color:#facc15;font-family:'DM Mono',monospace;font-weight:700;flex-shrink:0;width:1.1rem">${n+1}.</span><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(i.title||'')}</span></div>`).join('');
+  return`<div class="feed-card pressable" style="cursor:pointer;border-left:3px solid #facc15" onclick="openListOverlay('${escJs(l.id)}')">
+    <div class="feed-card-top">
+      <div class="feed-user" onclick="event.stopPropagation();openUserModal('${escAttr(l.user_id)}')" style="cursor:pointer">
+        ${avatarHTML(p,'feed-avatar')}
+        <div>
+          <div class="feed-username">@${esc(uname)} <span style="color:var(--muted);font-weight:600">made a list</span></div>
+          <div class="feed-time">${timeAgo(l.created_at)}</div>
         </div>
       </div>
-      <div class="feed-card-footer">
-        <div class="feed-card-footer-left">
-          ${row.verdict?`<div class="feed-verdict">${esc(row.verdict)}</div>`:''}
-          ${row.comment?`<div class="feed-comment">${esc(row.comment)}</div>`:''}
-          ${count>1?`<div class="feed-rating-count">🎯 ${count} ratings</div>`:''}
-        </div>
-        <div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">
-          <button class="preview-btn" data-song="${escAttr(row.song_name||'')}" data-artist="${escAttr(row.artist_name||'')}" onclick="playFeedSong(this)" title="Preview" style="width:30px;height:30px">${previewPlayIcon()}</button>
-          <span style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.04em">💬 ${commentCounts[row.id]||0}</span>
-          <button class="like-btn${liked?' liked':''}" data-rid="${escAttr(row.id)}" onclick="event.stopPropagation();toggleLike('${escJs(row.id)}')">♥ <span class="like-count">${likeCount}</span></button>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;color:#facc15;background:rgba(250,204,21,.12);border:1px solid #facc15;padding:.2rem .45rem;border-radius:3px">LIST</div>
+    </div>
+    <div style="padding:.15rem 0 .35rem">
+      <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:.2rem">${esc(l.title||'Untitled')}</div>
+      ${l.description?`<div style="font-size:.62rem;color:var(--muted);margin-bottom:.35rem">${esc(l.description)}</div>`:''}
+      ${thumbs?`<div style="display:flex;gap:.3rem;margin-bottom:.45rem">${thumbs}${count>3?`<div style="width:36px;height:36px;border-radius:3px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.55rem;color:var(--muted);flex-shrink:0">+${count-3}</div>`:''}</div>`:''}
+      ${preview||'<div style="font-size:.6rem;color:var(--muted);font-style:italic">Empty list</div>'}
+    </div>
+    <div class="feed-card-footer">
+      <div class="feed-card-footer-left">
+        <div style="font-size:.58rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em">${count} item${count!==1?'s':''}</div>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.06em;color:#facc15">View Full List ›</div>
+    </div>
+  </div>`;
+}
+
+function renderFeedQuestionCard(q){
+  const p=feedQuestionProfilesById[q.user_id]||{};
+  const uname=p.username||'Unknown';
+  const count=feedQuestionEntryCounts[q.id]||0;
+  return`<div class="feed-card pressable" style="cursor:pointer;border-left:3px solid #f472b6" onclick="openQuestionOverlay('${escJs(q.id)}')">
+    <div class="feed-card-top">
+      <div class="feed-user" onclick="event.stopPropagation();openUserModal('${escAttr(q.user_id)}')" style="cursor:pointer">
+        ${avatarHTML(p,'feed-avatar')}
+        <div>
+          <div class="feed-username">@${esc(uname)} <span style="color:var(--muted);font-weight:600">asked</span></div>
+          <div class="feed-time">${timeAgo(q.created_at)}</div>
         </div>
       </div>
-    `;
-    list.appendChild(card);
-  });
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;color:#f472b6;background:rgba(244,114,182,.12);border:1px solid #f472b6;padding:.2rem .45rem;border-radius:3px">QUESTION</div>
+    </div>
+    <div style="padding:.15rem 0 .35rem">
+      <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:.4rem">${esc(q.question_text||'')}</div>
+      <div style="display:flex;gap:.35rem;flex-wrap:wrap">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.06em;color:var(--muted2);background:var(--surface2);padding:.2rem .45rem;border-radius:3px">${q.type==='albums'?'Albums':'Songs'}</span>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.06em;color:var(--muted2);background:var(--surface2);padding:.2rem .45rem;border-radius:3px">${count} answer${count!==1?'s':''}</span>
+      </div>
+    </div>
+    <div class="feed-card-footer">
+      <div class="feed-card-footer-left"></div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.06em;color:#f472b6">Answer ›</div>
+    </div>
+  </div>`;
+}
+
+function renderFeed() {
+  const q = (document.getElementById('feed-search')?.value||'').trim().toLowerCase();
+  const list = document.getElementById('feed-list');
+  document.getElementById('fmode-following-btn')?.classList.toggle('active',feedMode==='following');
+
+  // Build typed entries with timestamps for merging
+  const followingOn=feedMode==='following';
+  const followingIds=new Set((myFollows||[]).filter(f=>f.requester_id===currentUser?.id).map(f=>f.addressee_id));
+  if(currentUser)followingIds.add(currentUser.id);
+  const userPasses=uid=>!followingOn||followingIds.has(uid);
+
+  const ratingsForFeed=(feedType==='all'||feedType==='ratings')?feedData.filter(r=>userPasses(r.user_id)).filter(r=>!q||(r.song_name||'').toLowerCase().includes(q)||(r.artist_name||'').toLowerCase().includes(q)):[];
+  const listsForFeed=(feedType==='all'||feedType==='lists')?feedListsAll.filter(l=>userPasses(l.user_id)).filter(l=>!q||(l.title||'').toLowerCase().includes(q)||(l.description||'').toLowerCase().includes(q)):[];
+  const questionsForFeed=(feedType==='all'||feedType==='questions')?feedQuestionsAll.filter(qq=>userPasses(qq.user_id)).filter(qq=>!q||(qq.question_text||'').toLowerCase().includes(q)):[];
+
+  if(feedType==='lists'){
+    if(!listsForFeed.length){list.innerHTML='<div class="feed-empty">'+(q?'No lists match.':followingOn?'No lists from people you follow.':'No lists yet.<br>Create the first list.')+'</div>';return;}
+    list.innerHTML=listsForFeed.map(renderFeedListCard).join('');
+    loadMissingArtwork(list);return;
+  }
+  if(feedType==='questions'){
+    if(!questionsForFeed.length){list.innerHTML='<div class="feed-empty">'+(q?'No questions match.':followingOn?'No questions from people you follow.':'No questions yet.<br>Ask the first question.')+'</div>';return;}
+    list.innerHTML=questionsForFeed.map(renderFeedQuestionCard).join('');
+    return;
+  }
+
+  // Ratings or All
+  let data = sortedFeed(ratingsForFeed);
+
+  // For "all", merge with lists and questions sorted by created_at
+  if(feedType==='all'){
+    const merged=[
+      ...data.map(r=>({_type:'rating',_ts:new Date(r.created_at).getTime()||0,row:r})),
+      ...listsForFeed.map(l=>({_type:'list',_ts:new Date(l.created_at).getTime()||0,row:l})),
+      ...questionsForFeed.map(qq=>({_type:'question',_ts:new Date(qq.created_at).getTime()||0,row:qq}))
+    ];
+    if(feedSort==='recent'||feedSort==='likes'||feedSort==='score'||feedSort==='lowest'){
+      // For non-rating-only sorts that require numeric data, fall back to recency for non-rating items
+      if(feedSort==='recent')merged.sort((a,b)=>b._ts-a._ts);
+      else{
+        // Keep ratings sorted by feedSort, then interleave lists/questions by recency
+        const ratingsSorted=data.map(r=>({_type:'rating',_ts:new Date(r.created_at).getTime()||0,row:r}));
+        const otherMerged=[
+          ...listsForFeed.map(l=>({_type:'list',_ts:new Date(l.created_at).getTime()||0,row:l})),
+          ...questionsForFeed.map(qq=>({_type:'question',_ts:new Date(qq.created_at).getTime()||0,row:qq}))
+        ].sort((a,b)=>b._ts-a._ts);
+        // Simple interleave: every 3 ratings, insert one other item
+        const out=[];let oi=0;
+        ratingsSorted.forEach((r,i)=>{
+          out.push(r);
+          if((i+1)%3===0&&oi<otherMerged.length)out.push(otherMerged[oi++]);
+        });
+        while(oi<otherMerged.length)out.push(otherMerged[oi++]);
+        merged.length=0;merged.push(...out);
+      }
+    }
+    if(!merged.length){list.innerHTML='<div class="feed-empty">'+(q?'No posts match.':followingOn?'No posts from people you follow yet.':'Nothing here yet.<br>Be the first to post.')+'</div>';return;}
+    const songCounts={};
+    feedData.forEach(r=>{const k=(r.song_name||'').toLowerCase();songCounts[k]=(songCounts[k]||0)+1;});
+    list.innerHTML='';
+    merged.forEach(item=>{
+      if(item._type==='rating')list.appendChild(buildRatingCard(item.row,songCounts));
+      else if(item._type==='list'){const div=document.createElement('div');div.innerHTML=renderFeedListCard(item.row);list.appendChild(div.firstChild);}
+      else if(item._type==='question'){const div=document.createElement('div');div.innerHTML=renderFeedQuestionCard(item.row);list.appendChild(div.firstChild);}
+    });
+    loadMissingArtwork(list);
+    return;
+  }
+
+  // Ratings-only view
+  if(!data.length){list.innerHTML='<div class="feed-empty">'+(followingOn?'No ratings from people you follow yet.<br>Find people to follow on the Profile tab.':(q?'No results found.':'No ratings yet.<br>Be the first to rate a song.'))+'</div>';return;}
+
+  const songCounts={};
+  feedData.forEach(r=>{const k=(r.song_name||'').toLowerCase();songCounts[k]=(songCounts[k]||0)+1;});
+
+  list.innerHTML='';
+  data.forEach(row=>{ list.appendChild(buildRatingCard(row,songCounts)); });
   loadMissingArtwork(list);
 }
 
@@ -3431,16 +3592,45 @@ function closeRatingDetail(){
 
 async function loadFeed(){
   const list=document.getElementById('feed-list');
-  const{data:ratingsData,error}=await db.from('ratings').select('*').neq('user_id',currentUser.id).or('is_private.is.null,is_private.eq.false').order('created_at',{ascending:false}).limit(200);
+  const myId=currentUser?.id||null;
+  const ratingsP=db.from('ratings').select('*').neq('user_id',myId||'00000000-0000-0000-0000-000000000000').or('is_private.is.null,is_private.eq.false').order('created_at',{ascending:false}).limit(200);
+  const listsP=db.from('lists').select('*').eq('is_posted',true).order('created_at',{ascending:false}).limit(120);
+  const questionsP=db.from('questions').select('*').order('created_at',{ascending:false}).limit(120);
+  const[{data:ratingsData,error},{data:listsData},{data:questionsDataRes}]=await Promise.all([ratingsP,listsP,questionsP]);
   if(error){list.innerHTML='<div class="feed-empty">Feed failed to load.</div>';console.error(error);return;}
   const ratings=ratingsData||[];
+  const lists=listsData||[];
+  const questions=questionsDataRes||[];
 
-  const userIds=[...new Set(ratings.map(r=>r.user_id).filter(Boolean))];
+  const userIds=[...new Set([...ratings.map(r=>r.user_id),...lists.map(l=>l.user_id),...questions.map(q=>q.user_id)].filter(Boolean))];
   if(userIds.length){
     const{data:profilesData}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',userIds);
     profileMap={};
     (profilesData||[]).forEach(p=>{profileMap[p.id]=p;});
   }
+
+  // Lists: fetch list_items for previews
+  feedListItemsByList={};
+  if(lists.length){
+    const{data:items}=await db.from('list_items').select('list_id,position,title,subtitle,artwork_url').in('list_id',lists.map(l=>l.id)).order('position');
+    (items||[]).forEach(it=>{
+      if(!feedListItemsByList[it.list_id])feedListItemsByList[it.list_id]=[];
+      feedListItemsByList[it.list_id].push(it);
+    });
+  }
+  feedListsAll=lists;
+  feedListProfilesById=profileMap;
+  feedListsData=lists;
+
+  // Questions: fetch entry counts
+  feedQuestionEntryCounts={};
+  if(questions.length){
+    const{data:entries}=await db.from('question_entries').select('question_id').in('question_id',questions.map(q=>q.id));
+    (entries||[]).forEach(e=>{feedQuestionEntryCounts[e.question_id]=(feedQuestionEntryCounts[e.question_id]||0)+1;});
+  }
+  feedQuestionsAll=questions;
+  feedQuestionProfilesById=profileMap;
+  questionsData=questions;
 
   const data=ratings.map(r=>({...r,profiles:profileMap[r.user_id]||null}));
   feedData=data.filter(r=>r.final_score!=null);
@@ -3711,9 +3901,39 @@ let currentListId=null, currentListItems=[], aliType='songs', aliTimer=null;
 function switchProfileSection(sec){
   document.getElementById('profile-ratings').style.display=sec==='ratings'?'':'none';
   document.getElementById('profile-lists').style.display=sec==='lists'?'':'none';
+  const qEl=document.getElementById('profile-questions');
+  if(qEl)qEl.style.display=sec==='questions'?'':'none';
   document.getElementById('pst-ratings').classList.toggle('active',sec==='ratings');
   document.getElementById('pst-lists').classList.toggle('active',sec==='lists');
+  const qBtn=document.getElementById('pst-questions');
+  if(qBtn)qBtn.classList.toggle('active',sec==='questions');
   if(sec==='lists')loadLists();
+  else if(sec==='questions')loadProfileQuestions();
+}
+
+async function loadProfileQuestions(){
+  const el=document.getElementById('profile-questions');
+  if(!el)return;
+  if(!currentUser){el.innerHTML='';return;}
+  el.innerHTML='<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.7rem">Loading…</div>';
+  const{data:qs,error}=await db.from('questions').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});
+  if(error){el.innerHTML=`<div style="padding:1.5rem;text-align:center;color:var(--muted);font-size:.7rem">${esc(error.message)}</div>`;return;}
+  const newBtn=`<div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border)"><button onclick="openProposeQuestion()" style="width:100%;padding:.6rem;background:transparent;border:1px dashed var(--border2);color:var(--muted);border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.1em;cursor:pointer">+ ASK A QUESTION</button></div>`;
+  if(!qs||!qs.length){el.innerHTML=newBtn+'<div style="padding:2.5rem 1.25rem;text-align:center;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;font-size:.75rem;letter-spacing:.08em">NO QUESTIONS YET</div>';return;}
+  const ids=qs.map(q=>q.id);
+  const{data:entries}=await db.from('question_entries').select('question_id').in('question_id',ids);
+  const cnt={};(entries||[]).forEach(e=>{cnt[e.question_id]=(cnt[e.question_id]||0)+1;});
+  el.innerHTML=newBtn+qs.map(q=>{
+    const c=cnt[q.id]||0;
+    return`<div class="q-card" onclick="openQuestionOverlay('${escJs(q.id)}')">
+      <div class="q-card-text">${esc(q.question_text||'')}</div>
+      <div class="q-card-meta">
+        <span class="q-type-pill">${q.type==='albums'?'Albums':'Songs'}</span>
+        <span>${c} answer${c!==1?'s':''}</span>
+        <span>· ${timeAgo(q.created_at)}</span>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 async function loadLists(){
@@ -3786,6 +4006,7 @@ function closeListOverlay(){
   document.getElementById('list-overlay').style.display='none';
   currentListId=null;currentListItems=[];
   loadLists();
+  if(worldSection==='ratings')loadFeed();
 }
 
 function renderListItems(isOwn){
@@ -4400,8 +4621,14 @@ function updateBadge(){}
 
 function setFeedMode(mode,btn){
   feedMode=mode;
-  document.querySelectorAll('.feed-mode-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  const folBtn=document.getElementById('fmode-following-btn');
+  if(folBtn){
+    const on=mode==='following';
+    folBtn.classList.toggle('active',on);
+    folBtn.style.background=on?'rgba(167,139,250,.16)':'transparent';
+    folBtn.style.color=on?'var(--gold)':'var(--muted)';
+    folBtn.style.borderColor=on?'var(--gold)':'var(--border2)';
+  }
   renderFeed();
 }
 
@@ -4409,42 +4636,33 @@ function setFeedSubject(subj){feedSubject=subj;}
 
 let socialSubject='lists';
 function setSocialSubject(subj){
-  socialSubject=subj;
-  document.querySelectorAll('[data-ssubj]').forEach(b=>b.classList.toggle('active',b.dataset.ssubj===subj));
-  const la=document.getElementById('feed-lists-area');
-  const qa=document.getElementById('feed-questions-area');
-  const ba=document.getElementById('feed-battles-area');
-  if(la)la.style.display=subj==='lists'?'flex':'none';
-  if(qa)qa.style.display=subj==='questions'?'flex':'none';
-  if(ba)ba.style.display=subj==='battles'?'flex':'none';
-  if(subj==='lists')loadFeedLists();
-  if(subj==='questions')loadQuestions();
-  if(subj==='battles')loadBattles();
+  // Legacy shim — Lists/Questions are now in the unified Feed.
+  if(subj==='lists'||subj==='questions'){
+    setWorldSection('ratings');
+    setFeedType(subj);
+  }
 }
 
 let worldSection='ratings';
 function setWorldSection(sect){
+  if(sect==='social')sect='ratings';
   worldSection=sect;
   document.querySelectorAll('[data-wsect]').forEach(b=>b.classList.toggle('active',b.dataset.wsect===sect));
   const discoverEl=document.getElementById('world-discover-wrap');
   const ratingsEl=document.getElementById('world-ratings-wrap');
-  const socialEl=document.getElementById('world-social-wrap');
   const tasteEl=document.getElementById('world-taste-wrap');
   const subEl=document.getElementById('world-header-sub');
   if(discoverEl)discoverEl.style.display=sect==='discover'?'block':'none';
   if(ratingsEl)ratingsEl.style.display=sect==='ratings'?'flex':'none';
-  if(socialEl)socialEl.style.display=sect==='social'?'flex':'none';
   if(tasteEl)tasteEl.style.display=sect==='taste'?'block':'none';
   if(subEl){
     if(sect==='discover')subEl.textContent='Explore the music universe';
-    else if(sect==='ratings')subEl.textContent='Community ratings';
+    else if(sect==='ratings')subEl.textContent='Ratings · Lists · Questions';
     else if(sect==='taste')subEl.textContent='Personalized for you';
-    else subEl.textContent='Lists · Questions · Battles';
   }
   if(sect==='discover')loadWorld();
-  else if(sect==='ratings'){if(!document.getElementById('feed-list').children.length||document.getElementById('feed-list').querySelector('.feed-empty'))loadFeed();}
+  else if(sect==='ratings')loadFeed();
   else if(sect==='taste')loadTasteEngine();
-  else if(sect==='social')setSocialSubject(socialSubject);
 }
 function initWorldTab(){
   setWorldSection(worldSection);
@@ -4568,7 +4786,9 @@ async function refreshQuestionEntries(){
 function closeQuestionOverlay(){
   document.getElementById('question-overlay').style.display='none';
   currentQuestion=null;currentQuestionEntries=[];
-  if(feedSubject==='questions')loadQuestions();
+  if(worldSection==='ratings')loadFeed();
+  const qEl=document.getElementById('profile-questions');
+  if(qEl&&qEl.style.display!=='none')loadProfileQuestions();
 }
 
 async function deleteQuestion(){
@@ -4598,7 +4818,9 @@ async function submitQuestion(){
   const{error}=await db.from('questions').insert({user_id:currentUser.id,question_text:text,type:_pqType});
   if(error){errEl.textContent=error.message;return;}
   document.getElementById('propose-q-modal').classList.remove('open');
-  loadQuestions();
+  if(worldSection==='ratings')loadFeed();
+  const qEl=document.getElementById('profile-questions');
+  if(qEl&&qEl.style.display!=='none')loadProfileQuestions();
 }
 
 function openQoAdd(){
@@ -7913,6 +8135,7 @@ function abState(s){
   else if(s==='round')renderAuxBattleRound();
   else if(s==='result')renderAuxBattleResult();
   else if(s==='final')renderAuxBattleFinal();
+  renderAbTimeline();
 }
 
 // ─── Lobby ────────────────────────────────────────────────────────────────────
@@ -8265,6 +8488,182 @@ async function submitAuxBattlePick(){
   btn.disabled=false;btn.textContent='Lock Pick';
   if(allDone){abArrangement=new Array(b.song_count).fill(null);abState('arrange');}
   else{clearAbPickSelection();renderAuxBattleDraft();}
+}
+
+// ─── Battle Timeline & Momentum ────────────────────────────────────────────────
+let _abTlPrevResolvedRound=0;
+function abShortName(name,len){
+  if(!name)return'';
+  const s=String(name).trim();
+  return s.length>len?s.slice(0,len-1)+'…':s;
+}
+function renderAbTimeline(){
+  const tl=document.getElementById('ab-timeline');
+  if(!tl)return;
+  const b=currentAuxBattle;
+  if(!b||b.status==='lobby'){tl.style.display='none';return;}
+  tl.style.display='block';
+
+  const songCount=b.song_count||5;
+  const pointsA=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_a)||0),0);
+  const pointsB=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_b)||0),0);
+  const roundsCompleted=abRoundResults.length;
+  const roundsLeft=Math.max(0,songCount-roundsCompleted);
+
+  // Phase label
+  let phaseLabel='';
+  if(b.status==='banning')phaseLabel='Ban Phase';
+  else if(b.status==='drafting')phaseLabel='Draft Phase';
+  else if(b.status==='arranging')phaseLabel='Arrangement';
+  else if(b.status==='round_active')phaseLabel=`Round ${b.current_round} of ${songCount}`;
+  else if(b.status==='rating_tiebreaker')phaseLabel=`Round ${b.current_round} · Tiebreaker`;
+  else if(b.status==='round_result')phaseLabel=`Round ${b.current_round} Result`;
+  else if(b.status==='final')phaseLabel='Final Recap';
+  document.getElementById('ab-tl-phase-label').textContent=phaseLabel;
+
+  // Build node list
+  const nodes=[];
+  if(b.ban_count>0)nodes.push({key:'bans',label:'Ban'});
+  nodes.push({key:'draft',label:'Draft'});
+  nodes.push({key:'arrange',label:'Arrange'});
+  for(let i=1;i<=songCount;i++)nodes.push({key:'r'+i,label:'R'+i,round:i});
+  nodes.push({key:'final',label:'Final'});
+  let currentKey='';
+  if(b.status==='banning')currentKey='bans';
+  else if(b.status==='drafting')currentKey='draft';
+  else if(b.status==='arranging')currentKey='arrange';
+  else if(b.status==='round_active'||b.status==='rating_tiebreaker'||b.status==='round_result')currentKey='r'+b.current_round;
+  else if(b.status==='final')currentKey='final';
+
+  const nodesEl=document.getElementById('ab-tl-nodes');
+  const currentIdx=nodes.findIndex(n=>n.key===currentKey);
+  const newlyResolved=roundsCompleted>_abTlPrevResolvedRound?roundsCompleted:0;
+  nodesEl.innerHTML=nodes.map((n,i)=>{
+    let bg='var(--surface2)',color='var(--muted)',border='var(--border)';
+    let content=esc(n.label);
+    let extraStyle='';
+    let cls='ab-tl-node';
+    if(n.round){
+      const rr=abRoundResults.find(r=>r.round_number===n.round);
+      if(rr){
+        if(rr.winner_side==='A'){bg='rgba(167,139,250,.18)';color='var(--gold)';border='var(--gold)';content=`R${n.round}<span style="opacity:.75;margin-left:.18rem">A</span>`;}
+        else if(rr.winner_side==='B'){bg='rgba(244,114,182,.18)';color='#f472b6';border='#f472b6';content=`R${n.round}<span style="opacity:.75;margin-left:.18rem">B</span>`;}
+        else{bg='var(--surface)';color='var(--muted2)';border='var(--border2)';content=`R${n.round}<span style="opacity:.6;margin-left:.18rem">·</span>`;}
+        if(n.round===newlyResolved)cls+=' just-resolved';
+      }
+    }
+    if(n.key===currentKey){
+      if(!n.round||!abRoundResults.find(r=>r.round_number===n.round)){
+        bg='var(--surface)';color='var(--gold)';border='var(--gold)';
+      }
+      cls+=' current';
+    } else if(i<currentIdx&&!n.round){
+      bg='var(--surface)';color='var(--muted2)';border='var(--border2)';
+    }
+    if(n.key==='final'&&b.status==='final'){
+      extraStyle='animation:abTlGlowFinal 2s ease-in-out infinite;';
+      bg='rgba(250,204,21,.12)';color='#facc15';border='#facc15';
+    }
+    return`<div class="${cls}" style="${extraStyle}background:${bg};border-color:${border};color:${color}">${content}</div>`;
+  }).join('');
+  _abTlPrevResolvedRound=roundsCompleted;
+  // Auto-scroll to current node on mobile
+  setTimeout(()=>{
+    const cur=nodesEl.querySelector('.current');
+    if(cur&&cur.scrollIntoView)cur.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  },50);
+
+  // Score row — use artist names; if very long, truncate
+  const aLbl=abShortName(b.artist_a||'A',14);
+  const bLbl=abShortName(b.artist_b||'B',14);
+  document.getElementById('ab-tl-score').innerHTML=`
+    <span style="color:var(--gold);min-width:0;flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(aLbl)}</span>
+    <span style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--text);font-weight:700">${pointsA}</span>
+    <span style="color:var(--muted);font-weight:400">—</span>
+    <span style="font-family:'DM Mono',monospace;font-size:1rem;color:var(--text);font-weight:700">${pointsB}</span>
+    <span style="color:#f472b6;min-width:0;flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(bLbl)}</span>
+  `;
+
+  // Momentum: weighted by recency over last 3 decisive rounds
+  const lastRounds=abRoundResults.slice(-3);
+  let weight=0,maxWeight=0;
+  lastRounds.forEach((r,i)=>{
+    const w=i+1;
+    maxWeight+=w;
+    if(r.winner_side==='A')weight+=w;
+    else if(r.winner_side==='B')weight-=w;
+  });
+  const ratio=maxWeight>0?weight/maxWeight:0;
+  const fillA=document.getElementById('ab-tl-mom-fill-a');
+  const fillB=document.getElementById('ab-tl-mom-fill-b');
+  if(ratio>0){fillA.style.width=(ratio*50)+'%';fillB.style.width='0';}
+  else if(ratio<0){fillB.style.width=(Math.abs(ratio)*50)+'%';fillA.style.width='0';}
+  else{fillA.style.width='0';fillB.style.width='0';}
+
+  // Momentum label + shift detection
+  let momText='Momentum: Even';
+  if(lastRounds.length>=1){
+    if(ratio>=0.45)momText=`Momentum: ${esc(aLbl)}`;
+    else if(ratio<=-0.45)momText=`Momentum: ${esc(bLbl)}`;
+    else momText='Momentum: Even';
+    if(lastRounds.length>=2){
+      const last=lastRounds[lastRounds.length-1].winner_side;
+      const prev=lastRounds[lastRounds.length-2].winner_side;
+      if(last&&prev&&last!==prev&&last!=='split'&&prev!=='split')momText='Momentum Shift';
+    }
+  }
+  document.getElementById('ab-tl-mom-label').innerHTML=momText;
+
+  // Badge
+  const badgeEl=document.getElementById('ab-tl-badge');
+  let badge='',badgeColor='var(--gold)',badgeBg='rgba(167,139,250,.12)';
+  const lead=Math.abs(pointsA-pointsB);
+  const isLive=b.status==='round_active';
+  if(b.status==='final'){badge='Battle Complete';badgeColor='#facc15';badgeBg='rgba(250,204,21,.14)';}
+  else if(b.status==='rating_tiebreaker'){badge='Tiebreaker';badgeColor='#f472b6';badgeBg='rgba(244,114,182,.14)';}
+  else if(isLive&&roundsLeft===1&&lead>=1){badge='Match Point';badgeColor='#f472b6';badgeBg='rgba(244,114,182,.14)';}
+  else if(isLive&&roundsLeft===1){badge='Final Round';badgeColor='#facc15';badgeBg='rgba(250,204,21,.14)';}
+  else if(isLive&&lead>=2&&roundsLeft>=2){badge='Comeback Chance';badgeColor='#34d399';badgeBg='rgba(52,211,153,.12)';}
+  if(badge){
+    badgeEl.textContent=badge;
+    badgeEl.style.color=badgeColor;
+    badgeEl.style.background=badgeBg;
+    badgeEl.style.border='1px solid '+badgeColor;
+    badgeEl.style.display='';
+  } else {
+    badgeEl.textContent='';badgeEl.style.display='none';
+  }
+
+  // Drama text
+  let drama='';
+  if(b.status==='final'){
+    if(b.winner_side==='A')drama=`${aLbl} takes the battle ${pointsA}–${pointsB}.`;
+    else if(b.winner_side==='B')drama=`${bLbl} takes the battle ${pointsB}–${pointsA}.`;
+    else drama=`Tied ${pointsA}–${pointsB}. No clear winner.`;
+  } else if(b.status==='banning'){
+    drama=b.ban_count===1?'One ban each. Pick your target.':`${b.ban_count} bans each. Strip the heaters.`;
+  } else if(b.status==='drafting'){
+    drama=b.draft_budget?`Spend wisely. Budget: ${b.draft_budget} pts each.`:'Stack your aux. Snake draft is on.';
+  } else if(b.status==='arranging'){
+    drama='Lock the order. Round 1 starts when both lock in.';
+  } else if(b.status==='rating_tiebreaker'){
+    drama='Audience tied. SONGR ratings break the tie.';
+  } else {
+    if(roundsCompleted===0)drama="Battle just started. Anyone's game.";
+    else if(pointsA===pointsB){
+      if(roundsLeft===1)drama=`Tied ${pointsA}–${pointsB} going into the final round.`;
+      else drama=`Tied ${pointsA}–${pointsB}. ${roundsLeft} rounds left.`;
+    } else {
+      const leader=pointsA>pointsB?aLbl:bLbl;
+      const trailer=pointsA>pointsB?bLbl:aLbl;
+      const hi=Math.max(pointsA,pointsB),lo=Math.min(pointsA,pointsB);
+      if(roundsLeft===0)drama=`${leader} wins it ${hi}–${lo}.`;
+      else if(roundsLeft===1&&lead>=1)drama=`${leader} leads ${hi}–${lo}. ${trailer} needs this round to stay alive.`;
+      else if(lead>=roundsLeft)drama=`${leader} leads ${hi}–${lo}. This round could decide it.`;
+      else drama=`${leader} leads ${hi}–${lo}. Still anyone's game.`;
+    }
+  }
+  document.getElementById('ab-tl-drama').textContent=drama;
 }
 
 // ─── Ban phase ─────────────────────────────────────────────────────────────────
@@ -8966,7 +9365,28 @@ function renderAuxBattleFinal(){
         </div>`;
       }).join('')}
     </div>
-    ${closestRound?`<div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.65rem .85rem;margin-bottom:.6rem"><div class="ab-section-lbl">Closest Round</div><div style="font-size:.68rem;color:var(--text)">Round ${closestRound.round_number}</div></div>`:''}
+    ${(()=>{
+      let leadFlip=null,maxFlip=0;
+      let runA=0,runB=0,prevLeader=0;
+      abRoundResults.forEach(r=>{
+        runA+=parseFloat(r.points_a)||0;
+        runB+=parseFloat(r.points_b)||0;
+        const newLeader=runA>runB?1:runA<runB?-1:0;
+        if(prevLeader&&newLeader&&prevLeader!==newLeader){
+          const flipMag=Math.abs((parseFloat(r.points_a)||0)-(parseFloat(r.points_b)||0));
+          if(flipMag>=maxFlip){maxFlip=flipMag;leadFlip=r;}
+        }
+        if(newLeader)prevLeader=newLeader;
+      });
+      const biggestDiff=abRoundResults.length?abRoundResults.reduce((m,r)=>{const d=Math.abs((parseFloat(r.points_a)||0)-(parseFloat(r.points_b)||0));return d>m.diff?{r,diff:d}:m;},{r:null,diff:-1}).r:null;
+      const swingRound=leadFlip||biggestDiff;
+      const swingLabel=leadFlip?'Lead Change':'Biggest Round';
+      return`
+      <div style="display:flex;gap:.5rem;margin-bottom:.6rem">
+        ${closestRound?`<div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">Closest Round</div><div style="font-size:.66rem;color:var(--text)">Round ${closestRound.round_number}</div></div>`:''}
+        ${swingRound?`<div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">${swingLabel}</div><div style="font-size:.66rem;color:var(--text)">Round ${swingRound.round_number}</div></div>`:''}
+      </div>`;
+    })()}
     ${tiebreakerUsed?`<div style="background:rgba(244,114,182,.08);border:1px solid #f472b6;border-radius:.55rem;padding:.55rem .85rem;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;color:#f472b6;text-align:center;margin-bottom:.6rem">⚡ Tiebreaker(s) used this battle</div>`:''}
     ${(b.ban_count>0||b.album_lock||b.draft_budget>0)?`
       <div class="ab-section-lbl" style="margin-bottom:.5rem">Strategy Modes</div>
@@ -9170,6 +9590,8 @@ function abLeave(){
   localStorage.removeItem('ab_battle_id');
   currentAuxBattle=null;abPicks=[];abRoundVotes=[];abRoundRatings=[];abRoundResults=[];abArrangement=[];abBans=[];
   abPendingPick=null;abMyRatingA=null;abMyRatingB=null;abPendingBan=null;abBanMatches=[];
+  _abTlPrevResolvedRound=0;
+  const _tl=document.getElementById('ab-timeline');if(_tl)_tl.style.display='none';
   document.getElementById('ab-view').style.display='none';
 }
 
