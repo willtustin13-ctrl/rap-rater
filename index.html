@@ -2318,12 +2318,6 @@
     </div>
     <div id="ab-tl-nodes" style="display:flex;gap:.3rem;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:.15rem;margin-bottom:.5rem"></div>
     <div id="ab-tl-score" style="display:flex;align-items:center;justify-content:center;gap:.55rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem"></div>
-    <div style="position:relative;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden">
-      <div id="ab-tl-mom-fill-a" style="position:absolute;left:50%;top:0;bottom:0;background:var(--gold);transition:width .55s cubic-bezier(.22,1,.36,1);width:0"></div>
-      <div id="ab-tl-mom-fill-b" style="position:absolute;right:50%;top:0;bottom:0;background:#f472b6;transition:width .55s cubic-bezier(.22,1,.36,1);width:0"></div>
-      <div style="position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:var(--border2);transform:translateX(-.5px)"></div>
-    </div>
-    <div id="ab-tl-mom-label" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-top:.25rem"></div>
     <div id="ab-tl-drama" style="text-align:center;font-size:.62rem;color:var(--muted);font-style:italic;font-family:'Playfair Display',serif;margin-top:.2rem;line-height:1.3"></div>
   </div>
 
@@ -2384,7 +2378,7 @@
   </div>
 
   <!-- ROUND ACTIVE -->
-  <div id="ab-round" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+  <div id="ab-round" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden">
     <div id="ab-round-header" style="padding:.5rem 1rem .35rem;border-bottom:1px solid var(--border);flex-shrink:0">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem">
         <div id="ab-round-label" style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)"></div>
@@ -2392,7 +2386,7 @@
       </div>
       <div id="ab-round-tiebreaker-banner" style="display:none"></div>
     </div>
-    <div id="ab-round-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem;padding-bottom:calc(var(--safe-b)+5rem)">
+    <div id="ab-round-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem;padding-bottom:calc(var(--safe-b)+8rem);overscroll-behavior:contain">
       <div style="display:flex;gap:.65rem;margin-bottom:.85rem" id="ab-round-songs-row">
         <div class="ab-round-song" id="ab-round-song-a"></div>
         <div class="ab-round-vs">vs</div>
@@ -7887,6 +7881,25 @@ function setAbGenre(g,btn){
   _abGenre=g;
   document.querySelectorAll('#ab-genre-btns .ab-pill').forEach(b=>b.classList.toggle('active',b===btn));
 }
+
+// Returns the per-step (every 0.5) description for a category at a given value,
+// matching the descriptions used on the Rate tab and in Rank Rooms.
+const _AB_RAP_DESC_KEY={
+  'Replay Value':'replay',
+  'Flow & Delivery':'flow',
+  'Beat':'prod',
+  'Chorus':'chorus',
+  'Verses':'verses',
+  'Lyrics / Wordplay':'lyrics'
+};
+function abCatDescription(catName,value){
+  const v=parseFloat(value);
+  if(!v||isNaN(v))return '';
+  const rapKey=_AB_RAP_DESC_KEY[catName];
+  if(rapKey)return (typeof DESCS!=='undefined'&&DESCS[rapKey]&&DESCS[rapKey][v])||'';
+  if(typeof GENRE_CAT_DESCS!=='undefined'&&GENRE_CAT_DESCS[catName]&&GENRE_CAT_DESCS[catName][v])return GENRE_CAT_DESCS[catName][v];
+  return '';
+}
 let _abBanCount=0, _abAlbumLock=false, _abAlbumA=null, _abAlbumB=null, _abBudget=0, _abBudgetCustom=null;
 let abLobbyPoll=null, abRatingSide='A', abPresence={};
 let abBans=[], abPendingBan=null, abBanMatches=[], abBanTimer=null;
@@ -8667,36 +8680,6 @@ function renderAbTimeline(){
     <span style="color:#f472b6;min-width:0;flex:1;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(bLbl)}</span>
   `;
 
-  // Momentum: weighted by recency over last 3 decisive rounds
-  const lastRounds=abRoundResults.slice(-3);
-  let weight=0,maxWeight=0;
-  lastRounds.forEach((r,i)=>{
-    const w=i+1;
-    maxWeight+=w;
-    if(r.winner_side==='A')weight+=w;
-    else if(r.winner_side==='B')weight-=w;
-  });
-  const ratio=maxWeight>0?weight/maxWeight:0;
-  const fillA=document.getElementById('ab-tl-mom-fill-a');
-  const fillB=document.getElementById('ab-tl-mom-fill-b');
-  if(ratio>0){fillA.style.width=(ratio*50)+'%';fillB.style.width='0';}
-  else if(ratio<0){fillB.style.width=(Math.abs(ratio)*50)+'%';fillA.style.width='0';}
-  else{fillA.style.width='0';fillB.style.width='0';}
-
-  // Momentum label + shift detection
-  let momText='Momentum: Even';
-  if(lastRounds.length>=1){
-    if(ratio>=0.45)momText=`Momentum: ${esc(aLbl)}`;
-    else if(ratio<=-0.45)momText=`Momentum: ${esc(bLbl)}`;
-    else momText='Momentum: Even';
-    if(lastRounds.length>=2){
-      const last=lastRounds[lastRounds.length-1].winner_side;
-      const prev=lastRounds[lastRounds.length-2].winner_side;
-      if(last&&prev&&last!==prev&&last!=='split'&&prev!=='split')momText='Momentum Shift';
-    }
-  }
-  document.getElementById('ab-tl-mom-label').innerHTML=momText;
-
   // Badge
   const badgeEl=document.getElementById('ab-tl-badge');
   let badge='',badgeColor='var(--gold)',badgeBg='rgba(167,139,250,.12)';
@@ -8979,9 +8962,16 @@ function renderAuxBattleArrange(){
     return;
   }
   if(myLocked){
+    const isHost=b.host_id===currentUser?.id;
     bodyEl.innerHTML=`<div style="text-align:center;padding:2.5rem 1rem">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.1em;color:var(--gold);margin-bottom:.55rem">Order Locked ✓</div>
       <div style="font-size:.65rem;color:var(--muted)">Waiting for ${esc(oppArtist||'opponent')} to lock their order…</div>
+      ${isHost?`<div style="margin-top:1.4rem;padding-top:1.2rem;border-top:1px solid var(--border)">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem">Host Tools</div>
+        <button onclick="abHostResyncArrangement()" style="background:transparent;border:1px solid var(--border2);color:var(--muted);padding:.5rem .85rem;border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;cursor:pointer;text-transform:uppercase;margin-right:.4rem">↻ Hard Refresh</button>
+        <button onclick="abHostForceStartRound()" style="background:rgba(244,114,182,.12);border:1px solid #f472b6;color:#f472b6;padding:.5rem .85rem;border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;letter-spacing:.1em;cursor:pointer;text-transform:uppercase">⚡ Force Start Round 1</button>
+        <div style="font-size:.55rem;color:var(--muted);margin-top:.55rem;line-height:1.4">Hard Refresh re-syncs from the server. Force Start advances if both players already locked but the game is stuck.</div>
+      </div>`:''}
     </div>`;
     return;
   }
@@ -9022,6 +9012,10 @@ function renderAuxBattleArrange(){
       </div>`).join('')}
     </div>`:''}
     <button onclick="lockAuxBattleArrangement()" id="ab-lock-order-btn" ${allFilled?'':'disabled'} style="width:100%;padding:.7rem;background:${allFilled?'var(--gold)':'var(--surface)'};color:${allFilled?'var(--bg)':'var(--muted)'};border:1px solid ${allFilled?'var(--gold)':'var(--border)'};border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.1em;cursor:${allFilled?'pointer':'not-allowed'}">${allFilled?'Lock Order':'Fill All Rounds to Lock'}</button>
+    ${b.host_id===currentUser?.id?`<div style="margin-top:1rem;padding-top:.85rem;border-top:1px solid var(--border);text-align:center">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2);margin-bottom:.45rem">Host Tools</div>
+      <button onclick="abHostResyncArrangement()" style="background:transparent;border:1px solid var(--border2);color:var(--muted);padding:.4rem .7rem;border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;letter-spacing:.1em;cursor:pointer;text-transform:uppercase">↻ Hard Refresh</button>
+    </div>`:''}
   `;
 }
 
@@ -9049,10 +9043,19 @@ async function lockAuxBattleArrangement(){
   const otherLocked=mySide==='A'?b.arrangement_locked_b:b.arrangement_locked_a;
   const updateData={[lockField]:true};
   if(otherLocked){updateData.status='round_active';updateData.current_round=1;}
-  const{data:updatedBattle,error}=await db.from('aux_battles').update(updateData).eq('id',b.id).select('*').single();
+  let{data:updatedBattle,error}=await db.from('aux_battles').update(updateData).eq('id',b.id).select('*').single();
   if(error){if(btn){btn.disabled=false;btn.textContent='Lock Order';}return;}
+  // ── Race-condition self-heal ─────────────────────────────────────────────
+  // If both players locked at nearly the same time, both reads saw the other
+  // as not-locked, so neither write included the round_active transition.
+  // After our write, fetch the latest row — if BOTH locks are now true and
+  // the status is still 'arranging', push the advance ourselves.
+  if(updatedBattle.arrangement_locked_a&&updatedBattle.arrangement_locked_b&&updatedBattle.status==='arranging'){
+    const{data:advanced}=await db.from('aux_battles').update({status:'round_active',current_round:1}).eq('id',b.id).select('*').single();
+    if(advanced)updatedBattle=advanced;
+  }
   currentAuxBattle=updatedBattle;
-  if(otherLocked){
+  if(updatedBattle.status==='round_active'){
     const{data:freshPicks}=await db.from('aux_battle_picks').select('*').eq('battle_id',b.id);
     if(freshPicks)abPicks=freshPicks;
     await loadAbRoundData();
@@ -9060,6 +9063,65 @@ async function lockAuxBattleArrangement(){
   } else {
     renderAuxBattleArrange();
   }
+}
+
+// Host-only: hard refresh from the server. Refetches the battle row + picks +
+// bans, re-renders the current state, and self-advances if a stuck arrangement
+// (both players locked but status still 'arranging') is detected.
+async function abHostResyncArrangement(){
+  const b=currentAuxBattle;
+  if(!b||b.host_id!==currentUser?.id)return;
+  const{data:fresh}=await db.from('aux_battles').select('*').eq('id',b.id).maybeSingle();
+  if(!fresh){alert('Could not reach server.');return;}
+  // Refresh local state
+  const[{data:picks},{data:bans}]=await Promise.all([
+    db.from('aux_battle_picks').select('*').eq('battle_id',b.id),
+    db.from('aux_battle_bans').select('*').eq('battle_id',b.id).order('created_at')
+  ]);
+  if(picks)abPicks=picks;
+  if(bans)abBans=bans;
+  currentAuxBattle=fresh;
+  // Stuck-state self-heal: both locked but status didn't advance
+  if(fresh.status==='arranging'&&fresh.arrangement_locked_a&&fresh.arrangement_locked_b){
+    const{data:advanced}=await db.from('aux_battles').update({status:'round_active',current_round:1}).eq('id',b.id).select('*').single();
+    if(advanced){
+      currentAuxBattle=advanced;
+      await loadAbRoundData();
+      abState('round');
+      return;
+    }
+  }
+  // Otherwise just re-route to whatever state the server says we're in
+  if(fresh.status==='arranging')abState('arrange');
+  else if(fresh.status==='round_active'||fresh.status==='rating_tiebreaker'){
+    await loadAbRoundData();abState('round');
+  }
+  else if(fresh.status==='round_result')abState('result');
+  else if(fresh.status==='final')abState('final');
+  else if(fresh.status==='banning')abState('bans');
+  else if(fresh.status==='drafting')abState('draft');
+  else abState('lobby');
+}
+
+// Host-only: force-advance from the arrange screen even if one player hasn't
+// locked. Sets both lock flags and transitions status to round_active.
+async function abHostForceStartRound(){
+  const b=currentAuxBattle;
+  if(!b||b.host_id!==currentUser?.id)return;
+  if(!confirm('Force start Round 1? This will lock the arrangement for both players based on whatever order is currently saved.'))return;
+  const update={
+    status:'round_active',
+    current_round:1,
+    arrangement_locked_a:true,
+    arrangement_locked_b:true
+  };
+  const{data:advanced,error}=await db.from('aux_battles').update(update).eq('id',b.id).select('*').single();
+  if(error){alert(error.message);return;}
+  currentAuxBattle=advanced;
+  const{data:freshPicks}=await db.from('aux_battle_picks').select('*').eq('battle_id',b.id);
+  if(freshPicks)abPicks=freshPicks;
+  await loadAbRoundData();
+  abState('round');
 }
 
 // ─── Round ─────────────────────────────────────────────────────────────────────
@@ -9312,6 +9374,7 @@ function renderAbRatingSection(pickA,pickB){
           </div>
           <input type="range" min="0" max="10" step="0.5" value="${vals[i]||5}" class="${sliderClass}" id="ab-rate-${side}-${i}" oninput="updateAbRatingDisplay('${side}',${i},this.value)" style="accent-color:${cat.color}" ${dimmed?'disabled':''}>
           <div class="ab-rating-scale"><span>0</span><span>5</span><span>10</span></div>
+          <div id="ab-rate-${side}-${i}-step-desc" data-cat="${escAttr(cat.name)}" style="margin-top:.5rem;font-size:.7rem;font-style:italic;color:${cat.color};font-family:'Playfair Display',serif;line-height:1.25;min-height:1.2em">${esc(abCatDescription(cat.name,vals[i]||5))}</div>
         </div>`;
       }).join('')}
       <div id="ab-rate-${side}-live" style="text-align:center;padding:.7rem 0;border-top:1px solid var(--border)">
@@ -9341,6 +9404,12 @@ function abRecalcLiveScore(side){
 function updateAbRatingDisplay(side,idx,val){
   const el=document.getElementById(`ab-rate-${side}-${idx}-val`);
   if(el)el.textContent=parseFloat(val).toFixed(1);
+  // Refresh the per-step description (matches Rate tab / Rank Room behavior)
+  const descEl=document.getElementById(`ab-rate-${side}-${idx}-step-desc`);
+  if(descEl){
+    const catName=descEl.getAttribute('data-cat')||'';
+    descEl.textContent=abCatDescription(catName,val);
+  }
   abRecalcLiveScore(side);
 }
 
