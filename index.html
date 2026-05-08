@@ -2458,42 +2458,6 @@
       </div>
     </div>
 
-    <div style="height:1px;background:var(--border);margin:.85rem 0 .65rem"></div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem">Strategy Modes <span style="color:var(--muted);letter-spacing:.06em;font-weight:600;font-size:.55rem">· optional</span></div>
-
-    <label class="modal-lbl">Ban Phase <span style="color:var(--muted);font-weight:400">— ban opponent's songs before draft</span></label>
-    <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem" id="ab-bans-btns">
-      <button class="ab-pill active" style="cursor:pointer;flex:1" data-bans="0" onclick="setAbBans(0,this)">No Bans</button>
-      <button class="ab-pill" style="cursor:pointer;flex:1" data-bans="1" onclick="setAbBans(1,this)">1 each</button>
-      <button class="ab-pill" style="cursor:pointer;flex:1" data-bans="2" onclick="setAbBans(2,this)">2 each</button>
-      <button class="ab-pill" style="cursor:pointer;flex:1" data-bans="3" onclick="setAbBans(3,this)">3 each</button>
-    </div>
-
-    <label class="modal-lbl">Album Lock <span style="color:var(--muted);font-weight:400">— only draft from one album</span></label>
-    <div style="display:flex;gap:.35rem;margin-bottom:.55rem" id="ab-album-lock-btns">
-      <button id="ab-alock-off" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbAlbumLock(false)">Off</button>
-      <button id="ab-alock-on" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbAlbumLock(true)">On</button>
-    </div>
-    <div id="ab-album-pickers" style="display:none;background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.55rem .65rem;margin-bottom:.75rem">
-      <div style="display:flex;gap:.5rem">
-        <button id="ab-pick-album-a" onclick="openAbAlbumPicker('A')" style="flex:1;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:.5rem;border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Pick Album A</button>
-        <button id="ab-pick-album-b" onclick="openAbAlbumPicker('B')" style="flex:1;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:.5rem;border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Pick Album B</button>
-      </div>
-    </div>
-
-    <label class="modal-lbl">Draft Budget <span style="color:var(--muted);font-weight:400">— bigger songs cost more points</span></label>
-    <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.55rem" id="ab-budget-btns">
-      <button class="ab-pill active" style="cursor:pointer" data-budget="0" onclick="setAbBudget(0,this)">Off</button>
-      <button class="ab-pill" style="cursor:pointer" data-budget="50" onclick="setAbBudget(50,this)">50</button>
-      <button class="ab-pill" style="cursor:pointer" data-budget="75" onclick="setAbBudget(75,this)">75</button>
-      <button class="ab-pill" style="cursor:pointer" data-budget="100" onclick="setAbBudget(100,this)">100</button>
-      <button class="ab-pill" style="cursor:pointer" data-budget="150" onclick="setAbBudget(150,this)">150</button>
-      <button class="ab-pill" style="cursor:pointer" data-budget="custom" onclick="setAbBudget('custom',this)">Custom</button>
-    </div>
-    <div id="ab-budget-custom-wrap" style="display:none;margin-bottom:.65rem">
-      <input id="ab-budget-custom" type="number" min="20" max="500" class="modal-input" placeholder="Custom budget (20–500)" style="font-size:.78rem">
-    </div>
-
     <div id="create-ab-err" style="color:#f472b6;font-size:.6rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;min-height:1em;margin-bottom:.5rem"></div>
     <div class="modal-btns">
       <button class="modal-btn modal-btn-confirm" id="create-ab-btn" onclick="createAuxBattle()">Create Battle</button>
@@ -7922,32 +7886,29 @@ function setAbToggle(field,val){
   else if(field==='features'){_abFeatures=val;document.getElementById('ab-feat-on').classList.toggle('active',val);document.getElementById('ab-feat-off').classList.toggle('active',!val);}
   else if(field==='private'){_abPrivate=val;document.getElementById('ab-priv-on').classList.toggle('active',val);document.getElementById('ab-priv-off').classList.toggle('active',!val);}
 }
-function setAbBans(n,btn){
+function setAbBans(n){
   _abBanCount=parseInt(n)||0;
-  document.querySelectorAll('#ab-bans-btns .ab-pill').forEach(b=>b.classList.toggle('active',b===btn));
+  if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
 }
 function setAbAlbumLock(on){
   _abAlbumLock=!!on;
-  document.getElementById('ab-alock-on').classList.toggle('active',on);
-  document.getElementById('ab-alock-off').classList.toggle('active',!on);
-  document.getElementById('ab-album-pickers').style.display=on?'block':'none';
-  if(!on){_abAlbumA=null;_abAlbumB=null;abRefreshAlbumPickerLabels();}
+  if(!on){_abAlbumA=null;_abAlbumB=null;}
+  if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
 }
 function abRefreshAlbumPickerLabels(){
-  const a=document.getElementById('ab-pick-album-a');
-  const b=document.getElementById('ab-pick-album-b');
-  if(a)a.textContent=_abAlbumA?_abAlbumA.title:'Pick Album A';
-  if(b)b.textContent=_abAlbumB?_abAlbumB.title:'Pick Album B';
+  // Now handled inline in renderAuxBattleLobby
 }
-function setAbBudget(val,btn){
-  if(val==='custom'){_abBudget='custom';}
-  else{_abBudget=parseInt(val)||0;}
-  document.querySelectorAll('#ab-budget-btns .ab-pill').forEach(b=>b.classList.toggle('active',b===btn));
-  document.getElementById('ab-budget-custom-wrap').style.display=val==='custom'?'block':'none';
+function setAbBudget(val){
+  _abBudget=val==='custom'?'custom':parseInt(val)||0;
+  if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
 }
-function openAbAlbumPicker(side){
+function abLobbyBudgetCustomChange(val){
+  _abBudgetCustom=parseInt(val)||0;
+}
+function openAbAlbumPicker(side,artistName){
   _abAlbumPickSide=side;
-  const aName=(document.getElementById('ab-create-artist-'+side.toLowerCase()).value||'').trim();
+  const input=document.getElementById('ab-create-artist-'+side.toLowerCase());
+  const aName=artistName||(input?input.value:'').trim()||'';
   if(!aName){alert('Enter Artist '+side+' first.');return;}
   document.getElementById('ab-album-picker-title').textContent='Pick album for '+aName;
   document.getElementById('ab-album-search-input').value=aName;
@@ -8006,14 +7967,6 @@ function openCreateAuxBattleModal(){
   _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abBudget=0;
   document.querySelectorAll('#ab-song-count-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.count==='5'));
   setAbMode('audience');setAbToggle('secret',true);setAbToggle('features',false);setAbToggle('private',false);
-  document.querySelectorAll('#ab-bans-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.bans==='0'));
-  document.querySelectorAll('#ab-budget-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.budget==='0'));
-  document.getElementById('ab-budget-custom-wrap').style.display='none';
-  const cust=document.getElementById('ab-budget-custom');if(cust)cust.value='';
-  document.getElementById('ab-album-pickers').style.display='none';
-  document.getElementById('ab-alock-off').classList.add('active');
-  document.getElementById('ab-alock-on').classList.remove('active');
-  abRefreshAlbumPickerLabels();
   document.getElementById('create-ab-modal').classList.add('open');
 }
 function closeCreateAuxBattleModal(){document.getElementById('create-ab-modal').classList.remove('open');}
@@ -8032,12 +7985,6 @@ async function createAuxBattle(){
     songCount=parseInt(document.getElementById('ab-custom-count').value)||0;
     if(songCount<1||songCount>20){errEl.textContent='Song count must be 1–20.';return;}
   }
-  let budget=_abBudget;
-  if(budget==='custom'){
-    budget=parseInt(document.getElementById('ab-budget-custom').value)||0;
-    if(budget<20||budget>500){errEl.textContent='Custom budget must be 20–500.';return;}
-  }
-  if(_abAlbumLock&&(!_abAlbumA||!_abAlbumB)){errEl.textContent='Album Lock: pick an album for both sides.';return;}
   const code=rrGenCode();
   const btn=document.getElementById('create-ab-btn');
   btn.disabled=true;btn.textContent='Creating…';
@@ -8046,15 +7993,7 @@ async function createAuxBattle(){
     song_count:songCount,winner_mode:_abMode,secret_draft:_abSecret,
     allow_features:_abFeatures,is_private:_abPrivate,
     player_a_id:currentUser.id,status:'lobby',
-    ban_count:_abBanCount,
-    album_lock:_abAlbumLock,
-    album_a_name:_abAlbumLock&&_abAlbumA?_abAlbumA.title:null,
-    album_a_id:_abAlbumLock&&_abAlbumA?_abAlbumA.id:null,
-    album_a_cover:_abAlbumLock&&_abAlbumA?_abAlbumA.cover:null,
-    album_b_name:_abAlbumLock&&_abAlbumB?_abAlbumB.title:null,
-    album_b_id:_abAlbumLock&&_abAlbumB?_abAlbumB.id:null,
-    album_b_cover:_abAlbumLock&&_abAlbumB?_abAlbumB.cover:null,
-    draft_budget:budget||0
+    ban_count:0,album_lock:false,draft_budget:0
   };
   const{data,error}=await db.from('aux_battles').insert(insertData).select('*').single();
   btn.disabled=false;btn.textContent='Create Battle';
@@ -8193,6 +8132,28 @@ async function renderAuxBattleLobby(){
       ${b.draft_budget?`<div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Draft Budget</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${b.draft_budget} pts</span></div>`:''}
       <div style="display:flex;justify-content:space-between"><span class="ab-section-lbl">Audience in room</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${audienceCount>=1?'var(--green)':'var(--muted)'}">${audienceCount} member${audienceCount!==1?'s':''}</span></div>
     </div>
+    ${isHost&&playersReady&&audienceCount===0?`
+    <div style="border-top:1px solid var(--border);padding-top:.75rem;margin-bottom:.75rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem">⚙️ Strategy Modes <span style="color:var(--muted);font-weight:500;font-size:.52rem;letter-spacing:.04em">· host only</span></div>
+      <label class="modal-lbl">Ban Phase</label>
+      <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.65rem">
+        ${[0,1,2,3].map(n=>`<button class="ab-pill${_abBanCount===n?' active':''}" style="cursor:pointer;flex:1" onclick="setAbBans(${n})">${n===0?'No Bans':n+' each'}</button>`).join('')}
+      </div>
+      <label class="modal-lbl">Album Lock</label>
+      <div style="display:flex;gap:.35rem;margin-bottom:${_abAlbumLock?'.45rem':'.65rem'}">
+        <button class="ab-pill${!_abAlbumLock?' active':''}" style="cursor:pointer;flex:1" onclick="setAbAlbumLock(false)">Off</button>
+        <button class="ab-pill${_abAlbumLock?' active':''}" style="cursor:pointer;flex:1" onclick="setAbAlbumLock(true)">On</button>
+      </div>
+      ${_abAlbumLock?`<div style="display:flex;gap:.5rem;margin-bottom:.65rem">
+        <button onclick="openAbAlbumPicker('A','${escJs(b.artist_a)}')" style="flex:1;background:var(--surface2);border:1px solid ${_abAlbumA?'var(--gold)':'var(--border2)'};color:${_abAlbumA?'var(--gold)':'var(--muted)'};padding:.45rem .55rem;border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_abAlbumA?esc(_abAlbumA.title):'Pick Album A'}</button>
+        <button onclick="openAbAlbumPicker('B','${escJs(b.artist_b)}')" style="flex:1;background:var(--surface2);border:1px solid ${_abAlbumB?'#f472b6':'var(--border2)'};color:${_abAlbumB?'#f472b6':'var(--muted)'};padding:.45rem .55rem;border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_abAlbumB?esc(_abAlbumB.title):'Pick Album B'}</button>
+      </div>`:''}
+      <label class="modal-lbl">Draft Budget</label>
+      <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:${_abBudget==='custom'?'.4rem':'.65rem'}">
+        ${[['Off',0],['50',50],['75',75],['100',100],['150',150],['Custom','custom']].map(([lbl,val])=>`<button class="ab-pill${_abBudget===val?' active':''}" style="cursor:pointer" onclick="setAbBudget('${val}')">${lbl}</button>`).join('')}
+      </div>
+      ${_abBudget==='custom'?`<input id="ab-lobby-budget-custom" type="number" min="20" max="500" class="modal-input" placeholder="Custom budget (20–500)" style="font-size:.78rem;margin-bottom:.65rem" oninput="abLobbyBudgetCustomChange(this.value)" value="${_abBudgetCustom||''}">`:''}
+    </div>`:''}
     ${canStart
       ?`<button onclick="startAuxBattleDraft()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Start Draft${willDuel?' · Duel Mode':''}</button>`
       :isHost
@@ -8226,8 +8187,26 @@ async function startAuxBattleDraft(){
   if(!b.player_a_id||!b.player_b_id){alert('Both players must join first.');return;}
   const audienceNow=abAudienceCount();
   const isDuel=audienceNow===0;
-  const startStatus=(b.ban_count&&b.ban_count>0)?'banning':'drafting';
-  const update={status:startStatus,duel_mode:isDuel};
+  // Resolve budget (handle custom input)
+  let resolvedBudget=_abBudget;
+  if(resolvedBudget==='custom'){
+    resolvedBudget=_abBudgetCustom||parseInt(document.getElementById('ab-lobby-budget-custom')?.value)||0;
+    if(resolvedBudget<20||resolvedBudget>500){alert('Custom budget must be 20–500.');return;}
+  }
+  if(_abAlbumLock&&(!_abAlbumA||!_abAlbumB)){alert('Album Lock: pick an album for both sides first.');return;}
+  const startStatus=(_abBanCount>0)?'banning':'drafting';
+  const update={
+    status:startStatus,duel_mode:isDuel,
+    ban_count:_abBanCount,
+    album_lock:_abAlbumLock,
+    album_a_name:_abAlbumLock&&_abAlbumA?_abAlbumA.title:null,
+    album_a_id:_abAlbumLock&&_abAlbumA?_abAlbumA.id:null,
+    album_a_cover:_abAlbumLock&&_abAlbumA?_abAlbumA.cover:null,
+    album_b_name:_abAlbumLock&&_abAlbumB?_abAlbumB.title:null,
+    album_b_id:_abAlbumLock&&_abAlbumB?_abAlbumB.id:null,
+    album_b_cover:_abAlbumLock&&_abAlbumB?_abAlbumB.cover:null,
+    draft_budget:resolvedBudget||0
+  };
   if(startStatus==='drafting')update.current_pick_index=0;
   const{data,error}=await db.from('aux_battles').update(update).eq('id',b.id).select('*').single();
   if(error){alert(error.message);return;}
@@ -9586,6 +9565,7 @@ function subscribeToAuxBattleRealtime(battleId){
       else if(s==='banning'){renderAuxBattleBans();}
       else if(s==='drafting'&&(prev==='lobby'||prev==='banning')){_stopAbLobbyPoll();abState('draft');}
       else if(s==='drafting'){renderAuxBattleDraft();}
+      else if(s==='arranging'&&prev!=='arranging'){abArrangement=new Array(battle.song_count).fill(null);abState('arrange');}
       else if(s==='arranging'){renderAuxBattleArrange();}
       else if((s==='round_active'||s==='rating_tiebreaker')&&prev!==s){const{data:fp}=await db.from('aux_battle_picks').select('*').eq('battle_id',battleId);if(fp)abPicks=fp;await loadAbRoundData();abState('round');}
       else if(s==='round_result'&&prev!=='round_result'){const{data:rr}=await db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number');if(rr)abRoundResults=rr;showAbAnticipatation(()=>abState('result'));}
@@ -9646,6 +9626,7 @@ function abLeave(){
   localStorage.removeItem('ab_battle_id');
   currentAuxBattle=null;abPicks=[];abRoundVotes=[];abRoundRatings=[];abRoundResults=[];abArrangement=[];abBans=[];
   abPendingPick=null;abMyRatingA=null;abMyRatingB=null;abPendingBan=null;abBanMatches=[];
+  _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abBudget=0;_abBudgetCustom=null;
   _abTlPrevResolvedRound=0;
   const _tl=document.getElementById('ab-timeline');if(_tl)_tl.style.display='none';
   document.getElementById('ab-view').style.display='none';
