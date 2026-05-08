@@ -2303,7 +2303,7 @@
 </div>
 
 <!-- AUX BATTLE VIEW (full-screen overlay) -->
-<div id="ab-view" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:150;flex-direction:column;overflow:hidden">
+<div id="ab-view" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:150;flex-direction:column;overflow:hidden;min-height:0;height:100%">
   <div class="ab-view-header">
     <button onclick="abLeave()" style="background:transparent;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;line-height:1;padding:.2rem .3rem;flex-shrink:0">←</button>
     <div id="ab-view-title" class="ab-view-title">Aux Battle</div>
@@ -2386,14 +2386,14 @@
       </div>
       <div id="ab-round-tiebreaker-banner" style="display:none"></div>
     </div>
-    <div id="ab-round-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:.75rem 1rem;padding-bottom:calc(var(--safe-b)+8rem);overscroll-behavior:contain">
+    <div id="ab-round-body" style="flex:1 1 0;min-height:0;height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:.75rem 1rem;padding-bottom:calc(var(--safe-b)+8rem);overscroll-behavior:contain">
       <div style="display:flex;gap:.65rem;margin-bottom:.85rem" id="ab-round-songs-row">
         <div class="ab-round-song" id="ab-round-song-a"></div>
         <div class="ab-round-vs">vs</div>
         <div class="ab-round-song" id="ab-round-song-b"></div>
       </div>
       <div id="ab-round-vote-section" style="display:none"></div>
-      <div id="ab-round-rating-section"></div>
+      <div id="ab-round-rating-section" style="display:block;width:100%"></div>
       <div id="ab-round-finalize-section" style="display:none;margin-top:.75rem">
         <button class="ab-finalize-btn" id="ab-finalize-btn" onclick="finalizeAuxBattleRound()">Finalize Round</button>
         <div id="ab-finalize-err" style="color:#f472b6;font-size:.58rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;min-height:.9em;margin-top:.3rem;text-align:center"></div>
