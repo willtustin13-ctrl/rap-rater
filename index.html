@@ -2400,7 +2400,7 @@
   </div>
 
   <!-- ROUND ACTIVE -->
-  <div id="ab-round" style="display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden">
+  <div id="ab-round" style="display:none;flex-direction:column;flex:1 1 0;min-height:0">
     <div id="ab-round-header" style="padding:.5rem 1rem .35rem;border-bottom:1px solid var(--border);flex-shrink:0">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.2rem">
         <div id="ab-round-label" style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)"></div>
@@ -2408,7 +2408,7 @@
       </div>
       <div id="ab-round-tiebreaker-banner" style="display:none"></div>
     </div>
-    <div id="ab-round-body" style="flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:.75rem 1rem;padding-bottom:calc(var(--safe-b)+8rem);overscroll-behavior:contain">
+    <div id="ab-round-body" class="scroll-area" style="padding:.75rem 1rem;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 8rem);overscroll-behavior:contain">
       <div style="display:flex;gap:.65rem;margin-bottom:.85rem" id="ab-round-songs-row">
         <div class="ab-round-song" id="ab-round-song-a"></div>
         <div class="ab-round-vs">vs</div>
