@@ -1432,8 +1432,8 @@
           <input type="text" id="feed-search" class="feed-search-input" placeholder="Search songs, artists, lists, questions..." oninput="filterFeed()">
         </div>
         <div class="feed-sort-btns" id="feed-sort-row">
-          <button class="feed-sort-btn active" data-sort="likes" onclick="setFeedSort(this)">Most Liked</button>
-          <button class="feed-sort-btn" data-sort="recent" onclick="setFeedSort(this)">Recent</button>
+          <button class="feed-sort-btn" data-sort="likes" onclick="setFeedSort(this)">Most Liked</button>
+          <button class="feed-sort-btn active" data-sort="recent" onclick="setFeedSort(this)">Recent</button>
           <button class="feed-sort-btn" data-sort="score" onclick="setFeedSort(this)">Highest</button>
           <button class="feed-sort-btn" data-sort="lowest" onclick="setFeedSort(this)">Lowest</button>
         </div>
@@ -3283,7 +3283,7 @@ async function removeAvatarPhoto(){
 }
 
 let feedData = [];
-let feedSort = 'likes';
+let feedSort = 'recent';
 let feedType = 'all'; // 'all' | 'ratings' | 'lists' | 'questions'
 let feedListsAll = [];
 let feedListItemsByList = {};
@@ -8166,7 +8166,8 @@ async function renderAuxBattleLobby(){
   };
   const audienceCount=abAudienceCount();
   const playersReady=!!(b.player_a_id&&b.player_b_id);
-  const canStart=isHost&&playersReady&&audienceCount>=1;
+  const willDuel=playersReady&&audienceCount===0;
+  const canStart=isHost&&playersReady;
   const el=document.getElementById('ab-lobby-body');
   el.innerHTML=`
     <div style="text-align:center;margin-bottom:1rem">
@@ -8175,9 +8176,16 @@ async function renderAuxBattleLobby(){
       <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
     </div>
     <div style="display:flex;gap:.65rem;margin-bottom:1rem">${sideBtn('A',paProf,b.artist_a)}${sideBtn('B',pbProf,b.artist_b)}</div>
+    ${playersReady?`<div style="display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;border-radius:.5rem;border:1px solid ${willDuel?'var(--gold)':'var(--green)'};background:${willDuel?'rgba(167,139,250,.1)':'rgba(52,211,153,.1)'};margin-bottom:.75rem">
+      <div style="font-size:1.1rem;flex-shrink:0">${willDuel?'⚔️':'🎤'}</div>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:${willDuel?'var(--gold)':'var(--green)'}">${willDuel?'Duel Mode Will Activate':'Audience Battle Available'}</div>
+        <div style="font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.2rem">${willDuel?'No audience detected — both players will rate both songs to decide each round.':'Audience present. Host\'s selected winner mode will be used.'}</div>
+      </div>
+    </div>`:``}
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.75rem .9rem;margin-bottom:.85rem">
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Songs per side</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text)">${b.song_count}</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Winner mode</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text)">${b.winner_mode==='audience'?'Audience Vote':'Ratings'}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Judging mode</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${willDuel?'var(--gold)':'var(--text)'}">${willDuel?'Duel (auto)':b.winner_mode==='audience'?'Audience Vote':'Ratings'}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Secret draft</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${b.secret_draft?'var(--gold)':'var(--muted)'}">${b.secret_draft?'On':'Off'}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Featured songs</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">${b.allow_features?'Allowed':'Not Allowed'}</span></div>
       ${b.ban_count?`<div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Ban Phase</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${b.ban_count} ban${b.ban_count===1?'':'s'} each</span></div>`:''}
@@ -8186,9 +8194,9 @@ async function renderAuxBattleLobby(){
       <div style="display:flex;justify-content:space-between"><span class="ab-section-lbl">Audience in room</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${audienceCount>=1?'var(--green)':'var(--muted)'}">${audienceCount} member${audienceCount!==1?'s':''}</span></div>
     </div>
     ${canStart
-      ?`<button onclick="startAuxBattleDraft()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Start Draft</button>`
+      ?`<button onclick="startAuxBattleDraft()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Start Draft${willDuel?' · Duel Mode':''}</button>`
       :isHost
-        ?`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.5rem">${!playersReady?'Waiting for both players to join…':'Need at least 1 audience member to start.'}</div>`
+        ?`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.5rem">Waiting for both players to join…</div>`
         :`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.5rem">Waiting for host to start the draft…</div>`}
   `;
 }
@@ -8216,9 +8224,10 @@ async function startAuxBattleDraft(){
   const b=currentAuxBattle;
   if(b.host_id!==currentUser?.id)return;
   if(!b.player_a_id||!b.player_b_id){alert('Both players must join first.');return;}
-  if(abAudienceCount()<1){alert('Need at least 1 audience member in the room before starting.');return;}
+  const audienceNow=abAudienceCount();
+  const isDuel=audienceNow===0;
   const startStatus=(b.ban_count&&b.ban_count>0)?'banning':'drafting';
-  const update={status:startStatus};
+  const update={status:startStatus,duel_mode:isDuel};
   if(startStatus==='drafting')update.current_pick_index=0;
   const{data,error}=await db.from('aux_battles').update(update).eq('id',b.id).select('*').single();
   if(error){alert(error.message);return;}
@@ -8971,10 +8980,20 @@ function renderAuxBattleRound(){
   document.getElementById('ab-round-song-b').outerHTML=songCardHTML(pickB,'B').replace('class="ab-round-song"','class="ab-round-song" id="ab-round-song-b"');
   const voteSection=document.getElementById('ab-round-vote-section');
   const ratingSection=document.getElementById('ab-round-rating-section');
-  const showVoting=(b.winner_mode==='audience'&&!isTiebreaker);
-  const showRatings=(b.winner_mode==='ratings'||isTiebreaker);
+  const showVoting=(b.winner_mode==='audience'&&!isTiebreaker&&!b.duel_mode);
+  const showRatings=(b.winner_mode==='ratings'||isTiebreaker||b.duel_mode);
   voteSection.style.display=showVoting?'block':'none';
   ratingSection.style.display=showRatings?'block':'none';
+  // Duel mode badge in round header
+  let duelBannerEl=document.getElementById('ab-duel-mode-banner');
+  if(b.duel_mode){
+    if(!duelBannerEl){
+      duelBannerEl=document.createElement('div');duelBannerEl.id='ab-duel-mode-banner';
+      duelBannerEl.style.cssText='background:rgba(167,139,250,.12);border:1px solid var(--gold);color:var(--gold);font-family:\'Barlow Condensed\',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-align:center;padding:.3rem .5rem;border-radius:3px;margin:.4rem 0 .2rem';
+      duelBannerEl.textContent='⚔️ Duel Mode · Both players rate both songs';
+      document.getElementById('ab-round-body').insertBefore(duelBannerEl,document.getElementById('ab-round-body').firstChild);
+    }
+  } else if(duelBannerEl){duelBannerEl.remove();}
   if(showVoting)renderAbVoteSection(pickA,pickB);
   if(showRatings)renderAbRatingSection(pickA,pickB);
   const finSection=document.getElementById('ab-round-finalize-section');
@@ -9022,7 +9041,7 @@ function renderAbVoteSection(pickA,pickB){
 function renderAbRatingSection(pickA,pickB){
   const b=currentAuxBattle;
   const ratingSection=document.getElementById('ab-round-rating-section');
-  if(abIsPlayer()){
+  if(abIsPlayer()&&!b.duel_mode){
     ratingSection.innerHTML=`<div style="text-align:center;padding:1rem 0">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">You're competing</div>
       <div style="font-size:.58rem;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:.35rem">Only audience members can rate</div>
@@ -9035,8 +9054,9 @@ function renderAbRatingSection(pickA,pickB){
   if(ratedA&&ratedB){
     ratingSection.innerHTML=`<div style="text-align:center;padding:1.25rem 0">
       <div style="font-size:1.5rem;margin-bottom:.4rem">✓</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--green)">Both Songs Rated</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--green)">${b.duel_mode?'Duel Ratings Submitted':'Both Songs Rated'}</div>
       <div style="font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.35rem">${abMyRatingA?parseFloat(abMyRatingA.final_score).toFixed(1):'-'} · ${abMyRatingB?parseFloat(abMyRatingB.final_score).toFixed(1):'-'}</div>
+      ${b.duel_mode?`<div style="font-size:.55rem;color:var(--muted);margin-top:.3rem">Waiting for ${abIsPlayer()?(currentUser?.id===b.player_a_id?b.artist_b:b.artist_a):'both players'} to finish rating…</div>`:''}
     </div>`;
     return;
   }
@@ -9088,7 +9108,7 @@ function calcAbRating(scores){
 async function submitAuxBattleRating(side){
   const b=currentAuxBattle;
   if(!currentUser)return;
-  if(abIsPlayer()){return;}
+  if(abIsPlayer()&&!b.duel_mode){return;}
   const scores=Array.from({length:5},(_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value||5));
   const finalScore=calcAbRating(scores);
   const catKeys=['replay','flow_vocals','production','songwriting','impression'];
@@ -9285,13 +9305,42 @@ function renderAuxBattleResult(){
   const winnerText=rr?.winner_side==='A'?pickA?.song_name||b.artist_a:rr?.winner_side==='B'?pickB?.song_name||b.artist_b:'Split';
   const whyText=rr?.tiebreaker_used?`Tiebreaker: ${rr.tiebreaker_used}`
     :rr?.vote_count_a!==undefined?`${rr.vote_count_a}–${rr.vote_count_b} votes`
-    :rr?.rating_avg_a!==undefined?`${parseFloat(rr.rating_avg_a||0).toFixed(1)} vs ${parseFloat(rr.rating_avg_b||0).toFixed(1)} avg rating`:'';
+    :rr?.rating_avg_a!==undefined?`${parseFloat(rr.rating_avg_a||0).toFixed(1)} vs ${parseFloat(rr.rating_avg_b||0).toFixed(1)} avg`:'';
+  // Build per-player duel breakdown for duel mode
+  let duelBreakdownHTML='';
+  if(b.duel_mode&&rr?.rating_avg_a!=null){
+    const ratA=abRoundRatings.filter(r=>r.side==='A');
+    const ratB=abRoundRatings.filter(r=>r.side==='B');
+    const fmt=n=>parseFloat(n||0).toFixed(1);
+    const playerAId=b.player_a_id,playerBId=b.player_b_id;
+    const pAratA=ratA.find(r=>r.user_id===playerAId),pBratA=ratA.find(r=>r.user_id===playerBId);
+    const pAratB=ratB.find(r=>r.user_id===playerAId),pBratB=ratB.find(r=>r.user_id===playerBId);
+    duelBreakdownHTML=`<div style="background:rgba(167,139,250,.08);border:1px solid var(--border2);border-radius:.5rem;padding:.65rem .8rem;margin-bottom:.75rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem">⚔️ Duel Mode · Round ${rn} Breakdown</div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.3rem">
+        <div style="flex:1;background:var(--surface);border-radius:.4rem;padding:.4rem .55rem">
+          <div style="font-size:.5rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;margin-bottom:.2rem">${esc(pickA?.song_name||b.artist_a)}</div>
+          <div style="font-size:.58rem;color:var(--muted)">A rated: <span style="color:var(--text)">${pAratA?fmt(pAratA.final_score):'—'}</span></div>
+          <div style="font-size:.58rem;color:var(--muted)">B rated: <span style="color:var(--text)">${pBratA?fmt(pBratA.final_score):'—'}</span></div>
+          <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--gold);margin-top:.25rem">${fmt(rr.rating_avg_a)} avg</div>
+        </div>
+        <div style="flex:1;background:var(--surface);border-radius:.4rem;padding:.4rem .55rem">
+          <div style="font-size:.5rem;color:#f472b6;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;margin-bottom:.2rem">${esc(pickB?.song_name||b.artist_b)}</div>
+          <div style="font-size:.58rem;color:var(--muted)">A rated: <span style="color:var(--text)">${pAratB?fmt(pAratB.final_score):'—'}</span></div>
+          <div style="font-size:.58rem;color:var(--muted)">B rated: <span style="color:var(--text)">${pBratB?fmt(pBratB.final_score):'—'}</span></div>
+          <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#f472b6;margin-top:.25rem">${fmt(rr.rating_avg_b)} avg</div>
+        </div>
+      </div>
+    </div>`;
+  }
   document.getElementById('ab-result-body').innerHTML=`
-    <div style="text-align:center;margin-bottom:1.25rem">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem">Round ${rn} Result</div>
+    ${b.duel_mode?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:.5rem">⚔️ Duel Mode Result</div>`:''}
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem">Round ${rn} ${b.duel_mode?'Duel':'Result'}</div>
       <div class="ab-result-winner" style="color:${winColor}">${esc(winnerText)}</div>
       <div style="font-size:.65rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.3rem">${esc(whyText)}</div>
     </div>
+    ${duelBreakdownHTML}
     <div class="ab-score-tally">
       <div class="ab-score-tally-side">
         <div class="ab-score-tally-num" style="color:var(--gold)">${pointsA}</div>
@@ -9336,8 +9385,15 @@ function renderAuxBattleFinal(){
     abRoundResults.reduce((a,r)=>{const d=Math.abs((r.vote_count_a||0)-(r.vote_count_b||0));return d>a.diff?{r,diff:d}:a;},{r:abRoundResults[0],diff:-1}).r:null;
   const tiebreakerUsed=abRoundResults.some(r=>r.tiebreaker_used);
   document.getElementById('ab-final-body').innerHTML=`
+    ${b.duel_mode?`<div style="display:flex;align-items:center;gap:.55rem;padding:.55rem .75rem;background:rgba(167,139,250,.1);border:1px solid var(--gold);border-radius:.5rem;margin-bottom:1rem">
+      <div style="font-size:1rem;flex-shrink:0">⚔️</div>
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">Duel Result</div>
+        <div style="font-size:.55rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.15rem">Decided by both players rating both songs. No audience was present.</div>
+      </div>
+    </div>`:''}
     <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">${winArtist?'Aux Battle Winner':'Aux Battle Result'}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">${b.duel_mode?(winArtist?'Duel Mode Winner':'Duel Mode Result'):(winArtist?'Aux Battle Winner':'Aux Battle Result')}</div>
       ${winArtist?`<div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:${winColor};line-height:1.1">${esc(winArtist)}</div>
       <div style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.4rem">${pointsA} – ${pointsB}</div>`
       :`<div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--muted)">Tie</div>`}
