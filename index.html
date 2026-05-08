@@ -2420,9 +2420,9 @@
 
 <!-- AUX BATTLE ROUND ANTICIPATION OVERLAY -->
 <!-- DRAMATIC REVEAL OVERLAY (per-round + final recap) -->
-<div id="ab-reveal" style="display:none;position:fixed;inset:0;background:#070718;z-index:215;flex-direction:column;align-items:center;justify-content:flex-start;padding:2.5rem 1.25rem 1.25rem;overflow-y:auto;-webkit-overflow-scrolling:touch">
-  <button id="ab-reveal-skip" onclick="abSkipReveal()" style="position:absolute;top:.85rem;right:.85rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.12em;padding:.3rem .65rem;border-radius:3px;cursor:pointer;text-transform:uppercase;z-index:2">Skip ›</button>
-  <div id="ab-reveal-content" style="width:100%;max-width:480px;display:flex;flex-direction:column;align-items:center;gap:1rem"></div>
+<div id="ab-reveal" style="display:none;position:fixed;inset:0;background:#070718;z-index:215;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.25rem 1.5rem;overflow-y:auto;-webkit-overflow-scrolling:touch">
+  <button id="ab-reveal-skip" onclick="abSkipReveal()" style="position:absolute;top:1.1rem;right:1.1rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.16em;padding:.45rem .85rem;border-radius:4px;cursor:pointer;text-transform:uppercase;z-index:2">Skip ›</button>
+  <div id="ab-reveal-content" style="width:100%;max-width:780px;margin:auto;display:flex;flex-direction:column;align-items:center;gap:1.4rem"></div>
 </div>
 
 <div id="ab-anticipation" style="display:none;position:fixed;inset:0;background:#070718;z-index:210;flex-direction:column;align-items:center;justify-content:center;gap:1.25rem;padding:2rem">
@@ -7834,23 +7834,30 @@ document.addEventListener('click',e=>{
 let currentAuxBattle=null, abChannel=null, abPicks=[], abRoundVotes=[], abRoundRatings=[], abRoundResults=[], abArrangement=[];
 let abSongMatches=[], abSongTimer=null, abPendingPick=null;
 let abMyRatingA=null, abMyRatingB=null, abRoomsSubject='rankroom';
+// Rap-mode "No Hook" / "Lyrics Don't Matter" flags per side, per round
+let abMyNoHookA=false, abMyNoLyricsA=false, abMyNoHookB=false, abMyNoLyricsB=false;
 let _abSongCount=5, _abMode='ratings', _abSecret=true, _abFeatures=false, _abPrivate=false, _abGenre='rap';
 
-// Returns a 5-category preset for the AB rating UI based on genre.
-// Drops the lowest-weighted category for 6-cat genres and renormalizes weights.
+// Returns the exact same rating preset as the Rank tab uses for this genre.
+// For 'rap' returns the rank-tab's 6-cat preset (Replay/Flow/Beat/Chorus/Verses/Lyrics);
+// for other genres returns GENRE_PRESETS[genre] verbatim (preserving all cats and weights).
 function abGenrePreset(genre){
-  const RAP_DEFAULT={
+  // Mirror of calcFinal()'s rap weights (the values that actually drive the math, not the
+  // slightly-rounded labels in the HTML)
+  const RAP={
     label:'Rap',
-    cats:['Replay Value','Flow & Delivery','Production','Lyrics','Impression'],
-    colors:['var(--replay)','var(--flow)','var(--prod)','var(--lyrics)','var(--gold)'],
-    weights:[0.28,0.22,0.20,0.15,0.15],
+    cats:['Replay Value','Flow & Delivery','Beat','Chorus','Verses','Lyrics / Wordplay'],
+    colors:['var(--replay)','var(--flow)','var(--prod)','var(--chorus)','var(--verses)','var(--lyrics)'],
+    weights:[0.24,0.20,0.18,0.16,0.14,0.08],
     descs:[
       'Would you replay this song? Repeat-listen factor.',
       'Cadence, delivery, vocal performance.',
       'Beat, mix, sound design, sonic detail.',
-      'Lyrics, themes, hooks, depth.',
-      'Overall impact and first-listen reaction.'
-    ]
+      'Strength and impact of the chorus / hook.',
+      'Verse quality, bars, and writing.',
+      'Lyrical depth, wordplay, and writing.'
+    ],
+    isRap:true
   };
   const DESCS_BY_NAME={
     'Replay Value':'Would you replay this song? Repeat-listen factor.',
@@ -7871,19 +7878,9 @@ function abGenrePreset(genre){
     'Flow & Delivery':'Cadence, delivery, vocal performance.',
     'Impression':'Overall impact and first-listen reaction.'
   };
-  if(!genre||genre==='rap'||!GENRE_PRESETS[genre]||GENRE_PRESETS[genre].isRap)return RAP_DEFAULT;
+  if(!genre||genre==='rap'||!GENRE_PRESETS[genre]||GENRE_PRESETS[genre].isRap)return RAP;
   const p=GENRE_PRESETS[genre];
-  let cats=p.cats.slice(),colors=p.colors.slice(),weights=p.weights.slice();
-  if(cats.length>5){
-    // Drop the lowest-weighted category
-    let minIdx=0;
-    weights.forEach((w,i)=>{if(w<weights[minIdx])minIdx=i;});
-    cats.splice(minIdx,1);colors.splice(minIdx,1);weights.splice(minIdx,1);
-  }
-  const sum=weights.reduce((a,b)=>a+b,0)||1;
-  weights=weights.map(w=>w/sum);
-  const descs=cats.map(c=>DESCS_BY_NAME[c]||'');
-  return{label:p.label,cats,colors,weights,descs};
+  return{label:p.label,cats:p.cats.slice(),colors:p.colors.slice(),weights:p.weights.slice(),descs:p.cats.map(c=>DESCS_BY_NAME[c]||''),isRap:false};
 }
 
 function setAbGenre(g,btn){
@@ -8914,6 +8911,47 @@ async function abLockBans(){
   if(otherLocked){abState('draft');}else{renderAuxBattleBans();}
 }
 
+// Cache of resolved preview URLs (keyed by song|||artist) — avoids re-searching
+// Deezer when a pick doesn't have a preview_url stored.
+const _abPreviewUrlCache={};
+
+// Play a 30-second preview for the given pick (object with song_name/artist_name/
+// preview_url). Falls back to a Deezer track search if no preview_url is stored.
+async function abPlayPickPreview(pickId,btn){
+  if(!pickId||!btn)return;
+  const pick=abPicks.find(p=>p.id===pickId);
+  if(!pick){return;}
+  const songName=pick.song_name||'';
+  const artistName=pick.artist_name||'';
+  // 1) Use the stored preview_url directly
+  if(pick.preview_url){
+    playPreview(pick.preview_url,songName,artistName,btn);
+    return;
+  }
+  // 2) Cached lookup
+  const key=songName.toLowerCase()+'|||'+artistName.toLowerCase();
+  if(_abPreviewUrlCache[key]===null){return;}
+  if(_abPreviewUrlCache[key]){
+    playPreview(_abPreviewUrlCache[key],songName,artistName,btn);
+    return;
+  }
+  // 3) Resolve via Deezer search
+  btn.disabled=true;btn.style.opacity='.55';
+  try{
+    const data=await deezerFetch('https://api.deezer.com/search/track?q='+encodeURIComponent(artistName+' '+songName)+'&limit=5');
+    const match=(data.data||[]).find(r=>r.preview&&r.title&&r.artist?.name);
+    _abPreviewUrlCache[key]=match?.preview||null;
+  }catch(e){_abPreviewUrlCache[key]=null;}
+  btn.disabled=false;btn.style.opacity='';
+  if(_abPreviewUrlCache[key])playPreview(_abPreviewUrlCache[key],songName,artistName,btn);
+  else{
+    // Briefly show "no preview"
+    const orig=btn.innerHTML;
+    btn.innerHTML='<span style="font-size:.55rem;letter-spacing:.1em">NO PREVIEW</span>';
+    setTimeout(()=>{btn.innerHTML=orig;},1400);
+  }
+}
+
 // Look up a player's pick for a given round number. Tries arranged round_position
 // first; falls back to draft pick_number so song names always render even if
 // round_position hasn't synced yet.
@@ -9039,6 +9077,23 @@ async function loadAbRoundData(){
   abMyRatingA=abRoundRatings.find(r=>r.user_id===currentUser?.id&&r.side==='A')||null;
   abMyRatingB=abRoundRatings.find(r=>r.user_id===currentUser?.id&&r.side==='B')||null;
   abRatingSide=abMyRatingA?'B':'A';
+  // Restore No Hook / No Lyrics state from saved ratings (rap only)
+  abMyNoHookA=!!abMyRatingA?.no_hook;abMyNoLyricsA=!!abMyRatingA?.no_lyrics;
+  abMyNoHookB=!!abMyRatingB?.no_hook;abMyNoLyricsB=!!abMyRatingB?.no_lyrics;
+}
+
+// Toggle handlers for the rap-only buttons (per rating side)
+function abToggleNoHook(side){
+  if(side==='A')abMyNoHookA=!abMyNoHookA;else abMyNoHookB=!abMyNoHookB;
+  const pickA=abPickForRound('A',currentAuxBattle?.current_round);
+  const pickB=abPickForRound('B',currentAuxBattle?.current_round);
+  renderAbRatingSection(pickA,pickB);
+}
+function abToggleNoLyrics(side){
+  if(side==='A')abMyNoLyricsA=!abMyNoLyricsA;else abMyNoLyricsB=!abMyNoLyricsB;
+  const pickA=abPickForRound('A',currentAuxBattle?.current_round);
+  const pickB=abPickForRound('B',currentAuxBattle?.current_round);
+  renderAbRatingSection(pickA,pickB);
 }
 
 function renderAuxBattleRound(){
@@ -9162,14 +9217,26 @@ function renderAbRatingSection(pickA,pickB){
   const b=currentAuxBattle;
   const ratingSection=document.getElementById('ab-round-rating-section');
   if(abIsPlayer()&&!b.duel_mode){
-    ratingSection.innerHTML=`<div style="text-align:center;padding:1rem 0">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">You're competing</div>
-      <div style="font-size:.58rem;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:.35rem">Only audience members can rate</div>
-    </div>`;
+    const previewRow=(p,c)=>p?`<div style="flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-left:3px solid ${c};border-radius:.5rem;padding:.6rem .7rem;display:flex;align-items:center;gap:.55rem">
+      ${p.artwork_url?`<img src="${esc(itunesArtUrl(p.artwork_url,120))}" style="width:38px;height:38px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:38px;height:38px;border-radius:4px;background:var(--surface2);flex-shrink:0"></div>`}
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.04em;color:${c};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.song_name||'')}</div>
+        <div style="font-size:.55rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.artist_name||'')}</div>
+      </div>
+      <button onclick="abPlayPickPreview('${escJs(p.id)}',this)" style="background:transparent;border:1px solid ${c};color:${c};width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0">
+        <svg viewBox="0 0 12 12" width="10" height="10" fill="currentColor"><polygon points="3,1 11,6 3,11"/></svg>
+      </button>
+    </div>`:'';
+    ratingSection.innerHTML=`<div style="text-align:center;padding:1.25rem 0 .5rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)">You're competing</div>
+      <div style="font-size:.62rem;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:.35rem">Only audience members can rate — preview the songs while you wait.</div>
+    </div>
+    <div style="display:flex;gap:.6rem;margin-top:.85rem">${previewRow(pickA,'var(--gold)')}${previewRow(pickB,'#f472b6')}</div>`;
     return;
   }
   const preset=abGenrePreset(b.genre);
-  const cats=preset.cats.map((name,i)=>({name,desc:preset.descs[i]||'',color:preset.colors[i]||'var(--gold)'}));
+  const isRap=preset.isRap;
+  const cats=preset.cats.map((name,i)=>({name,desc:preset.descs[i]||'',color:preset.colors[i]||'var(--gold)',weight:preset.weights[i]||0}));
   const ratedA=!!abMyRatingA, ratedB=!!abMyRatingB;
   if(ratedA&&ratedB){
     ratingSection.innerHTML=`<div style="text-align:center;padding:1.5rem 1rem;background:var(--surface);border:1px solid var(--green);border-radius:.6rem">
@@ -9189,12 +9256,22 @@ function renderAbRatingSection(pickA,pickB){
   const songName=pick?.song_name||(side==='A'?b.artist_a:b.artist_b);
   const songArtist=pick?.artist_name||(side==='A'?b.artist_a:b.artist_b);
   const stepNum=side==='A'?1:2;
-  const allScores=[existing?.score_1,existing?.score_2,existing?.score_3,existing?.score_4,existing?.score_5];
+  const allScores=[existing?.score_1,existing?.score_2,existing?.score_3,existing?.score_4,existing?.score_5,existing?.score_6];
   const vals=cats.map((_,i)=>existing?(allScores[i]??5):5);
   const finalScore=existing?existing.final_score:null;
+  const noHook=side==='A'?abMyNoHookA:abMyNoHookB;
+  const noLyrics=side==='A'?abMyNoLyricsA:abMyNoLyricsB;
+  // Compute effective weights with No Hook / Lyrics Don't Matter active (rap only)
+  const effWeight=(i,name)=>{
+    if(!isRap)return cats[i].weight;
+    if(noHook&&noLyrics){const map={'Replay Value':24/92,'Flow & Delivery':28/92,'Verses':22/92,'Beat':18/92};return map[name]||0;}
+    if(noHook){const map={'Replay Value':0.24,'Flow & Delivery':0.28,'Verses':0.22,'Beat':0.18,'Lyrics / Wordplay':0.08};return map[name]||0;}
+    if(noLyrics){const map={'Replay Value':24/92,'Flow & Delivery':20/92,'Chorus':16/92,'Verses':14/92,'Beat':18/92};return map[name]||0;}
+    return cats[i].weight;
+  };
   ratingSection.innerHTML=`
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Song ${stepNum} of 2 · Now Rating</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)">Song ${stepNum} of 2 · ${esc(preset.label)} · Now Rating</div>
       <div style="display:flex;gap:.35rem">${['A','B'].map((s,i)=>{
         const dotColor=s===side?color:(i===0&&ratedA)||(i===1&&ratedB)?'var(--green)':'var(--surface2)';
         return`<div style="width:22px;height:6px;border-radius:3px;background:${dotColor};transition:background .25s"></div>`;
@@ -9206,41 +9283,104 @@ function renderAbRatingSection(pickA,pickB){
         :`<div class="ab-rating-hero-art" style="background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:2rem">🎵</div>`}
       <div class="ab-rating-hero-song" style="color:${color}">${esc(songName)}</div>
       <div class="ab-rating-hero-artist">${esc(songArtist)}</div>
+      ${pick?`<button onclick="abPlayPickPreview('${escJs(pick.id)}',this)" style="margin-top:.7rem;display:inline-flex;align-items:center;gap:.45rem;background:transparent;border:1px solid ${color};color:${color};padding:.4rem .8rem;border-radius:999px;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s">
+        <svg viewBox="0 0 12 12" width="10" height="10" fill="currentColor"><polygon points="3,1 11,6 3,11"/></svg>
+        Preview Song
+      </button>`:''}
     </div>
     <div class="ab-rating-panel" style="border-color:${color}">
-      ${cats.map((cat,i)=>`<div class="ab-rating-cat" style="border-left:3px solid ${cat.color}">
-        <div class="ab-rating-cat-head">
-          <div style="flex:1;min-width:0">
-            <div class="ab-rating-cat-name" style="color:${cat.color}">${esc(cat.name)}</div>
-            <div class="ab-rating-cat-desc">${esc(cat.desc)}</div>
+      ${cats.map((cat,i)=>{
+        const isChorusCat=isRap&&cat.name==='Chorus';
+        const isLyricsCat=isRap&&cat.name==='Lyrics / Wordplay';
+        const dimmed=(isChorusCat&&noHook)||(isLyricsCat&&noLyrics);
+        const w=effWeight(i,cat.name);
+        const wPct=Math.round(w*100);
+        return`<div class="ab-rating-cat${dimmed?' dim':''}" style="border-left:3px solid ${cat.color};${dimmed?'opacity:.45':''}">
+          <div class="ab-rating-cat-head">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:baseline;gap:.5rem">
+                <div class="ab-rating-cat-name" style="color:${cat.color}">${esc(cat.name)}</div>
+                <div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted2)">${dimmed?'—':wPct+'%'}</div>
+              </div>
+              <div class="ab-rating-cat-desc">${esc(cat.desc)}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.55rem;flex-shrink:0">
+              ${isChorusCat?`<button onclick="abToggleNoHook('${side}')" style="background:${noHook?cat.color:'transparent'};color:${noHook?'var(--bg)':cat.color};border:1px solid ${cat.color};padding:.18rem .42rem;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">No Hook</button>`:''}
+              ${isLyricsCat?`<button onclick="abToggleNoLyrics('${side}')" style="background:${noLyrics?cat.color:'transparent'};color:${noLyrics?'var(--bg)':cat.color};border:1px solid ${cat.color};padding:.18rem .42rem;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Lyrics Don't Matter</button>`:''}
+              <div class="ab-rating-cat-val" id="ab-rate-${side}-${i}-val" style="color:${cat.color}">${parseFloat(vals[i]||5).toFixed(1)}</div>
+            </div>
           </div>
-          <div class="ab-rating-cat-val" id="ab-rate-${side}-${i}-val" style="color:${cat.color}">${parseFloat(vals[i]||5).toFixed(1)}</div>
-        </div>
-        <input type="range" min="0" max="10" step="0.5" value="${vals[i]||5}" class="${sliderClass}" id="ab-rate-${side}-${i}" oninput="updateAbRatingDisplay('${side}',${i},this.value)" style="accent-color:${cat.color}">
-        <div class="ab-rating-scale"><span>0</span><span>5</span><span>10</span></div>
-      </div>`).join('')}
-      ${finalScore!==null?`<div style="text-align:center;padding:.7rem 0;margin-bottom:.4rem;border-top:1px solid var(--border)">
-        <div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:.2rem">Your final score</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${color};line-height:1">${parseFloat(finalScore).toFixed(1)}</div>
-      </div>`:''}
+          <input type="range" min="0" max="10" step="0.5" value="${vals[i]||5}" class="${sliderClass}" id="ab-rate-${side}-${i}" oninput="updateAbRatingDisplay('${side}',${i},this.value)" style="accent-color:${cat.color}" ${dimmed?'disabled':''}>
+          <div class="ab-rating-scale"><span>0</span><span>5</span><span>10</span></div>
+        </div>`;
+      }).join('')}
+      <div id="ab-rate-${side}-live" style="text-align:center;padding:.7rem 0;border-top:1px solid var(--border)">
+        <div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:.2rem">${existing?'Your saved score':'Your final score (live)'}</div>
+        <div id="ab-rate-${side}-live-num" style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${color};line-height:1">${finalScore!==null?parseFloat(finalScore).toFixed(1):'—'}</div>
+      </div>
       <button class="ab-submit-rating-btn" id="ab-submit-rate-${side}" onclick="submitAuxBattleRating('${side}')" style="background:${color}">${existing?'Update Rating':'Submit Rating · '+esc(songName)}</button>
     </div>`;
+  // Compute and show live score on load
+  abRecalcLiveScore(side);
+}
+
+// Pull current slider values, run the genre engine, and update the live final-score readout.
+function abRecalcLiveScore(side){
+  const b=currentAuxBattle;if(!b)return;
+  const preset=abGenrePreset(b.genre);
+  const noHook=side==='A'?abMyNoHookA:abMyNoHookB;
+  const noLyrics=side==='A'?abMyNoLyricsA:abMyNoLyricsB;
+  const scores=preset.cats.map((_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value??5));
+  const live=document.getElementById(`ab-rate-${side}-live-num`);
+  if(!live)return;
+  const final=preset.isRap?abCalcRapScore(scores,noHook,noLyrics):abCalcGenreScore(scores,preset.weights);
+  if(scores.every(s=>s===0||s==null))live.textContent='—';
+  else live.textContent=parseFloat(final).toFixed(1);
 }
 
 function updateAbRatingDisplay(side,idx,val){
   const el=document.getElementById(`ab-rate-${side}-${idx}-val`);
   if(el)el.textContent=parseFloat(val).toFixed(1);
+  abRecalcLiveScore(side);
 }
 
-function calcAbRating(scores,weights){
-  const w=weights||[0.24,0.22,0.20,0.18,0.16];
-  const B=scores.reduce((s,v,i)=>s+(v||0)*(w[i]||0),0);
-  const weakCats=scores.filter(s=>s<=5).length;
-  const eliteCats=scores.filter(s=>s>=9).length;
+// Exact mirror of calcFinal() for rap — same redistribution math when No Hook /
+// Lyrics Don't Matter are toggled, same weak/elite/diminishing-returns modifiers.
+// scores order: [Replay, Flow, Beat, Chorus, Verses, Lyrics]
+function abCalcRapScore(scores,nh,nl){
+  const r=scores[0]||0,F=scores[1]||0,p=scores[2]||0,ch=scores[3]||0,V=scores[4]||0,l=scores[5]||0;
+  const B=nh&&nl?(r*24+F*28+V*22+p*18)/92:
+          nh?    (r*.24)+(F*.28)+(V*.22)+(p*.18)+(l*.08):
+          nl?    (r*24+F*20+ch*16+V*14+p*18)/92:
+                 (r*.24)+(F*.20)+(ch*.16)+(V*.14)+(p*.18)+(l*.08);
+  const activeScores=nh&&nl?[r,F,V,p]:nh?[r,F,V,p,l]:nl?[r,F,ch,V,p]:[r,F,ch,V,p,l];
+  const weakCats=activeScores.filter(s=>s<=5).length;
+  const eliteCats=activeScores.filter(s=>s>=9).length;
   const penalty=weakCats*.15,bonus=eliteCats*.20;
-  const gap=Math.max(...scores)-Math.min(...scores);
+  const gap=Math.max(...activeScores)-Math.min(...activeScores);
   let dr=0;if(B>8){if(gap>=7)dr=.70;else if(gap>=5)dr=.40;else if(gap>=3)dr=.20;}
   return Math.min(10,Math.max(1,B-penalty+bonus-dr));
+}
+
+// Generic genre rating — mirrors calcGenericFinal() in the Rank tab.
+function abCalcGenreScore(scores,weights){
+  const B=weights.reduce((s,w,i)=>s+(scores[i]||0)*w,0);
+  const active=scores.slice(0,weights.length);
+  const weakCats=active.filter(s=>s<=5).length;
+  const eliteCats=active.filter(s=>s>=9).length;
+  const penalty=weakCats*.15,bonus=eliteCats*.20;
+  const gap=Math.max(...active)-Math.min(...active);
+  let dr=0;if(B>8){if(gap>=7)dr=.70;else if(gap>=5)dr=.40;else if(gap>=3)dr=.20;}
+  return Math.min(10,Math.max(1,B-penalty+bonus-dr));
+}
+
+// Genre-aware dispatch. Pass scores in the order defined by abGenrePreset(genre).cats
+function calcAbRating(scores,genreOrWeights,nh,nl){
+  // Backward-compat: callers that pass an array as 2nd arg are using the old generic path.
+  if(Array.isArray(genreOrWeights))return abCalcGenreScore(scores,genreOrWeights);
+  const preset=abGenrePreset(genreOrWeights);
+  if(preset.isRap)return abCalcRapScore(scores,!!nh,!!nl);
+  return abCalcGenreScore(scores,preset.weights);
 }
 
 async function submitAuxBattleRating(side){
@@ -9250,13 +9390,17 @@ async function submitAuxBattleRating(side){
   const preset=abGenrePreset(b.genre);
   const n=preset.cats.length;
   const scores=Array.from({length:n},(_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value||5));
-  const finalScore=calcAbRating(scores,preset.weights);
+  const noHook=side==='A'?abMyNoHookA:abMyNoHookB;
+  const noLyrics=side==='A'?abMyNoLyricsA:abMyNoLyricsB;
+  const finalScore=preset.isRap?abCalcRapScore(scores,noHook,noLyrics):abCalcGenreScore(scores,preset.weights);
   const breakdown={};preset.cats.forEach((name,i)=>{breakdown[name]=scores[i];});
   breakdown._genre=b.genre||'rap';
-  // Pad scores to 5 slots for the existing score_1..score_5 columns
-  const padded=Array.from({length:5},(_,i)=>scores[i]??null);
+  if(preset.isRap){breakdown._no_hook=noHook;breakdown._no_lyrics=noLyrics;}
+  // Pad scores to 6 slots for the score_1..score_6 columns
+  const padded=Array.from({length:6},(_,i)=>scores[i]??null);
   const row={battle_id:b.id,round_number:b.current_round,user_id:currentUser.id,side,
-    score_1:padded[0],score_2:padded[1],score_3:padded[2],score_4:padded[3],score_5:padded[4],
+    score_1:padded[0],score_2:padded[1],score_3:padded[2],score_4:padded[3],score_5:padded[4],score_6:padded[5],
+    no_hook:!!noHook,no_lyrics:!!noLyrics,
     final_score:finalScore,category_breakdown:breakdown};
   const btn=document.getElementById(`ab-submit-rate-${side}`);
   if(btn){btn.disabled=true;btn.textContent='Saving…';}
@@ -9325,10 +9469,10 @@ function abMissingRaterIds(){
 function calculateAuxBattleRatingStats(){
   const b=currentAuxBattle;
   const preset=abGenrePreset(b?.genre);
-  const cats=['score_1','score_2','score_3','score_4','score_5'];
+  const cats=['score_1','score_2','score_3','score_4','score_5','score_6'];
   const calcAvg=(side)=>{
     const rs=abRoundRatings.filter(r=>r.side===side);
-    if(!rs.length)return{final:0,cats:[0,0,0,0,0]};
+    if(!rs.length)return{final:0,cats:[0,0,0,0,0,0]};
     const fin=rs.reduce((s,r)=>s+parseFloat(r.final_score||0),0)/rs.length;
     const catAvgs=cats.map(k=>rs.reduce((s,r)=>s+parseFloat(r[k]||0),0)/rs.length);
     return{final:fin,cats:catAvgs};
@@ -9376,17 +9520,21 @@ async function finalizeAuxBattleRound(){
   const{data:roundRes,error:rErr}=await db.from('aux_battle_round_results').upsert(resultData,{onConflict:'battle_id,round_number'}).select('*').single();
   if(rErr){console.error(rErr);errEl.textContent=rErr.message;btn.disabled=false;btn.textContent='Finalize Round';return;}
   abRoundResults=[...abRoundResults.filter(r=>r.round_number!==b.current_round),roundRes];
-  const isLastRound=b.current_round>=b.song_count;
   const finalScoreA=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_a)||0),0);
   const finalScoreB=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_b)||0),0);
-  if(isLastRound){
-    const winSide=finalScoreA>finalScoreB?'A':finalScoreA<finalScoreB?'B':'tie';
-    // Update DB only — let the realtime UPDATE event drive the reveal on every
-    // client (host included) so all viewers' animations start in sync.
-    await db.from('aux_battles').update({status:'final',final_score_a:finalScoreA,final_score_b:finalScoreB,winner_side:winSide}).eq('id',b.id);
-  } else {
-    await db.from('aux_battles').update({status:'round_result',final_score_a:finalScoreA,final_score_b:finalScoreB}).eq('id',b.id);
-  }
+  // Always go to round_result first — even on the last round — so the per-round
+  // reveal animation plays. The host then manually advances to 'final'.
+  await db.from('aux_battles').update({status:'round_result',final_score_a:finalScoreA,final_score_b:finalScoreB}).eq('id',b.id);
+}
+
+// Host advances from the last-round result screen to the final recap animation.
+async function advanceAuxBattleToFinal(){
+  const b=currentAuxBattle;
+  if(!b||b.host_id!==currentUser?.id)return;
+  const finalScoreA=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_a)||0),0);
+  const finalScoreB=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_b)||0),0);
+  const winSide=finalScoreA>finalScoreB?'A':finalScoreA<finalScoreB?'B':'tie';
+  await db.from('aux_battles').update({status:'final',final_score_a:finalScoreA,final_score_b:finalScoreB,winner_side:winSide}).eq('id',b.id);
 }
 
 // ─── Dramatic Round Reveal ─────────────────────────────────────────────────────
@@ -9497,25 +9645,25 @@ function _abRevealCats(b){
 }
 
 function _abRevealIntroHTML(b,roundNumber,modeLabel){
-  return`<div style="opacity:0;animation:abRevealIn .55s ease forwards;text-align:center;padding-top:2rem">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem">${esc(modeLabel)}</div>
-    <div style="font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:900;color:var(--text);line-height:1;text-shadow:0 0 38px rgba(167,139,250,.45)">Round ${roundNumber}</div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.62rem;letter-spacing:.24em;color:var(--muted);margin-top:.55rem">REVEAL</div>
+  return`<div style="opacity:0;animation:abRevealIn .55s ease forwards;text-align:center;padding:3rem 0">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem">${esc(modeLabel)}</div>
+    <div style="font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:var(--text);line-height:.95;text-shadow:0 0 50px rgba(167,139,250,.55)">Round ${roundNumber}</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;letter-spacing:.32em;color:var(--muted);margin-top:1rem;font-weight:700">REVEAL</div>
   </div>`;
 }
 
 function _abRevealSongsHTML(b,pickA,pickB,aName,bName){
-  return`<div style="display:flex;gap:.7rem;width:100%;justify-content:center;align-items:flex-start">
-    <div style="flex:1;max-width:170px;text-align:center;opacity:0;animation:abRevealSlideL .55s cubic-bezier(.22,1,.36,1) forwards">
-      ${pickA?.artwork_url?`<img src="${esc(itunesArtUrl(pickA.artwork_url,400))}" style="width:100%;aspect-ratio:1;border-radius:.65rem;object-fit:cover;box-shadow:0 0 30px rgba(167,139,250,.35)">`:`<div style="width:100%;aspect-ratio:1;border-radius:.65rem;background:var(--surface2)"></div>`}
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-top:.5rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(aName)}</div>
-      <div style="font-size:.52rem;color:var(--muted);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.artist_a)}</div>
+  return`<div style="display:flex;gap:1.3rem;width:100%;justify-content:center;align-items:flex-start;padding:1rem 0">
+    <div style="flex:1;max-width:280px;text-align:center;opacity:0;animation:abRevealSlideL .55s cubic-bezier(.22,1,.36,1) forwards">
+      ${pickA?.artwork_url?`<img src="${esc(itunesArtUrl(pickA.artwork_url,500))}" style="width:100%;aspect-ratio:1;border-radius:.85rem;object-fit:cover;box-shadow:0 0 50px rgba(167,139,250,.45)">`:`<div style="width:100%;aspect-ratio:1;border-radius:.85rem;background:var(--surface2)"></div>`}
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);margin-top:.85rem;line-height:1.15">${esc(aName)}</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">${esc(b.artist_a)}</div>
     </div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;color:var(--gold);align-self:center;text-shadow:0 0 20px rgba(167,139,250,.6);opacity:0;animation:abRevealIn .5s ease .25s forwards">VS</div>
-    <div style="flex:1;max-width:170px;text-align:center;opacity:0;animation:abRevealSlideR .55s cubic-bezier(.22,1,.36,1) forwards">
-      ${pickB?.artwork_url?`<img src="${esc(itunesArtUrl(pickB.artwork_url,400))}" style="width:100%;aspect-ratio:1;border-radius:.65rem;object-fit:cover;box-shadow:0 0 30px rgba(244,114,182,.35)">`:`<div style="width:100%;aspect-ratio:1;border-radius:.65rem;background:var(--surface2)"></div>`}
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#f472b6;margin-top:.5rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(bName)}</div>
-      <div style="font-size:.52rem;color:var(--muted);margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.artist_b)}</div>
+    <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-style:italic;color:var(--gold);align-self:center;text-shadow:0 0 30px rgba(167,139,250,.7);opacity:0;animation:abRevealIn .5s ease .25s forwards;flex-shrink:0">VS</div>
+    <div style="flex:1;max-width:280px;text-align:center;opacity:0;animation:abRevealSlideR .55s cubic-bezier(.22,1,.36,1) forwards">
+      ${pickB?.artwork_url?`<img src="${esc(itunesArtUrl(pickB.artwork_url,500))}" style="width:100%;aspect-ratio:1;border-radius:.85rem;object-fit:cover;box-shadow:0 0 50px rgba(244,114,182,.45)">`:`<div style="width:100%;aspect-ratio:1;border-radius:.85rem;background:var(--surface2)"></div>`}
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#f472b6;margin-top:.85rem;line-height:1.15">${esc(bName)}</div>
+      <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">${esc(b.artist_b)}</div>
     </div>
   </div>`;
 }
@@ -9529,27 +9677,27 @@ async function _abRevealWinner(b,rr,pickA,pickB,aName,bName){
   const winArt=winSide==='A'?pickA?.artwork_url:winSide==='B'?pickB?.artwork_url:null;
 
   // Suspense build-up: "And the winner is..." with rising sweep
-  _abSetReveal(`<div style="text-align:center;padding:2rem 0;width:100%">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;opacity:0;animation:abRevealIn .55s ease forwards">Round Winner</div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-style:italic;color:var(--muted);opacity:0;animation:abRevealIn .65s ease .25s forwards;animation-fill-mode:forwards">…and the winner is</div>
-    <div style="margin-top:1rem;font-size:1rem;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.4em;opacity:0;animation:abRevealIn .5s ease .65s forwards">●  ●  ●</div>
+  _abSetReveal(`<div style="text-align:center;padding:3rem 0;width:100%">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:0;animation:abRevealIn .55s ease forwards">Round Winner</div>
+    <div style="font-family:'Playfair Display',serif;font-size:2.7rem;font-style:italic;color:var(--muted);opacity:0;animation:abRevealIn .65s ease .25s forwards">…and the winner is</div>
+    <div style="margin-top:1.6rem;font-size:1.6rem;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.5em;opacity:0;animation:abRevealIn .5s ease .65s forwards">●  ●  ●</div>
   </div>`);
-  _abSfxSweepUp(1.2);
-  await _abWait(1700);
+  _abSfxSweepUp(1.3);
+  await _abWait(2000);
   if(_abSkipReveal)return;
 
   // Big reveal moment with boom + crown
-  _abSetReveal(`<div style="text-align:center;padding:1.5rem 0;width:100%">
-    <div style="font-size:4.5rem;opacity:0;animation:abRevealCrown .9s cubic-bezier(.22,1,.36,1) forwards;line-height:1">${isSplit?'⚖️':'👑'}</div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin:.55rem 0 .65rem;opacity:0;animation:abRevealIn .55s ease .3s forwards">Round Winner</div>
-    ${winArt?`<img src="${esc(itunesArtUrl(winArt,400))}" style="width:130px;height:130px;border-radius:.7rem;object-fit:cover;margin:0 auto .65rem;display:block;opacity:0;animation:abRevealPop .8s cubic-bezier(.22,1,.36,1) .45s forwards;box-shadow:0 0 50px ${winColor}99,0 0 90px ${winColor}55">`:''}
-    <div style="font-family:'Playfair Display',serif;font-size:2.7rem;font-weight:900;color:${winColor};line-height:1.1;opacity:0;animation:abRevealPop .8s cubic-bezier(.22,1,.36,1) .8s forwards;text-shadow:0 0 36px ${winColor}99;padding:0 .5rem">${esc(winName)}</div>
-    ${winArtist?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:.5rem;opacity:0;animation:abRevealIn .55s ease 1.1s forwards">${esc(winArtist)}</div>`:''}
-    ${!isSplit?`<div style="font-family:'DM Mono',monospace;font-size:.65rem;color:${winColor};margin-top:.85rem;opacity:0;animation:abRevealIn .55s ease 1.5s forwards;letter-spacing:.06em">+1 round</div>`:''}
+  _abSetReveal(`<div style="text-align:center;padding:2rem 0;width:100%">
+    <div style="font-size:7rem;opacity:0;animation:abRevealCrown .9s cubic-bezier(.22,1,.36,1) forwards;line-height:1">${isSplit?'⚖️':'👑'}</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--muted);margin:1rem 0 1rem;opacity:0;animation:abRevealIn .55s ease .3s forwards">Round Winner</div>
+    ${winArt?`<img src="${esc(itunesArtUrl(winArt,500))}" style="width:200px;height:200px;border-radius:.9rem;object-fit:cover;margin:0 auto 1rem;display:block;opacity:0;animation:abRevealPop .8s cubic-bezier(.22,1,.36,1) .45s forwards;box-shadow:0 0 70px ${winColor}99,0 0 130px ${winColor}55">`:''}
+    <div style="font-family:'Playfair Display',serif;font-size:4.2rem;font-weight:900;color:${winColor};line-height:1.05;opacity:0;animation:abRevealPop .8s cubic-bezier(.22,1,.36,1) .8s forwards;text-shadow:0 0 50px ${winColor},0 0 90px ${winColor}55;padding:0 .5rem">${esc(winName)}</div>
+    ${winArtist?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-top:.85rem;opacity:0;animation:abRevealIn .55s ease 1.1s forwards">${esc(winArtist)}</div>`:''}
+    ${!isSplit?`<div style="font-family:'DM Mono',monospace;font-size:.95rem;color:${winColor};margin-top:1.1rem;opacity:0;animation:abRevealIn .55s ease 1.5s forwards;letter-spacing:.1em">+1 round</div>`:''}
   </div>`);
   _abSfxBoom();
   setTimeout(()=>_abSfxFanfare(),650);
-  await _abWait(3300);
+  await _abWait(3800);
 }
 
 async function playDramaticRoundReveal(roundNumber,cb){
@@ -9685,10 +9833,13 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,p
     return;
   }
 
-  _abSetReveal(`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-align:center;opacity:0;animation:abRevealIn .45s ease forwards">⭐ Audience Ratings · ${raterIds.length} member${raterIds.length===1?'':'s'}</div>
-  <div style="text-align:center;font-size:.55rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.4rem;opacity:0;animation:abRevealIn .45s ease .25s forwards">Breaking down every score…</div>`);
+  _abSetReveal(`<div style="opacity:0;animation:abRevealIn .45s ease forwards;text-align:center;padding:2rem 0">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)">⭐ Audience Ratings</div>
+    <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--text);margin-top:.85rem;line-height:1.1">${raterIds.length} member${raterIds.length===1?'':'s'}</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;color:var(--muted);margin-top:1rem;letter-spacing:.16em;text-transform:uppercase">Breaking down every score…</div>
+  </div>`);
   _abSfxWhoosh();
-  await _abWait(1400);
+  await _abWait(1900);
 
   // For each rater, show their breakdown for both songs (with sounds + per-category drama)
   for(let raterIdx=0;raterIdx<raterIds.length;raterIdx++){
@@ -9700,40 +9851,40 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,p
     const rB=ratingsHere.find(r=>r.user_id===uid&&r.side==='B');
     const revealCats=_abRevealCats(b);
     const sideHTML=(label,color,r,suffix)=>{
-      if(!r)return`<div style="flex:1;text-align:center;color:var(--muted);font-size:.6rem;font-style:italic;padding:1rem 0">No rating for ${esc(label)}</div>`;
-      const cats=[r.score_1,r.score_2,r.score_3,r.score_4,r.score_5];
+      if(!r)return`<div style="flex:1;text-align:center;color:var(--muted);font-size:.85rem;font-style:italic;padding:2rem 0">No rating for ${esc(label)}</div>`;
+      const cats=[r.score_1,r.score_2,r.score_3,r.score_4,r.score_5,r.score_6];
       return`<div style="flex:1;min-width:0">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${color};margin-bottom:.45rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center">${esc(label)}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${color};margin-bottom:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center">${esc(label)}</div>
         ${revealCats.map((c,i)=>{
           const v=cats[i]||0;
           const pct=Math.round(v/10*100);
-          return`<div class="abrev-cat-row" id="abrev-cat-${suffix}-${i}" style="opacity:.25">
-            <div class="abrev-cat-name">${c.name}</div>
-            <div class="abrev-cat-bar"><div class="abrev-cat-bar-fill" data-target="${pct}" data-suffix="${suffix}" data-idx="${i}" style="background:${c.color}"></div></div>
-            <div class="abrev-cat-val abrev-cat-val-${suffix}-${i}" style="opacity:0">${parseFloat(v).toFixed(1)}</div>
+          return`<div class="abrev-cat-row" id="abrev-cat-${suffix}-${i}" style="opacity:.2;padding:.45rem 0;font-size:.85rem">
+            <div class="abrev-cat-name" style="flex:0 0 130px;font-size:.72rem">${c.name}</div>
+            <div class="abrev-cat-bar" style="height:9px"><div class="abrev-cat-bar-fill" data-target="${pct}" data-suffix="${suffix}" data-idx="${i}" style="background:${c.color}"></div></div>
+            <div class="abrev-cat-val abrev-cat-val-${suffix}-${i}" style="opacity:0;flex:0 0 44px;font-size:1rem">${parseFloat(v).toFixed(1)}</div>
           </div>`;
         }).join('')}
-        <div class="abrev-final-${suffix}" style="text-align:center;margin-top:.55rem;opacity:0">
-          <div style="font-size:.52rem;color:${color};font-family:'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-weight:800">Final</div>
-          <div class="abrev-score-num" style="font-size:1.85rem;color:${color}">${parseFloat(r.final_score).toFixed(1)}</div>
+        <div class="abrev-final-${suffix}" style="text-align:center;margin-top:1rem;opacity:0">
+          <div style="font-size:.7rem;color:${color};font-family:'Barlow Condensed',sans-serif;letter-spacing:.18em;text-transform:uppercase;font-weight:800">Final</div>
+          <div class="abrev-score-num" style="font-size:2.7rem;color:${color}">${parseFloat(r.final_score).toFixed(1)}</div>
         </div>
       </div>`;
     };
     _abSetReveal(`<div style="opacity:0;animation:abRevealIn .45s ease forwards;width:100%">
-      <div style="display:flex;align-items:center;gap:.6rem;justify-content:center;margin-bottom:.6rem">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.18em;color:var(--muted);text-transform:uppercase">Rater ${raterIdx+1}/${raterIds.length}</div>
-      </div>
       <div style="display:flex;align-items:center;gap:.6rem;justify-content:center;margin-bottom:.85rem">
-        ${avatarHTML(prof,null,32)}
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.05em;color:var(--text)">@${esc(uname)}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.24em;color:var(--muted);text-transform:uppercase">Rater ${raterIdx+1} / ${raterIds.length}</div>
       </div>
-      <div style="display:flex;gap:.7rem;width:100%;align-items:flex-start">
+      <div style="display:flex;align-items:center;gap:.85rem;justify-content:center;margin-bottom:1.4rem">
+        ${avatarHTML(prof,null,52)}
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:.04em;color:var(--text)">@${esc(uname)}</div>
+      </div>
+      <div style="display:flex;gap:1.4rem;width:100%;align-items:flex-start">
         ${sideHTML(aName,'var(--gold)',rA,'a')}
         ${sideHTML(bName,'#f472b6',rB,'b')}
       </div>
     </div>`);
-    _abSfxBlip(330,0.12,'triangle',0.10);
-    await _abWait(700);
+    _abSfxBlip(330,0.16,'triangle',0.12);
+    await _abWait(1100);
     if(_abSkipReveal)return;
 
     // Reveal each category one at a time with a tick sound and emphasis
@@ -9748,20 +9899,22 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,p
           bar.style.width=target+'%';
         });
         const valEl=document.querySelector(`.abrev-cat-val-${side}-${i}`);
-        if(valEl){valEl.style.animation='abRevealPop .4s cubic-bezier(.22,1,.36,1) .35s forwards';}
+        if(valEl){valEl.style.animation='abRevealPop .55s cubic-bezier(.22,1,.36,1) .35s forwards';}
       });
       _abSfxTick();
-      await _abWait(550);
+      await _abWait(900);
     }
     if(_abSkipReveal)return;
 
+    // Linger a moment so the audience can read the breakdown
+    await _abWait(700);
+
     // Reveal the final score with a chime
-    await _abWait(250);
     document.querySelectorAll('.abrev-final-a, .abrev-final-b').forEach(el=>{
-      el.style.animation='abRevealPop .65s cubic-bezier(.22,1,.36,1) forwards';
+      el.style.animation='abRevealPop .75s cubic-bezier(.22,1,.36,1) forwards';
     });
     _abSfxScoreReveal();
-    await _abWait(2000);
+    await _abWait(3200);
   }
   if(_abSkipReveal)return;
 
@@ -9986,35 +10139,42 @@ async function _abPlayBattleStatsBreakdown(b,prefetchedTotalRatings){
   }
 
   // Intro
-  _abSetReveal(`<div style="text-align:center;padding-top:2rem;opacity:0;animation:abRevealIn .55s ease forwards">
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem">Battle Stats</div>
-    <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--text);line-height:1">By the Numbers</div>
+  _abSetReveal(`<div style="text-align:center;padding:2rem 0;opacity:0;animation:abRevealIn .55s ease forwards">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem">📊 Battle Stats</div>
+    <div style="font-family:'Playfair Display',serif;font-size:3.4rem;font-weight:900;color:var(--text);line-height:1">By the Numbers</div>
   </div>`);
   _abSfxWhoosh();
-  await _abWait(1600);
+  await _abWait(2400);
   if(_abSkipReveal)return;
 
-  // Reveal stats one at a time
-  let statsHTML='';
+  // Build the stats container ONCE so previously-revealed cards stay on screen.
+  // Append each card incrementally rather than re-setting innerHTML (which would
+  // wipe the running animation state of earlier cards).
+  _abSetReveal(`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:1.1rem">📊 Battle Stats</div>
+    <div id="abrev-stats-list" style="width:100%;display:flex;flex-direction:column;gap:.7rem"></div>`);
+  await _abWait(60);
+  const list=document.getElementById('abrev-stats-list');
   for(let i=0;i<stats.length;i++){
     if(_abSkipReveal)return;
     const s=stats[i];
-    statsHTML+=`<div id="abrev-stat-${i}" style="opacity:0;width:100%;background:var(--surface);border:1px solid var(--border2);border-left:3px solid ${s.color};border-radius:.55rem;padding:.7rem .85rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.7rem">
-      <div style="font-size:1.4rem;flex-shrink:0">${s.icon}</div>
+    const card=document.createElement('div');
+    card.id=`abrev-stat-${i}`;
+    card.style.cssText=`opacity:0;width:100%;background:var(--surface);border:1px solid var(--border2);border-left:4px solid ${s.color};border-radius:.65rem;padding:1.1rem 1.3rem;display:flex;align-items:center;gap:1.1rem`;
+    card.innerHTML=`
+      <div style="font-size:2.2rem;flex-shrink:0">${s.icon}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)">${esc(s.label)}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:800;color:${s.color};line-height:1.1;margin-top:.15rem">${esc(s.value)}</div>
-        ${s.sub?`<div style="font-size:.55rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.sub)}</div>`:''}
-      </div>
-    </div>`;
-    _abSetReveal(`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:.7rem">📊 Battle Stats</div>${statsHTML}`);
-    await _abWait(80);
-    const el=document.getElementById(`abrev-stat-${i}`);
-    if(el)el.style.animation='abRevealUp .55s cubic-bezier(.22,1,.36,1) forwards';
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)">${esc(s.label)}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:800;color:${s.color};line-height:1.1;margin-top:.25rem">${esc(s.value)}</div>
+        ${s.sub?`<div style="font-size:.72rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.sub)}</div>`:''}
+      </div>`;
+    if(list)list.appendChild(card);
+    // Force a layout flush before applying animation so it actually plays
+    void card.offsetWidth;
+    card.style.animation='abRevealUp .65s cubic-bezier(.22,1,.36,1) forwards';
     _abSfxStatPing(i);
-    await _abWait(900);
+    await _abWait(1700);
   }
-  await _abWait(1500);
+  await _abWait(3000);
 }
 
 async function _abPlayCompactRoundReveal(b,rr){
@@ -10196,8 +10356,11 @@ function renderAuxBattleResult(){
         </div>`;
       }).join('')}
     </div>
-    ${isHost&&rn<b.song_count?`<button onclick="goToNextAuxBattleRound()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Round ${rn+1} →</button>`
-    :'<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:\'DM Mono\',monospace">Waiting for host to advance…</div>'}
+    ${isHost
+      ?(rn<b.song_count
+          ?`<button onclick="goToNextAuxBattleRound()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Round ${rn+1} →</button>`
+          :`<button onclick="advanceAuxBattleToFinal()" style="width:100%;padding:.85rem;background:linear-gradient(135deg,var(--gold),#facc15);color:var(--bg);border:none;border-radius:.55rem;font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.16em;cursor:pointer;text-transform:uppercase;box-shadow:0 0 30px rgba(250,204,21,.3)">🏆 View Final Results</button>`)
+      :'<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:\'DM Mono\',monospace">Waiting for host to advance…</div>'}
   `;
 }
 
@@ -10480,6 +10643,8 @@ function unsubscribeAuxBattleRealtime(){
 function abLeave(){
   _stopAbLobbyPoll();
   document.getElementById('ab-anticipation').style.display='none';
+  // Stop any in-progress 30s preview so audio doesn't keep playing after exit
+  try{stopPreview();}catch(e){}
   abPresence={};
   unsubscribeAuxBattleRealtime();
   localStorage.removeItem('ab_battle_id');
