@@ -2468,6 +2468,17 @@
     <div id="ab-custom-count-wrap" style="display:none;margin-bottom:.75rem">
       <input id="ab-custom-count" type="number" min="1" max="20" class="modal-input" placeholder="Number of songs (1-20)" style="font-size:.82rem">
     </div>
+    <label class="modal-lbl">Rating Genre <span style="color:var(--muted);font-weight:400">— audience uses this genre's rating system</span></label>
+    <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.75rem" id="ab-genre-btns">
+      <button class="ab-pill active" style="cursor:pointer;flex:1;min-width:54px" data-genre="rap" onclick="setAbGenre('rap',this)">Rap</button>
+      <button class="ab-pill" style="cursor:pointer;flex:1;min-width:54px" data-genre="pop" onclick="setAbGenre('pop',this)">Pop</button>
+      <button class="ab-pill" style="cursor:pointer;flex:1;min-width:54px" data-genre="rnb" onclick="setAbGenre('rnb',this)">R&amp;B</button>
+      <button class="ab-pill" style="cursor:pointer;flex:1;min-width:54px" data-genre="rock" onclick="setAbGenre('rock',this)">Rock</button>
+      <button class="ab-pill" style="cursor:pointer;flex:1;min-width:60px" data-genre="country" onclick="setAbGenre('country',this)">Country</button>
+      <button class="ab-pill" style="cursor:pointer;flex:1;min-width:54px" data-genre="edm" onclick="setAbGenre('edm',this)">EDM</button>
+      <button class="ab-pill" style="cursor:pointer;flex:1;min-width:80px" data-genre="hyperpop" onclick="setAbGenre('hyperpop',this)">Hyperpop</button>
+      <button class="ab-pill" style="cursor:pointer;flex:1;min-width:90px" data-genre="alternative" onclick="setAbGenre('alternative',this)">Alternative</button>
+    </div>
     <div style="display:flex;gap:.75rem;margin-bottom:.75rem;flex-wrap:wrap">
       <div style="flex:1;min-width:140px">
         <label class="modal-lbl">Secret Draft</label>
@@ -7823,7 +7834,62 @@ document.addEventListener('click',e=>{
 let currentAuxBattle=null, abChannel=null, abPicks=[], abRoundVotes=[], abRoundRatings=[], abRoundResults=[], abArrangement=[];
 let abSongMatches=[], abSongTimer=null, abPendingPick=null;
 let abMyRatingA=null, abMyRatingB=null, abRoomsSubject='rankroom';
-let _abSongCount=5, _abMode='ratings', _abSecret=true, _abFeatures=false, _abPrivate=false;
+let _abSongCount=5, _abMode='ratings', _abSecret=true, _abFeatures=false, _abPrivate=false, _abGenre='rap';
+
+// Returns a 5-category preset for the AB rating UI based on genre.
+// Drops the lowest-weighted category for 6-cat genres and renormalizes weights.
+function abGenrePreset(genre){
+  const RAP_DEFAULT={
+    label:'Rap',
+    cats:['Replay Value','Flow & Delivery','Production','Lyrics','Impression'],
+    colors:['var(--replay)','var(--flow)','var(--prod)','var(--lyrics)','var(--gold)'],
+    weights:[0.28,0.22,0.20,0.15,0.15],
+    descs:[
+      'Would you replay this song? Repeat-listen factor.',
+      'Cadence, delivery, vocal performance.',
+      'Beat, mix, sound design, sonic detail.',
+      'Lyrics, themes, hooks, depth.',
+      'Overall impact and first-listen reaction.'
+    ]
+  };
+  const DESCS_BY_NAME={
+    'Replay Value':'Would you replay this song? Repeat-listen factor.',
+    'Vocals':'Vocal performance and delivery.',
+    'Production':'Beat, mix, sound design, engineering.',
+    'Catchiness':'How sticky and memorable the song is.',
+    'Melody':'Melodic phrasing and tunefulness.',
+    'Songwriting':'Structure, themes, hooks, lyrical depth.',
+    'Storytelling':'Narrative quality and emotional arc.',
+    'Chorus':'Strength and impact of the chorus.',
+    'Lyrics':'Lyrical depth, wordplay, and writing.',
+    'Emotion':'Emotional impact and feeling.',
+    'Instrumentation':'Quality of the instruments and arrangement.',
+    'Energy':'Intensity, drive, and momentum.',
+    'Build-Up':'Tension build before the drop or hook.',
+    'Drop / Payoff':'Impact and release of the drop.',
+    'Atmosphere':'Mood and sonic atmosphere.',
+    'Flow & Delivery':'Cadence, delivery, vocal performance.',
+    'Impression':'Overall impact and first-listen reaction.'
+  };
+  if(!genre||genre==='rap'||!GENRE_PRESETS[genre]||GENRE_PRESETS[genre].isRap)return RAP_DEFAULT;
+  const p=GENRE_PRESETS[genre];
+  let cats=p.cats.slice(),colors=p.colors.slice(),weights=p.weights.slice();
+  if(cats.length>5){
+    // Drop the lowest-weighted category
+    let minIdx=0;
+    weights.forEach((w,i)=>{if(w<weights[minIdx])minIdx=i;});
+    cats.splice(minIdx,1);colors.splice(minIdx,1);weights.splice(minIdx,1);
+  }
+  const sum=weights.reduce((a,b)=>a+b,0)||1;
+  weights=weights.map(w=>w/sum);
+  const descs=cats.map(c=>DESCS_BY_NAME[c]||'');
+  return{label:p.label,cats,colors,weights,descs};
+}
+
+function setAbGenre(g,btn){
+  _abGenre=g;
+  document.querySelectorAll('#ab-genre-btns .ab-pill').forEach(b=>b.classList.toggle('active',b===btn));
+}
 let _abBanCount=0, _abAlbumLock=false, _abAlbumA=null, _abAlbumB=null, _abBudget=0, _abBudgetCustom=null;
 let abLobbyPoll=null, abRatingSide='A', abPresence={};
 let abBans=[], abPendingBan=null, abBanMatches=[], abBanTimer=null;
@@ -7994,8 +8060,9 @@ function openCreateAuxBattleModal(){
   document.getElementById('ab-custom-count-wrap').style.display='none';
   document.getElementById('create-ab-err').textContent='';
   _abSongCount=5;_abMode='ratings';_abSecret=true;_abFeatures=false;_abPrivate=false;
-  _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abBudget=0;
+  _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abBudget=0;_abGenre='rap';
   document.querySelectorAll('#ab-song-count-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.count==='5'));
+  document.querySelectorAll('#ab-genre-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.genre==='rap'));
   setAbToggle('secret',true);setAbToggle('features',false);setAbToggle('private',false);
   document.getElementById('create-ab-modal').classList.add('open');
 }
@@ -8020,7 +8087,7 @@ async function createAuxBattle(){
   btn.disabled=true;btn.textContent='Creating…';
   const insertData={
     host_id:currentUser.id,code,name,artist_a:artistA,artist_b:artistB,
-    song_count:songCount,winner_mode:'ratings',secret_draft:_abSecret,
+    song_count:songCount,winner_mode:'ratings',genre:_abGenre,secret_draft:_abSecret,
     allow_features:_abFeatures,is_private:_abPrivate,
     player_a_id:currentUser.id,status:'lobby',
     ban_count:0,album_lock:false,draft_budget:0
@@ -8155,6 +8222,7 @@ async function renderAuxBattleLobby(){
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.75rem .9rem;margin-bottom:.85rem">
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Songs per side</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text)">${b.song_count}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Judging mode</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${willDuel?'var(--gold)':'var(--text)'}">${willDuel?'Duel (auto)':'Ratings'}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Rating Genre</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${esc(abGenrePreset(b.genre).label)}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Secret draft</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${b.secret_draft?'var(--gold)':'var(--muted)'}">${b.secret_draft?'On':'Off'}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Featured songs</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">${b.allow_features?'Allowed':'Not Allowed'}</span></div>
       ${b.ban_count?`<div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Ban Phase</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${b.ban_count} ban${b.ban_count===1?'':'s'} each</span></div>`:''}
@@ -9100,13 +9168,8 @@ function renderAbRatingSection(pickA,pickB){
     </div>`;
     return;
   }
-  const cats=[
-    {name:'Replay Value',desc:'Would you replay this song again? Does it earn repeat listens?',color:'var(--replay)'},
-    {name:'Flow / Vocals',desc:'Cadence, delivery, vocal performance, melodic phrasing.',color:'var(--flow)'},
-    {name:'Production',desc:'Beat, mix, sound design, engineering, sonic detail.',color:'var(--prod)'},
-    {name:'Songwriting',desc:'Lyrics, structure, themes, hooks, lyrical depth.',color:'var(--lyrics)'},
-    {name:'Impression',desc:'Overall impact and immediate first-listen reaction.',color:'var(--gold)'}
-  ];
+  const preset=abGenrePreset(b.genre);
+  const cats=preset.cats.map((name,i)=>({name,desc:preset.descs[i]||'',color:preset.colors[i]||'var(--gold)'}));
   const ratedA=!!abMyRatingA, ratedB=!!abMyRatingB;
   if(ratedA&&ratedB){
     ratingSection.innerHTML=`<div style="text-align:center;padding:1.5rem 1rem;background:var(--surface);border:1px solid var(--green);border-radius:.6rem">
@@ -9126,7 +9189,8 @@ function renderAbRatingSection(pickA,pickB){
   const songName=pick?.song_name||(side==='A'?b.artist_a:b.artist_b);
   const songArtist=pick?.artist_name||(side==='A'?b.artist_a:b.artist_b);
   const stepNum=side==='A'?1:2;
-  const vals=existing?[existing.score_1,existing.score_2,existing.score_3,existing.score_4,existing.score_5]:[5,5,5,5,5];
+  const allScores=[existing?.score_1,existing?.score_2,existing?.score_3,existing?.score_4,existing?.score_5];
+  const vals=cats.map((_,i)=>existing?(allScores[i]??5):5);
   const finalScore=existing?existing.final_score:null;
   ratingSection.innerHTML=`
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem">
@@ -9168,9 +9232,9 @@ function updateAbRatingDisplay(side,idx,val){
   if(el)el.textContent=parseFloat(val).toFixed(1);
 }
 
-function calcAbRating(scores){
-  const weights=[0.24,0.22,0.20,0.18,0.16];
-  const B=weights.reduce((s,w,i)=>s+(scores[i]||0)*w,0);
+function calcAbRating(scores,weights){
+  const w=weights||[0.24,0.22,0.20,0.18,0.16];
+  const B=scores.reduce((s,v,i)=>s+(v||0)*(w[i]||0),0);
   const weakCats=scores.filter(s=>s<=5).length;
   const eliteCats=scores.filter(s=>s>=9).length;
   const penalty=weakCats*.15,bonus=eliteCats*.20;
@@ -9183,12 +9247,16 @@ async function submitAuxBattleRating(side){
   const b=currentAuxBattle;
   if(!currentUser)return;
   if(abIsPlayer()&&!b.duel_mode){return;}
-  const scores=Array.from({length:5},(_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value||5));
-  const finalScore=calcAbRating(scores);
-  const catKeys=['replay','flow_vocals','production','songwriting','impression'];
-  const breakdown={};catKeys.forEach((k,i)=>breakdown[k]=scores[i]);
+  const preset=abGenrePreset(b.genre);
+  const n=preset.cats.length;
+  const scores=Array.from({length:n},(_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value||5));
+  const finalScore=calcAbRating(scores,preset.weights);
+  const breakdown={};preset.cats.forEach((name,i)=>{breakdown[name]=scores[i];});
+  breakdown._genre=b.genre||'rap';
+  // Pad scores to 5 slots for the existing score_1..score_5 columns
+  const padded=Array.from({length:5},(_,i)=>scores[i]??null);
   const row={battle_id:b.id,round_number:b.current_round,user_id:currentUser.id,side,
-    score_1:scores[0],score_2:scores[1],score_3:scores[2],score_4:scores[3],score_5:scores[4],
+    score_1:padded[0],score_2:padded[1],score_3:padded[2],score_4:padded[3],score_5:padded[4],
     final_score:finalScore,category_breakdown:breakdown};
   const btn=document.getElementById(`ab-submit-rate-${side}`);
   if(btn){btn.disabled=true;btn.textContent='Saving…';}
@@ -9255,6 +9323,8 @@ function abMissingRaterIds(){
 }
 
 function calculateAuxBattleRatingStats(){
+  const b=currentAuxBattle;
+  const preset=abGenrePreset(b?.genre);
   const cats=['score_1','score_2','score_3','score_4','score_5'];
   const calcAvg=(side)=>{
     const rs=abRoundRatings.filter(r=>r.side===side);
@@ -9267,10 +9337,12 @@ function calculateAuxBattleRatingStats(){
   let winner=a.final>b_.final?'A':a.final<b_.final?'B':null;
   let tiebreaker=null;
   if(!winner){
-    // Replay (0), Production (2), Songwriting (3)
-    for(const[ci,name] of [[0,'Replay Value'],[2,'Production'],[3,'Songwriting']]){
-      if(a.cats[ci]>b_.cats[ci]){winner='A';tiebreaker=name;break;}
-      if(b_.cats[ci]>a.cats[ci]){winner='B';tiebreaker=name;break;}
+    // Tiebreaker: highest-weighted categories first
+    const order=preset.weights.map((w,i)=>({i,w,name:preset.cats[i]||`Cat ${i+1}`})).sort((x,y)=>y.w-x.w);
+    for(const o of order){
+      if(o.i>=a.cats.length)continue;
+      if(a.cats[o.i]>b_.cats[o.i]){winner='A';tiebreaker=o.name;break;}
+      if(b_.cats[o.i]>a.cats[o.i]){winner='B';tiebreaker=o.name;break;}
     }
     if(!winner)tiebreaker='split';
   }
@@ -9309,13 +9381,11 @@ async function finalizeAuxBattleRound(){
   const finalScoreB=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_b)||0),0);
   if(isLastRound){
     const winSide=finalScoreA>finalScoreB?'A':finalScoreA<finalScoreB?'B':'tie';
-    const{data:fin}=await db.from('aux_battles').update({status:'final',final_score_a:finalScoreA,final_score_b:finalScoreB,winner_side:winSide}).eq('id',b.id).select('*').single();
-    currentAuxBattle=fin;
-    playDramaticFinalRecap(()=>abState('final'));
+    // Update DB only — let the realtime UPDATE event drive the reveal on every
+    // client (host included) so all viewers' animations start in sync.
+    await db.from('aux_battles').update({status:'final',final_score_a:finalScoreA,final_score_b:finalScoreB,winner_side:winSide}).eq('id',b.id);
   } else {
-    const{data:nextBattle}=await db.from('aux_battles').update({status:'round_result',final_score_a:finalScoreA,final_score_b:finalScoreB}).eq('id',b.id).select('*').single();
-    currentAuxBattle=nextBattle;
-    playDramaticRoundReveal(b.current_round,()=>abState('result'));
+    await db.from('aux_battles').update({status:'round_result',final_score_a:finalScoreA,final_score_b:finalScoreB}).eq('id',b.id);
   }
 }
 
@@ -9421,13 +9491,10 @@ async function _abWait(ms){
   }
 }
 
-const _AB_REVEAL_CATS=[
-  {key:'score_1',name:'Replay',color:'var(--replay)'},
-  {key:'score_2',name:'Flow / Vocals',color:'var(--flow)'},
-  {key:'score_3',name:'Production',color:'var(--prod)'},
-  {key:'score_4',name:'Songwriting',color:'var(--lyrics)'},
-  {key:'score_5',name:'Impression',color:'var(--gold)'}
-];
+function _abRevealCats(b){
+  const preset=abGenrePreset(b?.genre);
+  return preset.cats.map((name,i)=>({key:`score_${i+1}`,name,color:preset.colors[i]||'var(--gold)'}));
+}
 
 function _abRevealIntroHTML(b,roundNumber,modeLabel){
   return`<div style="opacity:0;animation:abRevealIn .55s ease forwards;text-align:center;padding-top:2rem">
@@ -9488,9 +9555,13 @@ async function _abRevealWinner(b,rr,pickA,pickB,aName,bName){
 async function playDramaticRoundReveal(roundNumber,cb){
   const b=currentAuxBattle;
   if(!b){if(cb)cb();return;}
+  // ── Pre-fetch ALL data BEFORE showing overlay ──────────────────────────────
+  // This way every client (host + audience + spectators) starts the visible
+  // animation only after their data is fully loaded — no mid-animation pauses.
+  // The realtime UPDATE event triggers this on every client at ~the same time,
+  // and the prefetch is a single Promise.all roundtrip, so animations stay synced.
   const rr=abRoundResults.find(r=>r.round_number===roundNumber);
   if(!rr){if(cb)cb();return;}
-  // Refresh ratings/votes for this round in case they aren't loaded yet
   const[{data:rrats},{data:rvotes}]=await Promise.all([
     db.from('aux_battle_round_ratings').select('*').eq('battle_id',b.id).eq('round_number',roundNumber),
     db.from('aux_battle_round_votes').select('*').eq('battle_id',b.id).eq('round_number',roundNumber)
@@ -9498,13 +9569,20 @@ async function playDramaticRoundReveal(roundNumber,cb){
   const ratingsHere=rrats||abRoundRatings.filter(r=>r.round_number===roundNumber);
   const votesHere=rvotes||abRoundVotes.filter(v=>v.round_number===roundNumber);
 
+  // Pre-fetch profiles for raters (audience modes) — used inside _abPlayAudienceRatings
+  const raterIds=[...new Set(ratingsHere.map(r=>r.user_id))];
+  let raterProfiles={};
+  if(raterIds.length){
+    const{data:profs}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',raterIds);
+    (profs||[]).forEach(p=>{raterProfiles[p.id]=p;});
+  }
+
   const pickA=abPickForRound('A',roundNumber);
   const pickB=abPickForRound('B',roundNumber);
   const aName=pickA?.song_name||b.artist_a;
   const bName=pickB?.song_name||b.artist_b;
-  const isVote=rr.vote_count_a!=null&&!rr.tiebreaker_used;
   const isDuel=b.duel_mode;
-  const modeLabel=isDuel?'⚔️ Duel Mode':isVote?'🎤 Audience Vote':rr.tiebreaker_used?'⚡ Tiebreaker':'⭐ Ratings Mode';
+  const modeLabel=isDuel?'⚔️ Duel Mode':'⭐ Ratings Mode';
 
   _abShowRevealOverlay();
   _abSetReveal(_abRevealIntroHTML(b,roundNumber,modeLabel));
@@ -9519,9 +9597,8 @@ async function playDramaticRoundReveal(roundNumber,cb){
   await _abWait(1900);
   if(_abSkipReveal){_abHideRevealOverlay();if(cb)cb();return;}
 
-  if(isDuel)await _abPlayDuelScores(b,rr,ratingsHere,pickA,pickB,aName,bName);
-  else if(isVote)await _abPlayVoteTally(b,rr,votesHere,aName,bName);
-  else await _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName);
+  if(isDuel)await _abPlayDuelScores(b,rr,ratingsHere,pickA,pickB,aName,bName,raterProfiles);
+  else await _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,raterProfiles);
   if(_abSkipReveal){_abHideRevealOverlay();if(cb)cb();return;}
 
   await _abRevealWinner(b,rr,pickA,pickB,aName,bName);
@@ -9595,11 +9672,12 @@ async function _abPlayVoteTally(b,rr,votesHere,aName,bName){
   await _abWait(2200);
 }
 
-async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName){
-  // Get unique audience members (everyone who rated, excluding players)
+async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,prefetchedProfiles){
+  // Get unique audience members (everyone who rated, excluding players).
+  // Profiles are pre-fetched in playDramaticRoundReveal so animations stay
+  // synchronous with no mid-animation DB roundtrips.
   const raterIds=[...new Set(ratingsHere.map(r=>r.user_id))];
-  const{data:profiles}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',raterIds.length?raterIds:['00000000-0000-0000-0000-000000000000']);
-  const pmap={};(profiles||[]).forEach(p=>pmap[p.id]=p);
+  const pmap=prefetchedProfiles||{};
 
   if(!ratingsHere.length){
     _abSetReveal(`<div style="text-align:center;padding:2rem;font-size:.7rem;color:var(--muted);opacity:0;animation:abRevealIn .4s ease forwards">No ratings submitted</div>`);
@@ -9620,12 +9698,13 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName){
     const uname=prof.username||'audience';
     const rA=ratingsHere.find(r=>r.user_id===uid&&r.side==='A');
     const rB=ratingsHere.find(r=>r.user_id===uid&&r.side==='B');
+    const revealCats=_abRevealCats(b);
     const sideHTML=(label,color,r,suffix)=>{
       if(!r)return`<div style="flex:1;text-align:center;color:var(--muted);font-size:.6rem;font-style:italic;padding:1rem 0">No rating for ${esc(label)}</div>`;
       const cats=[r.score_1,r.score_2,r.score_3,r.score_4,r.score_5];
       return`<div style="flex:1;min-width:0">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${color};margin-bottom:.45rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center">${esc(label)}</div>
-        ${_AB_REVEAL_CATS.map((c,i)=>{
+        ${revealCats.map((c,i)=>{
           const v=cats[i]||0;
           const pct=Math.round(v/10*100);
           return`<div class="abrev-cat-row" id="abrev-cat-${suffix}-${i}" style="opacity:.25">
@@ -9658,7 +9737,7 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName){
     if(_abSkipReveal)return;
 
     // Reveal each category one at a time with a tick sound and emphasis
-    for(let i=0;i<_AB_REVEAL_CATS.length;i++){
+    for(let i=0;i<revealCats.length;i++){
       if(_abSkipReveal)return;
       ['a','b'].forEach(side=>{
         const row=document.getElementById(`abrev-cat-${side}-${i}`);
@@ -9714,11 +9793,22 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName){
 async function playDramaticFinalRecap(cb){
   const b=currentAuxBattle;
   if(!b){if(cb)cb();return;}
-  // Make sure abPicks has up-to-date round_position values
-  const{data:freshPicks}=await db.from('aux_battle_picks').select('*').eq('battle_id',b.id);
+  // ── Pre-fetch ALL data BEFORE showing overlay ──────────────────────────────
+  // Single Promise.all roundtrip → every client (host + audience) starts the
+  // visible animation with all data loaded. Realtime UPDATE event triggers this
+  // simultaneously on every client, so the sequences stay in sync.
+  const[
+    {data:freshPicks},
+    {data:freshResults},
+    {data:allRatingsRows}
+  ]=await Promise.all([
+    db.from('aux_battle_picks').select('*').eq('battle_id',b.id),
+    db.from('aux_battle_round_results').select('*').eq('battle_id',b.id).order('round_number'),
+    db.from('aux_battle_round_ratings').select('id').eq('battle_id',b.id)
+  ]);
   if(freshPicks)abPicks=freshPicks;
-  const{data:freshResults}=await db.from('aux_battle_round_results').select('*').eq('battle_id',b.id).order('round_number');
   if(freshResults)abRoundResults=freshResults;
+  const totalRatingsCount=(allRatingsRows||[]).length;
 
   _abShowRevealOverlay();
   // Phase 1: Battle complete intro
@@ -9741,7 +9831,7 @@ async function playDramaticFinalRecap(cb){
   if(_abSkipReveal){_abHideRevealOverlay();if(cb)cb();return;}
 
   // Phase 3: Battle stats breakdown
-  await _abPlayBattleStatsBreakdown(b);
+  await _abPlayBattleStatsBreakdown(b,totalRatingsCount);
   if(_abSkipReveal){_abHideRevealOverlay();if(cb)cb();return;}
 
   // Phase 4: Final score buildup
@@ -9802,7 +9892,7 @@ async function playDramaticFinalRecap(cb){
 }
 
 // Battle stats breakdown phase: shows MVPs, biggest blowout, closest round, etc.
-async function _abPlayBattleStatsBreakdown(b){
+async function _abPlayBattleStatsBreakdown(b,prefetchedTotalRatings){
   const stats=[];
   const fmt=n=>parseFloat(n||0).toFixed(1);
 
@@ -9882,11 +9972,9 @@ async function _abPlayBattleStatsBreakdown(b){
     sub:`${esc(b.artist_a)} vs ${esc(b.artist_b)}`
   });
 
-  // Total ratings cast (only counts unique audience/duel raters)
-  const totalRatings=abRoundResults.length>0?await(async()=>{
-    const{data}=await db.from('aux_battle_round_ratings').select('id').eq('battle_id',b.id);
-    return data?data.length:0;
-  })():0;
+  // Total ratings cast — pre-fetched in playDramaticFinalRecap so this stays
+  // synchronous across all clients (no mid-animation roundtrip).
+  const totalRatings=typeof prefetchedTotalRatings==='number'?prefetchedTotalRatings:0;
   if(totalRatings>0){
     stats.push({
       label:'Total Ratings Cast',
@@ -9936,8 +10024,7 @@ async function _abPlayCompactRoundReveal(b,rr){
   const bName=pickB?.song_name||b.artist_b;
   const winSide=rr.winner_side;
   const winColor=winSide==='A'?'var(--gold)':winSide==='B'?'#f472b6':'var(--muted2)';
-  const isVote=rr.vote_count_a!=null&&!rr.tiebreaker_used;
-  const detail=isVote?`${rr.vote_count_a||0}–${rr.vote_count_b||0} votes`:rr.rating_avg_a!=null?`${parseFloat(rr.rating_avg_a||0).toFixed(1)} vs ${parseFloat(rr.rating_avg_b||0).toFixed(1)}`:'';
+  const detail=rr.rating_avg_a!=null?`${parseFloat(rr.rating_avg_a||0).toFixed(1)} vs ${parseFloat(rr.rating_avg_b||0).toFixed(1)} avg`:'';
   const winnerLabel=winSide==='A'?aName:winSide==='B'?bName:'Split';
   _abSetReveal(`<div style="opacity:0;animation:abRevealIn .45s ease forwards;width:100%">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:.55rem">Round ${rr.round_number}</div>
@@ -9946,13 +10033,11 @@ async function _abPlayCompactRoundReveal(b,rr){
         ${pickA?.artwork_url?`<img src="${esc(itunesArtUrl(pickA.artwork_url,200))}" style="width:100%;aspect-ratio:1;border-radius:.4rem;object-fit:cover;margin-bottom:.4rem">`:''}
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(aName)}</div>
         ${rr.rating_avg_a!=null?`<div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text);margin-top:.2rem">${parseFloat(rr.rating_avg_a).toFixed(1)} avg</div>`:''}
-        ${rr.vote_count_a!=null?`<div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text);margin-top:.2rem">${rr.vote_count_a||0} votes</div>`:''}
       </div>
       <div style="flex:1;background:var(--surface);border:1px solid ${winSide==='B'?'#f472b6':'var(--border2)'};border-radius:.5rem;padding:.55rem .55rem;${winSide==='B'?'box-shadow:0 0 18px rgba(244,114,182,.35)':''}">
         ${pickB?.artwork_url?`<img src="${esc(itunesArtUrl(pickB.artwork_url,200))}" style="width:100%;aspect-ratio:1;border-radius:.4rem;object-fit:cover;margin-bottom:.4rem">`:''}
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#f472b6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(bName)}</div>
         ${rr.rating_avg_b!=null?`<div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text);margin-top:.2rem">${parseFloat(rr.rating_avg_b).toFixed(1)} avg</div>`:''}
-        ${rr.vote_count_b!=null?`<div style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text);margin-top:.2rem">${rr.vote_count_b||0} votes</div>`:''}
       </div>
     </div>
     <div style="text-align:center;margin-top:.7rem;opacity:0;animation:abRevealPop .55s cubic-bezier(.22,1,.36,1) .45s forwards">
