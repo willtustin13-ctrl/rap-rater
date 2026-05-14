@@ -19,7 +19,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>SONGR</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -8357,7 +8357,7 @@ async function renderAuxBattleLobby(){
   el.innerHTML=`
     <div style="text-align:center;margin-bottom:1rem">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem">Battle Code</div>
-      <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:.12em">${b.code}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.85rem;font-weight:800;color:var(--gold);letter-spacing:.18em">${b.code}</div>
       <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
     </div>
     <div style="display:flex;gap:.65rem;margin-bottom:1rem">${sideBtn('A',paProf,b.artist_a)}${sideBtn('B',pbProf,b.artist_b)}</div>
@@ -8430,6 +8430,65 @@ function abParseWheelArtists(b){
   try{return JSON.parse(b.wheel_artists)||[];}catch(e){return[];}
 }
 
+const _AB_WHEEL_PALETTE=['#a78bfa','#f472b6','#facc15','#34d399','#60a5fa','#fb923c','#e879f9','#22d3ee'];
+const _AB_WHEEL_PHASE1=4500;   // first spin (lands on Slot A artist)
+const _AB_WHEEL_PAUSE=700;     // pause between spins
+const _AB_WHEEL_PHASE2=4000;   // second spin (lands on Slot B artist)
+let _abWheelPhase2Timer=null;
+let _abWheelRevealATimer=null;
+let _abWheelRevealBTimer=null;
+let _abWheelLockTimer=null;
+
+function abBuildWheelSVG(artists){
+  const N=artists.length;
+  if(N===0)return'<div style="text-align:center;color:var(--muted);font-size:.6rem;padding:1rem">No artists in wheel</div>';
+  const size=300;
+  const cx=size/2,cy=size/2;
+  const r=size/2-12;
+  const slice=360/N;
+  let slices='',labels='';
+  for(let i=0;i<N;i++){
+    const a1=(i*slice-90)*Math.PI/180;
+    const a2=((i+1)*slice-90)*Math.PI/180;
+    const x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1);
+    const x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
+    const large=slice>180?1:0;
+    const color=_AB_WHEEL_PALETTE[i%_AB_WHEEL_PALETTE.length];
+    slices+=`<path id="ab-wheel-slice-${i}" d="M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="${color}" stroke="rgba(7,7,26,.55)" stroke-width="1.5" style="transition:opacity .4s,filter .4s"/>`;
+    const cDeg=i*slice+slice/2-90;
+    const cRad=cDeg*Math.PI/180;
+    const lr=r*0.62;
+    const lx=cx+lr*Math.cos(cRad);
+    const ly=cy+lr*Math.sin(cRad);
+    const maxChars=Math.max(5,Math.floor(slice*1.4));
+    let name=artists[i];
+    if(name.length>maxChars)name=name.slice(0,Math.max(3,maxChars-1))+'…';
+    const fs=Math.max(8,Math.min(15,110/N+5));
+    const rot=cDeg+90;
+    labels+=`<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="${fs.toFixed(1)}" font-weight="800" fill="#07071a" transform="rotate(${rot.toFixed(2)} ${lx.toFixed(2)} ${ly.toFixed(2)})" style="pointer-events:none">${esc(name)}</text>`;
+  }
+  return`<div style="position:relative;width:min(${size}px,92%);aspect-ratio:1;margin:0 auto">
+    <svg id="ab-wheel-svg" viewBox="0 0 ${size} ${size}" style="width:100%;height:100%;display:block;transform-origin:50% 50%;will-change:transform;filter:drop-shadow(0 10px 28px rgba(167,139,250,.35))">
+      <defs>
+        <radialGradient id="ab-wheel-shade" cx="50%" cy="50%" r="50%">
+          <stop offset="60%" stop-color="rgba(0,0,0,0)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,.35)"/>
+        </radialGradient>
+      </defs>
+      <g>
+        ${slices}
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#ab-wheel-shade)" pointer-events="none"/>
+        ${labels}
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3"/>
+        <circle cx="${cx}" cy="${cy}" r="28" fill="var(--bg)" stroke="var(--gold)" stroke-width="3"/>
+        <circle cx="${cx}" cy="${cy}" r="6" fill="var(--gold)"/>
+      </g>
+    </svg>
+    <div style="position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:26px solid var(--gold);filter:drop-shadow(0 3px 8px rgba(167,139,250,.8));z-index:10;pointer-events:none"></div>
+    <div style="position:absolute;top:14px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);z-index:11;pointer-events:none"></div>
+  </div>`;
+}
+
 async function renderAuxBattleWheel(){
   const b=currentAuxBattle;if(!b)return;
   const isHost=b.host_id===currentUser?.id;
@@ -8441,15 +8500,22 @@ async function renderAuxBattleWheel(){
   if(b.player_b_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_b_id).single();pbProf=data;}
   const spun=!!(b.wheel_spun_at&&b.wheel_winner_a&&b.wheel_winner_b);
   const playersReady=!!(b.player_a_id&&b.player_b_id);
+  const startedAt=spun?new Date(b.wheel_spun_at).getTime():0;
+  const elapsed=spun?Date.now()-startedAt:0;
+  const revealAAt=_AB_WHEEL_PHASE1;
+  const revealBAt=_AB_WHEEL_PHASE1+_AB_WHEEL_PAUSE+_AB_WHEEL_PHASE2;
+  const showA=spun&&elapsed>=revealAAt;
+  const showB=spun&&elapsed>=revealBAt;
   const slotBtn=(side,prof)=>{
     const filled=!!prof;
     const canJoin=!filled&&!isPlayerA&&!isPlayerB;
     const isMe=prof?.id===currentUser?.id;
+    const reveal=side==='A'?showA:showB;
     const winner=side==='A'?b.wheel_winner_a:b.wheel_winner_b;
     const sideColor=side==='A'?'var(--gold)':'#f472b6';
     return`<div class="ab-lobby-artist">
       <div class="ab-lobby-artist-label">Slot ${side}</div>
-      <div class="ab-lobby-artist-name" style="color:${winner?sideColor:'var(--muted)'}">${winner?esc(winner):'???'}</div>
+      <div class="ab-lobby-artist-name" id="ab-wheel-slot-${side.toLowerCase()}-name" style="color:${reveal?sideColor:'var(--muted)'};transition:color .3s">${reveal?esc(winner):'???'}</div>
       <div class="ab-lobby-player">
         ${filled?avatarHTML(prof,null,22):'<div style="width:22px;height:22px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>'}
         <div style="flex:1;min-width:0">
@@ -8459,73 +8525,142 @@ async function renderAuxBattleWheel(){
       ${canJoin?`<button class="ab-join-btn" onclick="joinAuxBattleSide('${side}')">+ Join Slot ${side}</button>`:''}
     </div>`;
   };
-  const reelRows=(side)=>{
-    if(!artists.length)return'';
-    const passes=8;
-    return[...Array(passes)].map(()=>artists.map(a=>`<div style="height:60px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;color:var(--text);padding:0 .4rem;text-align:center;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid var(--border)">${esc(a)}</div>`).join('')).join('');
-  };
-  const reelHTML=(side)=>`<div style="overflow:hidden;height:60px;border:1px solid var(--border2);border-radius:.4rem;background:var(--surface);position:relative">
-    <div id="ab-wheel-reel-${side.toLowerCase()}" style="will-change:transform;transform:translateY(0)">${reelRows(side)}</div>
-    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,var(--surface) 0%,transparent 35%,transparent 65%,var(--surface) 100%)"></div>
-    <div style="position:absolute;left:0;right:0;top:50%;height:2px;background:${side==='A'?'var(--gold)':'#f472b6'};transform:translateY(-50%);pointer-events:none;box-shadow:0 0 8px ${side==='A'?'var(--gold)':'#f472b6'}"></div>
-  </div>`;
+  const lockReady=spun&&elapsed>=revealBAt;
   const el=document.getElementById('ab-wheel-body');
   el.innerHTML=`
     <div style="text-align:center;margin-bottom:1rem">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem">Battle Code</div>
-      <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:.12em">${b.code}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.85rem;font-weight:800;color:var(--gold);letter-spacing:.18em">${b.code}</div>
       <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
     </div>
     <div style="text-align:center;margin-bottom:.85rem">
       <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">🎡 Wheel of Artists</div>
-      <div style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem">${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel decides the matchup</div>
+      <div id="ab-wheel-status" style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem">${spun?(showB?'Matchup locked in below.':showA?'Slot A revealed · spinning for Slot B…':'Spinning for Slot A…'):`${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel decides the matchup`}</div>
     </div>
-    <div style="display:flex;gap:.65rem;margin-bottom:.85rem">${slotBtn('A',paProf)}${slotBtn('B',pbProf)}</div>
-    <div style="display:flex;gap:.65rem;margin-bottom:.85rem">
-      <div style="flex:1;min-width:0">${reelHTML('A')}</div>
-      <div style="flex:1;min-width:0">${reelHTML('B')}</div>
-    </div>
-    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.6rem .8rem;margin-bottom:.85rem;max-height:9rem;overflow-y:auto">
-      <div class="ab-section-lbl" style="margin-bottom:.35rem">Pool</div>
+    <div style="display:flex;gap:.65rem;margin-bottom:1rem">${slotBtn('A',paProf)}${slotBtn('B',pbProf)}</div>
+    <div style="margin-bottom:1rem">${abBuildWheelSVG(artists)}</div>
+    <div id="ab-wheel-pool" style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.6rem .8rem;margin-bottom:.85rem;max-height:7rem;overflow-y:auto">
+      <div class="ab-section-lbl" style="margin-bottom:.35rem">Pool · ${artists.length}</div>
       <div style="display:flex;flex-wrap:wrap;gap:.3rem">
         ${artists.map(a=>`<span class="ab-pill" style="font-size:.55rem">${esc(a)}</span>`).join('')||'<div style="font-size:.55rem;color:var(--muted);font-style:italic">No artists in pool.</div>'}
       </div>
     </div>
+    <div id="ab-wheel-action">
     ${!spun
       ?(isHost
         ?`<button id="ab-wheel-spin-btn" onclick="abSpinWheel()" ${playersReady?'':'disabled'} style="width:100%;padding:.7rem;background:${playersReady?'var(--gold)':'var(--border2)'};color:${playersReady?'var(--bg)':'var(--muted)'};border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:${playersReady?'pointer':'not-allowed'};text-transform:uppercase">🎡 ${playersReady?'Spin the Wheel':'Waiting for players…'}</button>`
         :`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace">Waiting for host to spin…</div>`)
       :(isHost
-        ?`<button onclick="abLockInWheelResult()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer;text-transform:uppercase">Lock In Matchup →</button>`
-        :`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace">Waiting for host to continue…</div>`)}
+        ?(lockReady?`<button onclick="abLockInWheelResult()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer;text-transform:uppercase">Lock In Matchup →</button>`
+          :`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace">Spinning…</div>`)
+        :`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace">${lockReady?'Waiting for host to continue…':'Spinning…'}</div>`)}
+    </div>
   `;
   if(spun){
     const idxA=artists.indexOf(b.wheel_winner_a);
     const idxB=artists.indexOf(b.wheel_winner_b);
-    if(idxA>=0)_abAnimateWheelReel('a',idxA,artists.length,b.wheel_spun_at);
-    if(idxB>=0)_abAnimateWheelReel('b',idxB,artists.length,b.wheel_spun_at);
+    if(idxA>=0&&idxB>=0)_abAnimateWheelSpin(idxA,idxB,artists.length,b.wheel_spun_at,b.wheel_winner_a,b.wheel_winner_b,isHost);
   }
 }
 
-function _abAnimateWheelReel(side,winnerIdx,n,spunAt){
-  const reel=document.getElementById('ab-wheel-reel-'+side);
-  if(!reel)return;
-  const rowH=60;
-  const passes=7;
-  const targetY=-((passes*n+winnerIdx)*rowH);
+function _abClearWheelTimers(){
+  if(_abWheelPhase2Timer){clearTimeout(_abWheelPhase2Timer);_abWheelPhase2Timer=null;}
+  if(_abWheelRevealATimer){clearTimeout(_abWheelRevealATimer);_abWheelRevealATimer=null;}
+  if(_abWheelRevealBTimer){clearTimeout(_abWheelRevealBTimer);_abWheelRevealBTimer=null;}
+  if(_abWheelLockTimer){clearTimeout(_abWheelLockTimer);_abWheelLockTimer=null;}
+}
+
+function _abRevealWheelSlot(side,name){
+  const el=document.getElementById('ab-wheel-slot-'+side+'-name');
+  if(!el)return;
+  el.textContent=name;
+  el.style.color=side==='a'?'var(--gold)':'#f472b6';
+  el.animate?.([
+    {transform:'scale(1)',filter:'brightness(1)'},
+    {transform:'scale(1.18)',filter:'brightness(1.6)'},
+    {transform:'scale(1)',filter:'brightness(1)'}
+  ],{duration:600,easing:'cubic-bezier(.2,.7,.3,1)'});
+}
+
+function _abDimWheelSlice(idx){
+  const slice=document.getElementById('ab-wheel-slice-'+idx);
+  if(!slice)return;
+  slice.style.opacity='.25';
+  slice.style.filter='grayscale(.8)';
+}
+
+function _abAnimateWheelSpin(idxA,idxB,N,spunAt,nameA,nameB,isHost){
+  _abClearWheelTimers();
+  const svg=document.getElementById('ab-wheel-svg');
+  if(!svg)return;
+  const slice=360/N;
+  // Rotation R such that slice i lands at the top: R ≡ -(i+0.5)*slice (mod 360).
+  // Add multiple clockwise full turns for dramatic effect.
+  const spinsA=5, spinsB=4;
+  const targetA=-(idxA+0.5)*slice+360*spinsA;
+  const targetB=targetA+360*spinsB-((idxB-idxA)*slice);
   const startedAt=new Date(spunAt).getTime();
   const elapsed=Date.now()-startedAt;
-  const totalDuration=4500;
-  const remaining=Math.max(0,totalDuration-elapsed);
-  if(remaining<80){
-    reel.style.transition='none';
-    reel.style.transform=`translateY(${targetY}px)`;
+  const phase1End=_AB_WHEEL_PHASE1;
+  const phase2Start=phase1End+_AB_WHEEL_PAUSE;
+  const phase2End=phase2Start+_AB_WHEEL_PHASE2;
+  const easing='cubic-bezier(.17,.85,.25,1)';
+  const setRot=(deg,dur)=>{
+    if(dur<=0){
+      svg.style.transition='none';
+      svg.style.transform=`rotate(${deg}deg)`;
+    } else {
+      svg.style.transition=`transform ${dur}ms ${easing}`;
+      requestAnimationFrame(()=>{svg.style.transform=`rotate(${deg}deg)`;});
+    }
+  };
+  if(elapsed>=phase2End){
+    setRot(targetB,0);
+    _abRevealWheelSlot('a',nameA);
+    _abDimWheelSlice(idxA);
+    _abRevealWheelSlot('b',nameB);
+    _abMaybeShowLockBtn(isHost);
+    return;
+  }
+  if(elapsed>=phase2Start){
+    setRot(targetA,0);
+    void svg.offsetHeight;
+    setRot(targetB,phase2End-elapsed);
+    _abRevealWheelSlot('a',nameA);
+    _abDimWheelSlice(idxA);
+    _abWheelRevealBTimer=setTimeout(()=>{_abRevealWheelSlot('b',nameB);_abMaybeShowLockBtn(isHost);},phase2End-elapsed);
+    return;
+  }
+  if(elapsed>=phase1End){
+    setRot(targetA,0);
+    _abRevealWheelSlot('a',nameA);
+    _abDimWheelSlice(idxA);
+    _abWheelPhase2Timer=setTimeout(()=>{setRot(targetB,_AB_WHEEL_PHASE2);},phase2Start-elapsed);
+    _abWheelRevealBTimer=setTimeout(()=>{_abRevealWheelSlot('b',nameB);_abMaybeShowLockBtn(isHost);},phase2End-elapsed);
+    return;
+  }
+  // In phase 1
+  svg.style.transition='none';
+  svg.style.transform='rotate(0deg)';
+  void svg.offsetHeight;
+  setRot(targetA,phase1End-elapsed);
+  _abWheelRevealATimer=setTimeout(()=>{_abRevealWheelSlot('a',nameA);_abDimWheelSlice(idxA);_abUpdateWheelStatus('Slot A revealed · spinning for Slot B…');},phase1End-elapsed);
+  _abWheelPhase2Timer=setTimeout(()=>{setRot(targetB,_AB_WHEEL_PHASE2);},phase2Start-elapsed);
+  _abWheelRevealBTimer=setTimeout(()=>{_abRevealWheelSlot('b',nameB);_abUpdateWheelStatus('Matchup locked in below.');_abMaybeShowLockBtn(isHost);},phase2End-elapsed);
+}
+
+function _abUpdateWheelStatus(text){
+  const el=document.getElementById('ab-wheel-status');
+  if(el)el.textContent=text;
+}
+
+function _abMaybeShowLockBtn(isHost){
+  const act=document.getElementById('ab-wheel-action');
+  if(!act)return;
+  if(isHost){
+    act.innerHTML=`<button onclick="abLockInWheelResult()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer;text-transform:uppercase">Lock In Matchup →</button>`;
   } else {
-    reel.style.transition='none';
-    reel.style.transform='translateY(0)';
-    void reel.offsetHeight;
-    reel.style.transition=`transform ${remaining}ms cubic-bezier(.15,.85,.25,1)`;
-    requestAnimationFrame(()=>{reel.style.transform=`translateY(${targetY}px)`;});
+    act.innerHTML=`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace">Waiting for host to continue…</div>`;
   }
 }
 
@@ -8536,8 +8671,12 @@ async function abSpinWheel(){
   const artists=abParseWheelArtists(b);
   if(artists.length<2){alert('Need at least 2 artists on the wheel.');return;}
   const idxA=Math.floor(Math.random()*artists.length);
-  let idxB;do{idxB=Math.floor(Math.random()*artists.length);}while(idxB===idxA);
-  const winnerA=artists[idxA],winnerB=artists[idxB];
+  const winnerA=artists[idxA];
+  const remaining=artists.map((a,i)=>({a,i})).filter(x=>x.i!==idxA&&x.a.toLowerCase().trim()!==winnerA.toLowerCase().trim());
+  if(!remaining.length){alert('Need at least 2 distinct artists on the wheel.');return;}
+  const pickB=remaining[Math.floor(Math.random()*remaining.length)];
+  const idxB=pickB.i;
+  const winnerB=pickB.a;
   const spunAt=new Date().toISOString();
   const btn=document.getElementById('ab-wheel-spin-btn');
   if(btn){btn.disabled=true;btn.textContent='Spinning…';}
@@ -10865,6 +11004,7 @@ function unsubscribeAuxBattleRealtime(){
 
 function abLeave(){
   _stopAbLobbyPoll();
+  _abClearWheelTimers();
   document.getElementById('ab-anticipation').style.display='none';
   // Stop any in-progress 30s preview so audio doesn't keep playing after exit
   try{stopPreview();}catch(e){}
