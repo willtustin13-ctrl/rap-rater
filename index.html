@@ -2348,6 +2348,11 @@
     <div id="ab-lobby-body"></div>
   </div>
 
+  <!-- WHEEL -->
+  <div id="ab-wheel" style="display:none;grid-row:3;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem;padding-bottom:calc(var(--safe-b)+5rem)">
+    <div id="ab-wheel-body"></div>
+  </div>
+
   <!-- DRAFT -->
   <div id="ab-draft" style="display:none;flex-direction:column;flex:1;overflow:hidden">
     <div id="ab-draft-status" style="padding:.55rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2)"></div>
@@ -2463,15 +2468,32 @@
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem">Create Aux Battle</div>
     <label class="modal-lbl">Battle Name</label>
     <input id="ab-create-name" class="modal-input" maxlength="60" placeholder="e.g. Drake vs The Weeknd" style="margin-bottom:.75rem">
-    <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
-      <div style="flex:1">
-        <label class="modal-lbl">Artist A</label>
-        <input id="ab-create-artist-a" class="modal-input" maxlength="50" placeholder="e.g. Drake">
+    <label class="modal-lbl">Matchup Mode</label>
+    <div style="display:flex;gap:.35rem;margin-bottom:.75rem">
+      <button id="ab-mode-manual" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbCreateMode('manual')">Manual</button>
+      <button id="ab-mode-wheel" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbCreateMode('wheel')">🎡 Wheel</button>
+    </div>
+    <div id="ab-create-mode-manual">
+      <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+        <div style="flex:1;position:relative">
+          <label class="modal-lbl">Artist A</label>
+          <input id="ab-create-artist-a" class="modal-input" maxlength="50" autocomplete="off" placeholder="Search artist…" oninput="abArtistSearch('a')" onfocus="abArtistSearch('a')">
+          <div id="ab-create-artist-a-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
+        </div>
+        <div style="flex:1;position:relative">
+          <label class="modal-lbl">Artist B</label>
+          <input id="ab-create-artist-b" class="modal-input" maxlength="50" autocomplete="off" placeholder="Search artist…" oninput="abArtistSearch('b')" onfocus="abArtistSearch('b')">
+          <div id="ab-create-artist-b-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
+        </div>
       </div>
-      <div style="flex:1">
-        <label class="modal-lbl">Artist B</label>
-        <input id="ab-create-artist-b" class="modal-input" maxlength="50" placeholder="e.g. The Weeknd">
+    </div>
+    <div id="ab-create-mode-wheel" style="display:none">
+      <label class="modal-lbl">Artists on Wheel <span style="color:var(--muted);font-weight:400">— add at least 2</span></label>
+      <div style="position:relative;margin-bottom:.4rem">
+        <input id="ab-wheel-artist-input" class="modal-input" maxlength="50" autocomplete="off" placeholder="Search artist to add…" oninput="abWheelArtistSearch()" onfocus="abWheelArtistSearch()">
+        <div id="ab-wheel-artist-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
       </div>
+      <div id="ab-wheel-artist-chips" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.75rem;min-height:1.2rem"></div>
     </div>
     <label class="modal-lbl">Songs Per Side</label>
     <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem" id="ab-song-count-btns">
@@ -7922,41 +7944,12 @@ function abCatDescription(catName,value){
   if(typeof GENRE_CAT_DESCS!=='undefined'&&GENRE_CAT_DESCS[catName]&&GENRE_CAT_DESCS[catName][v])return GENRE_CAT_DESCS[catName][v];
   return '';
 }
-let _abBanCount=0, _abAlbumLock=false, _abAlbumA=null, _abAlbumB=null, _abBudget=0, _abBudgetCustom=null;
+let _abBanCount=0, _abAlbumLock=false, _abAlbumA=null, _abAlbumB=null;
 let abLobbyPoll=null, abRatingSide='A', abPresence={};
 let abBans=[], abPendingBan=null, abBanMatches=[], abBanTimer=null;
 let _abAlbumPickSide=null, _abAlbumSearchTimer=null;
+let _abCreateMode='manual', _abWheelArtists=[], _abWheelArtistTimer=null;
 
-// Compute song cost from Deezer popularity rank
-function abComputeSongCost(rank){
-  rank=parseInt(rank)||0;
-  if(rank>=900000)return 45;
-  if(rank>=800000)return 40;
-  if(rank>=700000)return 35;
-  if(rank>=600000)return 30;
-  if(rank>=500000)return 25;
-  if(rank>=400000)return 20;
-  if(rank>=300000)return 16;
-  if(rank>=200000)return 12;
-  if(rank>=100000)return 9;
-  if(rank>=50000) return 6;
-  if(rank>=20000) return 4;
-  return 3;
-}
-function abCostTier(cost){
-  if(cost>=35)return'Mega';
-  if(cost>=25)return'Big';
-  if(cost>=15)return'Popular';
-  if(cost>=8) return'Album';
-  return'Deep';
-}
-function abCostColor(cost){
-  if(cost>=35)return'#f472b6';
-  if(cost>=25)return'#facc15';
-  if(cost>=15)return'var(--gold)';
-  if(cost>=8) return'var(--muted2)';
-  return'#34d399';
-}
 function abIsBanned(song){
   if(!abBans.length)return false;
   const sn=(song.song||song.song_name||'').toLowerCase().trim();
@@ -8026,13 +8019,6 @@ function setAbAlbumLock(on){
 function abRefreshAlbumPickerLabels(){
   // Now handled inline in renderAuxBattleLobby
 }
-function setAbBudget(val){
-  _abBudget=val==='custom'?'custom':parseInt(val)||0;
-  if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
-}
-function abLobbyBudgetCustomChange(val){
-  _abBudgetCustom=parseInt(val)||0;
-}
 function openAbAlbumPicker(side,artistName){
   _abAlbumPickSide=side;
   const input=document.getElementById('ab-create-artist-'+side.toLowerCase());
@@ -8088,11 +8074,21 @@ function openCreateAuxBattleModal(){
   document.getElementById('ab-create-name').value='';
   document.getElementById('ab-create-artist-a').value='';
   document.getElementById('ab-create-artist-b').value='';
+  ['a','b'].forEach(side=>{
+    const r=document.getElementById('ab-create-artist-'+side+'-results');
+    if(r){r.style.display='none';r.innerHTML='';r._results=null;}
+  });
+  _abCreateMode='manual';_abWheelArtists=[];
+  document.getElementById('ab-wheel-artist-input').value='';
+  const wr=document.getElementById('ab-wheel-artist-results');
+  if(wr){wr.style.display='none';wr.innerHTML='';wr._results=null;}
+  renderAbWheelArtistChips();
+  setAbCreateMode('manual');
   document.getElementById('ab-custom-count').value='';
   document.getElementById('ab-custom-count-wrap').style.display='none';
   document.getElementById('create-ab-err').textContent='';
   _abSongCount=5;_abMode='ratings';_abSecret=true;_abFeatures=false;_abPrivate=false;
-  _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abBudget=0;_abGenre='rap';
+  _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abGenre='rap';
   document.querySelectorAll('#ab-song-count-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.count==='5'));
   document.querySelectorAll('#ab-genre-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.genre==='rap'));
   setAbToggle('secret',true);setAbToggle('features',false);setAbToggle('private',false);
@@ -8100,15 +8096,128 @@ function openCreateAuxBattleModal(){
 }
 function closeCreateAuxBattleModal(){document.getElementById('create-ab-modal').classList.remove('open');}
 
+function setAbCreateMode(mode){
+  _abCreateMode=mode;
+  document.getElementById('ab-mode-manual').classList.toggle('active',mode==='manual');
+  document.getElementById('ab-mode-wheel').classList.toggle('active',mode==='wheel');
+  document.getElementById('ab-create-mode-manual').style.display=mode==='manual'?'':'none';
+  document.getElementById('ab-create-mode-wheel').style.display=mode==='wheel'?'':'none';
+}
+
+function abWheelArtistSearch(){
+  clearTimeout(_abWheelArtistTimer);
+  const input=document.getElementById('ab-wheel-artist-input');
+  const resEl=document.getElementById('ab-wheel-artist-results');
+  const q=(input.value||'').trim();
+  if(!q){resEl.style.display='none';resEl.innerHTML='';return;}
+  resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.52rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">SEARCHING…</div>';
+  resEl.style.display='block';
+  _abWheelArtistTimer=setTimeout(async()=>{
+    try{
+      const d=await deezerFetch('https://api.deezer.com/search/artist?q='+encodeURIComponent(q)+'&limit=15');
+      const all=(d.data||[]).filter(a=>a&&a.name);
+      resEl._results=all;
+      resEl.innerHTML=all.map((a,i)=>{
+        const img=a.picture_small||a.picture||'';
+        const already=_abWheelArtists.some(x=>x.toLowerCase()===a.name.toLowerCase());
+        return`<div style="display:flex;align-items:center;gap:.65rem;padding:.55rem .85rem;border-bottom:1px solid var(--border);cursor:${already?'not-allowed':'pointer'};opacity:${already?'.4':'1'}" ${already?'':`onclick="abWheelPickResult(${i})"`}>
+          ${img?`<img src="${esc(img)}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>`}
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.name)}</div>
+          </div>
+          ${already?`<div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">ADDED</div>`:''}
+        </div>`;
+      }).join('')||`<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">No artists found</div>`;
+    }catch(e){resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted)">Search failed</div>';}
+  },350);
+}
+
+function abWheelPickResult(i){
+  const resEl=document.getElementById('ab-wheel-artist-results');
+  const a=(resEl._results||[])[i];
+  if(!a)return;
+  if(_abWheelArtists.some(x=>x.toLowerCase()===a.name.toLowerCase()))return;
+  _abWheelArtists.push(a.name);
+  renderAbWheelArtistChips();
+  document.getElementById('ab-wheel-artist-input').value='';
+  resEl.style.display='none';resEl.innerHTML='';resEl._results=null;
+}
+
+function abRemoveWheelArtist(i){
+  _abWheelArtists.splice(i,1);
+  renderAbWheelArtistChips();
+}
+
+function renderAbWheelArtistChips(){
+  const el=document.getElementById('ab-wheel-artist-chips');
+  if(!el)return;
+  if(!_abWheelArtists.length){
+    el.innerHTML='<div style="font-size:.55rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-style:italic">No artists added yet…</div>';
+    return;
+  }
+  el.innerHTML=_abWheelArtists.map((a,i)=>`<div style="display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .55rem;background:var(--surface2);border:1px solid var(--border2);border-radius:99px;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;color:var(--text)">${esc(a)}<button onclick="abRemoveWheelArtist(${i})" style="background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:.85rem;line-height:1;padding:0 .1rem">×</button></div>`).join('');
+}
+
+const _abArtistSearchTimers={a:null,b:null};
+function abArtistSearch(side){
+  clearTimeout(_abArtistSearchTimers[side]);
+  const input=document.getElementById('ab-create-artist-'+side);
+  const resEl=document.getElementById('ab-create-artist-'+side+'-results');
+  const q=(input.value||'').trim();
+  if(!q){resEl.style.display='none';resEl.innerHTML='';return;}
+  resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.52rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">SEARCHING…</div>';
+  resEl.style.display='block';
+  _abArtistSearchTimers[side]=setTimeout(async()=>{
+    try{
+      const d=await deezerFetch('https://api.deezer.com/search/artist?q='+encodeURIComponent(q)+'&limit=15');
+      const all=(d.data||[]).filter(a=>a&&a.name);
+      resEl._results=all;
+      resEl.innerHTML=all.map((a,i)=>{
+        const img=a.picture_small||a.picture||'';
+        return`<div style="display:flex;align-items:center;gap:.65rem;padding:.55rem .85rem;border-bottom:1px solid var(--border);cursor:pointer" onclick="abPickArtist('${side}',${i})">
+          ${img?`<img src="${esc(img)}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>`}
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.name)}</div>
+          </div>
+        </div>`;
+      }).join('')||`<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">No artists found</div>`;
+    }catch(e){resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted)">Search failed</div>';}
+  },350);
+}
+function abPickArtist(side,i){
+  const resEl=document.getElementById('ab-create-artist-'+side+'-results');
+  const a=(resEl._results||[])[i];
+  if(!a)return;
+  document.getElementById('ab-create-artist-'+side).value=a.name;
+  resEl.style.display='none';resEl.innerHTML='';resEl._results=null;
+}
+document.addEventListener('click',e=>{
+  ['a','b'].forEach(side=>{
+    const wrap=document.getElementById('ab-create-artist-'+side)?.parentElement;
+    const resEl=document.getElementById('ab-create-artist-'+side+'-results');
+    if(wrap&&resEl&&!wrap.contains(e.target))resEl.style.display='none';
+  });
+  const wWrap=document.getElementById('ab-wheel-artist-input')?.parentElement;
+  const wRes=document.getElementById('ab-wheel-artist-results');
+  if(wWrap&&wRes&&!wWrap.contains(e.target))wRes.style.display='none';
+});
+
 async function createAuxBattle(){
   if(!currentUser){return;}
   const errEl=document.getElementById('create-ab-err');
   const name=(document.getElementById('ab-create-name').value||'').trim();
-  const artistA=(document.getElementById('ab-create-artist-a').value||'').trim();
-  const artistB=(document.getElementById('ab-create-artist-b').value||'').trim();
   if(!name){errEl.textContent='Enter a battle name.';return;}
-  if(!artistA||!artistB){errEl.textContent='Enter both artists.';return;}
-  if(artistA.toLowerCase()===artistB.toLowerCase()){errEl.textContent='Artists must be different.';return;}
+  let artistA='', artistB='', wheelArtists=null, startStatus='lobby';
+  if(_abCreateMode==='wheel'){
+    if(_abWheelArtists.length<2){errEl.textContent='Add at least 2 artists to the wheel.';return;}
+    wheelArtists=_abWheelArtists.slice();
+    startStatus='wheel';
+  } else {
+    artistA=(document.getElementById('ab-create-artist-a').value||'').trim();
+    artistB=(document.getElementById('ab-create-artist-b').value||'').trim();
+    if(!artistA||!artistB){errEl.textContent='Enter both artists.';return;}
+    if(artistA.toLowerCase()===artistB.toLowerCase()){errEl.textContent='Artists must be different.';return;}
+  }
   let songCount=_abSongCount;
   if(songCount==='custom'){
     songCount=parseInt(document.getElementById('ab-custom-count').value)||0;
@@ -8121,8 +8230,9 @@ async function createAuxBattle(){
     host_id:currentUser.id,code,name,artist_a:artistA,artist_b:artistB,
     song_count:songCount,winner_mode:'ratings',genre:_abGenre,secret_draft:_abSecret,
     allow_features:_abFeatures,is_private:_abPrivate,
-    player_a_id:currentUser.id,status:'lobby',
-    ban_count:0,album_lock:false,draft_budget:0
+    player_a_id:currentUser.id,status:startStatus,
+    ban_count:0,album_lock:false,draft_budget:0,
+    wheel_artists:wheelArtists
   };
   const{data,error}=await db.from('aux_battles').insert(insertData).select('*').single();
   btn.disabled=false;btn.textContent='Create Battle';
@@ -8162,7 +8272,8 @@ async function loadAuxBattleState(id){
   abPicks=picks||[];
   abRoundResults=results||[];
   abBans=bans||[];
-  if(battle.status==='lobby')abState('lobby');
+  if(battle.status==='wheel')abState('wheel');
+  else if(battle.status==='lobby')abState('lobby');
   else if(battle.status==='banning')abState('bans');
   else if(battle.status==='drafting')abState('draft');
   else if(battle.status==='arranging'){abArrangement=new Array(battle.song_count).fill(null);abState('arrange');}
@@ -8177,19 +8288,20 @@ async function loadAuxBattleState(id){
 function _stopAbLobbyPoll(){if(abLobbyPoll){clearInterval(abLobbyPoll);abLobbyPoll=null;}}
 function abState(s){
   if(s!=='lobby')_stopAbLobbyPoll();
-  ['lobby','bans','draft','arrange','round','result','final'].forEach(id=>{
+  ['lobby','wheel','bans','draft','arrange','round','result','final'].forEach(id=>{
     const el=document.getElementById('ab-'+id);
     if(!el)return;
     el.style.display='none';
   });
   const el=document.getElementById('ab-'+s);
-  // 'round' needs display:flex (inner header + body flex layout); 'lobby','result','final'
+  // 'round' needs display:flex (inner header + body flex layout); 'lobby','wheel','result','final'
   // are simple scrollable blocks; bans/arrange/draft use flex column too.
   if(el){
-    if(s==='lobby'||s==='result'||s==='final')el.style.display='block';
+    if(s==='lobby'||s==='wheel'||s==='result'||s==='final')el.style.display='block';
     else el.style.display='flex';
   }
-  if(s==='lobby'){
+  if(s==='wheel'){renderAuxBattleWheel();}
+  else if(s==='lobby'){
     renderAuxBattleLobby();
     _stopAbLobbyPoll();
     abLobbyPoll=setInterval(async()=>{
@@ -8264,7 +8376,6 @@ async function renderAuxBattleLobby(){
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Featured songs</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">${b.allow_features?'Allowed':'Not Allowed'}</span></div>
       ${b.ban_count?`<div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Ban Phase</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${b.ban_count} ban${b.ban_count===1?'':'s'} each</span></div>`:''}
       ${b.album_lock?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem;gap:.5rem"><span class="ab-section-lbl">Album Lock</span><span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-align:right;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(b.album_a_name||'?')} vs ${esc(b.album_b_name||'?')}</span></div>`:''}
-      ${b.draft_budget?`<div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Draft Budget</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${b.draft_budget} pts</span></div>`:''}
       <div style="display:flex;justify-content:space-between"><span class="ab-section-lbl">Audience in room</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${audienceCount>=1?'var(--green)':'var(--muted)'}">${audienceCount} member${audienceCount!==1?'s':''}</span></div>
     </div>
     ${isHost&&playersReady&&audienceCount===0?`
@@ -8283,11 +8394,6 @@ async function renderAuxBattleLobby(){
         <button onclick="openAbAlbumPicker('A','${escJs(b.artist_a)}')" style="flex:1;background:var(--surface2);border:1px solid ${_abAlbumA?'var(--gold)':'var(--border2)'};color:${_abAlbumA?'var(--gold)':'var(--muted)'};padding:.45rem .55rem;border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_abAlbumA?esc(_abAlbumA.title):'Pick Album A'}</button>
         <button onclick="openAbAlbumPicker('B','${escJs(b.artist_b)}')" style="flex:1;background:var(--surface2);border:1px solid ${_abAlbumB?'#f472b6':'var(--border2)'};color:${_abAlbumB?'#f472b6':'var(--muted)'};padding:.45rem .55rem;border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${_abAlbumB?esc(_abAlbumB.title):'Pick Album B'}</button>
       </div>`:''}
-      <label class="modal-lbl">Draft Budget</label>
-      <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:${_abBudget==='custom'?'.4rem':'.65rem'}">
-        ${[['Off',0],['50',50],['75',75],['100',100],['150',150],['Custom','custom']].map(([lbl,val])=>`<button class="ab-pill${_abBudget===val?' active':''}" style="cursor:pointer" onclick="setAbBudget('${val}')">${lbl}</button>`).join('')}
-      </div>
-      ${_abBudget==='custom'?`<input id="ab-lobby-budget-custom" type="number" min="20" max="500" class="modal-input" placeholder="Custom budget (20–500)" style="font-size:.78rem;margin-bottom:.65rem" oninput="abLobbyBudgetCustomChange(this.value)" value="${_abBudgetCustom||''}">`:''}
     </div>`:''}
     ${canStart
       ?`<button onclick="startAuxBattleDraft()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer">Start Draft${willDuel?' · Duel Mode':''}</button>`
@@ -8300,7 +8406,7 @@ async function renderAuxBattleLobby(){
 async function joinAuxBattleSide(side){
   if(!currentUser){alert('Sign in first.');return;}
   const b=currentAuxBattle;
-  if(b.status!=='lobby'){alert('Battle has already started.');return;}
+  if(b.status!=='lobby'&&b.status!=='wheel'){alert('Battle has already started.');return;}
   if(side==='A'&&b.player_a_id){alert('Side A is already taken.');return;}
   if(side==='B'&&b.player_b_id){alert('Side B is already taken.');return;}
   const field=side==='A'?'player_a_id':'player_b_id';
@@ -8308,12 +8414,147 @@ async function joinAuxBattleSide(side){
   if(error){alert(error.message);console.error(error);return;}
   const{data:fresh}=await db.from('aux_battles').select('*').eq('id',b.id).single();
   if(fresh)currentAuxBattle=fresh;
-  renderAuxBattleLobby();
+  if(currentAuxBattle.status==='wheel')renderAuxBattleWheel();
+  else renderAuxBattleLobby();
 }
 
 function abCopyCode(){
   const code=currentAuxBattle?.code;if(!code)return;
   navigator.clipboard.writeText(code).catch(()=>{});
+}
+
+// ─── Wheel mode ───────────────────────────────────────────────────────────────
+function abParseWheelArtists(b){
+  if(!b||!b.wheel_artists)return[];
+  if(Array.isArray(b.wheel_artists))return b.wheel_artists;
+  try{return JSON.parse(b.wheel_artists)||[];}catch(e){return[];}
+}
+
+async function renderAuxBattleWheel(){
+  const b=currentAuxBattle;if(!b)return;
+  const isHost=b.host_id===currentUser?.id;
+  const isPlayerA=b.player_a_id===currentUser?.id;
+  const isPlayerB=b.player_b_id===currentUser?.id;
+  const artists=abParseWheelArtists(b);
+  let paProf=null,pbProf=null;
+  if(b.player_a_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_a_id).single();paProf=data;}
+  if(b.player_b_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_b_id).single();pbProf=data;}
+  const spun=!!(b.wheel_spun_at&&b.wheel_winner_a&&b.wheel_winner_b);
+  const playersReady=!!(b.player_a_id&&b.player_b_id);
+  const slotBtn=(side,prof)=>{
+    const filled=!!prof;
+    const canJoin=!filled&&!isPlayerA&&!isPlayerB;
+    const isMe=prof?.id===currentUser?.id;
+    const winner=side==='A'?b.wheel_winner_a:b.wheel_winner_b;
+    const sideColor=side==='A'?'var(--gold)':'#f472b6';
+    return`<div class="ab-lobby-artist">
+      <div class="ab-lobby-artist-label">Slot ${side}</div>
+      <div class="ab-lobby-artist-name" style="color:${winner?sideColor:'var(--muted)'}">${winner?esc(winner):'???'}</div>
+      <div class="ab-lobby-player">
+        ${filled?avatarHTML(prof,null,22):'<div style="width:22px;height:22px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>'}
+        <div style="flex:1;min-width:0">
+          ${filled?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;color:${isMe?'var(--gold)':'var(--text)'}">@${esc(prof.username)}${isMe?' ★':''}</div>`:'<div class="ab-lobby-player-empty">Empty slot</div>'}
+        </div>
+      </div>
+      ${canJoin?`<button class="ab-join-btn" onclick="joinAuxBattleSide('${side}')">+ Join Slot ${side}</button>`:''}
+    </div>`;
+  };
+  const reelRows=(side)=>{
+    if(!artists.length)return'';
+    const passes=8;
+    return[...Array(passes)].map(()=>artists.map(a=>`<div style="height:60px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;color:var(--text);padding:0 .4rem;text-align:center;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:1px solid var(--border)">${esc(a)}</div>`).join('')).join('');
+  };
+  const reelHTML=(side)=>`<div style="overflow:hidden;height:60px;border:1px solid var(--border2);border-radius:.4rem;background:var(--surface);position:relative">
+    <div id="ab-wheel-reel-${side.toLowerCase()}" style="will-change:transform;transform:translateY(0)">${reelRows(side)}</div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,var(--surface) 0%,transparent 35%,transparent 65%,var(--surface) 100%)"></div>
+    <div style="position:absolute;left:0;right:0;top:50%;height:2px;background:${side==='A'?'var(--gold)':'#f472b6'};transform:translateY(-50%);pointer-events:none;box-shadow:0 0 8px ${side==='A'?'var(--gold)':'#f472b6'}"></div>
+  </div>`;
+  const el=document.getElementById('ab-wheel-body');
+  el.innerHTML=`
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem">Battle Code</div>
+      <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:.12em">${b.code}</div>
+      <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
+    </div>
+    <div style="text-align:center;margin-bottom:.85rem">
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">🎡 Wheel of Artists</div>
+      <div style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem">${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel decides the matchup</div>
+    </div>
+    <div style="display:flex;gap:.65rem;margin-bottom:.85rem">${slotBtn('A',paProf)}${slotBtn('B',pbProf)}</div>
+    <div style="display:flex;gap:.65rem;margin-bottom:.85rem">
+      <div style="flex:1;min-width:0">${reelHTML('A')}</div>
+      <div style="flex:1;min-width:0">${reelHTML('B')}</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.6rem .8rem;margin-bottom:.85rem;max-height:9rem;overflow-y:auto">
+      <div class="ab-section-lbl" style="margin-bottom:.35rem">Pool</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">
+        ${artists.map(a=>`<span class="ab-pill" style="font-size:.55rem">${esc(a)}</span>`).join('')||'<div style="font-size:.55rem;color:var(--muted);font-style:italic">No artists in pool.</div>'}
+      </div>
+    </div>
+    ${!spun
+      ?(isHost
+        ?`<button id="ab-wheel-spin-btn" onclick="abSpinWheel()" ${playersReady?'':'disabled'} style="width:100%;padding:.7rem;background:${playersReady?'var(--gold)':'var(--border2)'};color:${playersReady?'var(--bg)':'var(--muted)'};border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:${playersReady?'pointer':'not-allowed'};text-transform:uppercase">🎡 ${playersReady?'Spin the Wheel':'Waiting for players…'}</button>`
+        :`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace">Waiting for host to spin…</div>`)
+      :(isHost
+        ?`<button onclick="abLockInWheelResult()" style="width:100%;padding:.7rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;cursor:pointer;text-transform:uppercase">Lock In Matchup →</button>`
+        :`<div style="text-align:center;font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace">Waiting for host to continue…</div>`)}
+  `;
+  if(spun){
+    const idxA=artists.indexOf(b.wheel_winner_a);
+    const idxB=artists.indexOf(b.wheel_winner_b);
+    if(idxA>=0)_abAnimateWheelReel('a',idxA,artists.length,b.wheel_spun_at);
+    if(idxB>=0)_abAnimateWheelReel('b',idxB,artists.length,b.wheel_spun_at);
+  }
+}
+
+function _abAnimateWheelReel(side,winnerIdx,n,spunAt){
+  const reel=document.getElementById('ab-wheel-reel-'+side);
+  if(!reel)return;
+  const rowH=60;
+  const passes=7;
+  const targetY=-((passes*n+winnerIdx)*rowH);
+  const startedAt=new Date(spunAt).getTime();
+  const elapsed=Date.now()-startedAt;
+  const totalDuration=4500;
+  const remaining=Math.max(0,totalDuration-elapsed);
+  if(remaining<80){
+    reel.style.transition='none';
+    reel.style.transform=`translateY(${targetY}px)`;
+  } else {
+    reel.style.transition='none';
+    reel.style.transform='translateY(0)';
+    void reel.offsetHeight;
+    reel.style.transition=`transform ${remaining}ms cubic-bezier(.15,.85,.25,1)`;
+    requestAnimationFrame(()=>{reel.style.transform=`translateY(${targetY}px)`;});
+  }
+}
+
+async function abSpinWheel(){
+  const b=currentAuxBattle;
+  if(!b||b.host_id!==currentUser?.id)return;
+  if(!b.player_a_id||!b.player_b_id){alert('Both players must join first.');return;}
+  const artists=abParseWheelArtists(b);
+  if(artists.length<2){alert('Need at least 2 artists on the wheel.');return;}
+  const idxA=Math.floor(Math.random()*artists.length);
+  let idxB;do{idxB=Math.floor(Math.random()*artists.length);}while(idxB===idxA);
+  const winnerA=artists[idxA],winnerB=artists[idxB];
+  const spunAt=new Date().toISOString();
+  const btn=document.getElementById('ab-wheel-spin-btn');
+  if(btn){btn.disabled=true;btn.textContent='Spinning…';}
+  const{data,error}=await db.from('aux_battles').update({wheel_winner_a:winnerA,wheel_winner_b:winnerB,wheel_spun_at:spunAt}).eq('id',b.id).select('*').single();
+  if(error){alert(error.message);if(btn){btn.disabled=false;btn.textContent='🎡 Spin the Wheel';}return;}
+  currentAuxBattle=data;
+  renderAuxBattleWheel();
+}
+
+async function abLockInWheelResult(){
+  const b=currentAuxBattle;
+  if(!b||b.host_id!==currentUser?.id)return;
+  if(!b.wheel_winner_a||!b.wheel_winner_b)return;
+  const{data,error}=await db.from('aux_battles').update({artist_a:b.wheel_winner_a,artist_b:b.wheel_winner_b,status:'lobby'}).eq('id',b.id).select('*').single();
+  if(error){alert(error.message);return;}
+  currentAuxBattle=data;
+  abState('lobby');
 }
 
 async function startAuxBattleDraft(){
@@ -8322,12 +8563,6 @@ async function startAuxBattleDraft(){
   if(!b.player_a_id||!b.player_b_id){alert('Both players must join first.');return;}
   const audienceNow=abAudienceCount();
   const isDuel=audienceNow===0;
-  // Resolve budget (handle custom input)
-  let resolvedBudget=_abBudget;
-  if(resolvedBudget==='custom'){
-    resolvedBudget=_abBudgetCustom||parseInt(document.getElementById('ab-lobby-budget-custom')?.value)||0;
-    if(resolvedBudget<20||resolvedBudget>500){alert('Custom budget must be 20–500.');return;}
-  }
   if(_abAlbumLock&&(!_abAlbumA||!_abAlbumB)){alert('Album Lock: pick an album for both sides first.');return;}
   const startStatus=(_abBanCount>0)?'banning':'drafting';
   const update={
@@ -8339,8 +8574,7 @@ async function startAuxBattleDraft(){
     album_a_cover:_abAlbumLock&&_abAlbumA?_abAlbumA.cover:null,
     album_b_name:_abAlbumLock&&_abAlbumB?_abAlbumB.title:null,
     album_b_id:_abAlbumLock&&_abAlbumB?_abAlbumB.id:null,
-    album_b_cover:_abAlbumLock&&_abAlbumB?_abAlbumB.cover:null,
-    draft_budget:resolvedBudget||0
+    album_b_cover:_abAlbumLock&&_abAlbumB?_abAlbumB.cover:null
   };
   if(startStatus==='drafting')update.current_pick_index=0;
   const{data,error}=await db.from('aux_battles').update(update).eq('id',b.id).select('*').single();
@@ -8372,14 +8606,7 @@ function renderAuxBattleDraft(){
   if(done){baseStatus='Draft complete!';}
   else if(isMyTurn){baseStatus=`Your turn — Pick ${abPicks.filter(p=>p.side===currentSide).length+1} for ${currentSide==='A'?b.artist_a:b.artist_b}`;}
   else{baseStatus=`Waiting for ${currentSide==='A'?b.artist_a+' (A)':b.artist_b+' (B)'} to pick…`;}
-  if(b.draft_budget>0&&mySide){
-    const remaining=abMyBudgetRemaining();
-    const myPicksCount=abPicks.filter(p=>p.side===mySide).length;
-    const songsLeft=b.song_count-myPicksCount;
-    statusEl.innerHTML=`${esc(baseStatus)} <span style="color:var(--gold);margin-left:.5rem">· Budget: ${remaining}/${b.draft_budget} pts${songsLeft>0?` · ${songsLeft} song${songsLeft===1?'':'s'} left`:''}</span>`;
-  } else {
-    statusEl.textContent=baseStatus;
-  }
+  statusEl.textContent=baseStatus;
   const pickPanel=document.getElementById('ab-draft-pick-panel');
   pickPanel.style.display=(isMyTurn&&!done)?'block':'none';
   if(isMyTurn){
@@ -8437,7 +8664,7 @@ function abSearchSongs(){
         if(!r.title||!r.artist?.name)return false;
         const k=(r.title+r.artist.name).toLowerCase();
         if(seen.has(k))return false;seen.add(k);return true;
-      }).map(r=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',album_id:r.album?.id?String(r.album.id):null,artwork:r.album?.cover_medium||'',preview:r.preview||'',itunes_id:String(r.id||''),rank:r.rank||0,cost:abComputeSongCost(r.rank||0)}));
+      }).map(r=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',album_id:r.album?.id?String(r.album.id):null,artwork:r.album?.cover_medium||'',preview:r.preview||'',itunes_id:String(r.id||''),rank:r.rank||0}));
       renderAbSearchResults(resEl);
     }catch(e){resEl.innerHTML='<div style="padding:.5rem .75rem;font-size:.6rem;color:var(--muted)">Search failed</div>';}
   },350);
@@ -8454,44 +8681,16 @@ function renderAbSearchResults(resEl){
   }
   if(b)list=list.filter(s=>!abIsBanned(s));
   if(!list.length){resEl.innerHTML='<div style="padding:.5rem .75rem;font-size:.6rem;color:var(--muted)">No results</div>';return;}
-  const remaining=abMyBudgetRemaining();
-  const budgetOn=b&&b.draft_budget>0;
-  const myPicks=mySide?abPicks.filter(p=>p.side===mySide):[];
-  const songsLeft=b?(b.song_count-myPicks.length):0;
-  const cheapestAffordable=budgetOn?list.reduce((m,s)=>(s.cost<=remaining&&(m===null||s.cost<m))?s.cost:m,null):null;
-  const emergencyAllowed=budgetOn&&songsLeft>0&&cheapestAffordable===null;
   resEl.innerHTML=list.slice(0,30).map((s)=>{
     const i=abSongMatches.indexOf(s);
-    const cost=s.cost||abComputeSongCost(s.rank);
-    const tier=abCostTier(cost);
-    const tierColor=abCostColor(cost);
-    const affordable=!budgetOn||cost<=remaining;
-    const emergencyThis=emergencyAllowed&&!affordable&&cost===list.reduce((m,x)=>x.cost<m?x.cost:m,Infinity);
-    const tappable=affordable||emergencyThis;
-    const dim=tappable?'1':'.4';
-    return`<div style="padding:.5rem .7rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;cursor:${tappable?'pointer':'not-allowed'};opacity:${dim}" ${tappable?`onclick="selectAbPick(${i})"`:''}>
+    return`<div style="padding:.5rem .7rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;cursor:pointer" onclick="selectAbPick(${i})">
       ${s.artwork?`<img src="${esc(itunesArtUrl(s.artwork,80))}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
       <div style="flex:1;min-width:0">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.song)}</div>
         <div style="font-size:.55rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div>
       </div>
-      ${budgetOn
-        ?`<div style="text-align:right;flex-shrink:0">
-            <div style="font-family:'DM Mono',monospace;font-size:.7rem;font-weight:800;color:${affordable?tierColor:'#f472b6'};line-height:1">${cost}<span style="font-size:.5rem;color:var(--muted);font-weight:600">pts</span></div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.06em;color:${tierColor}">${tier}${emergencyThis?' · EMERGENCY':!affordable?' · OVER':''}</div>
-          </div>`
-        :`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.06em;color:${tierColor};flex-shrink:0">${tier}</div>`}
     </div>`;
   }).join('');
-}
-
-function abMyBudgetRemaining(){
-  const b=currentAuxBattle;
-  if(!b||!b.draft_budget)return 0;
-  const mySide=b.player_a_id===currentUser?.id?'A':b.player_b_id===currentUser?.id?'B':null;
-  if(!mySide)return 0;
-  const spent=abPicks.filter(p=>p.side===mySide&&!p.is_emergency).reduce((s,p)=>s+(parseInt(p.cost)||0),0);
-  return Math.max(0,(b.draft_budget||0)-spent);
 }
 
 function validateAuxBattleSong(song,assignedArtist,allowFeatures){
@@ -8526,46 +8725,12 @@ function selectAbPick(idx){
   if(abIsBanned(song)){errEl.textContent='That song was banned.';return;}
   const dup=abPicks.find(p=>p.side===side&&p.song_name.toLowerCase()===song.song.toLowerCase()&&p.artist_name.toLowerCase()===song.artist.toLowerCase());
   if(dup){errEl.textContent='You already picked this song.';return;}
-  // Budget check + emergency rule
-  const budgetOn=b.draft_budget>0;
-  song.cost=song.cost||abComputeSongCost(song.rank);
-  let isEmergency=false;
-  if(budgetOn){
-    const remaining=abMyBudgetRemaining();
-    if(song.cost>remaining){
-      // Emergency rule: only allowed if no available song fits remaining budget
-      const myPicks=abPicks.filter(p=>p.side===side);
-      const songsLeft=b.song_count-myPicks.length;
-      const allowed=abSongMatches.filter(s=>{
-        if(!validateAuxBattleSong(s,assignedArtist,b.allow_features))return false;
-        if(b.album_lock){
-          const myAlbumName=side==='A'?b.album_a_name:b.album_b_name;
-          const myAlbumId=side==='A'?b.album_a_id:b.album_b_id;
-          if(!((myAlbumId&&String(s.album_id||'')===String(myAlbumId))||abMatchesAlbum(s,myAlbumName)))return false;
-        }
-        if(abIsBanned(s))return false;
-        if(myPicks.find(p=>p.song_name.toLowerCase()===s.song.toLowerCase()))return false;
-        return true;
-      });
-      const anyAffordable=allowed.some(s=>(s.cost||abComputeSongCost(s.rank))<=remaining);
-      if(songsLeft>0&&!anyAffordable){
-        const cheapest=allowed.reduce((m,s)=>{const c=s.cost||abComputeSongCost(s.rank);return(m===null||c<m)?c:m;},null);
-        if(cheapest!==null&&song.cost===cheapest){
-          isEmergency=true;
-        } else {
-          errEl.textContent=`Not enough budget. Need ${song.cost} pts, have ${remaining}.`;return;
-        }
-      } else {
-        errEl.textContent=`Not enough budget. Need ${song.cost} pts, have ${remaining}.`;return;
-      }
-    }
-  }
   errEl.textContent='';
-  abPendingPick=Object.assign({},song,{is_emergency:isEmergency});
+  abPendingPick=Object.assign({},song);
   document.getElementById('ab-draft-search-input').value='';
   document.getElementById('ab-draft-search-results').style.display='none';
-  document.getElementById('ab-pick-sel-name').textContent=song.song+(isEmergency?' · EMERGENCY':'');
-  document.getElementById('ab-pick-sel-meta').textContent=song.artist+(song.album?' · '+song.album:'')+(budgetOn?' · '+song.cost+' pts':'');
+  document.getElementById('ab-pick-sel-name').textContent=song.song;
+  document.getElementById('ab-pick-sel-meta').textContent=song.artist+(song.album?' · '+song.album:'');
   const artEl=document.getElementById('ab-pick-sel-art');
   if(song.artwork){artEl.src=itunesArtUrl(song.artwork,100);artEl.style.display='block';}else{artEl.style.display='none';}
   document.getElementById('ab-draft-pick-selected').style.display='block';
@@ -8593,14 +8758,13 @@ async function submitAuxBattlePick(){
   btn.disabled=true;btn.textContent='Locking…';
   const newPickIndex=b.current_pick_index+1;
   const allDone=newPickIndex>=b.song_count*2;
-  const songCost=song.cost||abComputeSongCost(song.rank);
   const{data:pickData,error}=await db.from('aux_battle_picks').insert({
     battle_id:b.id,player_id:currentUser.id,side,pick_number:pickNum,
     draft_pick_index:b.current_pick_index,song_name:song.song,artist_name:song.artist,
     album_name:song.album||null,artwork_url:song.artwork||null,preview_url:song.preview||null,
     itunes_track_id:song.itunes_id||null,is_revealed:false,
-    cost:b.draft_budget?songCost:null,
-    is_emergency:!!song.is_emergency
+    cost:null,
+    is_emergency:false
   }).select('*').single();
   if(pickData){abPicks=[...abPicks,pickData];}
   const updateData={current_pick_index:newPickIndex};
@@ -8624,7 +8788,7 @@ function renderAbTimeline(){
   const tl=document.getElementById('ab-timeline');
   if(!tl)return;
   const b=currentAuxBattle;
-  if(!b||b.status==='lobby'){tl.style.display='none';return;}
+  if(!b||b.status==='lobby'||b.status==='wheel'){tl.style.display='none';return;}
   tl.style.display='block';
 
   const songCount=b.song_count||5;
@@ -8736,7 +8900,7 @@ function renderAbTimeline(){
   } else if(b.status==='banning'){
     drama=b.ban_count===1?'One ban each. Pick your target.':`${b.ban_count} bans each. Strip the heaters.`;
   } else if(b.status==='drafting'){
-    drama=b.draft_budget?`Spend wisely. Budget: ${b.draft_budget} pts each.`:'Stack your aux. Snake draft is on.';
+    drama='Stack your aux. Snake draft is on.';
   } else if(b.status==='arranging'){
     drama='Lock the order. Round 1 starts when both lock in.';
   } else if(b.status==='rating_tiebreaker'){
@@ -8854,14 +9018,12 @@ function renderAbBanResults(resEl){
   if(!valid.length){resEl.innerHTML=`<div style="padding:.5rem .75rem;font-size:.6rem;color:var(--muted)">No ${esc(oppArtist)} matches</div>`;return;}
   resEl.innerHTML=valid.slice(0,30).map((s,i)=>{
     const realIdx=abBanMatches.indexOf(s);
-    const cost=abComputeSongCost(s.rank);
     return`<div style="padding:.5rem .7rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;cursor:pointer" onclick="abBanSong(${realIdx})">
       ${s.artwork?`<img src="${esc(itunesArtUrl(s.artwork,80))}" style="width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:3px;background:var(--border2);flex-shrink:0"></div>`}
       <div style="flex:1;min-width:0">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.song)}</div>
         <div style="font-size:.55rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div>
       </div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.06em;color:${abCostColor(cost)};flex-shrink:0">${abCostTier(cost)}</div>
     </div>`;
   }).join('');
 }
@@ -10528,19 +10690,28 @@ function renderAuxBattleFinal(){
       const biggestDiff=abRoundResults.length?abRoundResults.reduce((m,r)=>{const d=Math.abs((parseFloat(r.points_a)||0)-(parseFloat(r.points_b)||0));return d>m.diff?{r,diff:d}:m;},{r:null,diff:-1}).r:null;
       const swingRound=leadFlip||biggestDiff;
       const swingLabel=leadFlip?'Lead Change':'Biggest Round';
+      const roundDetail=r=>{
+        const pa=abPickForRound('A',r.round_number);
+        const pb=abPickForRound('B',r.round_number);
+        const aName=pa?.song_name||b.artist_a;
+        const bName=pb?.song_name||b.artist_b;
+        const wColor=r.winner_side==='A'?'var(--gold)':r.winner_side==='B'?'#f472b6':'var(--muted2)';
+        const winText=r.winner_side==='A'?`Won by ${esc(b.artist_a)}`:r.winner_side==='B'?`Won by ${esc(b.artist_b)}`:'Split';
+        return`<div style="font-size:.55rem;color:var(--muted);margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(aName)} vs ${esc(bName)}</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.08em;color:${wColor};margin-top:.15rem;text-transform:uppercase">${winText}</div>`;
+      };
       return`
       <div style="display:flex;gap:.5rem;margin-bottom:.6rem">
-        ${closestRound?`<div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">Closest Round</div><div style="font-size:.66rem;color:var(--text)">Round ${closestRound.round_number}</div></div>`:''}
-        ${swingRound?`<div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">${swingLabel}</div><div style="font-size:.66rem;color:var(--text)">Round ${swingRound.round_number}</div></div>`:''}
+        ${closestRound?`<div style="flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">Closest Round</div><div style="font-size:.66rem;color:var(--text)">Round ${closestRound.round_number}</div>${roundDetail(closestRound)}</div>`:''}
+        ${swingRound?`<div style="flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">${swingLabel}</div><div style="font-size:.66rem;color:var(--text)">Round ${swingRound.round_number}</div>${roundDetail(swingRound)}</div>`:''}
       </div>`;
     })()}
     ${tiebreakerUsed?`<div style="background:rgba(244,114,182,.08);border:1px solid #f472b6;border-radius:.55rem;padding:.55rem .85rem;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;color:#f472b6;text-align:center;margin-bottom:.6rem">⚡ Tiebreaker(s) used this battle</div>`:''}
-    ${(b.ban_count>0||b.album_lock||b.draft_budget>0)?`
+    ${(b.ban_count>0||b.album_lock)?`
       <div class="ab-section-lbl" style="margin-bottom:.5rem">Strategy Modes</div>
       <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem">
         ${b.ban_count>0?`<span class="ab-pill" style="font-size:.55rem">⛔ ${b.ban_count} ban${b.ban_count===1?'':'s'} each</span>`:''}
         ${b.album_lock?`<span class="ab-pill" style="font-size:.55rem">💿 ${esc(b.album_a_name||'?')} vs ${esc(b.album_b_name||'?')}</span>`:''}
-        ${b.draft_budget>0?`<span class="ab-pill" style="font-size:.55rem">💰 ${b.draft_budget} pts</span>`:''}
       </div>
     `:''}
     ${b.ban_count>0?`
@@ -10580,51 +10751,6 @@ function renderAuxBattleFinal(){
         <div style="text-align:center;margin-top:.55rem;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;color:${winSide==='A'?'var(--gold)':winSide==='B'?'#f472b6':'var(--muted)'}">${winSide?'Album Winner: '+esc(winSide==='A'?b.album_a_name:b.album_b_name):'Tie'}</div>
       </div>
     `:''}
-    ${b.draft_budget>0?(()=>{
-      const picksA=abPicks.filter(p=>p.side==='A');
-      const picksB=abPicks.filter(p=>p.side==='B');
-      const sumCost=ps=>ps.filter(p=>!p.is_emergency).reduce((s,p)=>s+(parseInt(p.cost)||0),0);
-      const spentA=sumCost(picksA),spentB=sumCost(picksB);
-      const leftA=Math.max(0,b.draft_budget-spentA);
-      const leftB=Math.max(0,b.draft_budget-spentB);
-      const allPicks=abPicks.filter(p=>p.cost!=null);
-      const scored=allPicks.filter(p=>{const rr=abRoundResults.find(r=>r.round_number===p.round_position);return rr&&(rr.rating_avg_a!=null||rr.vote_count_a!=null);});
-      const pickPoints=p=>{
-        const rr=abRoundResults.find(r=>r.round_number===p.round_position);
-        if(!rr)return 0;
-        if(rr.rating_avg_a!=null)return parseFloat(p.side==='A'?rr.rating_avg_a:rr.rating_avg_b)||0;
-        if(rr.vote_count_a!=null)return p.side==='A'?(rr.vote_count_a||0):(rr.vote_count_b||0);
-        return 0;
-      };
-      const efficiency=p=>{const c=parseInt(p.cost)||1;return pickPoints(p)/Math.max(1,c);};
-      const bestValue=scored.length?scored.reduce((m,p)=>(efficiency(p)>efficiency(m)?p:m),scored[0]):null;
-      const biggestSteal=scored.length?scored.filter(p=>(parseInt(p.cost)||0)<=10).reduce((m,p)=>{const pp=pickPoints(p);return(!m||pp>pickPoints(m))?p:m;},null):null;
-      const worstSpend=scored.length?scored.filter(p=>(parseInt(p.cost)||0)>=20).reduce((m,p)=>{const pp=pickPoints(p);return(!m||pp<pickPoints(m))?p:m;},null):null;
-      const efficientSide=spentA<spentB?'A':spentB<spentA?'B':null;
-      const emergencies=abPicks.filter(p=>p.is_emergency);
-      return`
-      <div class="ab-section-lbl" style="margin-bottom:.5rem">Draft Budget</div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.65rem .8rem;margin-bottom:.85rem">
-        <div style="display:flex;justify-content:space-between;font-size:.62rem;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:.4rem"><span>Starting budget</span><span>${b.draft_budget} pts</span></div>
-        <div style="display:flex;gap:.5rem;margin-bottom:.5rem">
-          <div style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:.4rem;padding:.45rem .55rem">
-            <div style="font-size:.5rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em">${esc(b.artist_a)}</div>
-            <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text)">Spent: ${spentA}</div>
-            <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted)">Left: ${leftA}</div>
-          </div>
-          <div style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:.4rem;padding:.45rem .55rem">
-            <div style="font-size:.5rem;color:#f472b6;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em">${esc(b.artist_b)}</div>
-            <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text)">Spent: ${spentB}</div>
-            <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted)">Left: ${leftB}</div>
-          </div>
-        </div>
-        ${bestValue?`<div style="font-size:.6rem;color:var(--text);margin-bottom:.18rem">⭐ <span style="color:var(--muted)">Best Value:</span> ${esc(bestValue.song_name)} (${bestValue.cost}pts)</div>`:''}
-        ${biggestSteal?`<div style="font-size:.6rem;color:var(--text);margin-bottom:.18rem">💎 <span style="color:var(--muted)">Biggest Steal:</span> ${esc(biggestSteal.song_name)} (${biggestSteal.cost}pts)</div>`:''}
-        ${worstSpend?`<div style="font-size:.6rem;color:var(--text);margin-bottom:.18rem">💸 <span style="color:var(--muted)">Worst Spend:</span> ${esc(worstSpend.song_name)} (${worstSpend.cost}pts)</div>`:''}
-        ${efficientSide?`<div style="font-size:.6rem;color:var(--text);margin-bottom:.18rem">📊 <span style="color:var(--muted)">Most Efficient Draft:</span> ${esc(efficientSide==='A'?b.artist_a:b.artist_b)}</div>`:''}
-        ${emergencies.length?`<div style="font-size:.6rem;color:#f472b6;margin-top:.3rem">⚡ Emergency Pick used by: ${emergencies.map(p=>esc((p.side==='A'?b.artist_a:b.artist_b)+' ('+p.song_name+')')).join(', ')}</div>`:''}
-      </div>
-    `;})():''}
     <div class="ab-section-lbl" style="margin-bottom:.5rem">Draft Order</div>
     ${[...Array(b.song_count)].map((_,i)=>{
       const pa=abPicks.find(p=>p.side==='A'&&p.pick_number===i+1);
@@ -10674,7 +10800,10 @@ function subscribeToAuxBattleRealtime(battleId){
       if(!battle)return;
       currentAuxBattle=battle;
       const s=battle.status;
-      if(s==='banning'&&prev!=='banning'){_stopAbLobbyPoll();abState('bans');}
+      if(s==='wheel'&&prev!=='wheel'){_stopAbLobbyPoll();abState('wheel');}
+      else if(s==='wheel'){renderAuxBattleWheel();}
+      else if(s==='lobby'&&prev==='wheel'){_stopAbLobbyPoll();abState('lobby');}
+      else if(s==='banning'&&prev!=='banning'){_stopAbLobbyPoll();abState('bans');}
       else if(s==='banning'){renderAuxBattleBans();}
       else if(s==='drafting'&&(prev==='lobby'||prev==='banning')){_stopAbLobbyPoll();abState('draft');}
       else if(s==='drafting'){renderAuxBattleDraft();}
@@ -10744,7 +10873,7 @@ function abLeave(){
   localStorage.removeItem('ab_battle_id');
   currentAuxBattle=null;abPicks=[];abRoundVotes=[];abRoundRatings=[];abRoundResults=[];abArrangement=[];abBans=[];
   abPendingPick=null;abMyRatingA=null;abMyRatingB=null;abPendingBan=null;abBanMatches=[];
-  _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abBudget=0;_abBudgetCustom=null;
+  _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;
   _abTlPrevResolvedRound=0;
   const _tl=document.getElementById('ab-timeline');if(_tl)_tl.style.display='none';
   document.getElementById('ab-view').style.display='none';
