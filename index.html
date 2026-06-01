@@ -1575,16 +1575,42 @@
         <!-- Genre selector -->
         <div class="genre-select-wrap">
           <span class="genre-label">Genre</span>
+          <span id="genre-auto-badge" style="display:none;font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bg);background:var(--gold);padding:.15rem .4rem;border-radius:3px;margin-left:.4rem;vertical-align:middle"></span>
           <div class="genre-select-inner">
-            <select id="genre-select" class="genre-select" onchange="selectGenre(this.value)">
-              <option value="rap">Rap (Default)</option>
-              <option value="pop">Pop</option>
-              <option value="country">Country</option>
-              <option value="rock">Rock</option>
-              <option value="rnb">R&amp;B</option>
-              <option value="edm">EDM</option>
-              <option value="hyperpop">Hyperpop</option>
-              <option value="alternative">Alternative</option>
+            <select id="genre-select" class="genre-select" onchange="userPickedGenre(this.value)">
+              <optgroup label="Auto-detected when you pick a song">
+                <option value="rap">Rap (Default)</option>
+                <option value="pop">Pop</option>
+                <option value="country">Country</option>
+                <option value="rock">Rock</option>
+                <option value="rnb">R&amp;B</option>
+                <option value="edm">EDM</option>
+                <option value="hyperpop">Hyperpop</option>
+                <option value="alternative">Alternative</option>
+              </optgroup>
+              <optgroup label="More genres">
+                <option value="soul">Soul</option>
+                <option value="funk">Funk</option>
+                <option value="jazz">Jazz</option>
+                <option value="blues">Blues</option>
+                <option value="reggae">Reggae</option>
+                <option value="latin">Latin</option>
+                <option value="classical">Classical</option>
+                <option value="soundtrack">Soundtrack</option>
+                <option value="world">World</option>
+                <option value="gospel">Gospel</option>
+                <option value="holiday">Holiday</option>
+                <option value="kids">Kids</option>
+                <option value="kpop">K-Pop</option>
+                <option value="jpop">J-Pop</option>
+                <option value="afrobeat">Afrobeat</option>
+                <option value="bollywood">Bollywood</option>
+                <option value="arabic">Arabic</option>
+                <option value="brazilian">Brazilian</option>
+                <option value="comedy">Comedy / Spoken</option>
+                <option value="newage">New Age / Ambient</option>
+                <option value="general">General</option>
+              </optgroup>
             </select>
           </div>
         </div>
@@ -1772,6 +1798,8 @@
       <div id="profile-header"></div>
       <div id="profile-stats" class="profile-stats"></div>
       <div id="profile-artist-stats"></div>
+      <div id="profile-aux-record"></div>
+      <div id="profile-aux-history"></div>
       <div id="profile-milestones"></div>
       <div id="profile-requests"></div>
       <div class="pst-bar">
@@ -1889,14 +1917,39 @@
             <div style="font-size:.5rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">Rating categories applied to everyone</div>
           </div>
           <select id="rr-genre-select" onchange="rrSetGenre(this.value)" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.06em;padding:.3rem .5rem;border-radius:4px;cursor:pointer">
-            <option value="rap">Rap</option>
-            <option value="pop">Pop</option>
-            <option value="country">Country</option>
-            <option value="rock">Rock</option>
-            <option value="rnb">R&amp;B</option>
-            <option value="edm">EDM</option>
-            <option value="hyperpop">Hyperpop</option>
-            <option value="alternative">Alternative</option>
+            <optgroup label="Core">
+              <option value="rap">Rap</option>
+              <option value="pop">Pop</option>
+              <option value="country">Country</option>
+              <option value="rock">Rock</option>
+              <option value="rnb">R&amp;B</option>
+              <option value="edm">EDM</option>
+              <option value="hyperpop">Hyperpop</option>
+              <option value="alternative">Alternative</option>
+            </optgroup>
+            <optgroup label="More genres">
+              <option value="soul">Soul</option>
+              <option value="funk">Funk</option>
+              <option value="jazz">Jazz</option>
+              <option value="blues">Blues</option>
+              <option value="reggae">Reggae</option>
+              <option value="latin">Latin</option>
+              <option value="classical">Classical</option>
+              <option value="soundtrack">Soundtrack</option>
+              <option value="world">World</option>
+              <option value="gospel">Gospel</option>
+              <option value="holiday">Holiday</option>
+              <option value="kids">Kids</option>
+              <option value="kpop">K-Pop</option>
+              <option value="jpop">J-Pop</option>
+              <option value="afrobeat">Afrobeat</option>
+              <option value="bollywood">Bollywood</option>
+              <option value="arabic">Arabic</option>
+              <option value="brazilian">Brazilian</option>
+              <option value="comedy">Comedy / Spoken</option>
+              <option value="newage">New Age / Ambient</option>
+              <option value="general">General</option>
+            </optgroup>
           </select>
         </div>
         <div id="rr-waiting-msg" style="font-size:.6rem;color:var(--muted);text-align:center;letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;padding:.3rem 0">Waiting for host to start…</div>
@@ -2196,6 +2249,8 @@
   <div class="scroll-area" style="flex:1;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)">
     <div style="padding:1.5rem 1.25rem .5rem" id="upo-header"></div>
     <div id="upo-stats" class="um-stats" style="margin:.5rem 1.25rem"></div>
+    <div id="upo-aux-record" style="padding:0 1.25rem"></div>
+    <div id="upo-aux-history"></div>
     <div style="padding:0 1.25rem .75rem" id="upo-follow"></div>
     <div id="upo-ratings"></div>
   </div>
@@ -2469,9 +2524,10 @@
     <label class="modal-lbl">Battle Name</label>
     <input id="ab-create-name" class="modal-input" maxlength="60" placeholder="e.g. Drake vs The Weeknd" style="margin-bottom:.75rem">
     <label class="modal-lbl">Matchup Mode</label>
-    <div style="display:flex;gap:.35rem;margin-bottom:.75rem">
-      <button id="ab-mode-manual" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbCreateMode('manual')">Manual</button>
-      <button id="ab-mode-wheel" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbCreateMode('wheel')">🎡 Wheel</button>
+    <div style="display:flex;gap:.35rem;margin-bottom:.75rem;flex-wrap:wrap">
+      <button id="ab-mode-manual" class="ab-pill active" style="cursor:pointer;flex:1;min-width:80px" onclick="setAbCreateMode('manual')">Manual</button>
+      <button id="ab-mode-wheel" class="ab-pill" style="cursor:pointer;flex:1;min-width:80px" onclick="setAbCreateMode('wheel')">🎡 Wheel</button>
+      <button id="ab-mode-single" class="ab-pill" style="cursor:pointer;flex:1;min-width:110px" onclick="setAbCreateMode('single')">🎤 Single Artist</button>
     </div>
     <div id="ab-create-mode-manual">
       <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
@@ -2487,13 +2543,45 @@
         </div>
       </div>
     </div>
+    <div id="ab-create-mode-single" style="display:none">
+      <div style="background:rgba(167,139,250,.06);border:1px solid var(--border2);border-radius:.5rem;padding:.65rem .8rem;margin-bottom:.75rem">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem">🎤 Single Artist Mode</div>
+        <div style="font-size:.58rem;color:var(--muted);line-height:1.4">One artist for the whole battle — both contestants pick songs from this artist's catalog only.</div>
+      </div>
+      <label class="modal-lbl">Artist Source</label>
+      <div style="display:flex;gap:.35rem;margin-bottom:.75rem">
+        <button id="ab-single-sub-manual" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbSingleSubMode('manual')">By Choice</button>
+        <button id="ab-single-sub-wheel" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbSingleSubMode('wheel')">🎡 From Wheel</button>
+      </div>
+      <div id="ab-single-sub-manual-panel">
+        <label class="modal-lbl">Artist</label>
+        <div style="position:relative;margin-bottom:.75rem">
+          <input id="ab-create-artist-single" class="modal-input" maxlength="50" autocomplete="off" placeholder="Search artist…" oninput="abArtistSearch('single')" onfocus="abArtistSearch('single')">
+          <div id="ab-create-artist-single-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
+        </div>
+      </div>
+      <div id="ab-single-sub-wheel-panel" style="display:none">
+        <label class="modal-lbl">Saved Wheels <span style="color:var(--muted);font-weight:400">— click to load</span></label>
+        <div id="ab-saved-wheels-single" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.65rem;min-height:1.2rem"></div>
+        <label class="modal-lbl">Artists on Wheel <span style="color:var(--muted);font-weight:400">— add at least 2 · the wheel picks one</span></label>
+        <div style="position:relative;margin-bottom:.4rem">
+          <input id="ab-wheel-artist-input-single" class="modal-input" maxlength="50" autocomplete="off" placeholder="Search artist to add…" oninput="abWheelArtistSearchSingle()" onfocus="abWheelArtistSearchSingle()">
+          <div id="ab-wheel-artist-results-single" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
+        </div>
+        <div id="ab-wheel-artist-chips-single" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem;min-height:1.2rem"></div>
+        <button onclick="saveCurrentWheelSingle()" style="width:100%;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;padding:.45rem;border-radius:.4rem;cursor:pointer;margin-bottom:.75rem">💾 Save this wheel</button>
+      </div>
+    </div>
     <div id="ab-create-mode-wheel" style="display:none">
+      <label class="modal-lbl">Saved Wheels <span style="color:var(--muted);font-weight:400">— click to load</span></label>
+      <div id="ab-saved-wheels" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.65rem;min-height:1.2rem"></div>
       <label class="modal-lbl">Artists on Wheel <span style="color:var(--muted);font-weight:400">— add at least 2</span></label>
       <div style="position:relative;margin-bottom:.4rem">
         <input id="ab-wheel-artist-input" class="modal-input" maxlength="50" autocomplete="off" placeholder="Search artist to add…" oninput="abWheelArtistSearch()" onfocus="abWheelArtistSearch()">
         <div id="ab-wheel-artist-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
       </div>
-      <div id="ab-wheel-artist-chips" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.75rem;min-height:1.2rem"></div>
+      <div id="ab-wheel-artist-chips" style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem;min-height:1.2rem"></div>
+      <button onclick="saveCurrentWheel()" style="width:100%;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.08em;padding:.45rem;border-radius:.4rem;cursor:pointer;margin-bottom:.75rem">💾 Save this wheel</button>
     </div>
     <label class="modal-lbl">Songs Per Side</label>
     <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem" id="ab-song-count-btns">
@@ -2506,7 +2594,7 @@
     <div id="ab-custom-count-wrap" style="display:none;margin-bottom:.75rem">
       <input id="ab-custom-count" type="number" min="1" max="20" class="modal-input" placeholder="Number of songs (1-20)" style="font-size:.82rem">
     </div>
-    <label class="modal-lbl">Rating Genre <span style="color:var(--muted);font-weight:400">— audience uses this genre's rating system</span></label>
+    <label class="modal-lbl">Fallback Genre <span style="color:var(--muted);font-weight:400">— used only when a song's genre can't be auto-detected</span></label>
     <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.75rem" id="ab-genre-btns">
       <button class="ab-pill active" style="cursor:pointer;flex:1;min-width:54px" data-genre="rap" onclick="setAbGenre('rap',this)">Rap</button>
       <button class="ab-pill" style="cursor:pointer;flex:1;min-width:54px" data-genre="pop" onclick="setAbGenre('pop',this)">Pop</button>
@@ -2883,12 +2971,100 @@ const GENRE_PRESETS={
   hyperpop:{label:'Hyperpop',
     colors:['#f472b6','#a78bfa','#60a5fa','#34d399','#facc15','#fb923c'],
     cats:['Production','Vocals','Lyrics','Replay Value','Chorus'],
-    weights:[0.35,0.20,0.10,0.25,0.10]},
+    weights:[0.27,0.20,0.10,0.30,0.13]},
   alternative:{label:'Alternative',
     colors:['#facc15','#f472b6','#fb923c','#a78bfa','#34d399'],
     cats:['Replay Value','Vocals','Production','Emotion','Lyrics'],
-    weights:[0.25,0.22,0.22,0.18,0.13]}
+    weights:[0.25,0.22,0.22,0.18,0.13]},
+  // ── Auto-detected genres (added beyond the locked-in core 8) ──
+  jazz:{label:'Jazz',
+    colors:['#a78bfa','#fb923c','#f472b6','#60a5fa','#34d399','#facc15'],
+    cats:['Instrumentation','Vocals','Atmosphere','Emotion','Songwriting','Replay Value'],
+    weights:[0.23,0.13,0.14,0.10,0.10,0.30]},
+  blues:{label:'Blues',
+    colors:['#60a5fa','#fb923c','#a78bfa','#34d399','#f472b6','#facc15'],
+    cats:['Emotion','Vocals','Instrumentation','Lyrics','Storytelling','Replay Value'],
+    weights:[0.20,0.18,0.15,0.10,0.10,0.27]},
+  soul:{label:'Soul',
+    colors:['#f472b6','#fb923c','#a78bfa','#60a5fa','#34d399','#facc15'],
+    cats:['Vocals','Emotion','Instrumentation','Production','Melody','Replay Value'],
+    weights:[0.22,0.18,0.13,0.10,0.10,0.27]},
+  funk:{label:'Funk',
+    colors:['#fb923c','#facc15','#f472b6','#60a5fa','#34d399','#a78bfa'],
+    cats:['Instrumentation','Energy','Vocals','Production','Chorus','Replay Value'],
+    weights:[0.22,0.16,0.12,0.13,0.10,0.27]},
+  reggae:{label:'Reggae',
+    colors:['#34d399','#facc15','#fb923c','#f472b6','#60a5fa','#a78bfa'],
+    cats:['Atmosphere','Vocals','Instrumentation','Lyrics','Emotion','Replay Value'],
+    weights:[0.20,0.16,0.13,0.12,0.12,0.27]},
+  latin:{label:'Latin',
+    colors:['#fb923c','#f472b6','#facc15','#34d399','#60a5fa','#a78bfa'],
+    cats:['Energy','Vocals','Instrumentation','Chorus','Production','Replay Value'],
+    weights:[0.18,0.16,0.15,0.12,0.12,0.27]},
+  classical:{label:'Classical',
+    colors:['#a78bfa','#60a5fa','#fb923c','#34d399','#f472b6','#facc15'],
+    cats:['Instrumentation','Atmosphere','Emotion','Build-Up','Songwriting','Replay Value'],
+    weights:[0.25,0.17,0.13,0.08,0.10,0.27]},
+  soundtrack:{label:'Soundtrack',
+    colors:['#60a5fa','#a78bfa','#fb923c','#f472b6','#34d399','#facc15'],
+    cats:['Atmosphere','Build-Up','Emotion','Instrumentation','Energy','Replay Value'],
+    weights:[0.22,0.13,0.16,0.12,0.10,0.27]},
+  world:{label:'World',
+    colors:['#34d399','#fb923c','#a78bfa','#f472b6','#60a5fa','#facc15'],
+    cats:['Atmosphere','Instrumentation','Vocals','Emotion','Energy','Replay Value'],
+    weights:[0.20,0.15,0.15,0.12,0.11,0.27]},
+  gospel:{label:'Gospel',
+    colors:['#facc15','#f472b6','#fb923c','#60a5fa','#a78bfa','#34d399'],
+    cats:['Vocals','Emotion','Lyrics','Production','Instrumentation','Replay Value'],
+    weights:[0.22,0.18,0.13,0.10,0.10,0.27]},
+  holiday:{label:'Holiday',
+    colors:['#f472b6','#facc15','#fb923c','#34d399','#a78bfa','#60a5fa'],
+    cats:['Catchiness','Vocals','Chorus','Production','Melody','Replay Value'],
+    weights:[0.22,0.18,0.15,0.10,0.10,0.25]},
+  kids:{label:'Kids',
+    colors:['#facc15','#fb923c','#f472b6','#60a5fa','#34d399','#a78bfa'],
+    cats:['Catchiness','Energy','Vocals','Chorus','Production','Replay Value'],
+    weights:[0.22,0.16,0.12,0.13,0.10,0.27]},
+  kpop:{label:'K-Pop',
+    colors:['#f472b6','#a78bfa','#facc15','#60a5fa','#34d399','#fb923c'],
+    cats:['Production','Vocals','Catchiness','Energy','Chorus','Replay Value'],
+    weights:[0.20,0.16,0.16,0.11,0.10,0.27]},
+  jpop:{label:'J-Pop',
+    colors:['#f472b6','#facc15','#a78bfa','#60a5fa','#34d399','#fb923c'],
+    cats:['Vocals','Catchiness','Production','Melody','Emotion','Replay Value'],
+    weights:[0.20,0.17,0.13,0.13,0.10,0.27]},
+  afrobeat:{label:'Afrobeat',
+    colors:['#fb923c','#facc15','#34d399','#a78bfa','#f472b6','#60a5fa'],
+    cats:['Energy','Production','Vocals','Atmosphere','Instrumentation','Replay Value'],
+    weights:[0.20,0.17,0.13,0.13,0.10,0.27]},
+  bollywood:{label:'Bollywood',
+    colors:['#fb923c','#f472b6','#facc15','#34d399','#a78bfa','#60a5fa'],
+    cats:['Vocals','Catchiness','Production','Instrumentation','Emotion','Replay Value'],
+    weights:[0.20,0.16,0.13,0.13,0.11,0.27]},
+  arabic:{label:'Arabic',
+    colors:['#a78bfa','#facc15','#fb923c','#f472b6','#34d399','#60a5fa'],
+    cats:['Vocals','Atmosphere','Instrumentation','Emotion','Songwriting','Replay Value'],
+    weights:[0.22,0.16,0.13,0.12,0.10,0.27]},
+  brazilian:{label:'Brazilian',
+    colors:['#34d399','#fb923c','#facc15','#f472b6','#a78bfa','#60a5fa'],
+    cats:['Vocals','Instrumentation','Atmosphere','Energy','Production','Replay Value'],
+    weights:[0.18,0.17,0.14,0.12,0.12,0.27]},
+  comedy:{label:'Comedy / Spoken',
+    colors:['#facc15','#fb923c','#f472b6','#60a5fa','#a78bfa','#34d399'],
+    cats:['Vocals','Songwriting','Storytelling','Catchiness','Production','Replay Value'],
+    weights:[0.20,0.17,0.13,0.13,0.10,0.27]},
+  newage:{label:'New Age / Ambient',
+    colors:['#60a5fa','#a78bfa','#34d399','#f472b6','#fb923c','#facc15'],
+    cats:['Atmosphere','Instrumentation','Production','Emotion','Build-Up','Replay Value'],
+    weights:[0.25,0.20,0.15,0.12,0.08,0.20]},
+  general:{label:'General',
+    colors:['#a78bfa','#fb923c','#f472b6','#facc15','#34d399','#60a5fa'],
+    cats:['Vocals','Production','Songwriting','Replay Value','Emotion','Catchiness'],
+    weights:[0.20,0.18,0.15,0.22,0.13,0.12]}
 };
+// Slugs in the order the user originally locked in — useful for UI to render
+// the "core" genres distinctly from auto-detected ones if needed later.
+const LOCKED_GENRES=['rap','pop','country','rock','rnb','edm','hyperpop','alternative'];
 
 // AUTH
 let authMode='in';
@@ -3871,6 +4047,21 @@ async function loadProfile(){
       </div>`;
   } else {
     astEl.innerHTML='';
+  }
+
+  // Aux Battle record (always shown — defaults to 0–0)
+  const auxEl=document.getElementById('profile-aux-record');
+  if(auxEl){
+    _abInvalidateRecordCache(currentUser.id);
+    const rec=await getAuxBattleRecord(currentUser.id);
+    auxEl.innerHTML=renderAuxRecordCardHTML(rec,'full');
+  }
+
+  // Aux Battle history list
+  const histEl=document.getElementById('profile-aux-history');
+  if(histEl){
+    _abHistoryState.limits[histEl.id]=null; // reset per profile open
+    loadAuxBattleHistoryView(currentUser.id,histEl);
   }
 
   // Milestones
@@ -5178,6 +5369,8 @@ async function openUserModal(userId){
   document.getElementById('upo-nav-title').textContent='Loading…';
   document.getElementById('upo-header').innerHTML=`<div class="um-center"><div class="um-avatar" style="background:var(--surface2);margin:0 auto .75rem"></div><div class="um-name" style="color:var(--muted)">Loading…</div></div>`;
   document.getElementById('upo-stats').innerHTML='';
+  const _upoAux=document.getElementById('upo-aux-record');if(_upoAux)_upoAux.innerHTML='';
+  const _upoHist=document.getElementById('upo-aux-history');if(_upoHist)_upoHist.innerHTML='';
   document.getElementById('upo-follow').innerHTML='';
   document.getElementById('upo-ratings').innerHTML='';
 
@@ -5226,6 +5419,20 @@ async function openUserModal(userId){
     <div><span class="um-stat-val" style="color:${scoreColor(parseFloat(avg)||0)}">${avg}</span><span class="um-stat-lbl">Avg</span></div>
     <div><span class="um-stat-val">${followerCount}</span><span class="um-stat-lbl">Followers</span></div>`;
   document.getElementById('upo-follow').innerHTML=btnHtml+followsYou;
+
+  // Aux Battle record (other user) — refresh cache for accuracy
+  const auxRecEl=document.getElementById('upo-aux-record');
+  if(auxRecEl){
+    _abInvalidateRecordCache(userId);
+    const rec=await getAuxBattleRecord(userId);
+    auxRecEl.innerHTML=renderAuxRecordCardHTML(rec,'compact');
+  }
+  // Aux Battle history (other user)
+  const auxHistEl=document.getElementById('upo-aux-history');
+  if(auxHistEl){
+    _abHistoryState.limits[auxHistEl.id]=null;
+    loadAuxBattleHistoryView(userId,auxHistEl);
+  }
 
   const ratingsEl=document.getElementById('upo-ratings');
   if(!ratings.length){
@@ -5398,6 +5605,14 @@ function selectGenre(g){
     if(noHook){noHook=false;document.getElementById('no-hook-btn')?.classList.remove('active');}
   }
   update();
+}
+
+// Called from the dropdown's onchange. Treats the change as a manual override
+// and clears the auto-detected badge so the user sees that they've taken control.
+function userPickedGenre(g){
+  const badge=document.getElementById('genre-auto-badge');
+  if(badge)badge.style.display='none';
+  selectGenre(g);
 }
 
 function renderGenericCats(preset){
@@ -5895,6 +6110,109 @@ function deezerFetch(url){
   });
 }
 
+// ─── Deezer → SONGR genre detection ───────────────────────────────────────────
+// SONGR genre buckets: rap, pop, rnb, rock, country, edm, hyperpop, alternative
+const _deezerAlbumGenreCache={};
+const _deezerAlbumGenreFetching=new Map(); // albumId → in-flight promise
+
+const _DEEZER_GENRE_EXACT={
+  'rap/hip hop':'rap','hip hop':'rap','rap':'rap',
+  'pop':'pop',
+  'r&b':'rnb','r&b/soul':'rnb','rnb':'rnb',
+  'soul & funk':'soul','soul':'soul','neo-soul':'soul','neo soul':'soul',
+  'funk':'funk',
+  'rock':'rock','metal':'rock','punk':'rock',
+  'country':'country','country & western':'country','folk':'country','americana':'country','singer/songwriter':'country',
+  'dance':'edm','electro':'edm','house':'edm','techno':'edm','edm':'edm','trance':'edm','dubstep':'edm','drum & bass':'edm','drum and bass':'edm',
+  'hyperpop':'hyperpop',
+  'alternative':'alternative','indie':'alternative','pop indé':'alternative',
+  'jazz':'jazz',
+  'blues':'blues',
+  'reggae':'reggae','dancehall':'reggae','ska':'reggae','reggae & dub':'reggae','dub':'reggae',
+  'latin':'latin','latin music':'latin','reggaeton':'latin','salsa':'latin','bachata':'latin','merengue':'latin','cumbia':'latin',
+  'classical':'classical','baroque':'classical','opera':'classical','orchestral':'classical',
+  'films/games':'soundtrack','soundtrack':'soundtrack','film score':'soundtrack','original score':'soundtrack','tv shows':'soundtrack','video game music':'soundtrack',
+  'k-pop':'kpop','kpop':'kpop','korean pop':'kpop',
+  'j-pop':'jpop','jpop':'jpop','japanese pop':'jpop','anime':'jpop',
+  'gospel':'gospel','christian':'gospel','christian/gospel':'gospel','worship':'gospel','contemporary christian':'gospel',
+  'holiday':'holiday','christmas':'holiday',
+  'children\'s music':'kids','enfants':'kids','kids':'kids',
+  'afrobeat':'afrobeat','afrobeats':'afrobeat','afropop':'afrobeat',
+  'bollywood':'bollywood','indian':'bollywood','indian music':'bollywood','hindi':'bollywood','punjabi':'bollywood',
+  'arabic':'arabic','arabic music':'arabic','arabesque':'arabic',
+  'brazilian':'brazilian','brazilian music':'brazilian','bossa nova':'brazilian','samba':'brazilian','mpb':'brazilian','sertanejo':'brazilian',
+  'comedy':'comedy','spoken word':'comedy','audiobooks':'comedy','spoken':'comedy','stand-up':'comedy',
+  'new age':'newage','easy listening':'newage','ambient':'newage','meditation':'newage','vocal':'newage',
+  'world':'world','world music':'world','asian music':'world','african':'world','middle east':'world','variété internationale':'world','variété française':'world'
+};
+// Ordered keyword scan — first match wins. More specific terms come first
+// (e.g. "hip hop" before "pop", "indie" before "rock", "k-pop" before "pop")
+// so subgenres land in their own bucket instead of collapsing.
+const _DEEZER_GENRE_KEYWORDS=[
+  ['hyperpop','hyperpop'],
+  // Regional pops before generic 'pop'
+  ['k-pop','kpop'],['kpop','kpop'],['korean','kpop'],
+  ['j-pop','jpop'],['jpop','jpop'],['japanese','jpop'],['anime','jpop'],
+  ['bollywood','bollywood'],['hindi','bollywood'],['punjabi','bollywood'],['indian','bollywood'],
+  ['afrobeat','afrobeat'],['afrobeats','afrobeat'],['afropop','afrobeat'],
+  ['hip hop','rap'],['hip-hop','rap'],['rap','rap'],['trap','rap'],['drill','rap'],
+  ['neo-soul','soul'],['neo soul','soul'],['soul','soul'],
+  ['funk','funk'],
+  ['r&b','rnb'],['rnb','rnb'],
+  ['reggaeton','latin'],['salsa','latin'],['bachata','latin'],['merengue','latin'],['cumbia','latin'],['latin','latin'],
+  ['bossa','brazilian'],['samba','brazilian'],['mpb','brazilian'],['sertanejo','brazilian'],['brazilian','brazilian'],
+  ['dancehall','reggae'],['reggae','reggae'],['ska','reggae'],['dub','reggae'],
+  ['blues','blues'],
+  ['jazz','jazz'],
+  ['baroque','classical'],['opera','classical'],['orchestral','classical'],['classical','classical'],
+  ['film score','soundtrack'],['original score','soundtrack'],['soundtrack','soundtrack'],['films/games','soundtrack'],['video game','soundtrack'],['tv show','soundtrack'],
+  ['indie','alternative'],['indé','alternative'],['alternative','alternative'],
+  ['country','country'],['folk','country'],['americana','country'],['singer/songwriter','country'],
+  ['gospel','gospel'],['christian','gospel'],['worship','gospel'],
+  ['christmas','holiday'],['holiday','holiday'],
+  ['children','kids'],['enfants','kids'],['kids','kids'],
+  ['arabic','arabic'],['arabesque','arabic'],
+  ['electro','edm'],['dance','edm'],['house','edm'],['techno','edm'],['edm','edm'],['trance','edm'],['dubstep','edm'],['drum & bass','edm'],['drum and bass','edm'],
+  ['metal','rock'],['punk','rock'],['rock','rock'],
+  ['comedy','comedy'],['spoken','comedy'],['stand-up','comedy'],['audiobook','comedy'],
+  ['new age','newage'],['easy listening','newage'],['ambient','newage'],['meditation','newage'],
+  ['world','world'],['asian','world'],['african','world'],['middle east','world'],['variété','world'],
+  ['pop','pop']
+];
+
+function mapDeezerGenresToSongr(deezerNames){
+  if(!deezerNames||!deezerNames.length)return 'general';
+  const norm=deezerNames.map(n=>(n||'').toLowerCase().trim()).filter(Boolean);
+  for(const n of norm){if(_DEEZER_GENRE_EXACT[n])return _DEEZER_GENRE_EXACT[n];}
+  for(const [kw,genre] of _DEEZER_GENRE_KEYWORDS){
+    if(norm.some(n=>n.includes(kw)))return genre;
+  }
+  return 'general';
+}
+
+async function getDeezerAlbumGenre(albumId){
+  if(!albumId)return null;
+  const key=String(albumId);
+  if(_deezerAlbumGenreCache[key]!==undefined)return _deezerAlbumGenreCache[key];
+  if(_deezerAlbumGenreFetching.has(key))return _deezerAlbumGenreFetching.get(key);
+  const p=(async()=>{
+    try{
+      const data=await deezerFetch('https://api.deezer.com/album/'+encodeURIComponent(key));
+      const names=(data?.genres?.data||[]).map(g=>g?.name).filter(Boolean);
+      const mapped=mapDeezerGenresToSongr(names);
+      _deezerAlbumGenreCache[key]=mapped;
+      return mapped;
+    }catch(e){
+      _deezerAlbumGenreCache[key]=null;
+      return null;
+    }finally{
+      _deezerAlbumGenreFetching.delete(key);
+    }
+  })();
+  _deezerAlbumGenreFetching.set(key,p);
+  return p;
+}
+
 const artworkCache={};
 const artworkFetching=new Set();
 
@@ -5951,7 +6269,7 @@ async function filterSongPicker(){
       });
       const words=q.toLowerCase().split(/\s+/).filter(w=>w.length>1);
       const score=(song,artist)=>{const h=(song+' '+artist).toLowerCase();return words.reduce((n,w)=>n+(h.includes(w)?1:0),0);};
-      songPickerMatches=all.map((r,i)=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',artwork:r.album?.cover_medium||'',preview:r.preview||'',_score:score(r.title,r.artist.name),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
+      songPickerMatches=all.map((r,i)=>({song:r.title,artist:r.artist.name,album:r.album?.title||'',album_id:r.album?.id?String(r.album.id):null,artwork:r.album?.cover_medium||'',preview:r.preview||'',_score:score(r.title,r.artist.name),_rank:i})).sort((a,b)=>b._score-a._score||a._rank-b._rank);
     }catch(e){}
     renderSongDropdown(resultsEl,songPickerMatches,false);
   },350);
@@ -5985,7 +6303,36 @@ function selectSong(idx){
   document.getElementById('song-picker-selected').style.display='flex';
   document.getElementById('song-picker-input-wrap').style.display='none';
   document.getElementById('song-picker-results').style.display='none';
+  autoDetectAndApplyGenre(selectedSong);
   update();
+}
+
+// Best-effort genre detection from Deezer's album metadata. If we have an
+// album_id we use it directly; otherwise we fall back to an artist+album
+// search so manual/local entries still try to auto-classify. Failures are
+// silent — the user's manual selection (or default) stays intact.
+async function autoDetectAndApplyGenre(song){
+  if(!song)return;
+  try{
+    let albumId=song.album_id||null;
+    if(!albumId&&song.artist&&song.album){
+      const d=await deezerFetch('https://api.deezer.com/search/album?q='+encodeURIComponent(song.artist+' '+song.album)+'&limit=1');
+      albumId=d?.data?.[0]?.id?String(d.data[0].id):null;
+      if(albumId)song.album_id=albumId;
+    }
+    if(!albumId)return;
+    const detected=await getDeezerAlbumGenre(albumId);
+    if(!detected||!GENRE_PRESETS[detected])return;
+    if(detected===currentGenre)return;
+    const sel=document.getElementById('genre-select');
+    if(sel)sel.value=detected;
+    selectGenre(detected);
+    const lbl=document.getElementById('genre-auto-badge');
+    if(lbl){
+      lbl.textContent=`Auto · ${GENRE_PRESETS[detected].label||detected}`;
+      lbl.style.display='inline-block';
+    }
+  }catch(e){/* swallow — fallback to manual selection */}
 }
 
 function showManualEntry(){
@@ -6032,6 +6379,8 @@ function confirmManualSong(){
 function clearSongPicker(){
   stopPreview();
   selectedSong=null;
+  const badge=document.getElementById('genre-auto-badge');
+  if(badge)badge.style.display='none';
   document.getElementById('song-picker-selected').style.display='none';
   document.getElementById('song-picker-manual').style.display='none';
   document.getElementById('song-picker-input-wrap').style.display='block';
@@ -7875,6 +8224,11 @@ let abMyRatingA=null, abMyRatingB=null, abRoomsSubject='rankroom';
 // Rap-mode "No Hook" / "Lyrics Don't Matter" flags per side, per round
 let abMyNoHookA=false, abMyNoLyricsA=false, abMyNoHookB=false, abMyNoLyricsB=false;
 let _abSongCount=5, _abMode='ratings', _abSecret=true, _abFeatures=false, _abPrivate=false, _abGenre='rap';
+// Rematch voting state — persists per battle session in memory.
+let _abRematchVoters=new Set();
+let _abMyRematchVote=false;
+let _abRematchInProgress=false;
+function _abResetRematchVoteState(){_abRematchVoters=new Set();_abMyRematchVote=false;_abRematchInProgress=false;}
 
 // Returns the exact same rating preset as the Rank tab uses for this genre.
 // For 'rap' returns the rank-tab's 6-cat preset (Replay/Flow/Beat/Chorus/Verses/Lyrics);
@@ -7949,6 +8303,7 @@ let abLobbyPoll=null, abRatingSide='A', abPresence={};
 let abBans=[], abPendingBan=null, abBanMatches=[], abBanTimer=null;
 let _abAlbumPickSide=null, _abAlbumSearchTimer=null;
 let _abCreateMode='manual', _abWheelArtists=[], _abWheelArtistTimer=null;
+let _abSavedWheels=[];
 
 function abIsBanned(song){
   if(!abBans.length)return false;
@@ -7982,17 +8337,23 @@ async function loadAuxBattles(){
   const{data,error}=await db.from('aux_battles').select('*,player_a:player_a_id(id,username,avatar_color,avatar_url),player_b:player_b_id(id,username,avatar_color,avatar_url)').eq('is_private',false).order('created_at',{ascending:false}).limit(40);
   if(error){el.innerHTML='<div class="feed-empty">Failed to load.</div>';console.error(error);return;}
   if(!data?.length){el.innerHTML='<div class="feed-empty">No battles yet. Create the first!</div>';return;}
-  el.innerHTML=(data||[]).map(b=>`<div class="ab-card">
+  el.innerHTML=(data||[]).map(b=>{
+    const isSingle=abIsSingleArtist(b);
+    const artistsLine=isSingle
+      ?`${esc(b.artist_a||'?')} <span style="color:var(--muted);font-style:normal;font-size:.7rem">· Single Artist</span>`
+      :`${esc(b.artist_a)} <span style="color:var(--muted);font-style:normal">vs</span> ${esc(b.artist_b)}`;
+    return`<div class="ab-card">
     <div class="ab-card-name">${esc(b.name)}</div>
-    <div class="ab-card-artists">${esc(b.artist_a)} <span style="color:var(--muted);font-style:normal">vs</span> ${esc(b.artist_b)}</div>
+    <div class="ab-card-artists">${artistsLine}</div>
     <div class="ab-card-meta" style="margin-bottom:.55rem">
       <span class="ab-pill">${b.song_count} songs</span>
       <span class="ab-pill">Ratings</span>
+      ${isSingle?'<span class="ab-pill" style="color:var(--gold);border-color:var(--gold)">🎤 Single Artist</span>':''}
       ${b.secret_draft?'<span class="ab-pill">Secret Draft</span>':''}
       <span class="ab-pill ${b.status==='final'?'':'active'}">${b.status==='lobby'?'Lobby':b.status==='drafting'?'Drafting':b.status==='round_active'?'Live':b.status==='round_result'?'Round Result':b.status==='final'?'Final':'In Progress'}</span>
     </div>
     <button onclick="openAuxBattle('${escJs(b.id)}')" style="width:100%;padding:.5rem;background:transparent;border:1px solid var(--border2);color:var(--gold);border-radius:.35rem;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;cursor:pointer">${b.status==='final'?'View Results':'Join / View'}</button>
-  </div>`).join('');
+  </div>`;}).join('');
 }
 
 // ─── Create modal helpers ────────────────────────────────────────────────────
@@ -8074,16 +8435,24 @@ function openCreateAuxBattleModal(){
   document.getElementById('ab-create-name').value='';
   document.getElementById('ab-create-artist-a').value='';
   document.getElementById('ab-create-artist-b').value='';
-  ['a','b'].forEach(side=>{
+  const singleInp=document.getElementById('ab-create-artist-single');
+  if(singleInp)singleInp.value='';
+  ['a','b','single'].forEach(side=>{
     const r=document.getElementById('ab-create-artist-'+side+'-results');
     if(r){r.style.display='none';r.innerHTML='';r._results=null;}
   });
-  _abCreateMode='manual';_abWheelArtists=[];
+  _abCreateMode='manual';_abWheelArtists=[];_abSingleSubMode='manual';
   document.getElementById('ab-wheel-artist-input').value='';
+  const wInpS=document.getElementById('ab-wheel-artist-input-single');
+  if(wInpS)wInpS.value='';
   const wr=document.getElementById('ab-wheel-artist-results');
   if(wr){wr.style.display='none';wr.innerHTML='';wr._results=null;}
+  const wrS=document.getElementById('ab-wheel-artist-results-single');
+  if(wrS){wrS.style.display='none';wrS.innerHTML='';wrS._results=null;}
   renderAbWheelArtistChips();
+  renderAbWheelArtistChipsSingle();
   setAbCreateMode('manual');
+  loadUserWheels();
   document.getElementById('ab-custom-count').value='';
   document.getElementById('ab-custom-count-wrap').style.display='none';
   document.getElementById('create-ab-err').textContent='';
@@ -8096,12 +8465,403 @@ function openCreateAuxBattleModal(){
 }
 function closeCreateAuxBattleModal(){document.getElementById('create-ab-modal').classList.remove('open');}
 
+let _abSingleSubMode='manual';
+
 function setAbCreateMode(mode){
   _abCreateMode=mode;
   document.getElementById('ab-mode-manual').classList.toggle('active',mode==='manual');
   document.getElementById('ab-mode-wheel').classList.toggle('active',mode==='wheel');
+  document.getElementById('ab-mode-single')?.classList.toggle('active',mode==='single');
   document.getElementById('ab-create-mode-manual').style.display=mode==='manual'?'':'none';
   document.getElementById('ab-create-mode-wheel').style.display=mode==='wheel'?'':'none';
+  const singleEl=document.getElementById('ab-create-mode-single');
+  if(singleEl)singleEl.style.display=mode==='single'?'':'none';
+  if(mode==='single'){setAbSingleSubMode(_abSingleSubMode||'manual');renderAbWheelArtistChipsSingle();}
+}
+
+function setAbSingleSubMode(sub){
+  _abSingleSubMode=sub;
+  document.getElementById('ab-single-sub-manual')?.classList.toggle('active',sub==='manual');
+  document.getElementById('ab-single-sub-wheel')?.classList.toggle('active',sub==='wheel');
+  const mp=document.getElementById('ab-single-sub-manual-panel');
+  const wp=document.getElementById('ab-single-sub-wheel-panel');
+  if(mp)mp.style.display=sub==='manual'?'':'none';
+  if(wp)wp.style.display=sub==='wheel'?'':'none';
+  if(sub==='wheel')loadUserWheelsSingle();
+}
+
+function abWheelArtistSearchSingle(){
+  clearTimeout(_abWheelArtistTimer);
+  const input=document.getElementById('ab-wheel-artist-input-single');
+  const resEl=document.getElementById('ab-wheel-artist-results-single');
+  if(!input||!resEl)return;
+  const q=(input.value||'').trim();
+  if(!q){resEl.style.display='none';resEl.innerHTML='';return;}
+  resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.52rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">SEARCHING…</div>';
+  resEl.style.display='block';
+  _abWheelArtistTimer=setTimeout(async()=>{
+    try{
+      const d=await deezerFetch('https://api.deezer.com/search/artist?q='+encodeURIComponent(q)+'&limit=15');
+      const all=(d.data||[]).filter(a=>a&&a.name);
+      resEl._results=all;
+      resEl.innerHTML=all.map((a,i)=>{
+        const img=a.picture_small||a.picture||'';
+        const already=_abWheelArtists.some(x=>x.toLowerCase()===a.name.toLowerCase());
+        return`<div style="display:flex;align-items:center;gap:.65rem;padding:.55rem .85rem;border-bottom:1px solid var(--border);cursor:${already?'not-allowed':'pointer'};opacity:${already?'.4':'1'}" ${already?'':`onclick="abWheelPickResultSingle(${i})"`}>
+          ${img?`<img src="${esc(img)}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>`}
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.name)}</div>
+          </div>
+          ${already?`<div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">ADDED</div>`:''}
+        </div>`;
+      }).join('')||`<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">No artists found</div>`;
+    }catch(e){resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted)">Search failed</div>';}
+  },350);
+}
+
+function abWheelPickResultSingle(i){
+  const resEl=document.getElementById('ab-wheel-artist-results-single');
+  const a=(resEl._results||[])[i];
+  if(!a)return;
+  if(_abWheelArtists.some(x=>x.toLowerCase()===a.name.toLowerCase()))return;
+  _abWheelArtists.push(a.name);
+  renderAbWheelArtistChipsSingle();
+  document.getElementById('ab-wheel-artist-input-single').value='';
+  resEl.style.display='none';resEl.innerHTML='';resEl._results=null;
+}
+
+function abRemoveWheelArtistSingle(i){
+  _abWheelArtists.splice(i,1);
+  renderAbWheelArtistChipsSingle();
+}
+
+function renderAbWheelArtistChipsSingle(){
+  const el=document.getElementById('ab-wheel-artist-chips-single');
+  if(!el)return;
+  if(!_abWheelArtists.length){
+    el.innerHTML='<div style="font-size:.55rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-style:italic">No artists added yet…</div>';
+    return;
+  }
+  el.innerHTML=_abWheelArtists.map((a,i)=>`<div style="display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .55rem;background:var(--surface2);border:1px solid var(--border2);border-radius:99px;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;color:var(--text)">${esc(a)}<button onclick="abRemoveWheelArtistSingle(${i})" style="background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:.85rem;line-height:1;padding:0 .1rem">×</button></div>`).join('');
+}
+
+async function loadUserWheelsSingle(){
+  if(!currentUser){_abSavedWheels=[];renderAbSavedWheelsSingle();return;}
+  const{data,error}=await db.from('user_wheels').select('*').eq('user_id',currentUser.id).order('updated_at',{ascending:false});
+  if(error){console.error('load wheels failed',error);_abSavedWheels=[];}
+  else _abSavedWheels=data||[];
+  renderAbSavedWheelsSingle();
+}
+
+function renderAbSavedWheelsSingle(){
+  const el=document.getElementById('ab-saved-wheels-single');
+  if(!el)return;
+  if(!_abSavedWheels.length){
+    el.innerHTML='<div style="font-size:.55rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-style:italic">No saved wheels yet — build one below and save it.</div>';
+    return;
+  }
+  el.innerHTML=_abSavedWheels.map(w=>{
+    const artists=Array.isArray(w.artists)?w.artists:(()=>{try{return JSON.parse(w.artists)||[];}catch(e){return[];}})();
+    return`<div style="display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .25rem .25rem .55rem;background:var(--surface2);border:1px solid var(--gold);border-radius:99px;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;color:var(--gold)">
+      <button onclick="loadSavedWheelSingle('${escJs(w.id)}')" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font:inherit;padding:0;letter-spacing:inherit" title="Load this wheel">${esc(w.name)} <span style="color:var(--muted);font-weight:500">· ${artists.length}</span></button>
+      <button onclick="deleteSavedWheel('${escJs(w.id)}','${escJs(w.name)}')" style="background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:.85rem;line-height:1;padding:0 .15rem" title="Delete">×</button>
+    </div>`;
+  }).join('');
+}
+
+function loadSavedWheelSingle(id){
+  const w=_abSavedWheels.find(x=>x.id===id);
+  if(!w)return;
+  const artists=Array.isArray(w.artists)?w.artists:(()=>{try{return JSON.parse(w.artists)||[];}catch(e){return[];}})();
+  _abWheelArtists=artists.slice();
+  renderAbWheelArtistChipsSingle();
+}
+
+async function saveCurrentWheelSingle(){
+  if(!currentUser){alert('Sign in first.');return;}
+  if(_abWheelArtists.length<2){alert('Add at least 2 artists before saving.');return;}
+  const name=(prompt('Name this wheel:','')||'').trim();
+  if(!name)return;
+  const{data,error}=await db.from('user_wheels').insert({user_id:currentUser.id,name,artists:_abWheelArtists.slice()}).select('*').single();
+  if(error){alert('Save failed: '+error.message);console.error(error);return;}
+  _abSavedWheels=[data,..._abSavedWheels];
+  renderAbSavedWheelsSingle();
+}
+
+// ─── Aux Battle W/L Records ───────────────────────────────────────────────
+// Records are computed on the fly from finished aux_battles rows so they
+// stay perfectly in sync without a separate counters table.
+const _abRecordCache={};
+async function getAuxBattleRecord(userId){
+  if(!userId)return{wins:0,losses:0,ties:0};
+  const cached=_abRecordCache[userId];
+  if(cached&&(Date.now()-cached.at<60000))return cached.value;
+  const{data,error}=await db.from('aux_battles')
+    .select('player_a_id,player_b_id,winner_side')
+    .eq('status','final')
+    .or(`player_a_id.eq.${userId},player_b_id.eq.${userId}`);
+  if(error||!data){
+    if(cached)return cached.value;
+    return{wins:0,losses:0,ties:0};
+  }
+  let wins=0,losses=0,ties=0;
+  data.forEach(b=>{
+    const wasA=b.player_a_id===userId;
+    const wasB=b.player_b_id===userId;
+    if(!wasA&&!wasB)return;
+    if(b.winner_side==='A'){if(wasA)wins++;else losses++;}
+    else if(b.winner_side==='B'){if(wasB)wins++;else losses++;}
+    else ties++;
+  });
+  const value={wins,losses,ties};
+  _abRecordCache[userId]={at:Date.now(),value};
+  return value;
+}
+function _abInvalidateRecordCache(userId){
+  if(userId){delete _abRecordCache[userId];return;}
+  Object.keys(_abRecordCache).forEach(k=>delete _abRecordCache[k]);
+}
+
+// History list — finished aux battles where this user was a player.
+async function getAuxBattleHistory(userId,limit){
+  if(!userId)return[];
+  const lim=limit||30;
+  const{data,error}=await db.from('aux_battles')
+    .select('id,code,name,artist_a,artist_b,player_a_id,player_b_id,winner_side,final_score_a,final_score_b,song_count,created_at,winner_mode,duel_mode,secret_draft,wheel_artists,allow_features')
+    .eq('status','final')
+    .or(`player_a_id.eq.${userId},player_b_id.eq.${userId}`)
+    .order('created_at',{ascending:false})
+    .limit(lim);
+  if(error||!data)return[];
+  return data;
+}
+function formatAuxRecord(rec){
+  if(!rec)return'0–0';
+  const total=rec.wins+rec.losses+rec.ties;
+  if(total===0)return'No battles yet';
+  return rec.ties>0?`${rec.wins}–${rec.losses}–${rec.ties}`:`${rec.wins}–${rec.losses}`;
+}
+function auxRecordPctLabel(rec){
+  if(!rec)return null;
+  const total=rec.wins+rec.losses;
+  if(total===0)return null;
+  return Math.round((rec.wins/total)*100)+'% WR';
+}
+
+// Profile card markup for an aux battle record. `variant` is 'full' (own
+// profile) or 'compact' (other-user overlay).
+function renderAuxRecordCardHTML(rec,variant){
+  if(!rec)return'';
+  const total=rec.wins+rec.losses+rec.ties;
+  const wrLabel=auxRecordPctLabel(rec);
+  if(variant==='compact'){
+    return`<div style="background:var(--surface);border:1px solid var(--border2);border-radius:.5rem;padding:.6rem .75rem;margin-top:.4rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted2)">⚔ Aux Battle Record</div>
+        ${wrLabel?`<div style="font-family:'DM Mono',monospace;font-size:.58rem;font-weight:700;color:var(--gold)">${wrLabel}</div>`:''}
+      </div>
+      <div style="display:flex;align-items:baseline;gap:.45rem;font-family:'DM Mono',monospace;font-size:.85rem;font-weight:700">
+        <span style="color:var(--green)">${rec.wins}W</span>
+        <span style="color:var(--muted2);font-size:.7rem">·</span>
+        <span style="color:#f472b6">${rec.losses}L</span>
+        ${rec.ties>0?`<span style="color:var(--muted2);font-size:.7rem">·</span><span style="color:var(--muted2)">${rec.ties}T</span>`:''}
+        <span style="color:var(--muted);font-size:.55rem;margin-left:auto;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase">${total} battle${total===1?'':'s'}</span>
+      </div>
+    </div>`;
+  }
+  // Full variant — matches the look of profile-stats / artist-stats blocks
+  return`<div class="pf-artist-stats" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="pf-astat">
+      <div class="pf-astat-lbl">⚔ Battles Won</div>
+      <div class="pf-astat-val" style="color:var(--green)">${rec.wins}</div>
+      <div class="pf-astat-name" style="color:var(--muted)">of ${total}</div>
+    </div>
+    <div class="pf-astat">
+      <div class="pf-astat-lbl">Battles Lost</div>
+      <div class="pf-astat-val" style="color:#f472b6">${rec.losses}${rec.ties>0?` <span style="font-size:.55rem;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em">+ ${rec.ties}T</span>`:''}</div>
+      <div class="pf-astat-name" style="color:var(--muted)">${total===0?'No battles yet':'finished'}</div>
+    </div>
+    <div class="pf-astat" style="border-right:none">
+      <div class="pf-astat-lbl">Win Rate</div>
+      <div class="pf-astat-val" style="color:var(--gold)">${wrLabel?wrLabel.replace(' WR',''):'—'}</div>
+      <div class="pf-astat-name" style="color:var(--muted)">aux battles</div>
+    </div>
+  </div>`;
+}
+
+// Render the aux battle history list into the given container element.
+// `forUserId` is the user whose history we're showing; outcome is computed
+// from their perspective ("W" if they won, "L" if they lost, "T" otherwise).
+const _abHistoryState={limits:{}};
+async function loadAuxBattleHistoryView(forUserId,container){
+  if(!container)return;
+  container.innerHTML=`<div style="padding:.85rem 1.25rem;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted)">Loading battle history…</div>`;
+  const battles=await getAuxBattleHistory(forUserId,50);
+  if(!battles.length){
+    container.innerHTML=`<div style="padding:1.5rem 1.25rem;text-align:center;color:var(--muted);font-size:.62rem;font-style:italic;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface)">No aux battles yet</div>`;
+    return;
+  }
+  const oppIds=new Set();
+  battles.forEach(b=>{const oppId=b.player_a_id===forUserId?b.player_b_id:b.player_a_id;if(oppId)oppIds.add(oppId);});
+  const oppMap={};
+  if(oppIds.size){
+    const{data:profs}=await db.from('profiles').select('id,username,avatar_color,avatar_url').in('id',[...oppIds]);
+    (profs||[]).forEach(p=>{oppMap[p.id]=p;profileMap[p.id]=p;});
+  }
+  const limKey=container.id||forUserId;
+  if(_abHistoryState.limits[limKey]==null)_abHistoryState.limits[limKey]=Math.min(8,battles.length);
+  const limit=_abHistoryState.limits[limKey];
+  container.dataset.forUid=forUserId;
+  const visible=battles.slice(0,limit);
+  const remaining=battles.length-visible.length;
+  container.innerHTML=`
+    <div class="ab-section-lbl" style="padding:1rem 1.25rem .35rem">⚔ Aux Battle History · ${battles.length}</div>
+    <div style="border-top:1px solid var(--border)">
+      ${visible.map(b=>renderAuxHistoryRowHTML(b,forUserId,oppMap)).join('')}
+    </div>
+    ${remaining>0?`<button onclick="auxHistoryShowMore('${escJs(limKey)}','${escJs(forUserId)}')" style="display:block;width:calc(100% - 2.5rem);margin:.6rem 1.25rem .25rem;padding:.55rem;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:.4rem">Show ${Math.min(8,remaining)} more (${remaining} hidden)</button>`:''}
+  `;
+}
+async function auxHistoryShowMore(limKey,uid){
+  _abHistoryState.limits[limKey]=(_abHistoryState.limits[limKey]||0)+8;
+  // Find the container by trying both known IDs
+  const container=document.getElementById(limKey)||document.getElementById('profile-aux-history')||document.getElementById('upo-aux-history');
+  if(container)await loadAuxBattleHistoryView(uid,container);
+}
+function renderAuxHistoryRowHTML(b,forUserId,oppMap){
+  const wasA=b.player_a_id===forUserId;
+  const mySide=wasA?'A':'B';
+  const oppSide=wasA?'B':'A';
+  const oppId=wasA?b.player_b_id:b.player_a_id;
+  const opp=oppMap[oppId]||{username:'Unknown',avatar_color:'#5c5a80'};
+  const myArtist=wasA?b.artist_a:b.artist_b;
+  const oppArtist=wasA?b.artist_b:b.artist_a;
+  const myScore=wasA?b.final_score_a:b.final_score_b;
+  const oppScore=wasA?b.final_score_b:b.final_score_a;
+  const didWin=b.winner_side===mySide;
+  const didLose=b.winner_side===oppSide;
+  const outcomeText=didWin?'W':didLose?'L':'T';
+  const outcomeColor=didWin?'var(--green)':didLose?'#f472b6':'var(--muted2)';
+  const isSingleArt=abIsSingleArtist(b);
+  const matchupText=isSingleArt?`<span style="color:var(--gold)">🎤 ${esc(b.artist_a||'?')}</span> <span style="color:var(--muted);font-size:.55rem">(single)</span>`:`<span style="color:var(--gold)">${esc(myArtist||'?')}</span> <span style="color:var(--muted);font-weight:500">vs</span> <span style="color:#f472b6">${esc(oppArtist||'?')}</span>`;
+  const fmtScore=v=>(v==null?'–':parseFloat(v).toFixed(0));
+  const detailId=`ab-hist-detail-${b.id}-${forUserId}`;
+  return`<div style="border-bottom:1px solid var(--border);background:var(--surface)" id="ab-hist-row-${esc(b.id)}-${esc(forUserId)}">
+    <div onclick="toggleAuxHistoryExpand('${escJs(b.id)}','${escJs(forUserId)}')" style="display:flex;align-items:center;gap:.7rem;padding:.7rem 1.25rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
+      <div style="width:34px;height:34px;border-radius:.4rem;background:${outcomeColor}1f;border:1.5px solid ${outcomeColor};display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:${outcomeColor};flex-shrink:0">${outcomeText}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${matchupText}</div>
+        <div style="font-size:.52rem;color:var(--muted2);margin-top:.15rem;display:flex;align-items:center;gap:.35rem">
+          <span>vs @${esc(opp.username)}</span>
+          <span style="color:var(--muted)">·</span>
+          <span>${timeAgo(b.created_at)}</span>
+          ${b.duel_mode?`<span style="color:var(--muted)">·</span><span style="color:var(--gold)">Duel</span>`:''}
+          ${b.secret_draft?`<span style="color:var(--muted)">·</span><span>Secret</span>`:''}
+        </div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text);text-align:right;flex-shrink:0;line-height:1.15">
+        <div style="font-weight:700"><span style="color:${didWin?'var(--green)':'var(--text)'}">${fmtScore(myScore)}</span><span style="color:var(--muted);margin:0 .15rem">–</span><span style="color:${didLose?'#f472b6':'var(--text)'}">${fmtScore(oppScore)}</span></div>
+        <div style="font-size:.5rem;color:var(--muted2);margin-top:.15rem;letter-spacing:.06em">${b.song_count}-song</div>
+      </div>
+      <div id="${detailId}-chev" style="color:var(--muted);font-size:.55rem;flex-shrink:0;transition:transform .2s">▾</div>
+    </div>
+    <div id="${detailId}" style="display:none;background:var(--bg);padding:.55rem 1.25rem 1rem;border-top:1px solid var(--border)"></div>
+  </div>`;
+}
+async function toggleAuxHistoryExpand(battleId,forUserId){
+  const detailId=`ab-hist-detail-${battleId}-${forUserId}`;
+  const detailEl=document.getElementById(detailId);
+  const chev=document.getElementById(detailId+'-chev');
+  if(!detailEl)return;
+  if(detailEl.style.display!=='none'){
+    detailEl.style.display='none';
+    if(chev)chev.style.transform='';
+    return;
+  }
+  detailEl.style.display='block';
+  if(chev)chev.style.transform='rotate(180deg)';
+  if(detailEl.dataset.loaded==='1')return;
+  detailEl.innerHTML=`<div style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);padding:.45rem 0">Loading details…</div>`;
+  try{
+    const[{data:battle},{data:rounds},{data:picks}]=await Promise.all([
+      db.from('aux_battles').select('*').eq('id',battleId).maybeSingle(),
+      db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number'),
+      db.from('aux_battle_picks').select('*').eq('battle_id',battleId).order('pick_number')
+    ]);
+    if(!battle){detailEl.innerHTML=`<div style="font-size:.6rem;color:var(--muted);padding:.5rem 0;font-style:italic">Details no longer available.</div>`;detailEl.dataset.loaded='1';return;}
+    const wasA=battle.player_a_id===forUserId;
+    const mySide=wasA?'A':'B';
+    const isSingleArt=abIsSingleArtist(battle);
+    const dt=new Date(battle.created_at).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});
+    let html=`
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.55rem .75rem;margin-bottom:.55rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);gap:.5rem;flex-wrap:wrap">
+          <span>Room <span style="color:var(--gold);letter-spacing:.1em">${esc(battle.code||'?')}</span></span>
+          <span>${esc(dt)}</span>
+        </div>
+        ${battle.name?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;color:var(--text);margin-top:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(battle.name)}</div>`:''}
+        <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.4rem">
+          ${isSingleArt?`<span class="ab-pill" style="font-size:.5rem;color:var(--gold);border-color:var(--gold)">🎤 Single</span>`:''}
+          ${battle.duel_mode?`<span class="ab-pill" style="font-size:.5rem;color:var(--gold);border-color:var(--gold)">Duel</span>`:`<span class="ab-pill" style="font-size:.5rem">Audience</span>`}
+          ${battle.secret_draft?`<span class="ab-pill" style="font-size:.5rem">Secret Draft</span>`:''}
+          ${battle.allow_features?`<span class="ab-pill" style="font-size:.5rem">Features OK</span>`:''}
+          <span class="ab-pill" style="font-size:.5rem">${battle.song_count} songs</span>
+        </div>
+      </div>`;
+    if(rounds&&rounds.length){
+      html+=`<div class="ab-section-lbl" style="margin-bottom:.3rem">Round Results</div><div style="background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;overflow:hidden;margin-bottom:.55rem">`;
+      rounds.forEach(r=>{
+        const pa=picks?picks.find(p=>p.side==='A'&&(p.round_position===r.round_number||p.pick_number===r.round_number)):null;
+        const pb=picks?picks.find(p=>p.side==='B'&&(p.round_position===r.round_number||p.pick_number===r.round_number)):null;
+        const winColor=r.winner_side==='A'?'var(--gold)':r.winner_side==='B'?'#f472b6':'var(--muted2)';
+        const winText=r.winner_side==='A'?(pa?.song_name||battle.artist_a):r.winner_side==='B'?(pb?.song_name||battle.artist_b):'Split';
+        const aLine=pa?esc(pa.song_name):'—';
+        const bLine=pb?esc(pb.song_name):'—';
+        const aScore=r.rating_avg_a!=null?parseFloat(r.rating_avg_a).toFixed(1):null;
+        const bScore=r.rating_avg_b!=null?parseFloat(r.rating_avg_b).toFixed(1):null;
+        const youWon=r.winner_side===mySide;
+        const youLost=r.winner_side&&r.winner_side!==mySide&&r.winner_side!=='split';
+        const stripeColor=youWon?'var(--green)':youLost?'#f472b6':'var(--muted2)';
+        html+=`<div style="padding:.45rem .65rem;border-bottom:1px solid var(--border);border-left:2px solid ${stripeColor}">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.15rem">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:800;color:var(--muted);width:1.8rem;flex-shrink:0">R${r.round_number}</div>
+            <div style="flex:1;min-width:0;font-size:.6rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+              <span style="color:var(--gold)">${aLine}</span>${aScore?` <span style="color:var(--muted2);font-family:'DM Mono',monospace">${aScore}</span>`:''}
+              <span style="color:var(--muted);margin:0 .25rem">vs</span>
+              <span style="color:#f472b6">${bLine}</span>${bScore?` <span style="color:var(--muted2);font-family:'DM Mono',monospace">${bScore}</span>`:''}
+            </div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:${winColor};padding-left:2.3rem">→ ${esc(winText)}</div>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+    // Final tally
+    const aFinal=parseFloat(battle.final_score_a||0);
+    const bFinal=parseFloat(battle.final_score_b||0);
+    html+=`<div style="background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.55rem .75rem;display:flex;align-items:center;justify-content:space-between;font-family:'DM Mono',monospace;font-size:.7rem">
+      <div style="flex:1;min-width:0"><span style="color:var(--gold);font-weight:800">${esc(battle.artist_a||'A')}</span></div>
+      <div style="font-weight:700;color:var(--text);padding:0 .5rem">${aFinal} – ${bFinal}</div>
+      <div style="flex:1;min-width:0;text-align:right"><span style="color:#f472b6;font-weight:800">${esc(battle.artist_b||'B')}</span></div>
+    </div>`;
+    detailEl.innerHTML=html;
+    detailEl.dataset.loaded='1';
+  }catch(e){console.error(e);detailEl.innerHTML=`<div style="font-size:.6rem;color:var(--muted);padding:.5rem 0;font-style:italic">Failed to load details.</div>`;}
+}
+
+// Helper: is this battle a Single Artist battle?
+// Primary signal: winner_mode === 'ratings_single'.
+// Fallback signal (if DB has a CHECK constraint on winner_mode): the first entry
+// of wheel_artists is the literal '__single__' sentinel.
+function abIsSingleArtist(b){
+  if(!b)return false;
+  if(b.winner_mode==='ratings_single')return true;
+  const wa=b.wheel_artists;
+  if(Array.isArray(wa)&&wa[0]==='__single__')return true;
+  if(typeof wa==='string'){try{const p=JSON.parse(wa);if(Array.isArray(p)&&p[0]==='__single__')return true;}catch(e){}}
+  // Last-ditch heuristic: artist_a and artist_b filled and equal (case-insensitive)
+  if(b.artist_a&&b.artist_b&&b.artist_a.toLowerCase().trim()===b.artist_b.toLowerCase().trim())return true;
+  return false;
 }
 
 function abWheelArtistSearch(){
@@ -8158,7 +8918,58 @@ function renderAbWheelArtistChips(){
   el.innerHTML=_abWheelArtists.map((a,i)=>`<div style="display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .55rem;background:var(--surface2);border:1px solid var(--border2);border-radius:99px;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;color:var(--text)">${esc(a)}<button onclick="abRemoveWheelArtist(${i})" style="background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:.85rem;line-height:1;padding:0 .1rem">×</button></div>`).join('');
 }
 
-const _abArtistSearchTimers={a:null,b:null};
+async function loadUserWheels(){
+  if(!currentUser){_abSavedWheels=[];renderAbSavedWheels();return;}
+  const{data,error}=await db.from('user_wheels').select('*').eq('user_id',currentUser.id).order('updated_at',{ascending:false});
+  if(error){console.error('load wheels failed',error);_abSavedWheels=[];}
+  else _abSavedWheels=data||[];
+  renderAbSavedWheels();
+}
+
+function renderAbSavedWheels(){
+  const el=document.getElementById('ab-saved-wheels');
+  if(!el)return;
+  if(!_abSavedWheels.length){
+    el.innerHTML='<div style="font-size:.55rem;color:var(--muted);font-family:\'DM Mono\',monospace;font-style:italic">No saved wheels yet — build one below and save it.</div>';
+    return;
+  }
+  el.innerHTML=_abSavedWheels.map(w=>{
+    const artists=Array.isArray(w.artists)?w.artists:(()=>{try{return JSON.parse(w.artists)||[];}catch(e){return[];}})();
+    return`<div style="display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .25rem .25rem .55rem;background:var(--surface2);border:1px solid var(--gold);border-radius:99px;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;color:var(--gold)">
+      <button onclick="loadSavedWheel('${escJs(w.id)}')" style="background:transparent;border:none;color:var(--gold);cursor:pointer;font:inherit;padding:0;letter-spacing:inherit" title="Load this wheel">${esc(w.name)} <span style="color:var(--muted);font-weight:500">· ${artists.length}</span></button>
+      <button onclick="deleteSavedWheel('${escJs(w.id)}','${escJs(w.name)}')" style="background:transparent;border:none;color:var(--muted2);cursor:pointer;font-size:.85rem;line-height:1;padding:0 .15rem" title="Delete">×</button>
+    </div>`;
+  }).join('');
+}
+
+function loadSavedWheel(id){
+  const w=_abSavedWheels.find(x=>x.id===id);
+  if(!w)return;
+  const artists=Array.isArray(w.artists)?w.artists:(()=>{try{return JSON.parse(w.artists)||[];}catch(e){return[];}})();
+  _abWheelArtists=artists.slice();
+  renderAbWheelArtistChips();
+}
+
+async function saveCurrentWheel(){
+  if(!currentUser){alert('Sign in first.');return;}
+  if(_abWheelArtists.length<2){alert('Add at least 2 artists before saving.');return;}
+  const name=(prompt('Name this wheel:','')||'').trim();
+  if(!name)return;
+  const{data,error}=await db.from('user_wheels').insert({user_id:currentUser.id,name,artists:_abWheelArtists.slice()}).select('*').single();
+  if(error){alert('Save failed: '+error.message);console.error(error);return;}
+  _abSavedWheels=[data,..._abSavedWheels];
+  renderAbSavedWheels();
+}
+
+async function deleteSavedWheel(id,name){
+  if(!confirm(`Delete saved wheel "${name}"?`))return;
+  const{error}=await db.from('user_wheels').delete().eq('id',id);
+  if(error){alert('Delete failed: '+error.message);return;}
+  _abSavedWheels=_abSavedWheels.filter(w=>w.id!==id);
+  renderAbSavedWheels();
+}
+
+const _abArtistSearchTimers={a:null,b:null,single:null};
 function abArtistSearch(side){
   clearTimeout(_abArtistSearchTimers[side]);
   const input=document.getElementById('ab-create-artist-'+side);
@@ -8192,7 +9003,7 @@ function abPickArtist(side,i){
   resEl.style.display='none';resEl.innerHTML='';resEl._results=null;
 }
 document.addEventListener('click',e=>{
-  ['a','b'].forEach(side=>{
+  ['a','b','single'].forEach(side=>{
     const wrap=document.getElementById('ab-create-artist-'+side)?.parentElement;
     const resEl=document.getElementById('ab-create-artist-'+side+'-results');
     if(wrap&&resEl&&!wrap.contains(e.target))resEl.style.display='none';
@@ -8200,6 +9011,14 @@ document.addEventListener('click',e=>{
   const wWrap=document.getElementById('ab-wheel-artist-input')?.parentElement;
   const wRes=document.getElementById('ab-wheel-artist-results');
   if(wWrap&&wRes&&!wWrap.contains(e.target))wRes.style.display='none';
+  const wWrapS=document.getElementById('ab-wheel-artist-input-single')?.parentElement;
+  const wResS=document.getElementById('ab-wheel-artist-results-single');
+  if(wWrapS&&wResS&&!wWrapS.contains(e.target))wResS.style.display='none';
+  ['a','b'].forEach(side=>{
+    const wrap=document.getElementById('ab-lobby-artist-rematch-'+side)?.parentElement;
+    const resEl=document.getElementById('ab-lobby-artist-rematch-'+side+'-results');
+    if(wrap&&resEl&&!wrap.contains(e.target))resEl.style.display='none';
+  });
 });
 
 async function createAuxBattle(){
@@ -8208,10 +9027,22 @@ async function createAuxBattle(){
   const name=(document.getElementById('ab-create-name').value||'').trim();
   if(!name){errEl.textContent='Enter a battle name.';return;}
   let artistA='', artistB='', wheelArtists=null, startStatus='lobby';
+  let winnerMode='ratings';
   if(_abCreateMode==='wheel'){
     if(_abWheelArtists.length<2){errEl.textContent='Add at least 2 artists to the wheel.';return;}
     wheelArtists=_abWheelArtists.slice();
     startStatus='wheel';
+  } else if(_abCreateMode==='single'){
+    winnerMode='ratings_single';
+    if(_abSingleSubMode==='wheel'){
+      if(_abWheelArtists.length<2){errEl.textContent='Add at least 2 artists to the wheel.';return;}
+      wheelArtists=_abWheelArtists.slice();
+      startStatus='wheel';
+    } else {
+      const single=(document.getElementById('ab-create-artist-single').value||'').trim();
+      if(!single){errEl.textContent='Enter the artist.';return;}
+      artistA=single;artistB=single;
+    }
   } else {
     artistA=(document.getElementById('ab-create-artist-a').value||'').trim();
     artistB=(document.getElementById('ab-create-artist-b').value||'').trim();
@@ -8228,15 +9059,28 @@ async function createAuxBattle(){
   btn.disabled=true;btn.textContent='Creating…';
   const insertData={
     host_id:currentUser.id,code,name,artist_a:artistA,artist_b:artistB,
-    song_count:songCount,winner_mode:'ratings',genre:_abGenre,secret_draft:_abSecret,
+    song_count:songCount,winner_mode:winnerMode,genre:_abGenre,secret_draft:_abSecret,
     allow_features:_abFeatures,is_private:_abPrivate,
-    player_a_id:currentUser.id,status:startStatus,
+    status:startStatus,
     ban_count:0,album_lock:false,draft_budget:0,
     wheel_artists:wheelArtists
   };
   const{data,error}=await db.from('aux_battles').insert(insertData).select('*').single();
   btn.disabled=false;btn.textContent='Create Battle';
-  if(error){errEl.textContent=error.message;console.error(error);return;}
+  if(error){
+    // If the schema's CHECK constraint rejects 'ratings_single', fall back to 'ratings'
+    // and stash the single-artist flag in wheel_artists JSON as a sentinel first entry.
+    if(winnerMode==='ratings_single'&&/winner_mode|check/i.test(error.message||'')){
+      insertData.winner_mode='ratings';
+      insertData.wheel_artists=wheelArtists?['__single__',...wheelArtists]:['__single__'];
+      const r2=await db.from('aux_battles').insert(insertData).select('*').single();
+      if(r2.error){errEl.textContent=r2.error.message;console.error(r2.error);return;}
+      closeCreateAuxBattleModal();
+      await openAuxBattle(r2.data.id);
+      return;
+    }
+    errEl.textContent=error.message;console.error(error);return;
+  }
   closeCreateAuxBattleModal();
   await openAuxBattle(data.id);
 }
@@ -8329,16 +9173,33 @@ async function renderAuxBattleLobby(){
   const isHost=b.host_id===currentUser?.id;
   const isPlayerA=b.player_a_id===currentUser?.id;
   const isPlayerB=b.player_b_id===currentUser?.id;
-  let paProf=null,pbProf=null;
-  if(b.player_a_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_a_id).single();paProf=data;}
-  if(b.player_b_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_b_id).single();pbProf=data;}
-  const sideBtn=(side,prof,artist)=>{
+  const singleMode=abIsSingleArtist(b);
+  const needsArtists=!b.artist_a||(!singleMode&&!b.artist_b);
+  let paProf=null,pbProf=null,paRec=null,pbRec=null;
+  await Promise.all([
+    (async()=>{if(!b.player_a_id)return;const[p,r]=await Promise.all([
+      db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_a_id).single().then(x=>x.data),
+      getAuxBattleRecord(b.player_a_id)
+    ]);paProf=p;paRec=r;})(),
+    (async()=>{if(!b.player_b_id)return;const[p,r]=await Promise.all([
+      db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_b_id).single().then(x=>x.data),
+      getAuxBattleRecord(b.player_b_id)
+    ]);pbProf=p;pbRec=r;})()
+  ]);
+  const sideBtn=(side,prof,artist,rec)=>{
     const filled=!!prof;
     const isMe=prof?.id===currentUser?.id;
     const canJoin=!filled&&!isPlayerA&&!isPlayerB;
+    const joinLabel=singleMode?(side==='A'?'as Player 1':'as Player 2'):('as '+esc(artist));
+    const sideColor=side==='A'?'var(--gold)':'#f472b6';
+    const recHTML=filled&&rec?`<div style="display:flex;align-items:center;gap:.35rem;margin-top:.3rem;padding:.22rem .4rem;background:var(--surface2);border:1px solid var(--border);border-radius:.3rem;font-family:'DM Mono',monospace;font-size:.52rem;letter-spacing:.04em;line-height:1">
+      <span style="color:var(--muted);text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em">Rec</span>
+      <span style="color:var(--green);font-weight:700">${rec.wins}W</span><span style="color:var(--muted2)">·</span><span style="color:#f472b6;font-weight:700">${rec.losses}L</span>${rec.ties>0?`<span style="color:var(--muted2)">·</span><span style="color:var(--muted2);font-weight:700">${rec.ties}T</span>`:''}
+      ${auxRecordPctLabel(rec)?`<span style="color:${sideColor};font-weight:700;margin-left:auto">${auxRecordPctLabel(rec)}</span>`:''}
+    </div>`:'';
     return`<div class="ab-lobby-artist">
       <div class="ab-lobby-artist-label">Side ${side}</div>
-      <div class="ab-lobby-artist-name">${artist}</div>
+      <div class="ab-lobby-artist-name">${esc(artist||'')}</div>
       <div class="ab-lobby-player">
         ${filled?avatarHTML(prof,null,22):'<div style="width:22px;height:22px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>'}
         <div style="flex:1;min-width:0">
@@ -8346,7 +9207,8 @@ async function renderAuxBattleLobby(){
           '<div class="ab-lobby-player-empty">Empty slot</div>'}
         </div>
       </div>
-      ${canJoin?`<button class="ab-join-btn" onclick="joinAuxBattleSide('${escJs(side)}')">+ Join as ${esc(artist)}</button>`:''}
+      ${recHTML}
+      ${canJoin?`<button class="ab-join-btn" onclick="joinAuxBattleSide('${escJs(side)}')">+ Join ${joinLabel}</button>`:''}
     </div>`;
   };
   const audienceCount=abAudienceCount();
@@ -8360,7 +9222,34 @@ async function renderAuxBattleLobby(){
       <div style="font-family:'JetBrains Mono',monospace;font-size:1.85rem;font-weight:800;color:var(--gold);letter-spacing:.18em">${b.code}</div>
       <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
     </div>
-    <div style="display:flex;gap:.65rem;margin-bottom:1rem">${sideBtn('A',paProf,b.artist_a)}${sideBtn('B',pbProf,b.artist_b)}</div>
+    ${singleMode?`<div style="display:flex;align-items:center;gap:.6rem;padding:.55rem .85rem;border-radius:.5rem;border:1px solid var(--gold);background:rgba(167,139,250,.1);margin-bottom:.75rem">
+      <div style="font-size:1.1rem;flex-shrink:0">🎤</div>
+      <div style="min-width:0">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)">Single Artist Mode</div>
+        <div style="font-size:.58rem;color:var(--muted2);font-family:'DM Mono',monospace;margin-top:.18rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Both sides draft from <span style="color:var(--text)">${esc(b.artist_a||'?')}</span></div>
+      </div>
+    </div>`:''}
+    ${needsArtists?(isHost?`<div style="background:rgba(167,139,250,.08);border:1px solid var(--gold);border-radius:.55rem;padding:.85rem 1rem;margin-bottom:.85rem">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem">🔁 Set Up Matchup</div>
+      <div style="font-size:.58rem;color:var(--muted);margin-bottom:.55rem;line-height:1.45">Pick new artists for this rematch. ${singleMode?'Single Artist mode — one artist for both sides.':'One artist per side.'}</div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.5rem">
+        <div style="flex:1;position:relative">
+          <input id="ab-lobby-artist-rematch-a" class="modal-input" maxlength="50" autocomplete="off" placeholder="${singleMode?'Artist…':'Artist A…'}" oninput="abLobbyArtistSearch('a')" onfocus="abLobbyArtistSearch('a')">
+          <div id="ab-lobby-artist-rematch-a-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
+        </div>
+        ${singleMode?'':`<div style="flex:1;position:relative">
+          <input id="ab-lobby-artist-rematch-b" class="modal-input" maxlength="50" autocomplete="off" placeholder="Artist B…" oninput="abLobbyArtistSearch('b')" onfocus="abLobbyArtistSearch('b')">
+          <div id="ab-lobby-artist-rematch-b-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:60;max-height:40vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
+        </div>`}
+      </div>
+      <button id="ab-lobby-lock-matchup-btn" onclick="lockRematchMatchup()" style="width:100%;padding:.6rem;background:var(--gold);color:var(--bg);border:none;border-radius:.45rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Lock In Matchup</button>
+      <div id="ab-lobby-matchup-err" style="color:#f472b6;font-size:.58rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;min-height:.9em;margin-top:.3rem"></div>
+    </div>`:`<div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.85rem 1rem;margin-bottom:.85rem;text-align:center">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem">🔁 Rematch Set-Up</div>
+      <div style="font-size:.6rem;color:var(--muted2);font-family:'DM Mono',monospace">Waiting for host to pick the artists…</div>
+    </div>`):''}
+    <div style="display:flex;gap:.65rem;margin-bottom:.65rem">${sideBtn('A',paProf,b.artist_a,paRec)}${sideBtn('B',pbProf,b.artist_b,pbRec)}</div>
+    ${(paProf&&pbProf&&paRec&&pbRec)?`<div style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">⚔ Tale of the Tape · <span style="color:var(--gold)">@${esc(paProf.username)}</span> ${formatAuxRecord(paRec)} <span style="color:var(--muted2)">vs</span> ${formatAuxRecord(pbRec)} <span style="color:#f472b6">@${esc(pbProf.username)}</span></div>`:''}
     ${playersReady?`<div style="display:flex;align-items:center;gap:.6rem;padding:.6rem .85rem;border-radius:.5rem;border:1px solid ${willDuel?'var(--gold)':'var(--green)'};background:${willDuel?'rgba(167,139,250,.1)':'rgba(52,211,153,.1)'};margin-bottom:.75rem">
       <div style="font-size:1.1rem;flex-shrink:0">${willDuel?'⚔️':'🎤'}</div>
       <div>
@@ -8371,7 +9260,7 @@ async function renderAuxBattleLobby(){
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.75rem .9rem;margin-bottom:.85rem">
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Songs per side</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text)">${b.song_count}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Judging mode</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${willDuel?'var(--gold)':'var(--text)'}">${willDuel?'Duel (auto)':'Ratings'}</span></div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Rating Genre</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${esc(abGenrePreset(b.genre).label)}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Rating Genre <span style="color:var(--muted);font-weight:400;letter-spacing:0">(auto · fallback)</span></span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${esc(abGenrePreset(b.genre).label)}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Secret draft</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${b.secret_draft?'var(--gold)':'var(--muted)'}">${b.secret_draft?'On':'Off'}</span></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Featured songs</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">${b.allow_features?'Allowed':'Not Allowed'}</span></div>
       ${b.ban_count?`<div style="display:flex;justify-content:space-between;margin-bottom:.3rem"><span class="ab-section-lbl">Ban Phase</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--gold)">${b.ban_count} ban${b.ban_count===1?'':'s'} each</span></div>`:''}
@@ -8423,11 +9312,71 @@ function abCopyCode(){
   navigator.clipboard.writeText(code).catch(()=>{});
 }
 
+// ─── Rematch lobby: pick new artists with Deezer autocomplete ─────────────
+const _abLobbyArtistTimers={a:null,b:null};
+function abLobbyArtistSearch(side){
+  clearTimeout(_abLobbyArtistTimers[side]);
+  const input=document.getElementById('ab-lobby-artist-rematch-'+side);
+  const resEl=document.getElementById('ab-lobby-artist-rematch-'+side+'-results');
+  if(!input||!resEl)return;
+  const q=(input.value||'').trim();
+  if(!q){resEl.style.display='none';resEl.innerHTML='';return;}
+  resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.52rem;color:var(--muted);font-family:\'Barlow Condensed\',sans-serif;letter-spacing:.1em">SEARCHING…</div>';
+  resEl.style.display='block';
+  _abLobbyArtistTimers[side]=setTimeout(async()=>{
+    try{
+      const d=await deezerFetch('https://api.deezer.com/search/artist?q='+encodeURIComponent(q)+'&limit=15');
+      const all=(d.data||[]).filter(a=>a&&a.name);
+      resEl._results=all;
+      resEl.innerHTML=all.map((a,i)=>{
+        const img=a.picture_small||a.picture||'';
+        return`<div style="display:flex;align-items:center;gap:.65rem;padding:.55rem .85rem;border-bottom:1px solid var(--border);cursor:pointer" onclick="abLobbyPickArtist('${side}',${i})">
+          ${img?`<img src="${esc(img)}" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div style="width:34px;height:34px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>`}
+          <div style="flex:1;min-width:0">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(a.name)}</div>
+          </div>
+        </div>`;
+      }).join('')||`<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">No artists found</div>`;
+    }catch(e){resEl.innerHTML='<div style="padding:.5rem .85rem;font-size:.58rem;color:var(--muted)">Search failed</div>';}
+  },350);
+}
+function abLobbyPickArtist(side,i){
+  const resEl=document.getElementById('ab-lobby-artist-rematch-'+side+'-results');
+  const a=(resEl?._results||[])[i];
+  if(!a)return;
+  const inp=document.getElementById('ab-lobby-artist-rematch-'+side);
+  if(inp)inp.value=a.name;
+  if(resEl){resEl.style.display='none';resEl.innerHTML='';resEl._results=null;}
+}
+async function lockRematchMatchup(){
+  const b=currentAuxBattle;if(!b)return;
+  if(b.host_id!==currentUser?.id)return;
+  const isSingle=abIsSingleArtist(b);
+  const errEl=document.getElementById('ab-lobby-matchup-err');
+  if(errEl)errEl.textContent='';
+  const aVal=(document.getElementById('ab-lobby-artist-rematch-a')?.value||'').trim();
+  const bVal=isSingle?aVal:(document.getElementById('ab-lobby-artist-rematch-b')?.value||'').trim();
+  if(!aVal||(!isSingle&&!bVal)){if(errEl)errEl.textContent='Enter '+(isSingle?'the artist':'both artists')+'.';return;}
+  if(!isSingle&&aVal.toLowerCase()===bVal.toLowerCase()){if(errEl)errEl.textContent='Artists must be different.';return;}
+  const btn=document.getElementById('ab-lobby-lock-matchup-btn');
+  if(btn){btn.disabled=true;btn.textContent='Locking…';}
+  const{error}=await db.from('aux_battles').update({artist_a:aVal,artist_b:bVal}).eq('id',b.id);
+  if(error){
+    if(errEl)errEl.textContent=error.message;
+    if(btn){btn.disabled=false;btn.textContent='Lock In Matchup';}
+    return;
+  }
+  // Realtime UPDATE handler will re-render.
+}
+
 // ─── Wheel mode ───────────────────────────────────────────────────────────────
 function abParseWheelArtists(b){
   if(!b||!b.wheel_artists)return[];
-  if(Array.isArray(b.wheel_artists))return b.wheel_artists;
-  try{return JSON.parse(b.wheel_artists)||[];}catch(e){return[];}
+  let arr=[];
+  if(Array.isArray(b.wheel_artists))arr=b.wheel_artists;
+  else{try{arr=JSON.parse(b.wheel_artists)||[];}catch(e){arr=[];}}
+  // Strip the '__single__' sentinel used as a fallback signal for Single Artist mode.
+  return arr.filter(x=>x!=='__single__');
 }
 
 const _AB_WHEEL_PALETTE=['#a78bfa','#f472b6','#facc15','#34d399','#60a5fa','#fb923c','#e879f9','#22d3ee'];
@@ -8446,6 +9395,19 @@ function abBuildWheelSVG(artists){
   const cx=size/2,cy=size/2;
   const r=size/2-12;
   const slice=360/N;
+  // Radial text layout: text runs along the radius of each slice.
+  // Font size is bounded by the slice's arc width at the text midpoint so
+  // crowded wheels (many slices) shrink the labels instead of overlapping.
+  const innerR=r*0.28;
+  const outerR=r*0.92;
+  const radialLen=outerR-innerR;
+  const textCenterR=(innerR+outerR)/2;
+  const arcWidthAtText=2*Math.PI*textCenterR*(slice/360);
+  // ~62% of the arc width keeps a small gap between neighbouring labels.
+  const fs=Math.max(7,Math.min(16,arcWidthAtText*0.62));
+  // Barlow Condensed (extra-bold) avg glyph width ≈ 0.52 × font-size.
+  const approxCharWidth=fs*0.52;
+  const maxChars=Math.max(3,Math.floor(radialLen/approxCharWidth));
   let slices='',labels='';
   for(let i=0;i<N;i++){
     const a1=(i*slice-90)*Math.PI/180;
@@ -8457,14 +9419,16 @@ function abBuildWheelSVG(artists){
     slices+=`<path id="ab-wheel-slice-${i}" d="M ${cx} ${cy} L ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)} Z" fill="${color}" stroke="rgba(7,7,26,.55)" stroke-width="1.5" style="transition:opacity .4s,filter .4s"/>`;
     const cDeg=i*slice+slice/2-90;
     const cRad=cDeg*Math.PI/180;
-    const lr=r*0.62;
-    const lx=cx+lr*Math.cos(cRad);
-    const ly=cy+lr*Math.sin(cRad);
-    const maxChars=Math.max(5,Math.floor(slice*1.4));
+    // Place text centered on the radial midpoint of the slice
+    const lx=cx+textCenterR*Math.cos(cRad);
+    const ly=cy+textCenterR*Math.sin(cRad);
+    // Truncate name to whatever fits along the radial length
     let name=artists[i];
-    if(name.length>maxChars)name=name.slice(0,Math.max(3,maxChars-1))+'…';
-    const fs=Math.max(8,Math.min(15,110/N+5));
-    const rot=cDeg+90;
+    if(name.length>maxChars)name=name.slice(0,Math.max(2,maxChars-1))+'…';
+    // Rotate so the baseline runs along the radius. Flip on the left half
+    // of the wheel so letters stay roughly upright for the viewer.
+    const isLeftHalf=Math.cos(cRad)<0;
+    const rot=isLeftHalf?cDeg+180:cDeg;
     labels+=`<text x="${lx.toFixed(2)}" y="${ly.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-family="'Barlow Condensed',sans-serif" font-size="${fs.toFixed(1)}" font-weight="800" fill="#07071a" transform="rotate(${rot.toFixed(2)} ${lx.toFixed(2)} ${ly.toFixed(2)})" style="pointer-events:none">${esc(name)}</text>`;
   }
   return`<div style="position:relative;width:min(${size}px,92%);aspect-ratio:1;margin:0 auto">
@@ -8494,6 +9458,7 @@ async function renderAuxBattleWheel(){
   const isHost=b.host_id===currentUser?.id;
   const isPlayerA=b.player_a_id===currentUser?.id;
   const isPlayerB=b.player_b_id===currentUser?.id;
+  const singleMode=abIsSingleArtist(b);
   const artists=abParseWheelArtists(b);
   let paProf=null,pbProf=null;
   if(b.player_a_id){const{data}=await db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_a_id).single();paProf=data;}
@@ -8503,18 +9468,20 @@ async function renderAuxBattleWheel(){
   const startedAt=spun?new Date(b.wheel_spun_at).getTime():0;
   const elapsed=spun?Date.now()-startedAt:0;
   const revealAAt=_AB_WHEEL_PHASE1;
-  const revealBAt=_AB_WHEEL_PHASE1+_AB_WHEEL_PAUSE+_AB_WHEEL_PHASE2;
+  // In single mode, lock readiness only requires phase-1 reveal (no Slot B animation).
+  const revealBAt=singleMode?revealAAt:(_AB_WHEEL_PHASE1+_AB_WHEEL_PAUSE+_AB_WHEEL_PHASE2);
   const showA=spun&&elapsed>=revealAAt;
   const showB=spun&&elapsed>=revealBAt;
   const slotBtn=(side,prof)=>{
     const filled=!!prof;
     const canJoin=!filled&&!isPlayerA&&!isPlayerB;
     const isMe=prof?.id===currentUser?.id;
-    const reveal=side==='A'?showA:showB;
+    // In single mode both slots reveal at phase-1 time (no second spin).
+    const reveal=singleMode?showA:(side==='A'?showA:showB);
     const winner=side==='A'?b.wheel_winner_a:b.wheel_winner_b;
     const sideColor=side==='A'?'var(--gold)':'#f472b6';
     return`<div class="ab-lobby-artist">
-      <div class="ab-lobby-artist-label">Slot ${side}</div>
+      <div class="ab-lobby-artist-label">${singleMode?(side==='A'?'Player 1':'Player 2'):('Slot '+side)}</div>
       <div class="ab-lobby-artist-name" id="ab-wheel-slot-${side.toLowerCase()}-name" style="color:${reveal?sideColor:'var(--muted)'};transition:color .3s">${reveal?esc(winner):'???'}</div>
       <div class="ab-lobby-player">
         ${filled?avatarHTML(prof,null,22):'<div style="width:22px;height:22px;border-radius:50%;background:var(--border2);flex-shrink:0"></div>'}
@@ -8522,7 +9489,7 @@ async function renderAuxBattleWheel(){
           ${filled?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;color:${isMe?'var(--gold)':'var(--text)'}">@${esc(prof.username)}${isMe?' ★':''}</div>`:'<div class="ab-lobby-player-empty">Empty slot</div>'}
         </div>
       </div>
-      ${canJoin?`<button class="ab-join-btn" onclick="joinAuxBattleSide('${side}')">+ Join Slot ${side}</button>`:''}
+      ${canJoin?`<button class="ab-join-btn" onclick="joinAuxBattleSide('${side}')">+ Join ${singleMode?(side==='A'?'as Player 1':'as Player 2'):('Slot '+side)}</button>`:''}
     </div>`;
   };
   const lockReady=spun&&elapsed>=revealBAt;
@@ -8534,8 +9501,8 @@ async function renderAuxBattleWheel(){
       <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
     </div>
     <div style="text-align:center;margin-bottom:.85rem">
-      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">🎡 Wheel of Artists</div>
-      <div id="ab-wheel-status" style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem">${spun?(showB?'Matchup locked in below.':showA?'Slot A revealed · spinning for Slot B…':'Spinning for Slot A…'):`${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel decides the matchup`}</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">🎡 ${singleMode?'Wheel · Single Artist':'Wheel of Artists'}</div>
+      <div id="ab-wheel-status" style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem">${spun?(singleMode?(showA?'Artist revealed — both sides draft from this artist.':'Spinning…'):(showB?'Matchup locked in below.':showA?'Slot A revealed · spinning for Slot B…':'Spinning for Slot A…')):(singleMode?`${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel picks one for both sides`:`${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel decides the matchup`)}</div>
     </div>
     <div style="display:flex;gap:.65rem;margin-bottom:1rem">${slotBtn('A',paProf)}${slotBtn('B',pbProf)}</div>
     <div style="margin-bottom:1rem">${abBuildWheelSVG(artists)}</div>
@@ -8605,6 +9572,8 @@ function _abAnimateWheelSpin(idxA,idxB,N,spunAt,nameA,nameB,isHost){
   const phase2Start=phase1End+_AB_WHEEL_PAUSE;
   const phase2End=phase2Start+_AB_WHEEL_PHASE2;
   const easing='cubic-bezier(.17,.85,.25,1)';
+  // Single-artist mode: same winner both sides → one spin, reveal both slots together.
+  const singleSpin=(nameA===nameB)&&(idxA===idxB);
   const setRot=(deg,dur)=>{
     if(dur<=0){
       svg.style.transition='none';
@@ -8614,6 +9583,29 @@ function _abAnimateWheelSpin(idxA,idxB,N,spunAt,nameA,nameB,isHost){
       requestAnimationFrame(()=>{svg.style.transform=`rotate(${deg}deg)`;});
     }
   };
+  if(singleSpin){
+    if(elapsed>=phase1End){
+      setRot(targetA,0);
+      _abRevealWheelSlot('a',nameA);
+      _abRevealWheelSlot('b',nameB);
+      _abDimWheelSlice(idxA);
+      _abUpdateWheelStatus('Artist revealed — both sides draft from this artist.');
+      _abMaybeShowLockBtn(isHost);
+      return;
+    }
+    svg.style.transition='none';
+    svg.style.transform='rotate(0deg)';
+    void svg.offsetHeight;
+    setRot(targetA,phase1End-elapsed);
+    _abWheelRevealATimer=setTimeout(()=>{
+      _abRevealWheelSlot('a',nameA);
+      _abRevealWheelSlot('b',nameB);
+      _abDimWheelSlice(idxA);
+      _abUpdateWheelStatus('Artist revealed — both sides draft from this artist.');
+      _abMaybeShowLockBtn(isHost);
+    },phase1End-elapsed);
+    return;
+  }
   if(elapsed>=phase2End){
     setRot(targetB,0);
     _abRevealWheelSlot('a',nameA);
@@ -8669,14 +9661,25 @@ async function abSpinWheel(){
   if(!b||b.host_id!==currentUser?.id)return;
   if(!b.player_a_id||!b.player_b_id){alert('Both players must join first.');return;}
   const artists=abParseWheelArtists(b);
-  if(artists.length<2){alert('Need at least 2 artists on the wheel.');return;}
+  const single=abIsSingleArtist(b);
+  if(single){
+    if(artists.length<1){alert('Need at least 1 artist on the wheel.');return;}
+  } else {
+    if(artists.length<2){alert('Need at least 2 artists on the wheel.');return;}
+  }
   const idxA=Math.floor(Math.random()*artists.length);
   const winnerA=artists[idxA];
-  const remaining=artists.map((a,i)=>({a,i})).filter(x=>x.i!==idxA&&x.a.toLowerCase().trim()!==winnerA.toLowerCase().trim());
-  if(!remaining.length){alert('Need at least 2 distinct artists on the wheel.');return;}
-  const pickB=remaining[Math.floor(Math.random()*remaining.length)];
-  const idxB=pickB.i;
-  const winnerB=pickB.a;
+  let winnerB,idxB;
+  if(single){
+    // Single Artist: same winner on both sides; second-phase animation will be skipped.
+    winnerB=winnerA;idxB=idxA;
+  } else {
+    const remaining=artists.map((a,i)=>({a,i})).filter(x=>x.i!==idxA&&x.a.toLowerCase().trim()!==winnerA.toLowerCase().trim());
+    if(!remaining.length){alert('Need at least 2 distinct artists on the wheel.');return;}
+    const pickB=remaining[Math.floor(Math.random()*remaining.length)];
+    idxB=pickB.i;
+    winnerB=pickB.a;
+  }
   const spunAt=new Date().toISOString();
   const btn=document.getElementById('ab-wheel-spin-btn');
   if(btn){btn.disabled=true;btn.textContent='Spinning…';}
@@ -8897,11 +9900,13 @@ async function submitAuxBattlePick(){
   btn.disabled=true;btn.textContent='Locking…';
   const newPickIndex=b.current_pick_index+1;
   const allDone=newPickIndex>=b.song_count*2;
+  const detectedGenre=await getDeezerAlbumGenre(song.album_id);
   const{data:pickData,error}=await db.from('aux_battle_picks').insert({
     battle_id:b.id,player_id:currentUser.id,side,pick_number:pickNum,
     draft_pick_index:b.current_pick_index,song_name:song.song,artist_name:song.artist,
-    album_name:song.album||null,artwork_url:song.artwork||null,preview_url:song.preview||null,
+    album_name:song.album||null,album_id:song.album_id||null,artwork_url:song.artwork||null,preview_url:song.preview||null,
     itunes_track_id:song.itunes_id||null,is_revealed:false,
+    detected_genre:detectedGenre,
     cost:null,
     is_emergency:false
   }).select('*').single();
@@ -9624,9 +10629,6 @@ function renderAbRatingSection(pickA,pickB){
     <div style="display:flex;gap:.6rem;margin-top:.85rem">${previewRow(pickA,'var(--gold)')}${previewRow(pickB,'#f472b6')}</div>`;
     return;
   }
-  const preset=abGenrePreset(b.genre);
-  const isRap=preset.isRap;
-  const cats=preset.cats.map((name,i)=>({name,desc:preset.descs[i]||'',color:preset.colors[i]||'var(--gold)',weight:preset.weights[i]||0}));
   const ratedA=!!abMyRatingA, ratedB=!!abMyRatingB;
   if(ratedA&&ratedB){
     ratingSection.innerHTML=`<div style="text-align:center;padding:1.5rem 1rem;background:var(--surface);border:1px solid var(--green);border-radius:.6rem">
@@ -9640,6 +10642,9 @@ function renderAbRatingSection(pickA,pickB){
   // Determine which side to show
   const side=abRatingSide==='B'&&ratedA?'B':(!ratedA?'A':(!ratedB?'B':'A'));
   const pick=side==='A'?pickA:pickB;
+  const preset=abGenrePreset(pick?.detected_genre||b.genre);
+  const isRap=preset.isRap;
+  const cats=preset.cats.map((name,i)=>({name,desc:preset.descs[i]||'',color:preset.colors[i]||'var(--gold)',weight:preset.weights[i]||0}));
   const existing=side==='A'?abMyRatingA:abMyRatingB;
   const color=side==='A'?'var(--gold)':'#f472b6';
   const sliderClass=side==='A'?'ab-rating-slider':'ab-rating-slider pink';
@@ -9718,7 +10723,8 @@ function renderAbRatingSection(pickA,pickB){
 // Pull current slider values, run the genre engine, and update the live final-score readout.
 function abRecalcLiveScore(side){
   const b=currentAuxBattle;if(!b)return;
-  const preset=abGenrePreset(b.genre);
+  const pick=abPickForRound(side,b.current_round);
+  const preset=abGenrePreset(pick?.detected_genre||b.genre);
   const noHook=side==='A'?abMyNoHookA:abMyNoHookB;
   const noLyrics=side==='A'?abMyNoLyricsA:abMyNoLyricsB;
   const scores=preset.cats.map((_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value??5));
@@ -9784,14 +10790,16 @@ async function submitAuxBattleRating(side){
   const b=currentAuxBattle;
   if(!currentUser)return;
   if(abIsPlayer()&&!b.duel_mode){return;}
-  const preset=abGenrePreset(b.genre);
+  const pick=abPickForRound(side,b.current_round);
+  const usedGenre=pick?.detected_genre||b.genre||'rap';
+  const preset=abGenrePreset(usedGenre);
   const n=preset.cats.length;
   const scores=Array.from({length:n},(_,i)=>parseFloat(document.getElementById(`ab-rate-${side}-${i}`)?.value||5));
   const noHook=side==='A'?abMyNoHookA:abMyNoHookB;
   const noLyrics=side==='A'?abMyNoLyricsA:abMyNoLyricsB;
   const finalScore=preset.isRap?abCalcRapScore(scores,noHook,noLyrics):abCalcGenreScore(scores,preset.weights);
   const breakdown={};preset.cats.forEach((name,i)=>{breakdown[name]=scores[i];});
-  breakdown._genre=b.genre||'rap';
+  breakdown._genre=usedGenre;
   if(preset.isRap){breakdown._no_hook=noHook;breakdown._no_lyrics=noLyrics;}
   // Pad scores to 6 slots for the score_1..score_6 columns
   const padded=Array.from({length:6},(_,i)=>scores[i]??null);
@@ -10036,8 +11044,8 @@ async function _abWait(ms){
   }
 }
 
-function _abRevealCats(b){
-  const preset=abGenrePreset(b?.genre);
+function _abRevealCats(b,pick){
+  const preset=abGenrePreset(pick?.detected_genre||b?.genre);
   return preset.cats.map((name,i)=>({key:`score_${i+1}`,name,color:preset.colors[i]||'var(--gold)'}));
 }
 
@@ -10253,8 +11261,9 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,p
     const uname=prof.username||'audience';
     const rA=ratingsHere.find(r=>r.user_id===uid&&r.side==='A');
     const rB=ratingsHere.find(r=>r.user_id===uid&&r.side==='B');
-    const revealCats=_abRevealCats(b);
-    const sideHTML=(label,color,r,suffix)=>{
+    const revealCatsA=_abRevealCats(b,pickA);
+    const revealCatsB=_abRevealCats(b,pickB);
+    const sideHTML=(label,color,r,suffix,revealCats)=>{
       if(!r)return`<div style="flex:1;text-align:center;color:var(--muted);font-size:.85rem;font-style:italic;padding:2rem 0">No rating for ${esc(label)}</div>`;
       const cats=[r.score_1,r.score_2,r.score_3,r.score_4,r.score_5,r.score_6];
       return`<div style="flex:1;min-width:0">
@@ -10283,8 +11292,8 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,p
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.5rem;font-weight:800;letter-spacing:.04em;color:var(--text)">@${esc(uname)}</div>
       </div>
       <div style="display:flex;gap:1.4rem;width:100%;align-items:flex-start">
-        ${sideHTML(aName,'var(--gold)',rA,'a')}
-        ${sideHTML(bName,'#f472b6',rB,'b')}
+        ${sideHTML(aName,'var(--gold)',rA,'a',revealCatsA)}
+        ${sideHTML(bName,'#f472b6',rB,'b',revealCatsB)}
       </div>
     </div>`);
     _abSfxBlip(330,0.16,'triangle',0.12);
@@ -10760,13 +11769,49 @@ function renderAuxBattleResult(){
 }
 
 // ─── Final screen ─────────────────────────────────────────────────────────────
-function renderAuxBattleFinal(){
+async function renderAuxBattleFinal(){
   const b=currentAuxBattle;
   const pointsA=parseFloat(b.final_score_a||0);
   const pointsB=parseFloat(b.final_score_b||0);
   const winSide=b.winner_side;
   const winColor=winSide==='A'?'var(--gold)':winSide==='B'?'#f472b6':'var(--muted2)';
   const winArtist=winSide==='A'?b.artist_a:winSide==='B'?b.artist_b:null;
+  // Fetch both players' updated W/L records (cache was invalidated on final transition)
+  let paProfF=null,pbProfF=null,paRecF=null,pbRecF=null;
+  await Promise.all([
+    (async()=>{if(!b.player_a_id)return;const[p,r]=await Promise.all([
+      db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_a_id).single().then(x=>x.data),
+      getAuxBattleRecord(b.player_a_id)
+    ]);paProfF=p;paRecF=r;})(),
+    (async()=>{if(!b.player_b_id)return;const[p,r]=await Promise.all([
+      db.from('profiles').select('id,username,avatar_color,avatar_url').eq('id',b.player_b_id).single().then(x=>x.data),
+      getAuxBattleRecord(b.player_b_id)
+    ]);pbProfF=p;pbRecF=r;})()
+  ]);
+  const recBadge=(prof,rec,side,didWin)=>{
+    if(!prof||!rec)return'';
+    const col=side==='A'?'var(--gold)':'#f472b6';
+    const deltaTxt=didWin?'+1 W':(b.winner_side&&b.winner_side!=='split'?'+1 L':'+1 T');
+    const deltaCol=didWin?'var(--green)':(b.winner_side==='split'?'var(--muted2)':'#f472b6');
+    return`<div style="flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-left:3px solid ${col};border-radius:.5rem;padding:.6rem .7rem;display:flex;align-items:center;gap:.55rem">
+      ${avatarHTML(prof,null,30)}
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.06em;color:${col};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${esc(prof.username)}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:var(--text);margin-top:.18rem">
+          <span style="color:var(--green);font-weight:700">${rec.wins}W</span>
+          <span style="color:var(--muted2)">·</span>
+          <span style="color:#f472b6;font-weight:700">${rec.losses}L</span>
+          ${rec.ties?`<span style="color:var(--muted2)">·</span><span style="color:var(--muted2);font-weight:700">${rec.ties}T</span>`:''}
+        </div>
+      </div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.1em;color:${deltaCol};flex-shrink:0">${deltaTxt}</div>
+    </div>`;
+  };
+  const aDidWin=winSide==='A',bDidWin=winSide==='B';
+  const recordsBlockHTML=(paProfF&&pbProfF)?`<div style="margin-bottom:1.25rem">
+    <div class="ab-section-lbl" style="margin-bottom:.45rem">Updated Records</div>
+    <div style="display:flex;gap:.55rem">${recBadge(paProfF,paRecF,'A',aDidWin)}${recBadge(pbProfF,pbRecF,'B',bDidWin)}</div>
+  </div>`:'';
   const closestRound=abRoundResults.length?abRoundResults.reduce((a,r)=>{
     const s1=r.rating_avg_a!=null?Math.abs(r.rating_avg_a-r.rating_avg_b):Math.abs((r.vote_count_a||0)-(r.vote_count_b||0));
     const s2=a.diff;return s1<s2?{r,diff:s1}:a;
@@ -10793,6 +11838,7 @@ function renderAuxBattleFinal(){
       <div class="ab-score-tally-sep">–</div>
       <div class="ab-score-tally-side"><div class="ab-score-tally-num" style="color:#f472b6">${pointsB}</div><div class="ab-score-tally-label">${esc(b.artist_b)}</div></div>
     </div>
+    ${recordsBlockHTML}
     <div class="ab-section-lbl" style="margin-bottom:.5rem">Round by Round</div>
     <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;overflow:hidden;margin-bottom:1rem">
       ${abRoundResults.map(r=>{
@@ -10920,7 +11966,104 @@ function renderAuxBattleFinal(){
         </div>
       </div>`;
     }).join('')}
+    <div id="ab-rematch-panel" style="margin-top:1.25rem"></div>
   `;
+  renderAbRematchPanel();
+}
+
+// ─── Rematch ─────────────────────────────────────────────────────────────────
+function abRoomPresentIds(){
+  const ids=new Set();
+  Object.values(abPresence||{}).forEach(slots=>(slots||[]).forEach(s=>{if(s.user_id)ids.add(s.user_id);}));
+  return ids;
+}
+function abRematchThreshold(){
+  // Majority of present room members. Min threshold of 1.
+  const present=abRoomPresentIds();
+  if(present.size===0)return 1;
+  return Math.max(1,Math.floor(present.size/2)+1);
+}
+function renderAbRematchPanel(){
+  const el=document.getElementById('ab-rematch-panel');
+  if(!el)return;
+  const b=currentAuxBattle;
+  if(!b||b.status!=='final'){el.innerHTML='';return;}
+  // Drop any votes from users who left the room
+  const present=abRoomPresentIds();
+  _abRematchVoters=new Set([..._abRematchVoters].filter(id=>present.has(id)));
+  const need=abRematchThreshold();
+  const have=_abRematchVoters.size;
+  const reached=have>=need;
+  const youVoted=_abMyRematchVote;
+  const btnDisabled=youVoted||reached;
+  el.innerHTML=`<div style="background:var(--surface);border:1px solid var(--gold);border-radius:.6rem;padding:.85rem 1rem">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:.35rem">🔁 Rematch?</div>
+    <div style="font-size:.6rem;color:var(--muted);margin-bottom:.65rem;line-height:1.45">Stay in this room — when a majority votes yes, the battle resets so everyone can pick new artists and new teams.</div>
+    <div style="display:flex;align-items:center;gap:.55rem;margin-bottom:.6rem">
+      <div style="flex:1;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.min(100,(have/need)*100)}%;background:linear-gradient(90deg,var(--gold),#facc15);transition:width .3s"></div></div>
+      <div style="font-family:'DM Mono',monospace;font-size:.6rem;color:${reached?'var(--green)':'var(--text)'};font-weight:700;flex-shrink:0">${have}/${need} ${reached?'✓':''}</div>
+    </div>
+    <button onclick="auxBattleVoteRematch()" ${btnDisabled?'disabled':''} style="width:100%;padding:.65rem;background:${btnDisabled?'var(--surface2)':'var(--gold)'};color:${btnDisabled?'var(--muted)':'var(--bg)'};border:1px solid var(--gold);border-radius:.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;cursor:${btnDisabled?'default':'pointer'}">${reached?(_abRematchInProgress?'Resetting battle…':'Majority reached'):youVoted?'✓ You voted yes':'Vote for Rematch'}</button>
+    ${reached&&currentUser?.id!==b.host_id?`<div style="font-family:'DM Mono',monospace;font-size:.55rem;color:var(--muted);text-align:center;margin-top:.5rem">Waiting for host to reset the battle…</div>`:''}
+  </div>`;
+}
+function auxBattleVoteRematch(){
+  if(!currentUser||!currentAuxBattle||currentAuxBattle.status!=='final')return;
+  if(_abMyRematchVote)return;
+  _abMyRematchVote=true;
+  _abRematchVoters.add(currentUser.id);
+  renderAbRematchPanel();
+  if(abChannel)abChannel.send({type:'broadcast',event:'rematch_vote',payload:{user_id:currentUser.id}});
+  maybeTriggerAuxRematch();
+}
+function maybeTriggerAuxRematch(){
+  const need=abRematchThreshold();
+  if(_abRematchVoters.size<need)return;
+  // Host triggers the reset to avoid race conditions. If host isn't present,
+  // fall back to the lowest-uuid voter so the reset still fires.
+  const present=abRoomPresentIds();
+  const hostId=currentAuxBattle?.host_id;
+  const triggerer=present.has(hostId)?hostId:[..._abRematchVoters].sort()[0];
+  if(currentUser?.id===triggerer)doAuxBattleRematch();
+}
+async function doAuxBattleRematch(){
+  const b=currentAuxBattle;
+  if(!b||_abRematchInProgress)return;
+  _abRematchInProgress=true;
+  renderAbRematchPanel();
+  const wasWheel=abParseWheelArtists(b).length>=1;
+  const newStatus=wasWheel?'wheel':'lobby';
+  const oldA=b.player_a_id,oldB=b.player_b_id;
+  // Delete dependent rows
+  await Promise.all([
+    db.from('aux_battle_picks').delete().eq('battle_id',b.id),
+    db.from('aux_battle_bans').delete().eq('battle_id',b.id),
+    db.from('aux_battle_round_votes').delete().eq('battle_id',b.id),
+    db.from('aux_battle_round_ratings').delete().eq('battle_id',b.id),
+    db.from('aux_battle_round_results').delete().eq('battle_id',b.id)
+  ]);
+  // Reset the battle row
+  const{error}=await db.from('aux_battles').update({
+    status:newStatus,
+    artist_a:'',artist_b:'',
+    player_a_id:null,player_b_id:null,
+    current_pick_index:0,
+    current_round:1,
+    duel_mode:null,
+    final_score_a:null,final_score_b:null,
+    winner_side:null,
+    album_a_name:null,album_a_id:null,album_a_cover:null,
+    album_b_name:null,album_b_id:null,album_b_cover:null,
+    bans_locked_a:false,bans_locked_b:false,
+    arrangement_locked_a:false,arrangement_locked_b:false,
+    wheel_winner_a:null,wheel_winner_b:null,wheel_spun_at:null
+  }).eq('id',b.id);
+  if(error){console.error('rematch reset failed',error);_abRematchInProgress=false;renderAbRematchPanel();return;}
+  // The previous battle row is no longer 'final', so its W/L contribution
+  // disappears from both players' records. Invalidate so the lobby fetches fresh.
+  _abInvalidateRecordCache(oldA);
+  _abInvalidateRecordCache(oldB);
+  // Local state cleanup is handled by the realtime update handler.
 }
 
 // ─── Realtime ─────────────────────────────────────────────────────────────────
@@ -10932,6 +12075,7 @@ function subscribeToAuxBattleRealtime(battleId){
       abPresence=abChannel.presenceState();
       if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
       else if(currentAuxBattle?.status==='round_active'||currentAuxBattle?.status==='rating_tiebreaker')refreshAbRatingProgress();
+      else if(currentAuxBattle?.status==='final')renderAbRematchPanel();
     })
     .on('postgres_changes',{event:'UPDATE',schema:'public',table:'aux_battles',filter:`id=eq.${battleId}`},async()=>{
       const prev=currentAuxBattle?.status;
@@ -10939,6 +12083,15 @@ function subscribeToAuxBattleRealtime(battleId){
       if(!battle)return;
       currentAuxBattle=battle;
       const s=battle.status;
+      // Rematch reset: final → wheel/lobby resets the in-memory state too.
+      if(prev==='final'&&(s==='wheel'||s==='lobby')){
+        _abResetRematchVoteState();
+        abPicks=[];abBans=[];abRoundVotes=[];abRoundRatings=[];abRoundResults=[];
+        abArrangement=[];abMyRatingA=null;abMyRatingB=null;
+        _stopAbLobbyPoll();
+        abState(s==='wheel'?'wheel':'lobby');
+        return;
+      }
       if(s==='wheel'&&prev!=='wheel'){_stopAbLobbyPoll();abState('wheel');}
       else if(s==='wheel'){renderAuxBattleWheel();}
       else if(s==='lobby'&&prev==='wheel'){_stopAbLobbyPoll();abState('lobby');}
@@ -10950,7 +12103,7 @@ function subscribeToAuxBattleRealtime(battleId){
       else if(s==='arranging'){renderAuxBattleArrange();}
       else if((s==='round_active'||s==='rating_tiebreaker')&&prev!==s){const{data:fp}=await db.from('aux_battle_picks').select('*').eq('battle_id',battleId);if(fp)abPicks=fp;await loadAbRoundData();abState('round');}
       else if(s==='round_result'&&prev!=='round_result'){const{data:rr}=await db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number');if(rr)abRoundResults=rr;playDramaticRoundReveal(battle.current_round,()=>abState('result'));}
-      else if(s==='final'&&prev!=='final'){const{data:r}=await db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number');abRoundResults=r||[];playDramaticFinalRecap(()=>abState('final'));}
+      else if(s==='final'&&prev!=='final'){const{data:r}=await db.from('aux_battle_round_results').select('*').eq('battle_id',battleId).order('round_number');abRoundResults=r||[];_abInvalidateRecordCache(battle.player_a_id);_abInvalidateRecordCache(battle.player_b_id);playDramaticFinalRecap(()=>abState('final'));}
       else if(s==='final'){abState('final');}
       else if(s==='lobby'){renderAuxBattleLobby();}
     })
@@ -10984,6 +12137,12 @@ function subscribeToAuxBattleRealtime(battleId){
       // Refresh the rating progress + finalize gate without rebuilding sliders
       refreshAbRatingProgress();
     })
+    .on('broadcast',{event:'rematch_vote'},({payload})=>{
+      if(!payload||!payload.user_id)return;
+      _abRematchVoters.add(payload.user_id);
+      renderAbRematchPanel();
+      maybeTriggerAuxRematch();
+    })
     .subscribe(async status=>{
       if(status==='SUBSCRIBED'&&currentUser)await abChannel.track({user_id:currentUser.id});
     });
@@ -11015,6 +12174,7 @@ function abLeave(){
   abPendingPick=null;abMyRatingA=null;abMyRatingB=null;abPendingBan=null;abBanMatches=[];
   _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;
   _abTlPrevResolvedRound=0;
+  _abResetRematchVoteState();
   const _tl=document.getElementById('ab-timeline');if(_tl)_tl.style.display='none';
   document.getElementById('ab-view').style.display='none';
 }
