@@ -85,11 +85,11 @@
     .no-hook-btn{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--muted);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:.18rem .15rem;border-radius:0;cursor:pointer;transition:all .15s;flex-shrink:0}
     .no-hook-btn.active{background:rgba(96,165,250,.15);border-color:var(--chorus);border-style:solid;color:var(--chorus)}
     .no-hook-dim{opacity:.28;pointer-events:none;transition:opacity .2s}
-    .interlude-btn{width:100%;padding:.4rem 0;background:transparent;border:none;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);color:var(--muted2);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:.55rem;transition:all .2s;margin-bottom:.25rem}
-    .features-btn{width:100%;padding:.35rem 0;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--muted2);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;margin-bottom:.25rem}
+    .interlude-btn{width:100%;padding:.6rem 0;background:transparent;border:none;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);color:var(--muted2);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:.55rem;transition:all .2s;margin-bottom:.65rem}
+    .features-btn{width:100%;padding:.5rem 0;background:transparent;border:none;border-bottom:1px solid var(--border);color:var(--muted2);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s;margin-bottom:.65rem}
     .features-btn:active{transform:scale(.97)}
     .features-btn.active{background:rgba(45,158,107,.12);border:1px solid var(--green);border-style:solid;color:var(--green)}
-    .features-bar{background:transparent;border:none;border-bottom:1px solid var(--border2);border-radius:0;padding:.5rem 0;margin-bottom:.25rem}
+    .features-bar{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.8rem 1rem;margin-bottom:.65rem}
     .features-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem}
     .features-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;min-width:2.4rem;flex-shrink:0}
     .features-impact{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.08em;min-width:2.8rem;flex-shrink:0}
@@ -98,7 +98,7 @@
     .interlude-btn:active{transform:scale(.97)}
     .interlude-btn.active{background:rgba(167,139,250,.18);border:2px solid var(--gold);color:var(--gold)}
     .interlude-btn.active svg{stroke:var(--gold)}
-    .interlude-banner{background:transparent;border:none;border-top:1px solid var(--text);border-bottom:1px solid var(--text);color:var(--text);padding:.4rem 1rem;font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:.85rem;font-weight:500;letter-spacing:0;text-transform:none;text-align:center;border-radius:0;margin-bottom:.25rem;line-height:1.35;font-variation-settings:'opsz' 24,'WONK' 0}
+    .interlude-banner{background:transparent;border:none;border-top:1px solid var(--text);border-bottom:1px solid var(--text);color:var(--text);padding:.55rem 1rem;font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:.85rem;font-weight:500;letter-spacing:0;text-transform:none;text-align:center;border-radius:0;margin-bottom:.65rem;line-height:1.45;font-variation-settings:'opsz' 24,'WONK' 0}
     .interlude-dim{opacity:.28;pointer-events:none;user-select:none;transition:opacity .2s}
     .rr-confirm-row{display:flex!important}
 
@@ -119,7 +119,7 @@
     .preview-btn.playing svg{animation:pulse 1.2s ease-in-out infinite}
 
     /* GENRE SELECTOR */
-    .genre-select-wrap{margin-bottom:.35rem}
+    .genre-select-wrap{margin-bottom:.7rem}
     .genre-label{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;margin-bottom:.3rem;display:block;font-weight:500}
     .genre-select-inner{position:relative}
     .genre-select{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:1.1rem;font-weight:500;letter-spacing:0;padding:.4rem 1.5rem .4rem 0;outline:none;cursor:pointer;border-radius:0;-webkit-appearance:none;appearance:none;transition:border-color .2s;font-variation-settings:'opsz' 24,'WONK' 0}
@@ -158,9 +158,9 @@
     .nav-btn-center.active span{color:var(--text);font-weight:700}
 
     /* FEED · editorial typeset entries (hairlines, no gradients) */
-    .feed-card{padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);transition:background .18s;position:relative}
+    .feed-card{padding:1.1rem 1.25rem;border-bottom:1.5px solid var(--muted2);transition:background .18s;position:relative}
     .feed-card:active{background:var(--surface)}
-    .feed-card-ed{padding:1.4rem 1.25rem 1.1rem}
+    .feed-card-ed{padding:.85rem 1.25rem .75rem}
     .feed-card-ed:active{background:rgba(128,128,128,.04)}
     .feed-card-ed .feed-card-gradient,.feed-card-ed .feed-card-accent{display:none}
     .feed-card-ed h2{letter-spacing:-.01em}
@@ -211,22 +211,20 @@
     .rc-title{font-size:1.3rem;font-weight:900;margin-bottom:.3rem}
     .rc-artist{font-size:.95rem;color:var(--muted2);margin-bottom:0}
 
-    /* RATE TAB · editorial categories with printed numerals
-       Tighter rhythm + harder boundaries between each category. */
-    .rcat{border-top:1.5px solid var(--muted);padding:.5rem 0 .55rem;position:relative}
-    .rcat:last-of-type{border-bottom:1.5px solid var(--muted)}
-    .rcat-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.25rem;gap:.6rem}
+    /* RATE TAB · editorial categories with printed numerals */
+    .rcat{border-top:1px solid var(--border);padding:.7rem 0}
+    .rcat:last-of-type{border-bottom:1px solid var(--border2)}
+    .rcat-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.45rem;gap:.6rem}
     .rcat-name{font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:1.05rem;font-weight:600;letter-spacing:0;text-transform:none;line-height:1;font-variation-settings:'opsz' 24,'WONK' 0}
-    .rcat-weight{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.48rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;margin-top:.15rem;font-weight:500}
-    .rcat-score{font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:900;line-height:.9;min-width:2.5rem;text-align:right;font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30;text-shadow:none}
-    .rcat-desc{font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:.7rem;color:var(--muted2);margin-top:.15rem;line-height:1.3;min-height:0;font-variation-settings:'opsz' 14}
-    .rcat-desc:empty{display:none}
+    .rcat-weight{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.48rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;margin-top:.2rem;font-weight:500}
+    .rcat-score{font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:900;line-height:.95;min-width:2.5rem;text-align:right;font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30;text-shadow:none}
+    .rcat-desc{font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:.7rem;color:var(--muted2);margin-top:.3rem;line-height:1.35;min-height:.6rem;font-variation-settings:'opsz' 14}
 
-    /* Slider row — full-width inked slider, mono numeral */
-    .rcat-row{display:flex;align-items:center;gap:.65rem;margin-bottom:0}
-    .rcat-lbl{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;min-width:42px;font-weight:500}
+    /* Slider row — sober inked slider, mono numeral */
+    .rcat-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.15rem}
+    .rcat-lbl{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;min-width:52px;font-weight:500}
     .rcat-lbl strong{color:var(--text);font-weight:700;font-feature-settings:'tnum'}
-    .rcat-slider{flex:1;max-width:none;height:3px}
+    .rcat-slider{flex:1;max-width:200px;height:3px;margin-left:auto}
 
     /* Verse tiers */
     .rcat-tiers{display:flex;gap:.2rem;margin-top:.45rem}
@@ -3692,7 +3690,7 @@ function buildRatingCard(row,songCounts){
   card.onclick=()=>openRatingDetail(row);
   card.innerHTML=`
     <!-- Eyebrow: kicker + byline -->
-    <header style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:.55rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">
+    <header style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:.35rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">
       <span style="display:flex;align-items:center;gap:.4rem;cursor:pointer" onclick="event.stopPropagation();openUserModal('${escAttr(row.user_id)}')">
         ${avatarHTML(p,'',16)}
         <span style="color:var(--text);font-weight:600">@${esc(u)}</span>
@@ -3702,26 +3700,26 @@ function buildRatingCard(row,songCounts){
       <span style="color:var(--text)">Rating</span>
     </header>
 
-    <!-- Body: italic title + meta + huge printed numeral -->
-    <div style="display:flex;align-items:flex-start;gap:.85rem">
+    <!-- Body: artwork left, title/byline middle, score right -->
+    <div style="display:flex;align-items:flex-start;gap:.7rem">
+      ${row.artwork_url
+        ?`<img src="${esc(itunesArtUrl(row.artwork_url,120))}" style="width:54px;height:54px;object-fit:cover;flex-shrink:0;border-radius:0" loading="lazy">`
+        :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="120" style="width:54px;height:54px;background:var(--border2);flex-shrink:0"></div>`
+      }
       <div style="flex:1;min-width:0">
-        <h2 class="ed-title ed-title-xl" style="margin:0;color:var(--text)">${esc(row.song_name||'Unknown')}</h2>
-        ${row.artist_name?`<div class="ed-byline" style="margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(row.artist_name)}${row.album?` <span style="color:var(--muted)">·</span> <span style="color:var(--muted)">${esc(row.album)}</span>`:''}</div>`:''}
-        ${row.verdict?`<div style="margin-top:.55rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);display:inline-flex;align-items:center;gap:.35rem"><span style="border-bottom:1px solid currentColor;padding-bottom:.05rem">${esc(row.verdict)}</span></div>`:''}
-        ${row.comment?`<p style="font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:.85rem;font-weight:400;line-height:1.45;color:var(--muted2);margin:.55rem 0 0;font-variation-settings:'opsz' 24,'WONK' 0;border-left:1px solid var(--border2);padding-left:.65rem">${esc(row.comment)}</p>`:''}
+        <h2 class="ed-title ed-title-xl" style="margin:0;color:var(--text);font-size:1.45rem;line-height:1.05">${esc(row.song_name||'Unknown')}</h2>
+        ${row.artist_name?`<div class="ed-byline" style="margin-top:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.65rem">${esc(row.artist_name)}${row.album?` <span style="color:var(--muted)">·</span> <span style="color:var(--muted)">${esc(row.album)}</span>`:''}</div>`:''}
+        ${row.verdict?`<div style="margin-top:.3rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);display:inline-flex;align-items:center;gap:.35rem"><span style="border-bottom:1px solid currentColor;padding-bottom:.05rem">${esc(row.verdict)}</span></div>`:''}
       </div>
-      <div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:.05rem">
-        ${row.artwork_url
-          ?`<img src="${esc(itunesArtUrl(row.artwork_url,140))}" style="width:70px;height:70px;object-fit:cover;flex-shrink:0;margin-bottom:.45rem;border-radius:0" loading="lazy">`
-          :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="140" style="width:70px;height:70px;background:var(--border2);flex-shrink:0;margin-bottom:.45rem"></div>`
-        }
-        <div class="ed-numeral" style="font-size:2.7rem;color:${scolor}">${score.toFixed(1)}</div>
-        <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:.15rem">— out of 10</div>
+      <div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:0;line-height:.95">
+        <div class="ed-numeral" style="font-size:2.4rem;color:${scolor}">${score.toFixed(1)}</div>
+        <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.46rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:.05rem">/ 10</div>
       </div>
     </div>
+    ${row.comment?`<p style="font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:.85rem;font-weight:400;line-height:1.4;color:var(--muted2);margin:.45rem 0 0;font-variation-settings:'opsz' 24,'WONK' 0;border-left:1px solid var(--border2);padding-left:.65rem">${esc(row.comment)}</p>`:''}
 
     <!-- Footer: meta + actions -->
-    <footer style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-top:.85rem;padding-top:.5rem;border-top:1px solid var(--border)">
+    <footer style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-top:.5rem;padding-top:.4rem;border-top:1px solid var(--border)">
       <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${count>1?count+' ratings on this title':'first rating'}</span>
       <div style="display:flex;align-items:center;gap:.85rem;flex-shrink:0">
         <button class="preview-btn" data-song="${escAttr(row.song_name||'')}" data-artist="${escAttr(row.artist_name||'')}" onclick="playFeedSong(this)" title="Preview" style="width:24px;height:24px;border:none;background:transparent;color:var(--muted)">${previewPlayIcon()}</button>
