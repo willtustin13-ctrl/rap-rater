@@ -19,7 +19,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>SONGR</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -41,7 +43,7 @@
     /* AUTH */
     .auth-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;padding:2rem 1.5rem;overflow-y:auto}
     .auth-brand{text-align:center;margin-bottom:2.5rem}
-    .auth-brand h1{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1;color:var(--text)}
+    .auth-brand h1{font-family:'Fraunces','Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1;color:var(--text)}
     .auth-brand h1 span{color:var(--red)}
     .auth-brand p{font-size:.6rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:.4rem}
     .auth-tabs{display:flex;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
@@ -63,7 +65,7 @@
 
     /* SETUP */
     .setup-wrap{flex:1;padding:2rem 1.5rem;overflow-y:auto}
-    .setup-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;margin-bottom:.4rem}
+    .setup-title{font-family:'Fraunces','Playfair Display',serif;font-size:1.8rem;font-weight:900;margin-bottom:.4rem}
     .setup-sub{font-size:.62rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:2rem}
     .setup-label{font-size:.58rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem;display:block}
     .setup-input{width:100%;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:16px;padding:.8rem 1rem;outline:none;transition:border-color .2s;margin-bottom:1.2rem;border-radius:2px;-webkit-appearance:none}
@@ -75,7 +77,7 @@
 
     /* APP HEADER */
     .app-header{padding:0 1.25rem;padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;min-height:56px;flex-shrink:0;background:var(--bg-nav);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border),0 4px 20px var(--shadow-mid)}
-    .app-header-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;letter-spacing:-.01em}
+    .app-header-title{font-family:'Fraunces','Playfair Display',serif;font-size:1.3rem;font-weight:900;letter-spacing:-.01em}
     .app-header-title span{color:var(--red)}
     .app-header-sub{font-size:.55rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase}
 
@@ -89,7 +91,7 @@
     .features-btn.active{background:rgba(45,158,107,.12);border:1px solid var(--green);border-style:solid;color:var(--green)}
     .features-bar{background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.8rem 1rem;margin-bottom:.65rem}
     .features-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem}
-    .features-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;min-width:2.4rem;flex-shrink:0}
+    .features-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;min-width:2.4rem;flex-shrink:0}
     .features-impact{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.08em;min-width:2.8rem;flex-shrink:0}
     .features-desc{font-size:.6rem;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;margin-top:.3rem;min-height:.9rem}
     .interlude-btn svg{width:18px;height:18px;flex-shrink:0;transition:stroke .2s}
@@ -131,26 +133,41 @@
     .refresh-btn.spinning svg{animation:spin .6s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* BOTTOM NAV */
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--bg-nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:100;box-shadow:0 -4px 24px var(--shadow-dark)}
-    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.28rem;background:transparent;border:none;cursor:pointer;color:var(--muted);transition:color .2s;padding:0;position:relative}
-    .nav-btn.active{color:var(--gold);filter:drop-shadow(0 0 6px var(--glow-accent))}
-    .nav-btn.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--gold);border-radius:0 0 3px 3px;box-shadow:0 0 8px var(--glow-accent)}
-    .nav-btn svg{width:21px;height:21px;transition:transform .2s}
-    .nav-btn.active svg{transform:scale(1.1)}
-    .nav-btn span{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700}
-    .nav-btn-center{flex:0 0 64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.28rem;background:transparent;border:none;cursor:pointer;color:var(--muted);padding:0;position:relative;margin-top:-14px}
-    .nav-btn-center .nav-center-disc{width:52px;height:52px;border-radius:50%;background:var(--surface2);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;transition:transform .15s cubic-bezier(.34,1.56,.64,1),background .15s,box-shadow .15s}
-    .nav-btn-center .nav-center-disc svg{width:26px;height:26px;stroke:var(--muted);transition:stroke .15s}
-    .nav-btn-center:active .nav-center-disc{transform:scale(.9)}
-    .nav-btn-center.active .nav-center-disc{background:var(--gold);border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,.55)}
-    .nav-btn-center.active .nav-center-disc svg{stroke:var(--bg)}
-    .nav-btn-center span{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;color:var(--muted)}
-    .nav-btn-center.active span{color:var(--gold)}
+    /* BOTTOM NAV · editorial — hairlines, italic mark, no disc */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--bg-nav);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:2px solid var(--text);display:flex;z-index:100;box-shadow:none}
+    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.18rem;background:transparent;border:none;cursor:pointer;color:var(--muted);transition:color .2s;padding:.35rem 0 0;position:relative}
+    .nav-btn::after{content:'';position:absolute;top:0;left:40%;right:40%;height:2px;background:transparent;transition:background .2s,left .2s,right .2s}
+    .nav-btn.active{color:var(--text);filter:none}
+    .nav-btn.active::after{background:var(--text);left:20%;right:20%}
+    .nav-btn svg{width:19px;height:19px;transition:opacity .2s;opacity:.7;stroke-width:1.5}
+    .nav-btn.active svg{opacity:1;transform:none}
+    .nav-btn span{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;line-height:1}
+    .nav-btn.active span{font-weight:700}
+    /* Center "Rate" button — no disc, just italic Fraunces section mark */
+    .nav-btn-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.14rem;background:transparent;border:none;cursor:pointer;color:var(--muted);padding:.3rem 0 0;position:relative;margin-top:0}
+    .nav-btn-center::after{content:'';position:absolute;top:0;left:40%;right:40%;height:2px;background:transparent;transition:background .2s,left .2s,right .2s}
+    .nav-btn-center.active{color:var(--text)}
+    .nav-btn-center.active::after{background:var(--text);left:20%;right:20%}
+    .nav-btn-center .nav-center-disc{width:auto;height:auto;border-radius:0;background:transparent;border:none;display:flex;align-items:baseline;justify-content:center;transition:none;font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-weight:700;font-size:1.2rem;color:inherit;line-height:1;font-variation-settings:'opsz' 36,'WONK' 1;padding:.05rem 0;position:relative}
+    .nav-btn-center .nav-center-disc::before{content:'§';display:block}
+    .nav-btn-center .nav-center-disc svg{display:none}
+    .nav-btn-center:active .nav-center-disc{transform:scale(.92)}
+    .nav-btn-center.active .nav-center-disc{background:transparent;border:none;box-shadow:none}
+    .nav-btn-center.active .nav-center-disc::before{color:var(--text)}
+    .nav-btn-center span{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;font-weight:500;line-height:1;color:var(--muted)}
+    .nav-btn-center.active span{color:var(--text);font-weight:700}
 
-    /* FEED */
+    /* FEED · editorial typeset entries (hairlines, no gradients) */
     .feed-card{padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);transition:background .18s;position:relative}
     .feed-card:active{background:var(--surface)}
+    .feed-card-ed{padding:1.4rem 1.25rem 1.1rem}
+    .feed-card-ed:active{background:rgba(128,128,128,.04)}
+    .feed-card-ed .feed-card-gradient,.feed-card-ed .feed-card-accent{display:none}
+    .feed-card-ed h2{letter-spacing:-.01em}
+    .feed-card-ed .preview-btn{border:none;background:transparent;transition:color .15s}
+    .feed-card-ed .preview-btn:hover{color:var(--text)}
+    .feed-card-ed .like-btn{color:var(--muted);background:transparent;border:none}
+    .feed-card-ed .like-btn.liked{color:var(--red)}
     .feed-card-accent{position:absolute;left:0;top:0;bottom:0;width:3px}
     .feed-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem}
     .feed-user{display:flex;align-items:center;gap:.55rem}
@@ -158,7 +175,7 @@
     .feed-username{font-size:1.05rem;color:var(--text);letter-spacing:.05em;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase}
     .feed-time{font-size:.55rem;color:var(--muted);letter-spacing:.04em}
     .feed-score-wrap{text-align:right}
-    .feed-score{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:900;line-height:1}
+    .feed-score{font-family:'Fraunces','Playfair Display',serif;font-size:2.6rem;font-weight:900;line-height:1}
     .feed-score-label{font-size:.48rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.1rem}
     .feed-main{display:flex;align-items:center;gap:.75rem}
     .feed-song-info{flex:1;min-width:0}
@@ -167,16 +184,17 @@
     .feed-verdict{display:inline-block;font-size:.55rem;color:var(--muted);letter-spacing:.08em;margin-top:.6rem;padding:.2rem .5rem;border:1px solid var(--border2);font-family:'Barlow Condensed',sans-serif;font-weight:600;text-transform:uppercase}
     .feed-empty{padding:3rem 1.5rem;text-align:center;font-size:.65rem;color:var(--muted);letter-spacing:.1em;font-style:italic;line-height:2}
 
-    /* FEED CONTROLS */
-    .feed-controls{padding:.65rem 1.25rem;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:.5rem;background:var(--bg);flex-shrink:0}
-    .feed-search-wrap{position:relative}
-    .feed-search-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--muted2);font-size:1.05rem;pointer-events:none}
-    .feed-search-input{width:100%;background:var(--surface2);border:1.5px solid #3a3a3a;color:var(--text);font-family:'DM Mono',monospace;font-size:.82rem;letter-spacing:.03em;padding:.72rem 1rem .72rem 2.5rem;outline:none;border-radius:3px;transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
-    .feed-search-input:focus{border-color:var(--gold);background:var(--surface)}
-    .feed-search-input::placeholder{color:var(--muted)}
-    .feed-sort-btns{display:flex;gap:.35rem}
-    .feed-sort-btn{flex:1;padding:.38rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .18s}
-    .feed-sort-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.08)}
+    /* FEED CONTROLS · editorial filter strip */
+    .feed-controls{padding:.7rem 1.25rem .55rem;border-bottom:1px solid var(--border2);display:flex;flex-direction:column;gap:.55rem;background:var(--bg);flex-shrink:0}
+    .feed-search-wrap{position:relative;border-bottom:1px solid var(--border);padding-bottom:.05rem}
+    .feed-search-icon{position:absolute;left:0;top:50%;transform:translateY(-50%);color:var(--muted2);font-size:.85rem;pointer-events:none;font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-weight:500}
+    .feed-search-icon::before{content:'⌕'}
+    .feed-search-input{width:100%;background:transparent;border:none;color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:1rem;letter-spacing:-.005em;padding:.4rem 0 .4rem 1.3rem;outline:none;border-radius:0;-webkit-appearance:none;appearance:none;font-variation-settings:'opsz' 36,'WONK' 1}
+    .feed-search-input:focus{background:transparent}
+    .feed-search-input::placeholder{color:var(--muted2);font-style:italic}
+    .feed-sort-btns{display:flex;gap:.25rem;flex-wrap:wrap}
+    .feed-sort-btn{flex:1;padding:.35rem 0;background:transparent;border:none;border-bottom:1.5px solid transparent;color:var(--muted);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:0;transition:all .18s;min-width:0}
+    .feed-sort-btn.active{border-bottom-color:var(--text);color:var(--text);background:transparent;font-weight:700;box-shadow:none}
 
     /* FEED CARD GRADIENT */
     .feed-card-gradient{position:absolute;top:0;left:0;right:0;height:3px;opacity:.7}
@@ -187,7 +205,7 @@
     /* RATE TAB — BALANCED */
     :root{--rc-bottom-h:80px}
     .rate-inner{padding:0 1rem}
-    .rc-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'Playfair Display',serif;font-style:italic;padding:.3rem 0;outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:0;display:block}
+    .rc-input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-style:italic;padding:.3rem 0;outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:0;display:block}
     .rc-input:focus{border-color:var(--gold)}
     .rc-input::placeholder{color:var(--muted)}
     .rc-title{font-size:1.3rem;font-weight:900;margin-bottom:.3rem}
@@ -199,7 +217,7 @@
     .rcat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.35rem}
     .rcat-name{font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;line-height:1}
     .rcat-weight{font-size:.48rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:.12rem}
-    .rcat-score{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;line-height:1;min-width:2.5rem;text-align:right}
+    .rcat-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.6rem;font-weight:900;line-height:1;min-width:2.5rem;text-align:right}
     .rcat-desc{font-size:.5rem;color:var(--muted2);font-style:italic;margin-top:.25rem;line-height:1.4;min-height:.6rem}
 
     /* Slider row — label on left, SHORT slider on right */
@@ -220,7 +238,7 @@
     .rc-score-bar-wrap{height:3px;background:var(--border);margin-bottom:.55rem;border-radius:2px;overflow:hidden}
     .rc-score-inner{display:flex;align-items:center;gap:.75rem}
     .rc-score-left{flex:1;min-width:0}
-    .rc-final{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1;transition:color .3s}
+    .rc-final{font-family:'Fraunces','Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1;transition:color .3s}
     .rc-verdict{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .rc-score-mods{display:none}
     .rc-score-btns{display:flex;gap:.4rem;flex-shrink:0}
@@ -237,7 +255,7 @@
     .onboard-slide.exit{opacity:0;transform:translateX(-40px)}
     .onboard-badge{font-size:.58rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem;font-family:'Barlow Condensed',sans-serif;font-weight:700}
     .onboard-icon{font-size:2.2rem;margin-bottom:.75rem}
-    .onboard-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1.1;margin-bottom:.75rem;color:var(--text)}
+    .onboard-title{font-family:'Fraunces','Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1.1;margin-bottom:.75rem;color:var(--text)}
     .onboard-body{font-size:.72rem;color:var(--muted2);line-height:1.7;margin-bottom:1.2rem}
     .onboard-body strong{color:var(--text)}
     .onboard-cats{display:flex;flex-direction:column;gap:.5rem}
@@ -266,7 +284,7 @@
     .onboard-flow-lbl{font-size:.58rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;min-width:72px}
     .onboard-flow-bar-wrap{flex:1;height:4px;background:var(--border2);border-radius:2px;overflow:hidden}
     .onboard-flow-bar{height:100%;border-radius:2px}
-    .onboard-flow-val{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:900;min-width:1.2rem;text-align:right}
+    .onboard-flow-val{font-family:'Fraunces','Playfair Display',serif;font-size:.9rem;font-weight:900;min-width:1.2rem;text-align:right}
     .onboard-flow-result{font-size:.62rem;color:var(--muted);letter-spacing:.05em;border-top:1px solid var(--border);padding-top:.45rem;margin-top:.1rem}
     .onboard-dots{display:flex;justify-content:center;gap:.5rem;padding:.9rem 0 .7rem}
     .onboard-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .25s}
@@ -328,7 +346,7 @@
     .section-rule{flex:1;height:1px;background:var(--border)}
     .section-num{font-size:.6rem;color:var(--red);font-weight:700}
     .song-inputs{margin-bottom:1rem}
-    .song-inputs input{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:0}
+    .song-inputs input{width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-size:1.6rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;transition:border-color .2s;-webkit-appearance:none;border-radius:0}
     .song-inputs input:focus{border-color:var(--gold)}
     .song-inputs input::placeholder{color:var(--muted)}
     .song-inputs input.artist-inp{font-size:1.1rem;color:var(--muted2);margin-top:.5rem}
@@ -339,7 +357,7 @@
     .cat-name{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;line-height:1}
     .cat-weight{font-size:.5rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
     .cat-right{text-align:right;min-width:110px}
-    .cat-score{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1;transition:color .3s}
+    .cat-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1;transition:color .3s}
     .cat-desc{font-size:.52rem;color:var(--muted2);letter-spacing:.03em;line-height:1.4;margin-top:.2rem;font-style:italic;max-width:130px;margin-left:auto;min-height:.7rem}
     .slider-row{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.4rem}
     .slider-meta{display:flex;justify-content:space-between;font-size:.54rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
@@ -360,9 +378,9 @@
     .verse-eq span{color:var(--verses);font-weight:500}
     .score-panel{background:var(--surface);border:1px solid var(--border2);margin-top:1.5rem;overflow:hidden;border-radius:2px}
     .score-panel-top{display:grid;grid-template-columns:1fr auto;gap:.75rem;padding:1.2rem 1.2rem .8rem;border-bottom:1px solid var(--border);align-items:end}
-    .score-song-nm{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;font-style:italic;color:var(--text);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .score-song-nm{font-family:'Fraunces','Playfair Display',serif;font-size:1.3rem;font-weight:700;font-style:italic;color:var(--text);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .score-lbl{font-size:.5rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.15rem}
-    .score-big{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;line-height:1;transition:color .35s;text-align:right}
+    .score-big{font-family:'Fraunces','Playfair Display',serif;font-size:4rem;font-weight:900;line-height:1;transition:color .35s;text-align:right}
     .score-bar-wrap{height:3px;background:var(--border)}
     .score-bar{height:100%;transition:width .5s cubic-bezier(.4,0,.2,1),background .35s;width:0}
     .score-breakdown{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border)}
@@ -383,36 +401,37 @@
     .rate-btn-reset{border-color:var(--border2);color:var(--muted)}
     .rate-btn-reset:active{border-color:var(--red);color:var(--red)}
 
-    /* PROFILE */
-    .profile-header{padding:1.5rem 1.25rem 1.3rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:1rem;background:var(--surface)}
-    .profile-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1.6rem;font-weight:800;color:var(--bg);flex-shrink:0;box-shadow:0 0 0 3px rgba(255,255,255,.08),0 4px 20px rgba(0,0,0,.4)}
+    /* PROFILE · editorial — flat surfaces, hairlines, italic name */
+    .profile-header{padding:1.5rem 1.25rem 1.3rem;border-bottom:1px solid var(--border2);display:flex;align-items:flex-start;gap:1rem;background:transparent}
+    .profile-avatar{width:64px;height:64px;border-radius:0;display:flex;align-items:center;justify-content:center;font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:1.8rem;font-weight:700;color:var(--bg);flex-shrink:0;box-shadow:none;font-variation-settings:'opsz' 96,'WONK' 1}
     .profile-info{flex:1;min-width:0}
-    .profile-username{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;letter-spacing:-.01em}
-    .profile-handle{font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem;font-family:'Barlow Condensed',sans-serif;font-weight:600}
-    .profile-bio{font-size:.65rem;color:var(--muted2);line-height:1.6;margin-top:.6rem}
-    .profile-stats{display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface)}
-    .stat-item{flex:1;padding:.9rem .75rem;border-right:1px solid var(--border);text-align:center}
+    .profile-username{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:2rem;font-weight:700;letter-spacing:-.015em;line-height:1;font-variation-settings:'opsz' 144,'SOFT' 30,'WONK' 1;color:var(--text)}
+    .profile-handle{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;margin-top:.35rem;font-weight:500}
+    .profile-bio{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:.85rem;color:var(--muted2);line-height:1.5;margin-top:.65rem;font-variation-settings:'opsz' 18,'WONK' 1}
+    .profile-stats{display:flex;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);background:transparent;padding:0}
+    .stat-item{flex:1;padding:.95rem .5rem;border-right:1px solid var(--border);text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:.05rem}
     .stat-item:last-child{border-right:none}
-    .stat-val{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;display:block;line-height:1}
-    .stat-lbl{font-size:.48rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.3rem;display:block;font-family:'Barlow Condensed',sans-serif;font-weight:700}
-    .profile-rating-row{display:flex;align-items:center;justify-content:space-between;padding:.85rem 1.25rem;border-bottom:1px solid var(--border)}
-    .pr-song{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text)}
-    .pr-artist{font-size:.58rem;color:var(--muted);margin-top:.1rem}
-    .pr-score{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900}
+    .stat-item:nth-child(n+2){padding-left:.85rem}
+    .stat-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.85rem;font-weight:900;display:block;line-height:1;font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30}
+    .stat-lbl{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:.3rem;display:block;font-weight:500}
+    .profile-rating-row{display:flex;align-items:baseline;justify-content:space-between;padding:.65rem 1.25rem;border-bottom:1px solid var(--border)}
+    .pr-song{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:1rem;font-weight:500;letter-spacing:0;color:var(--text);font-variation-settings:'opsz' 24,'WONK' 1;text-transform:none}
+    .pr-artist{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);margin-top:.15rem;letter-spacing:.1em;text-transform:uppercase}
+    .pr-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30;line-height:1}
 
-    .pf-joined{font-size:.52rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:600;margin-top:.3rem}
-    .pf-edit-btn{position:absolute;top:1rem;right:1.25rem;background:var(--surface2);border:1.5px solid var(--border2);color:var(--text);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.42rem .85rem;border-radius:4px;display:flex;align-items:center;justify-content:center;gap:.35rem;cursor:pointer;transition:all .2s;flex-shrink:0;min-height:34px}
-    .pf-edit-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.08)}
-    .pf-edit-btn:active{transform:scale(.96)}
-    .pf-edit-form{padding:1.25rem;background:var(--surface);border-bottom:1px solid var(--border)}
-    .pf-edit-bio{width:100%;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:.65rem;line-height:1.6;padding:.6rem .75rem;border-radius:2px;resize:none;outline:none;margin-top:.75rem;box-sizing:border-box}
-    .pf-edit-bio:focus{border-color:var(--gold)}
-    .pf-artist-stats{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+    .pf-joined{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-top:.4rem}
+    .pf-edit-btn{position:absolute;top:1rem;right:1.25rem;background:transparent;border:none;border-bottom:1.5px solid var(--text);color:var(--text);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;padding:.18rem .15rem;border-radius:0;display:flex;align-items:center;justify-content:center;gap:.3rem;cursor:pointer;transition:all .2s;flex-shrink:0;min-height:0}
+    .pf-edit-btn:hover{border-bottom-color:var(--gold);color:var(--gold);background:transparent}
+    .pf-edit-btn:active{opacity:.6}
+    .pf-edit-form{padding:1.25rem;background:transparent;border-bottom:1px solid var(--border2)}
+    .pf-edit-bio{width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:.85rem;line-height:1.5;padding:.4rem 0;border-radius:0;resize:none;outline:none;margin-top:.55rem;box-sizing:border-box}
+    .pf-edit-bio:focus{border-bottom-color:var(--gold)}
+    .pf-artist-stats{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border2);background:transparent;padding:0}
     .pf-astat{padding:.9rem 1.25rem;border-right:1px solid var(--border)}
     .pf-astat:last-child{border-right:none}
-    .pf-astat-lbl{font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.25rem}
-    .pf-astat-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .pf-astat-val{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;line-height:1.2;margin-top:.1rem}
+    .pf-astat-lbl{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:.3rem}
+    .pf-astat-name{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:1rem;font-weight:600;letter-spacing:0;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:none;font-variation-settings:'opsz' 24,'WONK' 1}
+    .pf-astat-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.2rem;font-weight:900;line-height:1.1;margin-top:.15rem;font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30}
     /* SETTINGS */
     .settings-section{border-bottom:1px solid var(--border);padding:.25rem 0}
     .settings-section-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);padding:.85rem 1.25rem .3rem}
@@ -467,32 +486,32 @@
     .milestone-toast-eyebrow{font-size:.44rem;color:var(--gold);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700}
     .milestone-toast-name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--text);margin-top:.1rem}
     .milestone-toast-desc{font-size:.52rem;color:var(--muted2);margin-top:.1rem}
-    /* PROFILE FOLDERS */
-    .pf-folder-block{margin-bottom:.4rem}
-    .pf-folder-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .15s}
-    .pf-folder-header:active{background:var(--surface2)}
-    .pf-folder-left{display:flex;align-items:center;gap:.6rem}
-    .pf-folder-arrow{font-size:.55rem;color:var(--muted);transition:transform .2s}
-    .pf-folder-header.open .pf-folder-arrow{transform:rotate(90deg);color:var(--gold)}
-    .pf-folder-nm{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text)}
-    .pf-folder-count{font-size:.52rem;color:var(--muted);letter-spacing:.08em}
-    .pf-folder-right{display:flex;align-items:center;gap:.6rem}
-    .pf-folder-avg{font-family:'Playfair Display',serif;font-size:1rem;font-weight:900}
-    .pf-folder-body{display:none;background:var(--bg)}
+    /* PROFILE FOLDERS · editorial — flat, italic artist names */
+    .pf-folder-block{margin-bottom:0}
+    .pf-folder-header{display:flex;align-items:baseline;justify-content:space-between;padding:.85rem 1.25rem;background:transparent;border-top:1px solid var(--border2);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .15s}
+    .pf-folder-header:active{background:rgba(128,128,128,.04)}
+    .pf-folder-left{display:flex;align-items:baseline;gap:.55rem}
+    .pf-folder-arrow{font-size:.5rem;color:var(--muted);transition:transform .2s;font-family:'JetBrains Mono','DM Mono',monospace}
+    .pf-folder-header.open .pf-folder-arrow{transform:rotate(90deg);color:var(--text)}
+    .pf-folder-nm{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:1.15rem;font-weight:600;letter-spacing:0;text-transform:none;color:var(--text);font-variation-settings:'opsz' 36,'WONK' 1;line-height:1}
+    .pf-folder-count{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase}
+    .pf-folder-right{display:flex;align-items:baseline;gap:.6rem}
+    .pf-folder-avg{font-family:'Fraunces','Playfair Display',serif;font-size:1.2rem;font-weight:900;font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30}
+    .pf-folder-body{display:none;background:transparent}
     .pf-folder-body.open{display:block}
-    .pf-album-header{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.25rem .6rem 2rem;background:var(--surface2);border-top:1px solid var(--border);cursor:pointer;user-select:none;transition:background .15s}
-    .pf-album-header:active{background:var(--surface)}
-    .pf-album-header.open .pf-album-arrow{transform:rotate(90deg);color:var(--gold)}
-    .pf-album-arrow{font-size:.5rem;color:var(--muted);transition:transform .2s;margin-right:.4rem}
-    .pf-album-nm{font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)}
-    .pf-album-header.open .pf-album-nm{color:var(--text)}
+    .pf-album-header{display:flex;align-items:baseline;justify-content:space-between;padding:.55rem 1.25rem .55rem 2rem;background:transparent;border-top:1px solid var(--border);cursor:pointer;user-select:none;transition:background .15s}
+    .pf-album-header:active{background:rgba(128,128,128,.04)}
+    .pf-album-header.open .pf-album-arrow{transform:rotate(90deg);color:var(--text)}
+    .pf-album-arrow{font-size:.45rem;color:var(--muted);transition:transform .2s;margin-right:.4rem;font-family:'JetBrains Mono','DM Mono',monospace}
+    .pf-album-nm{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:.88rem;font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted2);font-variation-settings:'opsz' 24,'WONK' 1}
+    .pf-album-header.open .pf-album-nm{color:var(--text);font-weight:600}
     .pf-album-body{display:none;background:var(--bg)}
     .pf-album-body.open{display:block}
     .pf-rating-row{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.25rem .65rem 2.5rem;border-bottom:1px solid var(--border)}
     .pf-rating-row:last-child{border-bottom:none}
     .pf-song{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text)}
     .pf-artist{font-size:.55rem;color:var(--muted);margin-top:.1rem}
-    .pf-score{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900}
+    .pf-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.3rem;font-weight:900}
 
     /* MODAL */
     .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:flex-end;justify-content:center;padding-bottom:var(--safe-b)}
@@ -500,7 +519,7 @@
     .modal{background:var(--surface);border:1px solid var(--border2);border-bottom:none;padding:1.5rem;width:100%;max-width:500px;border-radius:12px 12px 0 0}
     .modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 1.2rem}
     .modal-title{font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.5rem;color:var(--text)}
-    .modal-preview{font-family:'Playfair Display',serif;font-size:.95rem;font-style:italic;color:var(--muted2);margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+    .modal-preview{font-family:'Fraunces','Playfair Display',serif;font-size:.95rem;font-style:italic;color:var(--muted2);margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
     .modal-lbl{font-size:.54rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.35rem;display:block}
     .modal-tabs{display:flex;margin-bottom:.75rem}
     .modal-tab{flex:1;padding:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border2);color:var(--muted);background:transparent;transition:all .18s}
@@ -525,7 +544,7 @@
     .rd-meta{font-size:.58rem;color:var(--muted2);letter-spacing:.05em;margin-bottom:1rem;padding-bottom:.9rem;border-bottom:1px solid var(--border)}
     .rd-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.65rem}
     .rd-score-col{text-align:right}
-    .rd-score-big{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1}
+    .rd-score-big{font-family:'Fraunces','Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1}
     .rd-score-sub{font-size:.46rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-top:.1rem}
     .rd-verdict{font-size:.52rem;color:var(--muted);border:1px solid var(--border2);display:inline-block;padding:.2rem .5rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.9rem}
     .rd-cat{padding:.45rem 0;border-bottom:1px solid var(--border)}
@@ -533,7 +552,7 @@
     .rd-cat-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem}
     .rd-cat-name{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
     .rd-cat-weight{font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:.1rem}
-    .rd-cat-score{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;min-width:2rem;text-align:right}
+    .rd-cat-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.25rem;font-weight:900;min-width:2rem;text-align:right}
     .rd-bar-bg{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
     .rd-bar-fill{height:100%;border-radius:2px}
     .rd-modal{max-height:88vh;overflow-y:auto;padding-bottom:calc(var(--safe-b) + 1.5rem)}
@@ -541,7 +560,7 @@
     /* LOADING */
     .loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
     .loading-screen.hidden{display:none}
-    .loading-logo{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--text);animation:pulse 1.5s ease-in-out infinite}
+    .loading-logo{font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--text);animation:pulse 1.5s ease-in-out infinite}
     .loading-logo span{color:var(--red)}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
     @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
@@ -560,18 +579,18 @@
     .like-btn.pop{animation:likePop .25s cubic-bezier(.34,1.56,.64,1)}
     .rd-comment{font-size:.65rem;color:var(--muted2);line-height:1.6;font-style:italic;border-left:2px solid var(--border2);padding-left:.6rem;margin-bottom:.9rem}
 
-    /* FEED MODE */
-    .feed-mode-btns{display:flex;gap:.35rem;margin-bottom:.5rem}
-    .feed-mode-btn{flex:1;padding:.38rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .18s}
-    .feed-mode-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.08)}
+    /* FEED MODE · editorial section tabs */
+    .feed-mode-btns{display:flex;gap:0;margin-bottom:.4rem;border-bottom:1px solid var(--border)}
+    .feed-mode-btn{flex:1;padding:.4rem .2rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;border-radius:0;transition:all .18s;margin-bottom:-1px;min-width:0}
+    .feed-mode-btn.active{border-bottom-color:var(--text);color:var(--text);background:transparent;font-weight:700;box-shadow:none}
 
     /* USER MODAL */
     .um-center{text-align:center}
     .um-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:800;color:var(--bg);margin:0 auto .75rem;box-shadow:0 0 0 3px rgba(255,255,255,.08)}
-    .um-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900}
+    .um-name{font-family:'Fraunces','Playfair Display',serif;font-size:1.3rem;font-weight:900}
     .um-handle{font-size:.58rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:600;margin-top:.2rem}
     .um-stats{display:flex;justify-content:center;gap:2.5rem;padding:.9rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:.85rem 0}
-    .um-stat-val{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;display:block;text-align:center}
+    .um-stat-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:900;display:block;text-align:center}
     .um-stat-lbl{font-size:.48rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700}
     .follow-btn{width:100%;padding:.8rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;border:1px solid;border-radius:2px;transition:all .2s;margin-top:.25rem}
     .follow-btn-add{background:var(--gold);border-color:var(--gold);color:var(--bg)}
@@ -633,24 +652,39 @@
     .auth-btn{background:var(--gold);border:none}
     .rr-btn-primary{background:var(--gold);border:none}
 
-    /* Feed score glow */
-    .feed-score{text-shadow:0 0 18px currentColor}
+    /* ── EDITORIAL SCORE TREATMENT ──────────────────────────────────────
+       Printed numerals: tabular figures, optical sizing, no glow. The
+       semantic color (red/violet/green) stays for scannability — that's
+       what does the work, not the halo. */
+    .feed-score,.stat-val,.rc-final,.rr-final-score,.rr-reveal-avg,
+    .feed-score-label,.rcat-score,.rd-cat-score,.rd-score-big,
+    .pf-folder-avg,.pf-score,.pf-astat-val,.um-stat-val,
+    .ab-card-name,.battle-bar-pct,.ab-rating-cat-val,.ab-result-winner,
+    .ab-score-tally-num,.sw-song-score,.sw-detail-score,.sw-detail-stat-val,
+    .sw-genre-avg,.sw-trend-rank,
+    .te-card-score,.ap-album-score,.ap-song-score,.ap-hero-stat-val,
+    .ap-stat-card-val,.abrev-score-num,
+    .rr-intro-count,.rr-intro-song-name,
+    .ab-rating-hero-song,.ab-round-vs,.ab-rating-hero-art{
+      text-shadow:none;
+      font-feature-settings:'tnum' on, 'lnum' on, 'ss01' on;
+      font-variant-numeric:tabular-nums lining-nums;
+    }
+    /* Optical size: large display contexts → looser opsz, more wedge */
+    .feed-score,.rc-final,.rr-final-score,.rr-reveal-avg,
+    .rd-score-big,.um-stat-val,.ab-score-tally-num,
+    .ab-result-winner,.ab-rating-hero-song,.sw-detail-score,
+    .rr-intro-song-name,.abrev-score-num{
+      font-variation-settings:"opsz" 144, "SOFT" 30, "WONK" 0;
+    }
     .feed-card:active{background:rgba(128,128,128,.06)}
 
-    /* Active feed controls glow */
-    .feed-mode-btn.active{box-shadow:0 0 10px var(--glow-accent)}
-    .feed-sort-btn.active{box-shadow:0 0 10px var(--glow-accent)}
-
-    /* Stat values glow on profile */
-    .stat-val{text-shadow:0 0 14px currentColor}
+    /* Replace neon glow on controls with a quieter inked underline */
+    .feed-mode-btn.active{box-shadow:inset 0 -2px 0 currentColor}
+    .feed-sort-btn.active{box-shadow:inset 0 -2px 0 currentColor}
 
     /* Like button */
-    .like-btn.liked{color:var(--red);filter:drop-shadow(0 0 4px var(--glow-pink))}
-
-    /* Score panel final score glow */
-    .rc-final{text-shadow:0 0 24px currentColor}
-    .rr-final-score{text-shadow:0 0 20px currentColor}
-    .rr-reveal-avg{text-shadow:0 0 30px currentColor}
+    .like-btn.liked{color:var(--red)}
 
     /* Feed card gradient bar glow */
     .feed-card-gradient{opacity:1}
@@ -667,9 +701,92 @@
     /* Follow button */
     .follow-btn-add{background:var(--gold);border:none}
 
-    /* Stars — subtle dot grid pseudo-background on body */
-    body::before{display:none}
-    .view{z-index:1}
+    /* ── MIXTAPE EDITORIAL · DESIGN PRIMITIVES ────────────────────────
+       Reusable typesetting classes. Hairlines instead of cards,
+       printed numerals, mono caps eyebrows, Fraunces lede & numerals.
+       Theme-agnostic — work in light, dark, tinted. */
+
+    /* Masthead bar — 3-col mono meta with strong top rule */
+    .ed-mast{border-top:2px solid var(--text);border-bottom:1px solid var(--border2);padding:.4rem 0 .35rem;display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase}
+    .ed-mast .ed-mast-ink{color:var(--text)}
+
+    /* Small mono caps eyebrow / kicker */
+    .ed-eyebrow{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+    .ed-eyebrow-ink{color:var(--text)}
+
+    /* Running head — section title with hairline underline */
+    .ed-running-head{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border2);padding:0 0 .25rem;margin:1.1rem 0 .2rem;display:flex;align-items:baseline;justify-content:space-between;gap:.5rem}
+    .ed-running-head .ed-running-mark{color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-weight:500;font-size:.65rem;letter-spacing:0;text-transform:none}
+
+    /* Hairline rules */
+    .ed-rule{height:1px;background:var(--border);border:none;margin:0}
+    .ed-rule-strong{height:1px;background:var(--border2);border:none;margin:0}
+    .ed-rule-double{border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);height:3px;background:transparent}
+
+    /* Editorial italic lede paragraph (use sparingly) */
+    .ed-lede{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:1.25rem;font-weight:500;line-height:1.28;color:var(--text);margin:0;font-variation-settings:'opsz' 144,'SOFT' 30,'WONK' 1;letter-spacing:-.005em}
+    .ed-lede-tight{font-size:1rem;font-weight:500}
+
+    /* Drop cap (apply <span class="ed-dropcap">X</span> at start of lede) */
+    .ed-dropcap{float:left;font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-weight:900;font-size:3.6rem;line-height:.85;padding:.18rem .3rem 0 0;color:var(--text);font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1}
+
+    /* Printed numerals (huge prominent scores) */
+    .ed-numeral{font-family:'Fraunces','Playfair Display',serif;font-weight:900;font-feature-settings:'tnum','lnum';font-variant-numeric:tabular-nums lining-nums;font-variation-settings:'opsz' 144,'SOFT' 30;text-shadow:none;line-height:1}
+    .ed-numeral-mono{font-family:'JetBrains Mono','DM Mono',monospace;font-weight:700;font-feature-settings:'tnum','lnum';font-variant-numeric:tabular-nums lining-nums;text-shadow:none}
+
+    /* Italic / roman display names */
+    .ed-italic{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-weight:500;font-variation-settings:'opsz' 36,'WONK' 1}
+    .ed-roman{font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-weight:600;font-variation-settings:'opsz' 36}
+
+    /* Typeset list row (replaces card-in-card patterns) */
+    .ed-row{display:grid;grid-template-columns:1.6rem 1fr auto;gap:.55rem .75rem;align-items:baseline;padding:.6rem 1.25rem;border-bottom:1px solid var(--border);min-width:0}
+    .ed-row-flush{padding:.55rem 0}
+    .ed-row:last-of-type{border-bottom:none}
+    .ed-row-num{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.62rem;color:var(--muted);font-feature-settings:'tnum'}
+    .ed-row-body{min-width:0}
+    .ed-row-tail{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);text-align:right;white-space:nowrap}
+
+    /* Tally row — printed score line with em-dash */
+    .ed-tally{display:flex;align-items:baseline;justify-content:space-between;gap:.55rem;border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);padding:.95rem 0;margin:0}
+    .ed-tally-side{flex:1;min-width:0}
+    .ed-tally-side-end{text-align:right}
+    .ed-tally-mid{font-family:'Fraunces','Playfair Display',serif;font-weight:900;line-height:1;color:var(--text);font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30;flex-shrink:0;display:flex;align-items:baseline;gap:.35rem}
+    .ed-tally-em{font-size:.6em;color:var(--muted2);font-weight:400}
+
+    /* Mono caps tag (replaces pill buttons everywhere) */
+    .ed-tag{font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:baseline;gap:.25rem;padding:.18rem 0}
+    .ed-tag-rule{border-bottom:1px solid currentColor}
+    .ed-tag-ink{color:var(--text)}
+    .ed-tag-accent{color:var(--gold)}
+
+    /* Bylines, attributions */
+    .ed-byline{font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:.7rem;color:var(--muted2);font-weight:400;font-variation-settings:'opsz' 24}
+
+    /* Item title — Fraunces, opsz-aware */
+    .ed-title{font-family:'Fraunces','Playfair Display',serif;font-weight:600;color:var(--text);font-variation-settings:'opsz' 36,'WONK' 1;line-height:1.18}
+    .ed-title-lg{font-size:1.35rem;font-weight:700;font-variation-settings:'opsz' 60,'WONK' 1}
+    .ed-title-xl{font-size:1.85rem;font-weight:800;font-style:italic;font-variation-settings:'opsz' 96,'SOFT' 30,'WONK' 1;letter-spacing:-.01em;line-height:1.05}
+
+    /* Vertical em-dash separator (printed between meta items) */
+    .ed-sep::before{content:" — ";color:var(--muted2);font-family:'Fraunces','Playfair Display',serif;font-weight:400;margin:0 .15rem}
+
+    /* ── PAPER GRAIN OVERLAY ──────────────────────────────────────────
+       Tiny SVG fBm-noise tile, repeated. Sits above the background but
+       below all content. Multiply-style: lifts the visual a hair on
+       dark themes, drops it a hair on light. Theme-agnostic. */
+    body::before{
+      content:'';
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      opacity:.045;
+      mix-blend-mode:overlay;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      background-size:180px 180px;
+      display:block;
+    }
+    .view{z-index:1;position:fixed}
 
     /* NAV BADGE */
     .nav-badge{width:7px;height:7px;border-radius:50%;background:var(--red);position:absolute;top:9px;right:calc(50% - 17px);display:none}
@@ -707,9 +824,9 @@
     @keyframes rrIntroFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
     @keyframes rrCountTick{0%{transform:scale(1.6);opacity:.25}60%{opacity:1}100%{transform:scale(1);opacity:1}}
     .rr-intro-badge{font-size:.52rem;color:var(--gold);letter-spacing:.2em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;border:1px solid rgba(167,139,250,.35);padding:.3rem .9rem;border-radius:2px;margin-bottom:1.75rem;animation:rrIntroFade .4s ease-out both}
-    .rr-intro-song-name{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:900;line-height:1.15;max-width:300px;animation:rrIntroFade .5s .1s ease-out both}
+    .rr-intro-song-name{font-family:'Fraunces','Playfair Display',serif;font-size:2.1rem;font-weight:900;line-height:1.15;max-width:300px;animation:rrIntroFade .5s .1s ease-out both}
     .rr-intro-artist{font-size:.65rem;color:var(--muted2);margin-top:.6rem;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;animation:rrIntroFade .5s .2s ease-out both}
-    .rr-intro-count{font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:900;line-height:1;color:var(--text)}
+    .rr-intro-count{font-family:'Fraunces','Playfair Display',serif;font-size:4.5rem;font-weight:900;line-height:1;color:var(--text)}
     .rr-count-tick{animation:rrCountTick .65s ease-out}
     .rr-song-row{display:flex;align-items:center;gap:.5rem;padding:.55rem 0;border-bottom:1px solid var(--border)}
     .rr-song-num{font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);width:16px;flex-shrink:0;text-align:right}
@@ -731,12 +848,12 @@
     .rr-cat{padding:.55rem 1.25rem;border-bottom:1px solid var(--border)}
     .rr-cat-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem}
     .rr-cat-name{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-    .rr-cat-val{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900}
+    .rr-cat-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.05rem;font-weight:900}
     .rr-slider{width:100%;height:4px;border-radius:2px;cursor:pointer;-webkit-appearance:none;appearance:none;outline:none;background:#1e1d42}
     .rr-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--text);cursor:pointer;border:2px solid var(--bg);box-shadow:0 0 0 1px rgba(255,255,255,.1)}
     .rr-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--text);cursor:pointer;border:2px solid var(--bg)}
     .rr-score-footer{padding:.7rem 1.25rem calc(var(--nav-h) + var(--safe-b) + .5rem);background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-shrink:0}
-    .rr-final-score{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1;flex-shrink:0}
+    .rr-final-score{font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1;flex-shrink:0}
     .no-lyrics-dim{opacity:.2;pointer-events:none;user-select:none}
     @keyframes rrBlindPulse{0%,100%{opacity:.4}50%{opacity:.9}}
     .rr-blind-score{animation:rrBlindPulse 1.8s ease-in-out infinite;font-size:2rem;letter-spacing:.05em}
@@ -747,7 +864,7 @@
     .rr-verdict-txt{font-size:.56rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
     .rr-submit-btn{padding:.8rem 1.4rem;font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;background:var(--gold);color:var(--bg);border:none;border-radius:4px;transition:opacity .2s;flex-shrink:0;min-height:42px}
     .rr-submit-btn:disabled{opacity:.35;cursor:not-allowed}
-    .rr-reveal-avg{font-family:'Playfair Display',serif;font-size:7rem;font-weight:900;line-height:1;text-align:center;letter-spacing:-.02em}
+    .rr-reveal-avg{font-family:'Fraunces','Playfair Display',serif;font-size:7rem;font-weight:900;line-height:1;text-align:center;letter-spacing:-.02em}
     .rr-chat-btn{position:relative;background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:3px;padding:.28rem .55rem;cursor:pointer;display:flex;align-items:center;gap:.3rem;flex-shrink:0;transition:border-color .15s,color .15s}
     .rr-chat-btn:active{opacity:.7}
     .rr-chat-btn.has-unread{border-color:var(--red);color:var(--text)}
@@ -783,12 +900,12 @@
     .rr-msg-name{font-size:.44rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:.1rem}
     .rr-msg-text{font-size:.72rem;color:var(--text);line-height:1.35;word-break:break-word}
     .rr-ended-stat{text-align:center;padding:1rem;flex:1}
-    .rr-ended-stat-val{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;display:block;line-height:1;margin-bottom:.3rem}
+    .rr-ended-stat-val{font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:900;display:block;line-height:1;margin-bottom:.3rem}
     .rr-ended-stat-lbl{font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700}
-    /* LISTS */
-    .pst-bar{display:flex;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0}
-    .pst-btn{flex:1;padding:.65rem .5rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:color .15s,border-color .15s}
-    .pst-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+    /* LISTS · editorial section tabs */
+    .pst-bar{display:flex;border-bottom:1px solid var(--border2);background:transparent;flex-shrink:0;padding:0 1.25rem}
+    .pst-btn{flex:1;padding:.65rem .25rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:color .15s,border-color .15s;margin-bottom:-1px}
+    .pst-btn.active{color:var(--text);border-bottom-color:var(--text);font-weight:700}
     .list-card{background:var(--surface);border-bottom:1px solid var(--border);padding:.85rem 1.25rem;display:flex;align-items:center;gap:.85rem;cursor:pointer}
     .list-card:active{background:var(--surface2)}
     .list-card-thumbs{display:flex;gap:3px;flex-shrink:0}
@@ -822,7 +939,7 @@
     .pq-type-btn{flex:1;padding:.4rem;background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all .18s}
     .pq-type-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
     .list-item-row{display:flex;align-items:center;gap:.75rem;padding:.65rem 1.25rem;border-bottom:1px solid var(--border)}
-    .list-item-num{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--muted);width:28px;text-align:center;flex-shrink:0}
+    .list-item-num{font-family:'Fraunces','Playfair Display',serif;font-size:1.1rem;font-weight:900;color:var(--muted);width:28px;text-align:center;flex-shrink:0}
     .list-item-art{width:46px;height:46px;border-radius:5px;object-fit:cover;flex-shrink:0;background:var(--border2)}
     .list-item-info{flex:1;min-width:0}
     .list-item-title{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
@@ -845,7 +962,7 @@
     .battle-song-art-placeholder{width:72px;height:72px;border-radius:.45rem;background:var(--border2);flex-shrink:0}
     .battle-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;text-align:center;line-height:1.2;color:var(--text);word-break:break-word}
     .battle-song-artist{font-size:.57rem;color:var(--muted);text-align:center;font-family:'DM Mono',monospace;margin-top:.05rem}
-    .battle-vs{display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 .65rem;font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 12px rgba(167,139,250,.5)}
+    .battle-vs{display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 .65rem;font-family:'Fraunces','Playfair Display',serif;font-size:1.25rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 12px rgba(167,139,250,.5)}
     .battle-vote-row{display:flex;gap:.5rem;padding:0 .85rem .75rem}
     .battle-vote-btn{flex:1;padding:.55rem .4rem;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:.4rem;transition:all .18s;line-height:1.2}
     .battle-vote-btn:active{transform:scale(.96)}
@@ -857,7 +974,7 @@
     .battle-bar-track{flex:1;height:6px;background:var(--border2);border-radius:3px;overflow:hidden}
     .battle-bar-fill-a{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),#c084fc);transition:width .4s ease}
     .battle-bar-fill-b{height:100%;border-radius:3px;background:linear-gradient(90deg,#f472b6,#fb7185);transition:width .4s ease}
-    .battle-bar-pct{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;flex-shrink:0;width:2.8rem;text-align:right}
+    .battle-bar-pct{font-family:'Fraunces','Playfair Display',serif;font-size:.95rem;font-weight:900;flex-shrink:0;width:2.8rem;text-align:right}
     .battle-result-footer{display:flex;align-items:center;justify-content:space-between;padding:.3rem .85rem .6rem;font-size:.57rem;font-family:'DM Mono',monospace;color:var(--muted);border-top:1px solid var(--border)}
     .battle-winner-tag{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
     .battle-tied-tag{color:var(--muted2)}
@@ -886,7 +1003,7 @@
     .rooms-sub-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
     .ab-card{background:var(--surface);border:1px solid var(--border2);border-radius:.75rem;padding:.85rem 1rem;margin-bottom:.65rem}
     .ab-card-name{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);line-height:1.2;margin-bottom:.3rem}
-    .ab-card-artists{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;font-style:italic;color:var(--gold);margin-bottom:.45rem}
+    .ab-card-artists{font-family:'Fraunces','Playfair Display',serif;font-size:.85rem;font-weight:700;font-style:italic;color:var(--gold);margin-bottom:.45rem}
     .ab-card-meta{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
     .ab-pill{background:var(--surface2);border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .45rem;border-radius:3px}
     .ab-pill.active{border-color:var(--gold);color:var(--gold)}
@@ -894,7 +1011,7 @@
     .ab-view-title{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .ab-lobby-artist{background:var(--surface);border:1px solid var(--border2);border-radius:.65rem;padding:.85rem 1rem;flex:1}
     .ab-lobby-artist-label{font-size:.5rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.25rem}
-    .ab-lobby-artist-name{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900;font-style:italic;color:var(--gold);margin-bottom:.45rem}
+    .ab-lobby-artist-name{font-family:'Fraunces','Playfair Display',serif;font-size:1.05rem;font-weight:900;font-style:italic;color:var(--gold);margin-bottom:.45rem}
     .ab-lobby-player{background:var(--surface2);border:1px solid var(--border2);border-radius:.45rem;padding:.55rem .75rem;margin-top:.45rem;display:flex;align-items:center;gap:.55rem}
     .ab-lobby-player-empty{color:var(--muted);font-size:.6rem;font-family:'DM Mono',monospace;font-style:italic}
     .ab-join-btn{width:100%;margin-top:.4rem;padding:.42rem;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;cursor:pointer;border-radius:3px;transition:all .15s}
@@ -905,7 +1022,7 @@
     .ab-draft-slot{background:var(--surface2);border:1px solid var(--border2);border-radius:.4rem;padding:.5rem .65rem;min-height:52px;display:flex;align-items:center;gap:.5rem;transition:border-color .2s}
     .ab-draft-slot.active{border-color:var(--gold);box-shadow:0 0 0 1px rgba(167,139,250,.3)}
     .ab-draft-slot.picked{border-color:var(--border2)}
-    .ab-draft-slot-num{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:900;color:var(--muted);flex-shrink:0;width:16px;text-align:center}
+    .ab-draft-slot-num{font-family:'Fraunces','Playfair Display',serif;font-size:.85rem;font-weight:900;color:var(--muted);flex-shrink:0;width:16px;text-align:center}
     .ab-draft-slot-art{width:34px;height:34px;border-radius:3px;object-fit:cover;flex-shrink:0;background:var(--border2)}
     .ab-draft-slot-info{flex:1;min-width:0}
     .ab-draft-slot-name{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
@@ -915,7 +1032,7 @@
     .ab-round-song-art{width:88px;height:88px;border-radius:.55rem;object-fit:cover;background:var(--border2);flex-shrink:0}
     .ab-round-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;text-align:center;line-height:1.2;color:var(--text);word-break:break-word}
     .ab-round-song-artist{font-size:.57rem;color:var(--muted);text-align:center;font-family:'DM Mono',monospace}
-    .ab-round-vs{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 14px rgba(167,139,250,.5);flex-shrink:0;padding:0 .2rem;align-self:center}
+    .ab-round-vs{font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 14px rgba(167,139,250,.5);flex-shrink:0;padding:0 .2rem;align-self:center}
     .ab-vote-btn{flex:1;padding:.65rem .4rem;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border-radius:.45rem;transition:all .18s;line-height:1.2}
     .ab-vote-btn.voted-a{border-color:var(--gold);color:var(--gold);background:rgba(167,139,250,.1)}
     .ab-vote-btn.voted-b{border-color:#f472b6;color:#f472b6;background:rgba(244,114,182,.1)}
@@ -927,7 +1044,7 @@
     .ab-rating-cat-head{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem}
     .ab-rating-cat-name{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;flex:1;min-width:0}
     .ab-rating-cat-desc{font-size:.6rem;line-height:1.35;color:var(--muted);margin-top:.05rem}
-    .ab-rating-cat-val{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;flex-shrink:0;min-width:2.4rem;text-align:right}
+    .ab-rating-cat-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;flex-shrink:0;min-width:2.4rem;text-align:right}
     .ab-rating-slider{flex:1;width:100%;height:14px;-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer;margin-top:.4rem}
     .ab-rating-slider::-webkit-slider-runnable-track{height:8px;border-radius:5px;background:var(--surface2)}
     .ab-rating-slider::-moz-range-track{height:8px;border-radius:5px;background:var(--surface2)}
@@ -943,15 +1060,15 @@
     .ab-rating-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:.85rem 1rem 1.1rem;background:linear-gradient(180deg,var(--surface) 0%,var(--bg) 100%);border-radius:.7rem;border:1px solid var(--border2);margin-bottom:.85rem}
     .ab-rating-hero-art{width:140px;height:140px;border-radius:.6rem;object-fit:cover;box-shadow:0 0 30px rgba(167,139,250,.4);margin-bottom:.6rem}
     .ab-rating-hero-art.pink{box-shadow:0 0 30px rgba(244,114,182,.4)}
-    .ab-rating-hero-song{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:800;line-height:1.1;letter-spacing:-.01em;margin:0 0 .15rem}
+    .ab-rating-hero-song{font-family:'Fraunces','Playfair Display',serif;font-size:1.45rem;font-weight:800;line-height:1.1;letter-spacing:-.01em;margin:0 0 .15rem}
     .ab-rating-hero-artist{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted2)}
     .ab-round-header-mini{padding:.35rem 1rem!important}
     .ab-round-header-mini #ab-round-label{font-size:.62rem!important}
     .ab-round-header-mini #ab-round-score-pill{font-size:.55rem!important;opacity:.7}
-    .ab-result-winner{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--gold);text-align:center;line-height:1}
+    .ab-result-winner{font-family:'Fraunces','Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--gold);text-align:center;line-height:1}
     .ab-score-tally{display:flex;gap:.75rem;justify-content:center;align-items:center;margin:.75rem 0}
     .ab-score-tally-side{text-align:center}
-    .ab-score-tally-num{font-family:'Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1}
+    .ab-score-tally-num{font-family:'Fraunces','Playfair Display',serif;font-size:2.8rem;font-weight:900;line-height:1}
     .ab-score-tally-label{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
     .ab-score-tally-sep{font-family:'Barlow Condensed',sans-serif;font-size:1.4rem;font-weight:700;color:var(--muted)}
     .ab-round-row{display:flex;align-items:center;gap:.65rem;padding:.5rem 0;border-bottom:1px solid var(--border)}
@@ -1000,7 +1117,7 @@
     @keyframes abRevealGlow{0%,100%{box-shadow:0 0 25px rgba(250,204,21,.45)}50%{box-shadow:0 0 55px rgba(250,204,21,.85)}}
     @keyframes abRevealBarFill{from{width:0}to{width:100%}}
     @keyframes abRevealShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-    .abrev-score-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1}
+    .abrev-score-num{font-family:'Fraunces','Playfair Display',serif;font-size:2.4rem;font-weight:900;line-height:1}
     .abrev-cat-row{display:flex;align-items:center;gap:.5rem;font-size:.6rem;font-family:'DM Mono',monospace;padding:.18rem 0}
     .abrev-cat-name{flex:0 0 90px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.55rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .abrev-cat-bar{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;position:relative}
@@ -1021,7 +1138,7 @@
     .sw-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)}
     .sw-hero{padding:1.4rem 1.25rem .9rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
     .sw-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(167,139,250,.13) 0%,transparent 70%);pointer-events:none}
-    .sw-hero-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1;position:relative}
+    .sw-hero-title{font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:900;line-height:1;position:relative}
     .sw-hero-title span{color:var(--green);text-shadow:0 0 20px rgba(52,211,153,.5)}
     .sw-hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.2rem;position:relative}
     .sw-hero-nodes{position:absolute;right:1rem;top:.6rem;width:80px;height:70px;pointer-events:none}
@@ -1043,7 +1160,7 @@
     .sw-genre-card-glow{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);width:55px;height:36px;border-radius:50%;filter:blur(14px);opacity:.5;animation:swPulse 2.5s ease-in-out infinite}
     .sw-genre-icon{font-size:1.7rem;margin-bottom:.35rem;display:block}
     .sw-genre-name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1}
-    .sw-genre-avg{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;margin-top:.3rem}
+    .sw-genre-avg{font-family:'Fraunces','Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;margin-top:.3rem}
     .sw-genre-count{font-size:.48rem;color:var(--muted2);letter-spacing:.08em;text-transform:uppercase;margin-top:.08rem;font-family:'Barlow Condensed',sans-serif}
     .sw-node-list{display:flex;flex-direction:column;gap:.45rem}
     .sw-song-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.7rem .9rem;display:flex;align-items:center;gap:.7rem;cursor:pointer;transition:background .15s,transform .15s;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden}
@@ -1053,14 +1170,14 @@
     .sw-song-info{flex:1;min-width:0}
     .sw-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
     .sw-song-artist{font-size:.56rem;color:var(--muted2);letter-spacing:.04em;margin-top:.12rem}
-    .sw-song-score{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;flex-shrink:0}
+    .sw-song-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1;flex-shrink:0}
     .sw-song-label{font-size:.44rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.12rem .36rem;border-radius:2px;position:absolute;top:.45rem;right:.45rem}
     .sw-hot-card{border-color:rgba(251,146,60,.3)!important;animation:swFire 2.5s ease-in-out infinite}
     .sw-hot-bar{position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#fb923c,#f472b6);border-radius:3px 0 0 3px}
     .sw-gem-card{border-color:rgba(52,211,153,.3)!important;box-shadow:0 0 10px rgba(52,211,153,.1)}
     .sw-gem-bar{position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,#34d399,#60a5fa);border-radius:3px 0 0 3px}
     .sw-trend-card{border-left:3px solid var(--gold);animation:swTrendPulse 2s ease-in-out infinite}
-    .sw-trend-rank{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:900;color:var(--muted);min-width:2rem;text-align:center;flex-shrink:0;line-height:1}
+    .sw-trend-rank{font-family:'Fraunces','Playfair Display',serif;font-size:1.65rem;font-weight:900;color:var(--muted);min-width:2rem;text-align:center;flex-shrink:0;line-height:1}
     .sw-friend-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.6rem .9rem;display:flex;align-items:center;gap:.6rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
     .sw-friend-card:active{background:var(--surface2)}
     .sw-venue-row{display:flex;gap:.7rem;padding:0 1.25rem;margin-bottom:.7rem}
@@ -1078,20 +1195,20 @@
     .sw-detail-handle{width:38px;height:4px;background:var(--border2);border-radius:2px;margin:.6rem auto .45rem}
     .sw-detail-header{padding:.45rem 1.25rem .9rem;border-bottom:1px solid var(--border)}
     .sw-detail-label{font-size:.48rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-bottom:.18rem}
-    .sw-detail-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1.1}
+    .sw-detail-title{font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1.1}
     .sw-detail-meta{font-size:.6rem;color:var(--muted2);margin-top:.22rem}
-    .sw-detail-score{font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:900;line-height:1}
+    .sw-detail-score{font-family:'Fraunces','Playfair Display',serif;font-size:3.2rem;font-weight:900;line-height:1}
     .sw-detail-body{padding:.9rem 1.25rem}
     .sw-detail-stat-row{display:flex;gap:.85rem;margin-bottom:.9rem}
     .sw-detail-stat{text-align:center;flex:1;background:var(--surface2);border-radius:6px;padding:.55rem .35rem}
-    .sw-detail-stat-val{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1}
+    .sw-detail-stat-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1}
     .sw-detail-stat-lbl{font-size:.45rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.12rem}
     .sw-detail-section-title{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin:.8rem 0 .38rem}
     .sw-detail-item{display:flex;align-items:center;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--border);cursor:pointer}
     .sw-detail-item:last-child{border-bottom:none}
     .sw-detail-item:active{opacity:.7}
     .sw-detail-item-name{font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;margin-right:.4rem}
-    .sw-detail-item-score{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:900;flex-shrink:0}
+    .sw-detail-item-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.05rem;font-weight:900;flex-shrink:0}
     .sw-detail-close{position:absolute;top:.65rem;right:.9rem;background:transparent;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:.2rem .35rem;line-height:1;z-index:1}
     .sw-detail-rate-btn{width:100%;padding:.88rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;background:var(--gold);color:var(--bg);border:none;border-radius:4px;cursor:pointer;margin-top:.9rem;transition:opacity .2s}
     .sw-detail-rate-btn:active{opacity:.8}
@@ -1110,7 +1227,7 @@
     .te-hero{padding:1.4rem 1.25rem 1rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
     .te-hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 80% 0%,rgba(167,139,250,.18) 0%,transparent 60%),radial-gradient(ellipse at 0% 100%,rgba(244,114,182,.12) 0%,transparent 55%);pointer-events:none}
     .te-hero-shimmer{position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(201,168,76,.07) 50%,transparent 65%);background-size:240% 100%;animation:teShimmer 6s ease-in-out infinite;pointer-events:none}
-    .te-hero-title{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:900;line-height:1;position:relative;letter-spacing:-.01em}
+    .te-hero-title{font-family:'Fraunces','Playfair Display',serif;font-size:1.85rem;font-weight:900;line-height:1;position:relative;letter-spacing:-.01em}
     .te-hero-title span{background:linear-gradient(90deg,#a78bfa,#c9a84c,#f472b6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
     .te-hero-sub{font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:.25rem;position:relative}
     .te-insight-row{display:flex;gap:.5rem;margin-top:.85rem;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;position:relative;padding-bottom:.1rem}
@@ -1131,7 +1248,7 @@
     .te-card-artist{font-size:.55rem;color:var(--muted2);letter-spacing:.04em;margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .te-card-reason{font-size:.5rem;color:#a78bfa;letter-spacing:.05em;margin-top:.2rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .te-card-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:.15rem}
-    .te-card-score{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;line-height:1}
+    .te-card-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:900;line-height:1}
     .te-card-meta{font-size:.45rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif}
     .te-card-progress{width:46px;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:.25rem}
     .te-card-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),#a78bfa);border-radius:2px}
@@ -1162,10 +1279,10 @@
     .ap-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1.5rem)}
     .ap-hero{position:relative;padding:1.4rem 1.25rem 1.2rem;overflow:hidden;border-bottom:1px solid var(--border)}
     .ap-hero-bg{position:absolute;inset:0;pointer-events:none}
-    .ap-avatar{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;flex-shrink:0;border:2px solid transparent}
-    .ap-hero-name{font-family:'Playfair Display',serif;font-size:1.85rem;font-weight:900;line-height:1;margin-top:.6rem}
+    .ap-avatar{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces','Playfair Display',serif;font-size:1.8rem;font-weight:900;flex-shrink:0;border:2px solid transparent}
+    .ap-hero-name{font-family:'Fraunces','Playfair Display',serif;font-size:1.85rem;font-weight:900;line-height:1;margin-top:.6rem}
     .ap-hero-stats{display:flex;gap:1.25rem;margin-top:.8rem;flex-wrap:wrap}
-    .ap-hero-stat-val{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1}
+    .ap-hero-stat-val{font-family:'Fraunces','Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1}
     .ap-hero-stat-lbl{font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem}
     .ap-sec{padding:.85rem 1.25rem .35rem}
     .ap-sec-title{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem}
@@ -1188,7 +1305,7 @@
     .ap-album-art-ph{width:48px;height:48px;border-radius:4px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
     .ap-album-name{font-family:'Barlow Condensed',sans-serif;font-size:.92rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .ap-album-meta{font-size:.48rem;color:var(--muted2);letter-spacing:.05em;margin-top:.1rem}
-    .ap-album-score{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;flex-shrink:0}
+    .ap-album-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;flex-shrink:0}
     .ap-album-songs{border-top:1px solid var(--border)}
     .ap-album-toggle{font-family:'Barlow Condensed',sans-serif;font-size:.55rem;color:var(--muted);flex-shrink:0;padding-left:.35rem}
     .ap-song-row{display:flex;align-items:center;gap:.6rem;padding:.58rem .85rem;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s}
@@ -1198,7 +1315,7 @@
     .ap-song-art-ph{width:36px;height:36px;border-radius:3px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
     .ap-song-name{font-family:'Barlow Condensed',sans-serif;font-size:.86rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .ap-song-meta{font-size:.48rem;color:var(--muted2);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ap-song-score{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;line-height:1;flex-shrink:0}
+    .ap-song-score{font-family:'Fraunces','Playfair Display',serif;font-size:1.3rem;font-weight:900;line-height:1;flex-shrink:0}
     .ap-activity-item{display:flex;align-items:center;gap:.6rem;padding:.62rem .85rem;border-bottom:1px solid var(--border);-webkit-tap-highlight-color:transparent}
     .ap-activity-item:last-child{border-bottom:none}
     .ap-empty{padding:1.5rem;text-align:center;font-size:.6rem;color:var(--muted);letter-spacing:.08em;font-style:italic;line-height:1.9}
@@ -1550,7 +1667,7 @@
             <div style="display:flex;align-items:center;gap:.65rem">
               <img id="song-picker-sel-art" src="" style="display:none;width:52px;height:52px;border-radius:5px;object-fit:cover;flex-shrink:0">
               <div style="flex:1;min-width:0">
-                <div id="song-picker-sel-name" style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;color:var(--text);line-height:1.2"></div>
+                <div id="song-picker-sel-name" style="font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;color:var(--text);line-height:1.2"></div>
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-top:.2rem">
                   <div id="song-picker-sel-meta" style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted2)"></div>
                   <button onclick="clearSongPicker()" style="background:transparent;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;padding:.1rem .3rem;line-height:1">✕</button>
@@ -1559,11 +1676,11 @@
             </div>
           </div>
           <div id="song-picker-input-wrap" style="position:relative">
-            <input type="text" id="song-picker-input" autocomplete="off" placeholder="Search for a song..." oninput="filterSongPicker()" onfocus="filterSongPicker()" style="width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none">
+            <input type="text" id="song-picker-input" autocomplete="off" placeholder="Search for a song..." oninput="filterSongPicker()" onfocus="filterSongPicker()" style="width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none">
             <div id="song-picker-results" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface2);border:1px solid var(--border2);z-index:50;max-height:55vh;overflow-y:auto;border-radius:0 0 4px 4px;box-shadow:0 8px 24px rgba(7,7,26,.8)"></div>
           </div>
           <div id="song-picker-manual" style="display:none;padding:.4rem 0 .2rem">
-            <input type="text" id="manual-song" autocomplete="off" placeholder="Song name..." oninput="manualUpdate()" style="width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;-webkit-appearance:none;appearance:none">
+            <input type="text" id="manual-song" autocomplete="off" placeholder="Song name..." oninput="manualUpdate()" style="width:100%;background:transparent;border:none;border-bottom:2px solid var(--border2);color:var(--text);font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:700;font-style:italic;padding:.4rem 0;outline:none;-webkit-appearance:none;appearance:none">
             <input type="text" id="manual-artist" autocomplete="off" placeholder="Artist name..." oninput="manualUpdate()" style="width:100%;background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-family:'DM Mono',monospace;font-size:.85rem;padding:.45rem 0;outline:none;margin-top:.5rem;-webkit-appearance:none;appearance:none">
             <div style="display:flex;gap:.5rem;margin-top:.7rem">
               <button id="manual-confirm-btn" onclick="confirmManualSong()" style="flex:1;background:var(--gold);color:#07071a;border:none;border-radius:4px;padding:.55rem .8rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.08em;cursor:pointer;opacity:.4;pointer-events:none" disabled>USE THIS SONG</button>
@@ -1836,7 +1953,7 @@
       <!-- Rank Room panel -->
       <div id="rr-home-rr" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:2rem 1.5rem;display:flex;flex-direction:column;gap:.85rem;align-items:center">
         <div style="text-align:center;margin-bottom:.75rem">
-          <div style="font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:900">Rank <span style="color:var(--red)">Room</span></div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.9rem;font-weight:900">Rank <span style="color:var(--red)">Room</span></div>
           <div style="font-size:.55rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:.35rem">Live group rating sessions</div>
         </div>
         <div style="width:100%;max-width:340px">
@@ -1854,7 +1971,7 @@
       <!-- Aux Battle panel -->
       <div id="rr-home-ab" style="display:none;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1.25rem 1rem;flex-direction:column;gap:.75rem;padding-bottom:calc(var(--nav-h) + var(--safe-b) + 1rem)">
         <div style="text-align:center;margin-bottom:.25rem">
-          <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900">Aux <span style="color:var(--red)">Battle</span></div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.7rem;font-weight:900">Aux <span style="color:var(--red)">Battle</span></div>
           <div style="font-size:.52rem;color:var(--muted);letter-spacing:.2em;text-transform:uppercase;margin-top:.25rem">Artist vs Artist draft wars</div>
         </div>
         <button onclick="openCreateAuxBattleModal()" style="width:100%;padding:.65rem;background:var(--gold);color:var(--bg);border:none;border-radius:.5rem;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;cursor:pointer">+ Create Battle</button>
@@ -1871,7 +1988,7 @@
     <div id="rr-lobby" style="display:none;flex-direction:column;flex:1;overflow:hidden;position:relative">
       <div class="scroll-area" style="padding-bottom:6rem">
         <div style="padding:1.25rem 1.25rem .5rem;text-align:center">
-          <div id="rr-lobby-name" style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;line-height:1.2;margin-bottom:.25rem"></div>
+          <div id="rr-lobby-name" style="font-family:'Fraunces','Playfair Display',serif;font-size:1.35rem;font-weight:900;line-height:1.2;margin-bottom:.25rem"></div>
           <div id="rr-lobby-desc" style="display:none;font-size:.6rem;color:var(--muted2);font-style:italic;margin-bottom:.75rem"></div>
           <div class="rr-section-lbl" style="margin-bottom:.3rem">Room Code — share with friends</div>
           <div id="rr-lobby-code" class="rr-code-display">——</div>
@@ -2395,7 +2512,7 @@
     </div>
     <div id="ab-tl-nodes" style="display:flex;gap:.3rem;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:.15rem;margin-bottom:.5rem"></div>
     <div id="ab-tl-score" style="display:flex;align-items:center;justify-content:center;gap:.55rem;font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem"></div>
-    <div id="ab-tl-drama" style="text-align:center;font-size:.62rem;color:var(--muted);font-style:italic;font-family:'Playfair Display',serif;margin-top:.2rem;line-height:1.3"></div>
+    <div id="ab-tl-drama" style="text-align:center;font-size:.62rem;color:var(--muted);font-style:italic;font-family:'Fraunces','Playfair Display',serif;margin-top:.2rem;line-height:1.3"></div>
   </div>
 
   <!-- LOBBY -->
@@ -2505,14 +2622,14 @@
   <div id="ab-ant-round-lbl" style="font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--muted2)">Round 1 Results</div>
   <div style="display:flex;align-items:center;gap:1.1rem">
     <img id="ab-ant-art-a" class="ab-ant-art" src="" alt="">
-    <div id="ab-ant-vs-lbl" style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 24px rgba(167,139,250,.6);opacity:0">VS</div>
+    <div id="ab-ant-vs-lbl" style="font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:900;font-style:italic;color:var(--gold);text-shadow:0 0 24px rgba(167,139,250,.6);opacity:0">VS</div>
     <img id="ab-ant-art-b" class="ab-ant-art" src="" alt="">
   </div>
   <div style="width:100%;max-width:280px">
     <div id="ab-ant-bar-track" style="height:3px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-bottom:1rem">
       <div id="ab-ant-bar-fill" style="height:100%;background:var(--gold);width:0;border-radius:2px"></div>
     </div>
-    <div id="ab-ant-countdown" style="font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;font-style:italic;color:var(--gold);text-align:center;text-shadow:0 0 40px rgba(167,139,250,.5);min-height:5rem;display:flex;align-items:center;justify-content:center"></div>
+    <div id="ab-ant-countdown" style="font-family:'Fraunces','Playfair Display',serif;font-size:4rem;font-weight:900;font-style:italic;color:var(--gold);text-align:center;text-shadow:0 0 40px rgba(167,139,250,.5);min-height:5rem;display:flex;align-items:center;justify-content:center"></div>
   </div>
 </div>
 
@@ -2674,7 +2791,7 @@
       </div>
     </div>
 
-    <div style="text-align:center;font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;font-style:italic;color:var(--gold);margin:.1rem 0 .65rem;text-shadow:0 0 10px rgba(167,139,250,.4)">vs</div>
+    <div style="text-align:center;font-family:'Fraunces','Playfair Display',serif;font-size:1rem;font-weight:900;font-style:italic;color:var(--gold);margin:.1rem 0 .65rem;text-shadow:0 0 10px rgba(167,139,250,.4)">vs</div>
 
     <div class="battle-picker-slot" style="margin-bottom:.75rem">
       <div class="battle-picker-slot-label">Song B</div>
@@ -3556,49 +3673,49 @@ function buildRatingCard(row,songCounts){
   const count=songCounts[(row.song_name||'').toLowerCase()]||1;
   const liked=myLikes.has(row.id);
   const likeCount=likeCounts[row.id]||0;
-  const card=document.createElement('div');card.className='feed-card pressable';card.style.cursor='pointer';
+  const card=document.createElement('article');
+  card.className='feed-card feed-card-ed pressable';
+  card.style.cursor='pointer';
   card.onclick=()=>openRatingDetail(row);
   card.innerHTML=`
-    <div class="feed-card-gradient" style="background:${scolor}"></div>
-    <div class="feed-card-accent" style="background:${scolor}"></div>
-    <div class="feed-card-top">
-      <div class="feed-user" onclick="event.stopPropagation();openUserModal('${escAttr(row.user_id)}')" style="cursor:pointer">
-        ${avatarHTML(p,'feed-avatar')}
-        <div>
-          <div class="feed-username">@${esc(u)}</div>
-          <div class="feed-time">${timeAgo(row.created_at)}</div>
-        </div>
+    <!-- Eyebrow: kicker + byline -->
+    <header style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:.55rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">
+      <span style="display:flex;align-items:center;gap:.4rem;cursor:pointer" onclick="event.stopPropagation();openUserModal('${escAttr(row.user_id)}')">
+        ${avatarHTML(p,'',16)}
+        <span style="color:var(--text);font-weight:600">@${esc(u)}</span>
+        <span style="color:var(--muted2)">·</span>
+        <span>${timeAgo(row.created_at)}</span>
+      </span>
+      <span style="color:var(--text)">Rating</span>
+    </header>
+
+    <!-- Body: italic title + meta + huge printed numeral -->
+    <div style="display:flex;align-items:flex-start;gap:.85rem">
+      <div style="flex:1;min-width:0">
+        <h2 class="ed-title ed-title-xl" style="margin:0;color:var(--text);font-style:italic">${esc(row.song_name||'Unknown')}</h2>
+        ${row.artist_name?`<div class="ed-byline" style="margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(row.artist_name)}${row.album?` <span style="color:var(--muted)">·</span> <span style="color:var(--muted)">${esc(row.album)}</span>`:''}</div>`:''}
+        ${row.verdict?`<div style="margin-top:.55rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);display:inline-flex;align-items:center;gap:.35rem"><span style="border-bottom:1px solid currentColor;padding-bottom:.05rem">${esc(row.verdict)}</span></div>`:''}
+        ${row.comment?`<p style="font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:.85rem;font-weight:400;line-height:1.45;color:var(--muted2);margin:.55rem 0 0;font-variation-settings:'opsz' 24,'WONK' 1;border-left:1px solid var(--border2);padding-left:.65rem">${esc(row.comment)}</p>`:''}
       </div>
-      <div style="display:flex;align-items:center;gap:.5rem">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;color:var(--gold);background:rgba(167,139,250,.12);border:1px solid var(--gold);padding:.2rem .45rem;border-radius:3px">RATING</div>
-        <div class="feed-score-wrap">
-          <div class="feed-score" style="color:${scolor}">${score.toFixed(1)}</div>
-          <div class="feed-score-label">/ 10</div>
-        </div>
-      </div>
-    </div>
-    <div class="feed-main">
-      ${row.artwork_url
-        ?`<img src="${esc(itunesArtUrl(row.artwork_url,60))}" style="width:48px;height:48px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`
-        :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="60" style="width:48px;height:48px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`
-      }
-      <div class="feed-song-info">
-        <div class="feed-song">${esc(row.song_name||'Unknown')}</div>
-        ${row.artist_name?`<div class="feed-artist">${esc(row.artist_name)}${row.album?` · <em>${esc(row.album)}</em>`:''}</div>`:''}
-      </div>
-    </div>
-    <div class="feed-card-footer">
-      <div class="feed-card-footer-left">
-        ${row.verdict?`<div class="feed-verdict">${esc(row.verdict)}</div>`:''}
-        ${row.comment?`<div class="feed-comment">${esc(row.comment)}</div>`:''}
-        ${count>1?`<div class="feed-rating-count">🎯 ${count} ratings</div>`:''}
-      </div>
-      <div style="display:flex;align-items:center;gap:.6rem;flex-shrink:0">
-        <button class="preview-btn" data-song="${escAttr(row.song_name||'')}" data-artist="${escAttr(row.artist_name||'')}" onclick="playFeedSong(this)" title="Preview" style="width:30px;height:30px">${previewPlayIcon()}</button>
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.04em">💬 ${commentCounts[row.id]||0}</span>
-        <button class="like-btn${liked?' liked':''}" data-rid="${escAttr(row.id)}" onclick="event.stopPropagation();toggleLike('${escJs(row.id)}')">♥ <span class="like-count">${likeCount}</span></button>
+      <div style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:.05rem">
+        ${row.artwork_url
+          ?`<img src="${esc(itunesArtUrl(row.artwork_url,140))}" style="width:70px;height:70px;object-fit:cover;flex-shrink:0;margin-bottom:.45rem;border-radius:0" loading="lazy">`
+          :`<div data-art-key="${esc((row.artist_name||'unknown')+'|||'+(row.album||row.artist_name||'unknown'))}" data-art-size="140" style="width:70px;height:70px;background:var(--border2);flex-shrink:0;margin-bottom:.45rem"></div>`
+        }
+        <div class="ed-numeral" style="font-size:2.7rem;color:${scolor}">${score.toFixed(1)}</div>
+        <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.48rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:.15rem">— out of 10</div>
       </div>
     </div>
+
+    <!-- Footer: meta + actions -->
+    <footer style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-top:.85rem;padding-top:.5rem;border-top:1px solid var(--border)">
+      <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)">${count>1?count+' ratings on this title':'first rating'}</span>
+      <div style="display:flex;align-items:center;gap:.85rem;flex-shrink:0">
+        <button class="preview-btn" data-song="${escAttr(row.song_name||'')}" data-artist="${escAttr(row.artist_name||'')}" onclick="playFeedSong(this)" title="Preview" style="width:24px;height:24px;border:none;background:transparent;color:var(--muted)">${previewPlayIcon()}</button>
+        <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;font-weight:500;color:var(--muted);letter-spacing:.06em;font-feature-settings:'tnum'">${commentCounts[row.id]||0} <span style="color:var(--muted2)">comm</span></span>
+        <button class="like-btn${liked?' liked':''}" data-rid="${escAttr(row.id)}" onclick="event.stopPropagation();toggleLike('${escJs(row.id)}')" style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;letter-spacing:.06em;font-feature-settings:'tnum'">♥ <span class="like-count">${likeCount}</span></button>
+      </div>
+    </footer>
   `;
   return card;
 }
@@ -3623,7 +3740,7 @@ function renderFeedListCard(l){
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;color:#facc15;background:rgba(250,204,21,.12);border:1px solid #facc15;padding:.2rem .45rem;border-radius:3px">LIST</div>
     </div>
     <div style="padding:.15rem 0 .35rem">
-      <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:.2rem">${esc(l.title||'Untitled')}</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:.2rem">${esc(l.title||'Untitled')}</div>
       ${l.description?`<div style="font-size:.62rem;color:var(--muted);margin-bottom:.35rem">${esc(l.description)}</div>`:''}
       ${thumbs?`<div style="display:flex;gap:.3rem;margin-bottom:.45rem">${thumbs}${count>3?`<div style="width:36px;height:36px;border-radius:3px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:.55rem;color:var(--muted);flex-shrink:0">+${count-3}</div>`:''}</div>`:''}
       ${preview||'<div style="font-size:.6rem;color:var(--muted);font-style:italic">Empty list</div>'}
@@ -3653,7 +3770,7 @@ function renderFeedQuestionCard(q){
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.14em;color:#f472b6;background:rgba(244,114,182,.12);border:1px solid #f472b6;padding:.2rem .45rem;border-radius:3px">QUESTION</div>
     </div>
     <div style="padding:.15rem 0 .35rem">
-      <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:.4rem">${esc(q.question_text||'')}</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:.4rem">${esc(q.question_text||'')}</div>
       <div style="display:flex;gap:.35rem;flex-wrap:wrap">
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.06em;color:var(--muted2);background:var(--surface2);padding:.2rem .45rem;border-radius:3px">${q.type==='albums'?'Albums':'Songs'}</span>
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.06em;color:var(--muted2);background:var(--surface2);padding:.2rem .45rem;border-radius:3px">${count} answer${count!==1?'s':''}</span>
@@ -4602,13 +4719,13 @@ async function shareRating(row){
   // Score glow halo
   c.save();
   c.shadowColor=sc;c.shadowBlur=120;
-  c.font='900 220px "Playfair Display"';
+  c.font='900 220px "Fraunces"';
   c.textAlign='center';c.textBaseline='alphabetic';
   c.fillStyle=sc;c.fillText(score.toFixed(1),W/2,300);
   c.restore();
 
   // / 10
-  c.font='italic 400 34px "Playfair Display"';
+  c.font='italic 400 34px "Fraunces"';
   c.fillStyle='#5c5a80';c.textAlign='center';
   c.fillText('out of 10',W/2,354);
 
@@ -4669,7 +4786,7 @@ async function shareRating(row){
     c.font='700 19px "Barlow Condensed"';c.fillStyle=cat.color;c.textAlign='left';
     c.fillText(cat.name,x+12,y+24);
     // score
-    c.font='900 42px "Playfair Display"';c.fillStyle='#e8e5ff';
+    c.font='900 42px "Fraunces"';c.fillStyle='#e8e5ff';
     c.fillText(val%1===0?String(val):val.toFixed(1),x+12,y+72);
   });
 
@@ -4684,7 +4801,7 @@ async function shareRating(row){
   c.textAlign='left';c.fillStyle='#5c5a80';c.font='600 24px "Barlow Condensed"';
   c.fillText('@'+uname,pad+44,fy+8);
   // Branding right
-  c.textAlign='right';c.font='900 24px "Playfair Display"';
+  c.textAlign='right';c.font='900 24px "Fraunces"';
   c.fillStyle='#a78bfa';c.fillText('SONGR',W-pad,fy+8);
 
   return canvas;
@@ -6279,7 +6396,7 @@ function renderSongDropdown(resultsEl,matches,loading){
   const manualLink=`<div onclick="showManualEntry()" style="padding:.5rem .85rem;font-size:.6rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;cursor:pointer;text-align:center;border-bottom:1px solid var(--border);transition:color .15s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">+ CAN'T FIND IT? ENTER MANUALLY</div>`;
   if(!matches.length&&!loading){resultsEl.innerHTML=manualLink;resultsEl.style.display='block';return;}
   const artThumb=(s,sz)=>s.artwork?`<img src="${esc(itunesArtUrl(s.artwork,sz))}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;object-fit:cover;flex-shrink:0" loading="lazy">`:`<div data-art-key="${esc(s.artist+'|||'+(s.album||s.artist))}" data-art-size="${sz}" style="width:${sz-10}px;height:${sz-10}px;border-radius:4px;background:var(--border2);flex-shrink:0"></div>`;
-  resultsEl.innerHTML=manualLink+matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.song)}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'');
+  resultsEl.innerHTML=manualLink+matches.slice(0,40).map((s,i)=>`<div style="padding:.55rem .75rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.65rem">${artThumb(s,50)}<div style="flex:1;min-width:0;cursor:pointer" onclick="selectSong(${i})"><div style="font-family:'Fraunces','Playfair Display',serif;font-size:.95rem;font-weight:700;font-style:italic;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.song)}</div><div style="font-size:.58rem;color:var(--muted);margin-top:.1rem;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.artist)}${s.album?' · '+esc(s.album):''}</div></div>${s.preview?`<button class="preview-btn" id="spbtn-${i}" onclick="event.stopPropagation();playPreviewFromPicker(${i},this)" title="Preview">${previewPlayIcon()}</button>`:''}</div>`).join('')+(loading?`<div style="padding:.4rem .85rem;font-size:.52rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em">SEARCHING ALL SONGS…</div>`:'');
   loadMissingArtwork(resultsEl);
   resultsEl.style.display='block';
 }
@@ -7283,7 +7400,7 @@ function rrOpenScoreDetail(userId){
     <div style="text-align:center;margin-bottom:1rem">
       ${avatarHTML(r.profile,null,48,'margin:0 auto .6rem;')}
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${esc(u)}${isMe?' ★':''}</div>
-      <div style="font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:900;color:${scoreColor(s)};line-height:1;margin:.4rem 0 .2rem;text-shadow:0 0 24px currentColor">${s.toFixed(1)}</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.2rem;font-weight:900;color:${scoreColor(s)};line-height:1;margin:.4rem 0 .2rem;font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30">${s.toFixed(1)}</div>
       <div style="font-size:.65rem;color:${scoreColor(s)};font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em">${esc(r.verdict||'')}</div>
     </div>
     <div class="rr-bd-grid" style="gap:.55rem .9rem">
@@ -7343,12 +7460,12 @@ async function rrRenderReveal(){
         <div style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.65rem .85rem">
           <div style="font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.3rem">Most Loved</div>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${best.color}">${esc(best.name)}</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${best.color};line-height:1.1">${best.avg.toFixed(1)}</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${best.color};line-height:1.1">${best.avg.toFixed(1)}</div>
         </div>
         <div style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;padding:.65rem .85rem">
           <div style="font-size:.44rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;font-weight:700;margin-bottom:.3rem">Weakest</div>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:${worst.color}">${esc(worst.name)}</div>
-          <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${worst.color};line-height:1.1">${worst.avg.toFixed(1)}</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${worst.color};line-height:1.1">${worst.avg.toFixed(1)}</div>
         </div>`;
     } else {
       catStatsEl.style.display='none';
@@ -7365,7 +7482,7 @@ async function rrRenderReveal(){
     }
     const s=parseFloat(r.final_score);
     const revealTag=rrBlindMode&&isMe?'<span class="rr-blind-reveal-tag">REVEALED</span>':'';
-    return`<div class="rr-score-reveal-row" onclick="rrOpenScoreDetail('${escJs(r.user_id)}')"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem">${avatarHTML(r.profile,null,26)}<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${esc(u)}${isMe?' ★':''}${revealTag}</div></div><div style="display:flex;align-items:center;gap:.5rem"><div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${esc(r.verdict||'')}</div><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${scoreColor(s)}">${s.toFixed(1)}</div><span class="rr-reveal-arrow">▶</span></div></div></div>`;
+    return`<div class="rr-score-reveal-row" onclick="rrOpenScoreDetail('${escJs(r.user_id)}')"><div class="rr-score-reveal-header"><div style="display:flex;align-items:center;gap:.55rem">${avatarHTML(r.profile,null,26)}<div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'}">${esc(u)}${isMe?' ★':''}${revealTag}</div></div><div style="display:flex;align-items:center;gap:.5rem"><div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${esc(r.verdict||'')}</div><div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;color:${scoreColor(s)}">${s.toFixed(1)}</div><span class="rr-reveal-arrow">▶</span></div></div></div>`;
   }).join('');
   const isHost=currentRoom.host_id===currentUser?.id;
   const hasNext=currentRoom.current_song_idx<roomSongs.length-1;
@@ -7456,7 +7573,7 @@ async function rrRenderEnded(){
   const sec=t=>`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:1.5rem 0 .5rem">${t}</div>`;
 
   let html=`<div style="text-align:center;margin-bottom:1.25rem">
-    <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">Session Complete</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">Session Complete</div>
     <div style="font-size:.8rem;color:var(--muted);margin-top:.25rem">${currentRoom.name||'Rank Room'} · ${songStats.length} song${songStats.length!==1?'s':''} rated${roomSongs.length>songStats.length?` · ${roomSongs.length-songStats.length} interlude${roomSongs.length-songStats.length!==1?'s':''}`:''} · ${roomMembers.length} member${roomMembers.length!==1?'s':''}</div>
   </div>
 `;
@@ -7481,7 +7598,7 @@ async function rrRenderEnded(){
           <div style="font-size:.65rem;color:var(--muted2)">${esc(ss.song.artist)}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <div style="font-family:'Playfair Display',serif;font-size:${i===0?'1.6rem':'1.25rem'};font-weight:900;color:${hue(ss.avg)};line-height:1">${ss.avg.toFixed(1)}</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:${i===0?'1.6rem':'1.25rem'};font-weight:900;color:${hue(ss.avg)};line-height:1">${ss.avg.toFixed(1)}</div>
           ${myS!==null?`<div style="font-size:.6rem;color:var(--muted);margin-top:.1rem">you: ${myS.toFixed(1)}</div>`:''}
         </div>
       </div>`;
@@ -7502,7 +7619,7 @@ async function rrRenderEnded(){
           <div style="font-size:.6rem;color:var(--muted)">${esc(ss.song.artist)}</div>
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:${hue(ss.avg)}">${ss.avg.toFixed(1)}</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1rem;font-weight:900;color:${hue(ss.avg)}">${ss.avg.toFixed(1)}</div>
           ${myS!==null?`<div style="font-size:.6rem;color:var(--muted)">you: ${myS.toFixed(1)}</div>`:''}
         </div>
       </div>`;
@@ -7524,7 +7641,7 @@ async function rrRenderEnded(){
         <div style="font-size:${i<3?'1.1rem':'.75rem'};width:1.6rem;text-align:center;flex-shrink:0;color:var(--muted)">${rankLabel}</div>
         ${avatarHTML(profile,null,28)}
         <div style="flex:1;min-width:0;font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${isMe?'var(--gold)':'var(--text)'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">@${esc(uname)}${isMe?' ★':''}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900;color:${hue(m.avg)};flex-shrink:0">${m.avg.toFixed(1)}</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.3rem;font-weight:900;color:${hue(m.avg)};flex-shrink:0">${m.avg.toFixed(1)}</div>
       </div>`;
     });
     html+=`</div>`;
@@ -7532,9 +7649,9 @@ async function rrRenderEnded(){
 
   // ── Your Session ──
   html+=sec('Your Session');
-  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.75rem">${[['Score',myAvg],['Best',myHigh],['Low',myLow]].map(([lbl,val])=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem .5rem;text-align:center"><div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${hue(val)}">${val.toFixed(1)}</div><div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.1rem">${lbl}</div></div>`).join('')}</div>`;
+  html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-bottom:.75rem">${[['Score',myAvg],['Best',myHigh],['Low',myLow]].map(([lbl,val])=>`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem .5rem;text-align:center"><div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${hue(val)}">${val.toFixed(1)}</div><div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:.1rem">${lbl}</div></div>`).join('')}</div>`;
 
-  if(myTopSong)html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.4rem">⭐</div><div style="flex:1;min-width:0"><div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.1rem">Your Top Pick</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(myTopSong.song)}</div><div style="font-size:.65rem;color:var(--muted2)">${esc(myTopSong.artist)}</div></div><div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${hue(parseFloat(myTopRating.final_score))};flex-shrink:0">${parseFloat(myTopRating.final_score).toFixed(1)}</div></div>`;
+  if(myTopSong)html+=`<div style="background:var(--surface);border:1px solid var(--border);border-radius:.75rem;padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><div style="font-size:1.4rem">⭐</div><div style="flex:1;min-width:0"><div style="font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.1rem">Your Top Pick</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(myTopSong.song)}</div><div style="font-size:.65rem;color:var(--muted2)">${esc(myTopSong.artist)}</div></div><div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${hue(parseFloat(myTopRating.final_score))};flex-shrink:0">${parseFloat(myTopRating.final_score).toFixed(1)}</div></div>`;
 
   const highlights=[];
   if(songStats[0]?.scores.length)highlights.push({icon:'🏆',label:'Best Song',val:`${songStats[0].song.song} — ${songStats[0].avg.toFixed(1)}`});
@@ -7599,7 +7716,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
   setStage(`
     <div style="animation:pdSongIn .8s ease forwards">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:1rem">${currentRoom?.name||'Rank Room'}</div>
-      <div style="font-family:'Playfair Display',serif;font-size:3.2rem;font-weight:900;color:#fff;line-height:.95;letter-spacing:-.02em">Session<br>Complete</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.2rem;font-weight:900;color:#fff;line-height:.95;letter-spacing:-.02em">Session<br>Complete</div>
     </div>`);
   await delay(3000);
   await fadeOut();await delay(200);
@@ -7610,7 +7727,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
     setStage(`
       <div style="animation:pdSongIn .7s ease forwards">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.6rem">Before the reveals</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1.1">Make your<br>predictions</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1.1">Make your<br>predictions</div>
       </div>`,'#c9a84c');
     await delay(2400);
     await fadeOut();await delay(250);
@@ -7661,7 +7778,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
     setStage(`
       <div style="animation:pdSongIn .7s ease forwards">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.6rem">Votes locked in</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1.1">Time to<br>find out…</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1.1">Time to<br>find out…</div>
       </div>`);
     await delay(2400);
     await fadeOut();await delay(300);
@@ -7671,7 +7788,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
   setStage(`
     <div style="animation:pdSongIn .7s ease forwards">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.6rem">Now revealing</div>
-      <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:900;color:#c9a84c;line-height:1">Top Songs</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.6rem;font-weight:900;color:#c9a84c;line-height:1">Top Songs</div>
     </div>`,'#c9a84c');
   await delay(2400);
   await fadeOut();await delay(300);
@@ -7703,7 +7820,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:${isFirst?'1.6rem':'1.2rem'};font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#fff;line-height:1.15;word-break:break-word">${esc(ss.song.song)}</div>
           <div style="font-size:.68rem;color:rgba(255,255,255,.45);margin-top:.4rem;font-style:italic">${esc(ss.song.artist)}</div>
         </div>
-        <div style="font-family:'Playfair Display',serif;font-size:${isFirst?'4.5rem':'3.4rem'};font-weight:900;color:${sCol};line-height:1;margin-top:1.1rem;animation:pdScoreIn .55s .65s cubic-bezier(.22,1,.36,1) both;text-shadow:0 0 50px ${sCol}55">${ss.avg.toFixed(1)}</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:${isFirst?'4.5rem':'3.4rem'};font-weight:900;color:${sCol};line-height:1;margin-top:1.1rem;animation:pdScoreIn .55s .65s cubic-bezier(.22,1,.36,1) both;text-shadow:0 0 50px ${sCol}55">${ss.avg.toFixed(1)}</div>
         ${myS!==null?`<div style="font-size:.52rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.55rem;animation:pdSongIn .5s 1.1s ease both">You gave ${myS.toFixed(1)}</div>`:''}
       </div>`,glowCol||sCol);
 
@@ -7731,7 +7848,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.2rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#fff;line-height:1.15;word-break:break-word">${esc(worst.song.song)}</div>
           <div style="font-size:.68rem;color:rgba(255,255,255,.45);margin-top:.4rem;font-style:italic">${esc(worst.song.artist)}</div>
         </div>
-        <div style="font-family:'Playfair Display',serif;font-size:3.4rem;font-weight:900;color:${wCol};line-height:1;margin-top:1.1rem;animation:pdScoreIn .55s .65s cubic-bezier(.22,1,.36,1) both;text-shadow:0 0 50px ${wCol}55">${worst.avg.toFixed(1)}</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.4rem;font-weight:900;color:${wCol};line-height:1;margin-top:1.1rem;animation:pdScoreIn .55s .65s cubic-bezier(.22,1,.36,1) both;text-shadow:0 0 50px ${wCol}55">${worst.avg.toFixed(1)}</div>
         ${myWS!==null?`<div style="font-size:.52rem;color:rgba(255,255,255,.3);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.55rem;animation:pdSongIn .5s 1.1s ease both">You gave ${myWS.toFixed(1)}</div>`:''}
       </div>`,wCol);
     await delay(3500);
@@ -7746,7 +7863,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
         <div style="font-size:3.2rem;line-height:1;margin-bottom:.9rem">💥</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.54rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.5rem">Most Divisive</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:${dName.length>14?'1.35rem':'1.75rem'};font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#fff;line-height:1.1;word-break:break-word">${esc(dName)}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:#c9a84c;margin-top:.55rem">σ ${mostDivisive.stddev.toFixed(1)}</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.7rem;font-weight:900;color:#c9a84c;margin-top:.55rem">σ ${mostDivisive.stddev.toFixed(1)}</div>
         ${guessResults('divisive',String(mostDivisive.song.id))}
       </div>`,'#60a5fa');
     await delay(3500);
@@ -7760,7 +7877,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
         <div style="font-size:3.2rem;line-height:1;margin-bottom:.9rem">💚</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.54rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.5rem">Most Generous</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:${genName.length>14?'1.35rem':'1.75rem'};font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#fff;line-height:1.1;word-break:break-word">@${esc(genName)}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:#34d399;margin-top:.55rem">${mostGenerous.avg.toFixed(1)} avg</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.7rem;font-weight:900;color:#34d399;margin-top:.55rem">${mostGenerous.avg.toFixed(1)} avg</div>
         ${guessResults('generous',mostGenerous.member.user_id)}
       </div>`,'#34d399');
     await delay(3500);
@@ -7774,7 +7891,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
         <div style="font-size:3.2rem;line-height:1;margin-bottom:.9rem">🔥</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.54rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.5rem">Harshest Critic</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:${harshName.length>14?'1.35rem':'1.75rem'};font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#fff;line-height:1.1;word-break:break-word">@${esc(harshName)}</div>
-        <div style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:#c9a84c;margin-top:.55rem">${harshest.avg.toFixed(1)} avg</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.7rem;font-weight:900;color:#c9a84c;margin-top:.55rem">${harshest.avg.toFixed(1)} avg</div>
         ${guessResults('harshest',harshest.member.user_id)}
       </div>`,'#f47276');
     await delay(3500);
@@ -7795,7 +7912,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
     setStage(`
       <div style="animation:pdSongIn .7s ease forwards">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.6rem">Now revealing</div>
-        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:900;color:#c9a84c;line-height:1">Album<br>Scores</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.6rem;font-weight:900;color:#c9a84c;line-height:1">Album<br>Scores</div>
       </div>`,'#c9a84c');
     await delay(2400);
     await fadeOut();await delay(300);
@@ -7822,7 +7939,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
           <div>
             <div style="${nameStyle};animation:pdSongIn .5s ease both">@${esc(p.name)}${isMe?' ★':''}</div>
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.28);margin:.55rem 0 .4rem;animation:pdSongIn .5s .2s ease both">predicted</div>
-            <div style="font-family:'Playfair Display',serif;font-size:${isLast?'4rem':'3.2rem'};font-weight:900;color:rgba(201,168,76,.6);line-height:1;animation:pdScoreIn .55s .35s cubic-bezier(.22,1,.36,1) both">${p.guess.toFixed(1)}</div>
+            <div style="font-family:'Fraunces','Playfair Display',serif;font-size:${isLast?'4rem':'3.2rem'};font-weight:900;color:rgba(201,168,76,.6);line-height:1;animation:pdScoreIn .55s .35s cubic-bezier(.22,1,.36,1) both">${p.guess.toFixed(1)}</div>
           </div>`,'#c9a84c');
         await delay(isLast?2600:1900);
         await fadeOut(300);await delay(150);
@@ -7832,7 +7949,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
       setStage(`
         <div>
           <div style="${nameStyle};animation:pdSongIn .45s ease both">@${esc(p.name)}${isMe?' ★':''}</div>
-          <div style="font-family:'Playfair Display',serif;font-size:${isLast?'5rem':'4rem'};font-weight:900;color:${sCol};line-height:1;margin:.35rem 0;animation:pdScoreIn .55s .12s cubic-bezier(.22,1,.36,1) both;text-shadow:0 0 60px ${sCol}44">${p.actual.toFixed(1)}</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:${isLast?'5rem':'4rem'};font-weight:900;color:${sCol};line-height:1;margin:.35rem 0;animation:pdScoreIn .55s .12s cubic-bezier(.22,1,.36,1) both;text-shadow:0 0 60px ${sCol}44">${p.actual.toFixed(1)}</div>
           ${hasGuess?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:${diffColor};animation:pdSongIn .5s .7s ease both">${diff<=0.5?'🎯 nailed it':'guessed '+p.guess.toFixed(1)+' · ±'+diff.toFixed(1)}</div>`:''}
         </div>`,sCol);
 
@@ -7849,7 +7966,7 @@ async function rrRunPodiumSequence({songStats,myRatings,myAvg,mostGenerous,harsh
   setStage(`
     <div style="animation:pdSongIn .8s ease forwards">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.8rem">That's a wrap</div>
-      <div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1;letter-spacing:-.01em">See you next<br>session.</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.4rem;font-weight:900;color:#fff;line-height:1;letter-spacing:-.01em">See you next<br>session.</div>
     </div>`);
   await delay(2500);
 
@@ -7931,7 +8048,7 @@ async function shareRRSession(){
     // avg score
     const sc=hue(ss.avg);
     c.save();c.shadowColor=sc;c.shadowBlur=i===0?30:14;
-    c.font=`900 ${i===0?'64':'52'}px "Playfair Display"`;c.fillStyle=sc;c.textAlign='right';
+    c.font=`900 ${i===0?'64':'52'}px "Fraunces"`;c.fillStyle=sc;c.textAlign='right';
     c.fillText(ss.avg.toFixed(1),x+w-24,y+h*.7);
     c.restore();
     ry+=h+rowGap;
@@ -7949,7 +8066,7 @@ async function shareRRSession(){
     c.strokeStyle='#1e1d42';c.lineWidth=1;c.strokeRect(sx,sy,sw,sh);
     const col=hue(val);
     c.save();c.shadowColor=col;c.shadowBlur=16;
-    c.font='900 52px "Playfair Display"';c.fillStyle=col;c.textAlign='center';c.fillText(val.toFixed(1),sx+sw/2,sy+74);
+    c.font='900 52px "Fraunces"';c.fillStyle=col;c.textAlign='center';c.fillText(val.toFixed(1),sx+sw/2,sy+74);
     c.restore();
     c.font='600 20px "Barlow Condensed"';c.fillStyle='#5c5a80';c.textAlign='center';
     c.fillText(lbl,sx+sw/2,sy+100);
@@ -7981,7 +8098,7 @@ async function shareRRSession(){
   c.fillStyle=acol;c.beginPath();c.arc(pad+18,fy,18,0,Math.PI*2);c.fill();
   c.fillStyle='#07071a';c.font='800 13px "Barlow Condensed"';c.textAlign='center';c.fillText(avatarInitial(uname),pad+18,fy+5);
   c.textAlign='left';c.fillStyle='#5c5a80';c.font='600 24px "Barlow Condensed"';c.fillText('@'+uname,pad+44,fy+8);
-  c.textAlign='right';c.font='900 28px "Playfair Display"';c.fillStyle='#a78bfa';c.fillText('SONGR',W-pad,fy+8);
+  c.textAlign='right';c.font='900 28px "Fraunces"';c.fillStyle='#a78bfa';c.fillText('SONGR',W-pad,fy+8);
 
   // Export
   const link=document.createElement('a');
@@ -8090,7 +8207,7 @@ function renderMCVoteCard(key,label,choices){
   }).join('');
   return`<div style="animation:pdStageFadeIn .6s ease forwards;width:100%;text-align:left;display:flex;flex-direction:column;max-height:calc(100dvh - 10rem);overflow:hidden">
     <div style="flex-shrink:0;font-family:'Barlow Condensed',sans-serif;font-size:.48rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.55rem">Cast your vote</div>
-    <div style="flex-shrink:0;font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:.75rem">${esc(label)}</div>
+    <div style="flex-shrink:0;font-family:'Fraunces','Playfair Display',serif;font-size:1.55rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:.75rem">${esc(label)}</div>
     <div id="rr-vote-choices" style="display:flex;flex-direction:column;gap:.4rem;overflow-y:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;min-height:0;flex:1;padding-bottom:.1rem">${btns}</div>
     <div style="flex-shrink:0">
       <div id="rr-vote-status" style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);margin-top:.7rem;min-height:1.1em">${hasVoted?'Waiting for others…':''}</div>
@@ -8107,8 +8224,8 @@ function renderSliderVoteCard(){
   const displayVal=hasVoted?myVote.toFixed(1):'5.0';
   return`<div style="animation:pdStageFadeIn .6s ease forwards;width:100%;text-align:center">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.48rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:.55rem">Predict</div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:.9rem">Your album score?</div>
-    <div id="rr-vote-score-display" style="font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:.7rem">${displayVal}</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.55rem;font-weight:900;color:#fff;line-height:1.15;margin-bottom:.9rem">Your album score?</div>
+    <div id="rr-vote-score-display" style="font-family:'Fraunces','Playfair Display',serif;font-size:4rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:.7rem">${displayVal}</div>
     <input type="range" id="rr-vote-slider" min="1" max="10" step="0.1" value="${hasVoted?myVote:5}" ${hasVoted?'disabled':''} style="width:82%;accent-color:var(--gold);margin-bottom:.9rem;display:block;margin-left:auto;margin-right:auto" oninput="const d=document.getElementById('rr-vote-score-display');if(d)d.textContent=parseFloat(this.value).toFixed(1)">
     <button id="rr-vote-submit-btn" ${hasVoted?'disabled':''} onclick="rrSubmitVote('albumScore',parseFloat(document.getElementById('rr-vote-slider').value))" style="display:block;width:72%;margin:0 auto .75rem;padding:.65rem 1rem;border-radius:.55rem;border:1px solid var(--gold);background:rgba(201,168,76,.16);color:${hasVoted?'rgba(255,255,255,.4)':'#fff'};font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:${hasVoted?'default':'pointer'};opacity:${hasVoted?'.5':'1'}">${hasVoted?'Submitted ✓':'Submit'}</button>
     <div id="rr-vote-status" style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);min-height:1.1em">${hasVoted?'Waiting for others…':''}</div>
@@ -8748,7 +8865,7 @@ function renderAuxHistoryRowHTML(b,forUserId,oppMap){
   const detailId=`ab-hist-detail-${b.id}-${forUserId}`;
   return`<div style="border-bottom:1px solid var(--border);background:var(--surface)" id="ab-hist-row-${esc(b.id)}-${esc(forUserId)}">
     <div onclick="toggleAuxHistoryExpand('${escJs(b.id)}','${escJs(forUserId)}')" style="display:flex;align-items:center;gap:.7rem;padding:.7rem 1.25rem;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''">
-      <div style="width:34px;height:34px;border-radius:.4rem;background:${outcomeColor}1f;border:1.5px solid ${outcomeColor};display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;color:${outcomeColor};flex-shrink:0">${outcomeText}</div>
+      <div style="width:34px;height:34px;border-radius:.4rem;background:${outcomeColor}1f;border:1.5px solid ${outcomeColor};display:flex;align-items:center;justify-content:center;font-family:'Fraunces','Playfair Display',serif;font-size:1.15rem;font-weight:900;color:${outcomeColor};flex-shrink:0">${outcomeText}</div>
       <div style="flex:1;min-width:0">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${matchupText}</div>
         <div style="font-size:.52rem;color:var(--muted2);margin-top:.15rem;display:flex;align-items:center;gap:.35rem">
@@ -9501,7 +9618,7 @@ async function renderAuxBattleWheel(){
       <button onclick="abCopyCode()" style="margin-top:.3rem;background:transparent;border:1px solid var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:.3rem .65rem;border-radius:3px;cursor:pointer">Copy Code</button>
     </div>
     <div style="text-align:center;margin-bottom:.85rem">
-      <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">🎡 ${singleMode?'Wheel · Single Artist':'Wheel of Artists'}</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--text)">🎡 ${singleMode?'Wheel · Single Artist':'Wheel of Artists'}</div>
       <div id="ab-wheel-status" style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.25rem">${spun?(singleMode?(showA?'Artist revealed — both sides draft from this artist.':'Spinning…'):(showB?'Matchup locked in below.':showA?'Slot A revealed · spinning for Slot B…':'Spinning for Slot A…')):(singleMode?`${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel picks one for both sides`:`${artists.length} artist${artists.length===1?'':'s'} loaded · the wheel decides the matchup`)}</div>
     </div>
     <div style="display:flex;gap:.65rem;margin-bottom:1rem">${slotBtn('A',paProf)}${slotBtn('B',pbProf)}</div>
@@ -10589,12 +10706,12 @@ function renderAbVoteSection(pickA,pickB){
       <div style="display:flex;align-items:center;gap:.55rem;margin-bottom:.35rem">
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='A'?'var(--gold)':'var(--muted2)'};flex:0 0 70px">${esc(pickA?.song_name||b.artist_a)}</span>
         <div class="ab-pct-bar"><div class="ab-pct-fill-a" style="width:${pctA}%"></div></div>
-        <span style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:var(--gold);width:2.5rem;text-align:right">${pctA}%</span>
+        <span style="font-family:'Fraunces','Playfair Display',serif;font-size:.95rem;font-weight:900;color:var(--gold);width:2.5rem;text-align:right">${pctA}%</span>
       </div>
       <div style="display:flex;align-items:center;gap:.55rem">
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:${myVote.vote_choice==='B'?'#f472b6':'var(--muted2)'};flex:0 0 70px">${esc(pickB?.song_name||b.artist_b)}</span>
         <div class="ab-pct-bar"><div class="ab-pct-fill-b" style="width:${pctB}%"></div></div>
-        <span style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:900;color:#f472b6;width:2.5rem;text-align:right">${pctB}%</span>
+        <span style="font-family:'Fraunces','Playfair Display',serif;font-size:.95rem;font-weight:900;color:#f472b6;width:2.5rem;text-align:right">${pctB}%</span>
       </div>
     </div>
     <div style="text-align:center;font-size:.58rem;color:var(--muted);font-family:'DM Mono',monospace">${totalVotes} vote${totalVotes!==1?'s':''} · You voted ${esc(myVote.vote_choice==='A'?(pickA?.song_name||b.artist_a):(pickB?.song_name||b.artist_b))}</div>`;
@@ -10707,12 +10824,12 @@ function renderAbRatingSection(pickA,pickB){
           </div>
           <input type="range" min="0" max="10" step="0.5" value="${vals[i]||5}" class="${sliderClass}" id="ab-rate-${side}-${i}" oninput="updateAbRatingDisplay('${side}',${i},this.value)" style="accent-color:${cat.color}" ${dimmed?'disabled':''}>
           <div class="ab-rating-scale"><span>0</span><span>5</span><span>10</span></div>
-          <div id="ab-rate-${side}-${i}-step-desc" data-cat="${escAttr(cat.name)}" style="margin-top:.5rem;font-size:.7rem;font-style:italic;color:${cat.color};font-family:'Playfair Display',serif;line-height:1.25;min-height:1.2em">${esc(abCatDescription(cat.name,vals[i]||5))}</div>
+          <div id="ab-rate-${side}-${i}-step-desc" data-cat="${escAttr(cat.name)}" style="margin-top:.5rem;font-size:.7rem;font-style:italic;color:${cat.color};font-family:'Fraunces','Playfair Display',serif;line-height:1.25;min-height:1.2em">${esc(abCatDescription(cat.name,vals[i]||5))}</div>
         </div>`;
       }).join('')}
       <div id="ab-rate-${side}-live" style="text-align:center;padding:.7rem 0;border-top:1px solid var(--border)">
         <div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:.2rem">${existing?'Your saved score':'Your final score (live)'}</div>
-        <div id="ab-rate-${side}-live-num" style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${color};line-height:1">${finalScore!==null?parseFloat(finalScore).toFixed(1):'—'}</div>
+        <div id="ab-rate-${side}-live-num" style="font-family:'Fraunces','Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${color};line-height:1">${finalScore!==null?parseFloat(finalScore).toFixed(1):'—'}</div>
       </div>
       <button class="ab-submit-rating-btn" id="ab-submit-rate-${side}" onclick="submitAuxBattleRating('${side}')" style="background:${color}">${existing?'Update Rating':'Submit Rating · '+esc(songName)}</button>
     </div>`;
@@ -11052,7 +11169,7 @@ function _abRevealCats(b,pick){
 function _abRevealIntroHTML(b,roundNumber,modeLabel){
   return`<div style="opacity:0;animation:abRevealIn .55s ease forwards;text-align:center;padding:3rem 0">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem">${esc(modeLabel)}</div>
-    <div style="font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:var(--text);line-height:.95;text-shadow:0 0 50px rgba(167,139,250,.55)">Round ${roundNumber}</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:5rem;font-weight:900;color:var(--text);line-height:.95;text-shadow:0 0 50px rgba(167,139,250,.55)">Round ${roundNumber}</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.85rem;letter-spacing:.32em;color:var(--muted);margin-top:1rem;font-weight:700">REVEAL</div>
   </div>`;
 }
@@ -11064,7 +11181,7 @@ function _abRevealSongsHTML(b,pickA,pickB,aName,bName){
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);margin-top:.85rem;line-height:1.15">${esc(aName)}</div>
       <div style="font-size:.75rem;color:var(--muted);margin-top:.25rem">${esc(b.artist_a)}</div>
     </div>
-    <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-style:italic;color:var(--gold);align-self:center;text-shadow:0 0 30px rgba(167,139,250,.7);opacity:0;animation:abRevealIn .5s ease .25s forwards;flex-shrink:0">VS</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.6rem;font-style:italic;color:var(--gold);align-self:center;text-shadow:0 0 30px rgba(167,139,250,.7);opacity:0;animation:abRevealIn .5s ease .25s forwards;flex-shrink:0">VS</div>
     <div style="flex:1;max-width:280px;text-align:center;opacity:0;animation:abRevealSlideR .55s cubic-bezier(.22,1,.36,1) forwards">
       ${pickB?.artwork_url?`<img src="${esc(itunesArtUrl(pickB.artwork_url,500))}" style="width:100%;aspect-ratio:1;border-radius:.85rem;object-fit:cover;box-shadow:0 0 50px rgba(244,114,182,.45)">`:`<div style="width:100%;aspect-ratio:1;border-radius:.85rem;background:var(--surface2)"></div>`}
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#f472b6;margin-top:.85rem;line-height:1.15">${esc(bName)}</div>
@@ -11086,7 +11203,7 @@ async function _abRevealWinner(b,rr,pickA,pickB,aName,bName){
   // Suspense build-up: "And the winner is..." with rising sweep
   _abSetReveal(`<div style="text-align:center;padding:3rem 0;width:100%">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.4em;text-transform:uppercase;color:#a78bfa;margin-bottom:1rem;opacity:0;animation:abRevealIn .55s ease forwards">Round Winner</div>
-    <div style="font-family:'Playfair Display',serif;font-size:2.7rem;font-style:italic;color:#8a88b0;opacity:0;animation:abRevealIn .65s ease .25s forwards">…and the winner is</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.7rem;font-style:italic;color:#8a88b0;opacity:0;animation:abRevealIn .65s ease .25s forwards">…and the winner is</div>
     <div style="margin-top:1.6rem;font-size:1.6rem;color:#8a88b0;font-family:'DM Mono',monospace;letter-spacing:.5em;opacity:0;animation:abRevealIn .5s ease .65s forwards">●  ●  ●</div>
   </div>`);
   _abSfxSweepUp(1.3);
@@ -11099,7 +11216,7 @@ async function _abRevealWinner(b,rr,pickA,pickB,aName,bName){
     <div style="font-size:7rem;opacity:0;animation:abRevealCrown .9s cubic-bezier(.22,1,.36,1) forwards;line-height:1">${isSplit?'⚖️':'👑'}</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:#8a88b0;margin:1rem 0 1rem;opacity:0;animation:abRevealIn .55s ease .3s forwards">Round Winner</div>
     ${winArt?`<img src="${esc(itunesArtUrl(winArt,500))}" style="width:220px;height:220px;border-radius:.9rem;object-fit:cover;margin:0 auto 1.1rem;display:block;opacity:0;animation:abRevealPop .8s cubic-bezier(.22,1,.36,1) .45s forwards;box-shadow:0 0 70px ${winColor}99,0 0 130px ${winColor}55">`:''}
-    <div style="font-family:'Playfair Display',serif;font-size:3.6rem;font-weight:900;color:${winColor};line-height:1.05;opacity:0;animation:abRevealPop .8s cubic-bezier(.22,1,.36,1) .8s forwards;text-shadow:0 0 50px ${winColor},0 0 90px ${winColor}55;padding:0 .5rem">${esc(winName)}</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.6rem;font-weight:900;color:${winColor};line-height:1.05;opacity:0;animation:abRevealPop .8s cubic-bezier(.22,1,.36,1) .8s forwards;text-shadow:0 0 50px ${winColor},0 0 90px ${winColor}55;padding:0 .5rem">${esc(winName)}</div>
     ${winArtist?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#e8e5ff;margin-top:.65rem;opacity:0;animation:abRevealIn .55s ease 1.05s forwards">${esc(winArtist)}</div>`:''}
     ${winAlbum?`<div style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.06);border:1px solid ${winColor};color:#e8e5ff;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.32rem .7rem;border-radius:999px;margin-top:.85rem;opacity:0;animation:abRevealIn .55s ease 1.3s forwards">
       <span style="opacity:.7">Album</span>
@@ -11247,7 +11364,7 @@ async function _abPlayAudienceRatings(b,rr,ratingsHere,pickA,pickB,aName,bName,p
 
   _abSetReveal(`<div style="opacity:0;animation:abRevealIn .45s ease forwards;text-align:center;padding:2rem 0">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)">⭐ Audience Ratings</div>
-    <div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--text);margin-top:.85rem;line-height:1.1">${raterIds.length} member${raterIds.length===1?'':'s'}</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--text);margin-top:.85rem;line-height:1.1">${raterIds.length} member${raterIds.length===1?'':'s'}</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.78rem;color:var(--muted);margin-top:1rem;letter-spacing:.16em;text-transform:uppercase">Breaking down every score…</div>
   </div>`);
   _abSfxWhoosh();
@@ -11380,7 +11497,7 @@ async function playDramaticFinalRecap(cb){
   // Phase 1: Battle complete intro
   _abSetReveal(`<div style="text-align:center;padding-top:2rem;opacity:0;animation:abRevealIn .55s ease forwards">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:800;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem">Battle Complete</div>
-    <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;color:var(--text);line-height:1;text-shadow:0 0 38px rgba(167,139,250,.45)">Final Recap</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3rem;font-weight:900;color:var(--text);line-height:1;text-shadow:0 0 38px rgba(167,139,250,.45)">Final Recap</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;letter-spacing:.18em;color:var(--muted);margin-top:.55rem">Replaying every round…</div>
   </div>`);
   _abSfxBoom();
@@ -11413,7 +11530,7 @@ async function playDramaticFinalRecap(cb){
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-bottom:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.artist_a)}</div>
         <div class="abrev-score-num" id="abrev-final-a" style="color:var(--gold);font-size:3.4rem;opacity:0">${pointsA}</div>
       </div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--muted);font-style:italic;align-self:center">–</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.7rem;color:var(--muted);font-style:italic;align-self:center">–</div>
       <div style="text-align:center;flex:1;max-width:140px">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#f472b6;margin-bottom:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.artist_b)}</div>
         <div class="abrev-score-num" id="abrev-final-b" style="color:#f472b6;font-size:3.4rem;opacity:0">${pointsB}</div>
@@ -11433,7 +11550,7 @@ async function playDramaticFinalRecap(cb){
   // Phase 5: Suspense buildup before winner
   _abSetReveal(`<div style="text-align:center;padding-top:3rem;width:100%">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);opacity:0;animation:abRevealIn .55s ease forwards">Aux Battle Champion</div>
-    <div style="font-family:'Playfair Display',serif;font-size:1.9rem;font-style:italic;color:var(--muted);margin-top:.55rem;opacity:0;animation:abRevealIn .65s ease .35s forwards">…and the winner is</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.9rem;font-style:italic;color:var(--muted);margin-top:.55rem;opacity:0;animation:abRevealIn .65s ease .35s forwards">…and the winner is</div>
     <div style="margin-top:1.2rem;font-size:1.1rem;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.4em;opacity:0;animation:abRevealIn .55s ease .8s forwards">●  ●  ●</div>
   </div>`);
   _abSfxSweepUp(1.6);
@@ -11444,7 +11561,7 @@ async function playDramaticFinalRecap(cb){
   _abSetReveal(`<div style="text-align:center;padding:1rem 0;width:100%">
     <div style="font-size:5rem;opacity:0;animation:abRevealCrown 1.1s cubic-bezier(.22,1,.36,1) forwards;line-height:1">${winArtist?'🏆':'⚖️'}</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--muted);margin:.55rem 0 .75rem;opacity:0;animation:abRevealIn .55s ease .5s forwards">${winArtist?'Aux Battle Winner':'Aux Battle Result'}</div>
-    <div style="font-family:'Playfair Display',serif;font-size:3.4rem;font-weight:900;color:${winColor};line-height:1.05;opacity:0;animation:abRevealPop .9s cubic-bezier(.22,1,.36,1) .85s forwards;text-shadow:0 0 60px ${winColor},0 0 110px ${winColor}55;padding:0 .5rem">${winArtist?esc(winArtist):'Tie'}</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.4rem;font-weight:900;color:${winColor};line-height:1.05;opacity:0;animation:abRevealPop .9s cubic-bezier(.22,1,.36,1) .85s forwards;text-shadow:0 0 60px ${winColor},0 0 110px ${winColor}55;padding:0 .5rem">${winArtist?esc(winArtist):'Tie'}</div>
     <div style="font-family:'DM Mono',monospace;font-size:.85rem;color:${winColor};margin-top:.85rem;opacity:0;animation:abRevealIn .55s ease 1.45s forwards;letter-spacing:.06em">${pointsA} – ${pointsB}</div>
     ${b.duel_mode?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-top:.85rem;opacity:0;animation:abRevealIn .55s ease 1.7s forwards">⚔️ Duel Result · Decided by Player Ratings</div>`:''}
   </div>`);
@@ -11554,7 +11671,7 @@ async function _abPlayBattleStatsBreakdown(b,prefetchedTotalRatings){
   // Intro
   _abSetReveal(`<div style="text-align:center;padding:2rem 0;opacity:0;animation:abRevealIn .55s ease forwards">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:1rem;font-weight:800;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem">📊 Battle Stats</div>
-    <div style="font-family:'Playfair Display',serif;font-size:3.4rem;font-weight:900;color:var(--text);line-height:1">By the Numbers</div>
+    <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.4rem;font-weight:900;color:var(--text);line-height:1">By the Numbers</div>
   </div>`);
   _abSfxWhoosh();
   await _abWait(2400);
@@ -11569,7 +11686,7 @@ async function _abPlayBattleStatsBreakdown(b,prefetchedTotalRatings){
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.32em;text-transform:uppercase;color:#8a88b0;margin-bottom:1rem;opacity:0;animation:abRevealIn .5s ease forwards">Stat ${i+1} / ${stats.length}</div>
       <div style="font-size:6rem;line-height:1;opacity:0;animation:abRevealCrown .85s cubic-bezier(.22,1,.36,1) .15s forwards">${s.icon}</div>
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:#8a88b0;margin-top:1.4rem;opacity:0;animation:abRevealIn .55s ease .55s forwards">${esc(s.label)}</div>
-      <div style="font-family:'Playfair Display',serif;font-size:3.4rem;font-weight:900;color:${s.color};line-height:1.1;margin-top:.85rem;opacity:0;animation:abRevealPop .85s cubic-bezier(.22,1,.36,1) .85s forwards;text-shadow:0 0 50px ${s.color}77,0 0 100px ${s.color}33;padding:0 .6rem;max-width:100%;word-break:break-word">${esc(s.value)}</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.4rem;font-weight:900;color:${s.color};line-height:1.1;margin-top:.85rem;opacity:0;animation:abRevealPop .85s cubic-bezier(.22,1,.36,1) .85s forwards;text-shadow:0 0 50px ${s.color}77,0 0 100px ${s.color}33;padding:0 .6rem;max-width:100%;word-break:break-word">${esc(s.value)}</div>
       ${s.sub?`<div style="font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#e8e5ff;margin-top:1rem;opacity:0;animation:abRevealIn .55s ease 1.3s forwards;max-width:100%;line-height:1.3">${esc(s.sub)}</div>`:''}
     </div>`);
     _abSfxWhoosh();
@@ -11606,7 +11723,7 @@ async function _abPlayCompactRoundReveal(b,rr){
     </div>
     <div style="text-align:center;margin-top:.7rem;opacity:0;animation:abRevealPop .55s cubic-bezier(.22,1,.36,1) .45s forwards">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem">Winner</div>
-      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${winColor};line-height:1.1">${esc(winnerLabel)}</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;font-weight:900;color:${winColor};line-height:1.1">${esc(winnerLabel)}</div>
     </div>
   </div>`);
   _abSfxBlip(440+rr.round_number*60,0.18,'triangle',0.13);
@@ -11716,13 +11833,13 @@ function renderAuxBattleResult(){
           <div style="font-size:.5rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;margin-bottom:.2rem">${esc(pickA?.song_name||b.artist_a)}</div>
           <div style="font-size:.58rem;color:var(--muted)">A rated: <span style="color:var(--text)">${pAratA?fmt(pAratA.final_score):'—'}</span></div>
           <div style="font-size:.58rem;color:var(--muted)">B rated: <span style="color:var(--text)">${pBratA?fmt(pBratA.final_score):'—'}</span></div>
-          <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--gold);margin-top:.25rem">${fmt(rr.rating_avg_a)} avg</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--gold);margin-top:.25rem">${fmt(rr.rating_avg_a)} avg</div>
         </div>
         <div style="flex:1;background:var(--surface);border-radius:.4rem;padding:.4rem .55rem">
           <div style="font-size:.5rem;color:#f472b6;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.08em;margin-bottom:.2rem">${esc(pickB?.song_name||b.artist_b)}</div>
           <div style="font-size:.58rem;color:var(--muted)">A rated: <span style="color:var(--text)">${pAratB?fmt(pAratB.final_score):'—'}</span></div>
           <div style="font-size:.58rem;color:var(--muted)">B rated: <span style="color:var(--text)">${pBratB?fmt(pBratB.final_score):'—'}</span></div>
-          <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#f472b6;margin-top:.25rem">${fmt(rr.rating_avg_b)} avg</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.9rem;font-weight:700;color:#f472b6;margin-top:.25rem">${fmt(rr.rating_avg_b)} avg</div>
         </div>
       </div>
     </div>`;
@@ -11819,43 +11936,75 @@ async function renderAuxBattleFinal(){
   const biggestRound=abRoundResults.length&&abRoundResults.some(r=>r.vote_count_a!=null)?
     abRoundResults.reduce((a,r)=>{const d=Math.abs((r.vote_count_a||0)-(r.vote_count_b||0));return d>a.diff?{r,diff:d}:a;},{r:abRoundResults[0],diff:-1}).r:null;
   const tiebreakerUsed=abRoundResults.some(r=>r.tiebreaker_used);
+  // ── EDITORIAL LEDE ──────────────────────────────────────────────────
+  // A real sentence, not "Winner: X". Drop-cap on the first letter.
+  const lede=(()=>{
+    if(!winSide||winSide==='split'){
+      return `A wash — neither side could pull away, finishing level at ${pointsA}.`;
+    }
+    const winScore=winSide==='A'?pointsA:pointsB;
+    const loseScore=winSide==='A'?pointsB:pointsA;
+    const loseArtist=winSide==='A'?b.artist_b:b.artist_a;
+    const margin=Math.abs(winScore-loseScore);
+    if(margin>=3) return `A blowout — ${winArtist} ran away with it, taking the night ${winScore} rounds to ${loseScore}.`;
+    if(margin===1) return `Decided by a single round — ${winArtist} edged ${loseArtist} ${winScore} to ${loseScore}.`;
+    return `${winArtist} takes it from ${loseArtist} by ${margin}, finishing ${winScore} rounds to ${loseScore}.`;
+  })();
+  const ledeFirst=lede.charAt(0);
+  const ledeRest=lede.slice(1);
+  const dateStr=b.created_at?new Date(b.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).toUpperCase():'';
+  const modeStr=b.duel_mode?'DUEL EDITION':'AUDIENCE EDITION';
   document.getElementById('ab-final-body').innerHTML=`
-    ${b.duel_mode?`<div style="display:flex;align-items:center;gap:.55rem;padding:.55rem .75rem;background:rgba(167,139,250,.1);border:1px solid var(--gold);border-radius:.5rem;margin-bottom:1rem">
-      <div style="font-size:1rem;flex-shrink:0">⚔️</div>
-      <div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)">Duel Result</div>
-        <div style="font-size:.55rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.15rem">Decided by both players rating both songs. No audience was present.</div>
+    <!-- ── MASTHEAD ────────────────────────────────────────────────── -->
+    <div style="border-top:2px solid currentColor;border-bottom:1px solid var(--border2);padding:.4rem 0 .35rem;margin-bottom:1.1rem;display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase">
+      <span>ISSUE №<span style="color:var(--text)">${esc(b.code||'—')}</span></span>
+      <span style="color:var(--muted2)">${dateStr}</span>
+      <span>${modeStr}</span>
+    </div>
+
+    <!-- ── EDITORIAL LEDE ───────────────────────────────────────────── -->
+    <p style="font-family:'Fraunces','Playfair Display',serif;font-style:italic;font-size:1.45rem;font-weight:500;line-height:1.22;color:var(--text);margin:0 0 1.4rem;font-variation-settings:'opsz' 144,'SOFT' 30,'WONK' 1;letter-spacing:-.005em">
+      <span style="float:left;font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-weight:900;font-size:4.4rem;line-height:.85;padding:.18rem .35rem 0 0;color:${winColor};font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 1">${esc(ledeFirst)}</span>${esc(ledeRest)}
+    </p>
+
+    <!-- ── FINAL TALLY · PRINTED ────────────────────────────────────── -->
+    <div style="border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);padding:1.1rem 0;margin:0 0 1.5rem;display:flex;align-items:baseline;justify-content:space-between;gap:.55rem">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem">Side A</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);font-style:italic;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variation-settings:'opsz' 36,'WONK' 1">${esc(b.artist_a||'—')}</div>
       </div>
-    </div>`:''}
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.5rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">${b.duel_mode?(winArtist?'Duel Mode Winner':'Duel Mode Result'):(winArtist?'Aux Battle Winner':'Aux Battle Result')}</div>
-      ${winArtist?`<div style="font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:${winColor};line-height:1.1">${esc(winArtist)}</div>
-      <div style="font-size:.6rem;color:var(--muted);font-family:'DM Mono',monospace;margin-top:.4rem">${pointsA} – ${pointsB}</div>`
-      :`<div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--muted)">Tie</div>`}
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.4rem;font-weight:900;line-height:1;color:var(--text);font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30;flex-shrink:0;display:flex;align-items:baseline;gap:.4rem">
+        <span style="color:${winSide==='A'?winColor:'var(--muted)'}">${pointsA}</span>
+        <span style="font-size:1.6rem;color:var(--muted2);font-weight:400">—</span>
+        <span style="color:${winSide==='B'?winColor:'var(--muted)'}">${pointsB}</span>
+      </div>
+      <div style="flex:1;min-width:0;text-align:right">
+        <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem">Side B</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);font-style:italic;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variation-settings:'opsz' 36,'WONK' 1">${esc(b.artist_b||'—')}</div>
+      </div>
     </div>
-    <div class="ab-score-tally" style="margin-bottom:1.25rem">
-      <div class="ab-score-tally-side"><div class="ab-score-tally-num" style="color:var(--gold)">${pointsA}</div><div class="ab-score-tally-label">${esc(b.artist_a)}</div></div>
-      <div class="ab-score-tally-sep">–</div>
-      <div class="ab-score-tally-side"><div class="ab-score-tally-num" style="color:#f472b6">${pointsB}</div><div class="ab-score-tally-label">${esc(b.artist_b)}</div></div>
-    </div>
+
     ${recordsBlockHTML}
-    <div class="ab-section-lbl" style="margin-bottom:.5rem">Round by Round</div>
-    <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;overflow:hidden;margin-bottom:1rem">
+
+    <!-- ── ROUND BY ROUND · TYPESET ─────────────────────────────────── -->
+    <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border2);padding-bottom:.25rem;margin-bottom:.2rem">Round by Round</div>
+    <div style="margin-bottom:1.25rem">
       ${abRoundResults.map(r=>{
         const pa=abPickForRound('A',r.round_number);
         const pb=abPickForRound('B',r.round_number);
         const aName=pa?.song_name||b.artist_a;
         const bName=pb?.song_name||b.artist_b;
-        const wColor=r.winner_side==='A'?'var(--gold)':r.winner_side==='B'?'#f472b6':'var(--muted)';
-        const detail=r.rating_avg_a!=null?`${parseFloat(r.rating_avg_a||0).toFixed(1)} vs ${parseFloat(r.rating_avg_b||0).toFixed(1)}`
-          :r.vote_count_a!=null?`${r.vote_count_a}–${r.vote_count_b} votes`:'';
-        return`<div class="ab-round-row" style="padding:.55rem .85rem">
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;color:var(--muted);flex-shrink:0;width:1.8rem">R${r.round_number}</div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:.65rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(aName)} vs ${esc(bName)}</div>
-            ${detail?`<div style="font-size:.52rem;color:var(--muted)">${detail}${r.tiebreaker_used?' · Tiebreaker':''}</div>`:''}
+        const wColor=r.winner_side==='A'?'var(--gold)':r.winner_side==='B'?'#f472b6':'var(--muted2)';
+        const aScore=r.rating_avg_a!=null?parseFloat(r.rating_avg_a).toFixed(1):null;
+        const bScore=r.rating_avg_b!=null?parseFloat(r.rating_avg_b).toFixed(1):null;
+        const winnerName=r.winner_side==='A'?b.artist_a:r.winner_side==='B'?b.artist_b:'Split';
+        return`<div style="display:grid;grid-template-columns:1.6rem 1fr auto;gap:.6rem .75rem;align-items:baseline;padding:.6rem 0;border-bottom:1px solid var(--border)">
+          <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.62rem;color:var(--muted);font-feature-settings:'tnum'">${String(r.round_number).padStart(2,'0')}</div>
+          <div style="min-width:0">
+            <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.82rem;line-height:1.25;color:var(--text);font-variation-settings:'opsz' 24"><span style="color:${r.winner_side==='A'?'var(--text)':'var(--muted)'};${r.winner_side==='A'?'font-weight:600':'font-weight:400'}">${esc(aName)}</span>${aScore?` <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;color:var(--muted2);font-feature-settings:'tnum'">${aScore}</span>`:''} <span style="font-style:italic;color:var(--muted2);font-weight:400">vs</span> <span style="color:${r.winner_side==='B'?'var(--text)':'var(--muted)'};${r.winner_side==='B'?'font-weight:600':'font-weight:400'}">${esc(bName)}</span>${bScore?` <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;color:var(--muted2);font-feature-settings:'tnum'">${bScore}</span>`:''}</div>
+            ${r.tiebreaker_used?`<div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-top:.18rem">↳ Tiebreaker · ${esc(r.tiebreaker_used)}</div>`:''}
           </div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.06em;color:${wColor};flex-shrink:0">${r.winner_side==='split'?'SPLIT':r.winner_side==='A'?esc(aName):esc(bName)}</div>
+          <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:${wColor};text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:6rem">${esc(winnerName)}</div>
         </div>`;
       }).join('')}
     </div>
@@ -11924,7 +12073,7 @@ async function renderAuxBattleFinal(){
               <div style="font-size:.5rem;color:var(--muted)">${esc(b.artist_a)}</div>
             </div>
           </div>
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--muted);font-style:italic">vs</div>
+          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1rem;color:var(--muted);font-style:italic">vs</div>
           <div style="flex:1;display:flex;align-items:center;gap:.5rem;min-width:0">
             ${b.album_b_cover?`<img src="${esc(b.album_b_cover)}" style="width:42px;height:42px;border-radius:3px;object-fit:cover;flex-shrink:0">`:''}
             <div style="min-width:0">
@@ -12506,7 +12655,7 @@ function swRenderFriends(activity){
     const artHTML=r.artwork_url
       ?`<img class="sw-song-art" src="${esc(itunesArtUrl(r.artwork_url,84))}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="sw-song-art-ph" style="display:none">🎵</div>`
       :`<div class="sw-song-art" data-art-key="${esc((r.artist_name||'unknown')+'|||'+(r.album||r.artist_name||'unknown'))}" data-art-size="84"></div>`;
-    return`<div class="sw-friend-card" onclick="swOpenSong('${esc(enc)}')">${artHTML}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${esc(r.profile.username)}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${esc(r.song_name)}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${esc(r.artist_name)}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
+    return`<div class="sw-friend-card" onclick="swOpenSong('${esc(enc)}')">${artHTML}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--chorus)">${esc(r.profile.username)}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">${esc(r.song_name)}</div><div style="font-size:.54rem;color:var(--muted2);letter-spacing:.04em">${esc(r.artist_name)}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.5rem;font-weight:900;line-height:1;color:${col};text-shadow:0 0 10px ${col}">${r.score.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;margin-top:.1rem">${timeAgo(r.created_at)}</div></div></div>`;
   }).join('')+swShowMoreBtn('friends',visible.length,activity.length);
   loadMissingArtwork(el);
 }
@@ -12534,7 +12683,7 @@ function swOpenGenre(genre){
   const songItems=gSongs.length
     ?gSongs.slice(0,8).map(s=>{const col=swScoreColor(s.avg);const enc=encodeURIComponent(s.song+'||'+s.artist);return`<div class="sw-detail-item" onclick="swCloseDetail();setTimeout(()=>swOpenSong('${escJs(enc)}'),280)"><div style="flex:1;min-width:0"><div class="sw-detail-item-name">${esc(s.song)}</div><div style="font-size:.5rem;color:var(--muted)">${esc(s.artist)}</div></div><div class="sw-detail-item-score" style="color:${col}">${s.avg.toFixed(1)}</div></div>`;}).join('')
     :'<div class="sw-empty" style="font-size:.58rem">No songs rated in this genre yet.</div>';
-  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header" style="border-left:4px solid ${cfg.color}"><div class="sw-detail-label">Genre District</div><div style="display:flex;align-items:center;gap:.7rem"><span style="font-size:2rem">${esc(cfg.icon)}</span><div><div class="sw-detail-title" style="color:${cfg.color}">${esc(label)}</div><div class="sw-detail-meta">${count} ratings</div></div><div style="margin-left:auto;text-align:right"><div style="font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${cfg.color};text-shadow:0 0 14px ${cfg.color}">${avg}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Avg Score</div></div></div></div><div class="sw-detail-body"><div style="display:flex;gap:.7rem;margin-bottom:.9rem"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.songCount:'—'}</div><div class="sw-detail-stat-lbl">Songs</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.artistCount:'—'}</div><div class="sw-detail-stat-lbl">Artists</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${count}</div><div class="sw-detail-stat-lbl">Ratings</div></div></div><div class="sw-detail-section-title">Artists in ${esc(label)}</div>${artistItems}<div class="sw-detail-section-title" style="margin-top:.75rem">Top Songs</div>${songItems}<button class="sw-detail-rate-btn" onclick="swCloseDetail();switchTab('rate')">Rate a ${esc(label)} Song</button></div>`;
+  document.getElementById('sw-detail-content').innerHTML=`<div class="sw-detail-header" style="border-left:4px solid ${cfg.color}"><div class="sw-detail-label">Genre District</div><div style="display:flex;align-items:center;gap:.7rem"><span style="font-size:2rem">${esc(cfg.icon)}</span><div><div class="sw-detail-title" style="color:${cfg.color}">${esc(label)}</div><div class="sw-detail-meta">${count} ratings</div></div><div style="margin-left:auto;text-align:right"><div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${cfg.color};text-shadow:0 0 14px ${cfg.color}">${avg}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Avg Score</div></div></div></div><div class="sw-detail-body"><div style="display:flex;gap:.7rem;margin-bottom:.9rem"><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.songCount:'—'}</div><div class="sw-detail-stat-lbl">Songs</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${stats?stats.artistCount:'—'}</div><div class="sw-detail-stat-lbl">Artists</div></div><div class="sw-detail-stat"><div class="sw-detail-stat-val">${count}</div><div class="sw-detail-stat-lbl">Ratings</div></div></div><div class="sw-detail-section-title">Artists in ${esc(label)}</div>${artistItems}<div class="sw-detail-section-title" style="margin-top:.75rem">Top Songs</div>${songItems}<button class="sw-detail-rate-btn" onclick="swCloseDetail();switchTab('rate')">Rate a ${esc(label)} Song</button></div>`;
   swOpenDetail();
 }
 
@@ -12546,7 +12695,7 @@ function swOpenSong(enc){
   if(!song)return;
   const avg=song.avg;const col=swScoreColor(avg);
   const artHTML=song.artwork_url?`<img src="${esc(song.artwork_url)}" style="width:60px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0" onerror="this.style.display='none'">`:`<div style="width:60px;height:60px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0">🎵</div>`;
-  const myHTML=song.myScore!=null?`<span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Your score: </span><span style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:${swScoreColor(song.myScore)}">${parseFloat(song.myScore).toFixed(1)}</span>`:'';
+  const myHTML=song.myScore!=null?`<span style="font-family:'Barlow Condensed',sans-serif;font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">Your score: </span><span style="font-family:'Fraunces','Playfair Display',serif;font-size:1rem;font-weight:900;color:${swScoreColor(song.myScore)}">${parseFloat(song.myScore).toFixed(1)}</span>`:'';
   const tags=[];
   if(song.iMyRated)tags.push(`<span class="sw-song-label sw-label-rated" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">You Rated</span>`);
   else tags.push(`<span class="sw-song-label sw-label-new" style="position:static;display:inline-block;margin:.15rem .2rem .15rem 0">Not Rated</span>`);
@@ -13111,7 +13260,7 @@ function apMyStats(d){
   const diffText=diff!==null?(diff>0.1?`You rate ${aEsc} <strong style="color:var(--green)">${diff.toFixed(1)} higher</strong> than the SONGR average.`:diff<-0.1?`You rate ${aEsc} <strong style="color:var(--red)">${Math.abs(diff).toFixed(1)} lower</strong> than the SONGR average.`:'Your ratings match the SONGR average almost exactly.'):'';
   const col=swScoreColor(d.myAvg);
   const card=(lbl,val,sub)=>val?`<div class="ap-stat-card"><div class="ap-stat-card-lbl">${esc(lbl)}</div><div class="ap-stat-card-val">${esc(val)}</div>${sub?`<div class="ap-stat-card-sub">${esc(sub)}</div>`:''}</div>`:'';
-  return`<div class="ap-sec"><div class="ap-sec-title">Your Stats</div><div class="ap-personal"><div style="display:flex;gap:1rem;flex-wrap:wrap"><div><div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900;color:${col};text-shadow:0 0 14px ${col}88">${d.myAvg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Your Avg</div></div><div><div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:900">${d.myCount}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Songs Rated</div></div></div><div class="ap-stat-grid" style="margin-top:.6rem">${card('Your Best',myBest?.song,myBest?.score.toFixed(1))}${myWorst&&myWorst.song!==myBest?.song?card('Your Lowest',myWorst.song,myWorst.score.toFixed(1)):''}${myBestAlb?card('Fav Album',myBestAlb.album,myBestAlb.avg.toFixed(1)):''}${d.myHotTake?card('Hot Take',d.myHotTake.song,`You: ${d.myHotTake.score.toFixed(1)} · Avg: ${d.myHotTake.commAvg.toFixed(1)}`):''}</div>${diffText?`<div class="ap-personal-compare">${diffText}</div>`:''}</div></div>`;
+  return`<div class="ap-sec"><div class="ap-sec-title">Your Stats</div><div class="ap-personal"><div style="display:flex;gap:1rem;flex-wrap:wrap"><div><div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.75rem;font-weight:900;color:${col};text-shadow:0 0 14px ${col}88">${d.myAvg.toFixed(1)}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Your Avg</div></div><div><div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.75rem;font-weight:900">${d.myCount}</div><div style="font-size:.44rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif">Songs Rated</div></div></div><div class="ap-stat-grid" style="margin-top:.6rem">${card('Your Best',myBest?.song,myBest?.score.toFixed(1))}${myWorst&&myWorst.song!==myBest?.song?card('Your Lowest',myWorst.song,myWorst.score.toFixed(1)):''}${myBestAlb?card('Fav Album',myBestAlb.album,myBestAlb.avg.toFixed(1)):''}${d.myHotTake?card('Hot Take',d.myHotTake.song,`You: ${d.myHotTake.score.toFixed(1)} · Avg: ${d.myHotTake.commAvg.toFixed(1)}`):''}</div>${diffText?`<div class="ap-personal-compare">${diffText}</div>`:''}</div></div>`;
 }
 
 function apAlbumsSection(d){
@@ -13171,7 +13320,7 @@ function apActivitySection(d){
   if(!d.recentActivity.length)return`<div class="ap-sec"><div class="ap-sec-title">Recent Activity</div><div class="ap-empty">No recent public ratings for this artist.</div></div>`;
   const items=d.recentActivity.map(r=>{
     const col=swScoreColor(r.score);
-    return`<div class="ap-activity-item">${avatarHTML(r.profile,null,32)}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text)">${esc(r.profile.username||'user')}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.song_name)}</div><div style="font-size:.48rem;color:var(--muted);margin-top:.06rem">${timeAgo(r.created_at)}</div></div><div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:900;color:${col};text-shadow:0 0 10px ${col};flex-shrink:0">${r.score.toFixed(1)}</div></div>`;
+    return`<div class="ap-activity-item">${avatarHTML(r.profile,null,32)}<div style="flex:1;min-width:0"><div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text)">${esc(r.profile.username||'user')}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:.82rem;font-weight:800;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(r.song_name)}</div><div style="font-size:.48rem;color:var(--muted);margin-top:.06rem">${timeAgo(r.created_at)}</div></div><div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.35rem;font-weight:900;color:${col};text-shadow:0 0 10px ${col};flex-shrink:0">${r.score.toFixed(1)}</div></div>`;
   }).join('');
   return`<div class="ap-sec"><div class="ap-sec-title">Recent Activity</div><div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden">${items}</div></div>`;
 }
