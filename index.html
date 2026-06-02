@@ -1344,7 +1344,7 @@
 <!-- AUTH -->
 <div class="view hidden" id="view-auth">
   <div class="auth-wrap">
-    <div class="auth-brand"><h1>SONGR</h1><p>Rap Review System</p></div>
+    <div class="auth-brand"><h1>SONGR</h1></div>
     <div class="auth-tabs">
       <button class="auth-tab active" id="auth-tab-in" onclick="switchAuthTab('in')">Sign In</button>
       <button class="auth-tab" id="auth-tab-up" onclick="switchAuthTab('up')">Sign Up</button>
@@ -1393,7 +1393,7 @@
         <p class="onboard-body">SONGR rates rap using a 6-category equation. Replay Value leads — if a song keeps pulling you back, that matters most.</p>
         <div class="onboard-cats">
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--replay)">Replay Value</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:24%;background:var(--replay)"></div></div><span class="onboard-cat-pct">24%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Flow &amp; Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--flow)"></div></div><span class="onboard-cat-pct">20%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--flow)"></div></div><span class="onboard-cat-pct">20%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--prod)">Beat</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:18%;background:var(--prod)"></div></div><span class="onboard-cat-pct">18%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--chorus)">Chorus</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:16%;background:var(--chorus)"></div></div><span class="onboard-cat-pct">16%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--verses)">Verses</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:14%;background:var(--verses)"></div></div><span class="onboard-cat-pct">14%</span></div>
@@ -1446,7 +1446,7 @@
           </div>
           <div class="onboard-flow-result">Replay Score = <span style="color:var(--replay);font-weight:700">9</span></div>
         </div>
-        <p class="onboard-body" style="margin-top:.75rem">Flow &amp; Delivery follows at 20% — rate the peak moment of flow in the track.</p>
+        <p class="onboard-body" style="margin-top:.75rem">Delivery follows at 20% — rate the peak moment of delivery in the track.</p>
       </div>
 
     </div>
@@ -1480,7 +1480,7 @@
         <p class="onboard-body">SONGR rates rap using a 6-category equation. Replay Value leads — if a song keeps pulling you back, that matters most.</p>
         <div class="onboard-cats">
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--replay)">Replay Value</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:24%;background:var(--replay)"></div></div><span class="onboard-cat-pct">24%</span></div>
-          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Flow &amp; Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--flow)"></div></div><span class="onboard-cat-pct">20%</span></div>
+          <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--flow)">Delivery</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:20%;background:var(--flow)"></div></div><span class="onboard-cat-pct">20%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--prod)">Beat</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:18%;background:var(--prod)"></div></div><span class="onboard-cat-pct">18%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--chorus)">Chorus</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:16%;background:var(--chorus)"></div></div><span class="onboard-cat-pct">16%</span></div>
           <div class="onboard-cat"><span class="onboard-cat-name" style="color:var(--verses)">Verses</span><div class="onboard-bar-wrap"><div class="onboard-bar" style="width:14%;background:var(--verses)"></div></div><span class="onboard-cat-pct">14%</span></div>
@@ -1507,7 +1507,7 @@
           <div class="onboard-flow-row"><span class="onboard-flow-lbl">Replay Value</span><div class="onboard-flow-bar-wrap"><div class="onboard-flow-bar" style="width:90%;background:var(--replay)"></div></div><span class="onboard-flow-val" style="color:var(--replay)">9</span></div>
           <div class="onboard-flow-result">Replay Score = <span style="color:var(--replay);font-weight:700">9</span></div>
         </div>
-        <p class="onboard-body" style="margin-top:.75rem">Flow &amp; Delivery follows at 20% — rate the peak moment of flow in the track.</p>
+        <p class="onboard-body" style="margin-top:.75rem">Delivery follows at 20% — rate the peak moment of delivery in the track.</p>
       </div>
     </div>
     <div class="onboard-dots">
@@ -1743,11 +1743,10 @@
           </div>
         </div>
 
-        <!-- Interlude toggle -->
-        <button id="interlude-btn" class="interlude-btn pressable" onclick="toggleInterlude()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-          Mark as Interlude
-        </button>
+        <!-- Interlude banner only — toggle button removed from the Rate tab.
+             The id="interlude-btn" element is kept hidden so existing JS that
+             toggles its `.active` class (toggleInterlude) doesn't crash. -->
+        <button id="interlude-btn" class="interlude-btn pressable" onclick="toggleInterlude()" style="display:none"></button>
         <div id="interlude-banner" class="interlude-banner" style="display:none">
           🎵 Interlude — This track will not count toward the album score
         </div>
@@ -1785,7 +1784,7 @@
         <div class="rcat flow-cat">
           <div class="rcat-head">
             <div>
-              <div class="rcat-name" style="color:var(--flow)">Flow &amp; Delivery</div>
+              <div class="rcat-name" style="color:var(--flow)">Delivery</div>
               <div class="rcat-weight" id="flow-weight-lbl">20% · Peak</div>
             </div>
             <div class="rcat-score" id="flow-display">—</div>
@@ -2142,7 +2141,7 @@
           <div class="rcat-desc" id="rr-replay-desc"></div>
         </div>
         <div class="rr-cat">
-          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--flow)">Flow &amp; Delivery <span id="rr-flow-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">20%</span></div><div class="rr-cat-val" id="rr-flow-val">—</div></div>
+          <div class="rr-cat-head"><div class="rr-cat-name" style="color:var(--flow)">Delivery <span id="rr-flow-weight-lbl" style="color:var(--muted);font-weight:400;font-size:.55rem">20%</span></div><div class="rr-cat-val" id="rr-flow-val">—</div></div>
           <input type="range" min="0" max="10" step="0.5" value="0" id="rr-flow" class="rr-slider" oninput="rrUpdate()">
           <div class="rcat-desc" id="rr-flow-desc"></div>
         </div>
@@ -2747,6 +2746,13 @@
           <button id="ab-feat-on" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbToggle('features',true)">On</button>
           <button id="ab-feat-off" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbToggle('features',false)">Off</button>
         </div>
+      </div>
+    </div>
+    <div style="margin-bottom:.75rem">
+      <label class="modal-lbl">Blind Rating <span style="color:var(--muted);font-weight:400;letter-spacing:0;text-transform:none">— hide live score while rating to prevent bias; revealed in animation</span></label>
+      <div style="display:flex;gap:.35rem">
+        <button id="ab-blind-on" class="ab-pill" style="cursor:pointer;flex:1" onclick="setAbToggle('blind',true)">On</button>
+        <button id="ab-blind-off" class="ab-pill active" style="cursor:pointer;flex:1" onclick="setAbToggle('blind',false)">Off</button>
       </div>
     </div>
     <div style="margin-bottom:.75rem">
@@ -3886,7 +3892,7 @@ function openRatingDetail(row){
   let cats;
   if(genre==='rap'||!GENRE_PRESETS[genre]){
     cats=[
-      {name:'Flow & Delivery',key:'flow_peak',weight:'28%',color:'var(--flow)'},
+      {name:'Delivery',key:'flow_peak',weight:'28%',color:'var(--flow)'},
       {name:'Verses',key:'verse_quality',weight:'22%',color:'var(--verses)'},
       {name:'Production',key:'production',weight:'20%',color:'var(--prod)'},
       {name:'Chorus',key:'chorus',weight:'14%',color:'var(--chorus)'},
@@ -8351,7 +8357,17 @@ let abSongMatches=[], abSongTimer=null, abPendingPick=null;
 let abMyRatingA=null, abMyRatingB=null, abRoomsSubject='rankroom';
 // Rap-mode "No Hook" / "Lyrics Don't Matter" flags per side, per round
 let abMyNoHookA=false, abMyNoLyricsA=false, abMyNoHookB=false, abMyNoLyricsB=false;
-let _abSongCount=5, _abMode='ratings', _abSecret=true, _abFeatures=false, _abPrivate=false, _abGenre='rap';
+let _abSongCount=5, _abMode='ratings', _abSecret=true, _abFeatures=false, _abPrivate=false, _abGenre='rap', _abBlind=false;
+// Blind Rating · host-toggled. When on, raters don't see their live final score
+// while moving sliders — the score is only shown during the post-round reveal.
+// Persisted on the aux_battles row (best-effort) AND broadcast over the room
+// channel for instant in-session sync.
+let abBlindRating=false;
+function abIsBlindRating(b){
+  if(!b)return abBlindRating;
+  if(typeof b.blind_rating==='boolean')return b.blind_rating;
+  return abBlindRating;
+}
 // Rematch voting state — persists per battle session in memory.
 let _abRematchVoters=new Set();
 let _abMyRematchVote=false;
@@ -8366,7 +8382,7 @@ function abGenrePreset(genre){
   // slightly-rounded labels in the HTML)
   const RAP={
     label:'Rap',
-    cats:['Replay Value','Flow & Delivery','Beat','Chorus','Verses','Lyrics / Wordplay'],
+    cats:['Replay Value','Delivery','Beat','Chorus','Verses','Lyrics / Wordplay'],
     colors:['var(--replay)','var(--flow)','var(--prod)','var(--chorus)','var(--verses)','var(--lyrics)'],
     weights:[0.24,0.20,0.18,0.16,0.14,0.08],
     descs:[
@@ -8395,7 +8411,7 @@ function abGenrePreset(genre){
     'Build-Up':'Tension build before the drop or hook.',
     'Drop / Payoff':'Impact and release of the drop.',
     'Atmosphere':'Mood and sonic atmosphere.',
-    'Flow & Delivery':'Cadence, delivery, vocal performance.',
+    'Delivery':'Cadence, delivery, vocal performance.',
     'Impression':'Overall impact and first-listen reaction.'
   };
   if(!genre||genre==='rap'||!GENRE_PRESETS[genre]||GENRE_PRESETS[genre].isRap)return RAP;
@@ -8412,7 +8428,7 @@ function setAbGenre(g,btn){
 // matching the descriptions used on the Rate tab and in Rank Rooms.
 const _AB_RAP_DESC_KEY={
   'Replay Value':'replay',
-  'Flow & Delivery':'flow',
+  'Delivery':'flow',
   'Beat':'prod',
   'Chorus':'chorus',
   'Verses':'verses',
@@ -8495,6 +8511,7 @@ function setAbToggle(field,val){
   if(field==='secret'){_abSecret=val;document.getElementById('ab-secret-on').classList.toggle('active',val);document.getElementById('ab-secret-off').classList.toggle('active',!val);}
   else if(field==='features'){_abFeatures=val;document.getElementById('ab-feat-on').classList.toggle('active',val);document.getElementById('ab-feat-off').classList.toggle('active',!val);}
   else if(field==='private'){_abPrivate=val;document.getElementById('ab-priv-on').classList.toggle('active',val);document.getElementById('ab-priv-off').classList.toggle('active',!val);}
+  else if(field==='blind'){_abBlind=val;document.getElementById('ab-blind-on').classList.toggle('active',val);document.getElementById('ab-blind-off').classList.toggle('active',!val);}
 }
 function setAbBans(n){
   _abBanCount=parseInt(n)||0;
@@ -8504,6 +8521,26 @@ function setAbAlbumLock(on){
   _abAlbumLock=!!on;
   if(!on){_abAlbumA=null;_abAlbumB=null;}
   if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
+}
+// Host-only · toggle Blind Rating from inside the lobby. Updates local state,
+// broadcasts to room (instant sync), and best-effort persists on the row.
+async function setAbLobbyBlind(on){
+  const b=currentAuxBattle;
+  if(!b||b.host_id!==currentUser?.id)return;
+  abBlindRating=!!on;
+  // Broadcast first so other clients see the change immediately
+  if(abChannel)abChannel.send({type:'broadcast',event:'blind_rating_set',payload:{enabled:abBlindRating}});
+  // Best-effort persist; silently ignore if column doesn't exist
+  try{
+    const{error}=await db.from('aux_battles').update({blind_rating:abBlindRating}).eq('id',b.id);
+    if(error&&!/blind_rating|column/i.test(error.message||''))console.warn('blind_rating persist failed',error);
+    if(!error){
+      // Mirror onto local row so abIsBlindRating returns the new value
+      currentAuxBattle={...currentAuxBattle,blind_rating:abBlindRating};
+    }
+  }catch(e){/* swallow */}
+  if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
+  else if(currentAuxBattle?.status==='round_active')renderAuxBattleRound();
 }
 function abRefreshAlbumPickerLabels(){
   // Now handled inline in renderAuxBattleLobby
@@ -8584,11 +8621,11 @@ function openCreateAuxBattleModal(){
   document.getElementById('ab-custom-count').value='';
   document.getElementById('ab-custom-count-wrap').style.display='none';
   document.getElementById('create-ab-err').textContent='';
-  _abSongCount=5;_abMode='ratings';_abSecret=true;_abFeatures=false;_abPrivate=false;
+  _abSongCount=5;_abMode='ratings';_abSecret=true;_abFeatures=false;_abPrivate=false;_abBlind=false;
   _abBanCount=0;_abAlbumLock=false;_abAlbumA=null;_abAlbumB=null;_abGenre='rap';
   document.querySelectorAll('#ab-song-count-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.count==='5'));
   document.querySelectorAll('#ab-genre-btns .ab-pill').forEach(b=>b.classList.toggle('active',b.dataset.genre==='rap'));
-  setAbToggle('secret',true);setAbToggle('features',false);setAbToggle('private',false);
+  setAbToggle('secret',true);setAbToggle('features',false);setAbToggle('private',false);setAbToggle('blind',false);
   document.getElementById('create-ab-modal').classList.add('open');
 }
 function closeCreateAuxBattleModal(){document.getElementById('create-ab-modal').classList.remove('open');}
@@ -8820,7 +8857,7 @@ function renderAuxRecordCardHTML(rec,variant){
 // Render the aux battle history list into the given container element.
 // `forUserId` is the user whose history we're showing; outcome is computed
 // from their perspective ("W" if they won, "L" if they lost, "T" otherwise).
-const _abHistoryState={limits:{}};
+const _abHistoryState={limits:{},collapsed:{}};
 async function loadAuxBattleHistoryView(forUserId,container){
   if(!container)return;
   container.innerHTML=`<div style="padding:.85rem 1.25rem;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--muted)">Loading battle history…</div>`;
@@ -8842,13 +8879,26 @@ async function loadAuxBattleHistoryView(forUserId,container){
   container.dataset.forUid=forUserId;
   const visible=battles.slice(0,limit);
   const remaining=battles.length-visible.length;
+  // Default: expanded. Persists per-container across re-renders within the session.
+  const collapsed=!!_abHistoryState.collapsed[limKey];
   container.innerHTML=`
-    <div class="ab-section-lbl" style="padding:1rem 1.25rem .35rem">⚔ Aux Battle History · ${battles.length}</div>
-    <div style="border-top:1px solid var(--border)">
-      ${visible.map(b=>renderAuxHistoryRowHTML(b,forUserId,oppMap)).join('')}
+    <div onclick="auxHistoryToggleCollapsed('${escJs(limKey)}')" style="padding:1rem 1.25rem .35rem;display:flex;align-items:baseline;justify-content:space-between;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent">
+      <span class="ab-section-lbl" style="padding:0">⚔ Aux Battle History · ${battles.length}</span>
+      <span id="ab-hist-chev-${esc(limKey)}" style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.65rem;color:var(--muted);transition:transform .25s;display:inline-block;transform:rotate(${collapsed?'-90deg':'0deg'})">▾</span>
     </div>
-    ${remaining>0?`<button onclick="auxHistoryShowMore('${escJs(limKey)}','${escJs(forUserId)}')" style="display:block;width:calc(100% - 2.5rem);margin:.6rem 1.25rem .25rem;padding:.55rem;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:.4rem">Show ${Math.min(8,remaining)} more (${remaining} hidden)</button>`:''}
+    <div id="ab-hist-body-${esc(limKey)}" style="${collapsed?'display:none':''};border-top:1px solid var(--border)">
+      ${visible.map(b=>renderAuxHistoryRowHTML(b,forUserId,oppMap)).join('')}
+      ${remaining>0?`<button onclick="auxHistoryShowMore('${escJs(limKey)}','${escJs(forUserId)}')" style="display:block;width:calc(100% - 2.5rem);margin:.6rem 1.25rem .25rem;padding:.55rem;background:transparent;border:1px dashed var(--border2);color:var(--muted2);font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:.4rem">Show ${Math.min(8,remaining)} more (${remaining} hidden)</button>`:''}
+    </div>
   `;
+}
+function auxHistoryToggleCollapsed(limKey){
+  _abHistoryState.collapsed[limKey]=!_abHistoryState.collapsed[limKey];
+  const collapsed=_abHistoryState.collapsed[limKey];
+  const body=document.getElementById('ab-hist-body-'+limKey);
+  const chev=document.getElementById('ab-hist-chev-'+limKey);
+  if(body)body.style.display=collapsed?'none':'';
+  if(chev)chev.style.transform='rotate('+(collapsed?'-90deg':'0deg')+')';
 }
 async function auxHistoryShowMore(limKey,uid){
   _abHistoryState.limits[limKey]=(_abHistoryState.limits[limKey]||0)+8;
@@ -9189,11 +9239,21 @@ async function createAuxBattle(){
     host_id:currentUser.id,code,name,artist_a:artistA,artist_b:artistB,
     song_count:songCount,winner_mode:winnerMode,genre:_abGenre,secret_draft:_abSecret,
     allow_features:_abFeatures,is_private:_abPrivate,
+    blind_rating:_abBlind,
     status:startStatus,
     ban_count:0,album_lock:false,draft_budget:0,
     wheel_artists:wheelArtists
   };
-  const{data,error}=await db.from('aux_battles').insert(insertData).select('*').single();
+  // Track the desired blind-rating state locally so the broadcast covers cases
+  // where the DB column doesn't exist (we silently drop it from insertData below).
+  abBlindRating=_abBlind;
+  let insertRes=await db.from('aux_battles').insert(insertData).select('*').single();
+  // If the DB doesn't have the blind_rating column yet, retry without it.
+  if(insertRes.error&&/blind_rating|column/i.test(insertRes.error.message||'')){
+    delete insertData.blind_rating;
+    insertRes=await db.from('aux_battles').insert(insertData).select('*').single();
+  }
+  const{data,error}=insertRes;
   btn.disabled=false;btn.textContent='Create Battle';
   if(error){
     // If the schema's CHECK constraint rejects 'ratings_single', fall back to 'ratings'
@@ -9234,6 +9294,8 @@ async function loadAuxBattleState(id){
   const{data:battle,error}=await db.from('aux_battles').select('*').eq('id',id).single();
   if(error||!battle){alert('Battle not found.');document.getElementById('ab-view').style.display='none';return;}
   currentAuxBattle=battle;
+  // Seed local blind-rating flag from the row if the column exists
+  if(typeof battle.blind_rating==='boolean')abBlindRating=battle.blind_rating;
   document.getElementById('ab-view-title').textContent=battle.name;
   document.getElementById('ab-view-code').textContent=battle.code;
   const[{data:picks},{data:results},{data:bans}]=await Promise.all([
@@ -9395,6 +9457,13 @@ async function renderAuxBattleLobby(){
       ${b.album_lock?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.3rem;gap:.5rem"><span class="ab-section-lbl">Album Lock</span><span style="font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);text-align:right;line-height:1.2;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(b.album_a_name||'?')} vs ${esc(b.album_b_name||'?')}</span></div>`:''}
       <div style="display:flex;justify-content:space-between"><span class="ab-section-lbl">Audience in room</span><span style="font-family:'DM Mono',monospace;font-size:.68rem;color:${audienceCount>=1?'var(--green)':'var(--muted)'}">${audienceCount} member${audienceCount!==1?'s':''}</span></div>
     </div>
+    ${isHost?`<div style="border-top:1px solid var(--border);padding-top:.75rem;margin-bottom:.75rem">
+      <label class="modal-lbl">Blind Rating <span style="color:var(--muted);font-weight:400;letter-spacing:0;text-transform:none">— hide live score while raters move sliders; revealed only in animation</span></label>
+      <div style="display:flex;gap:.35rem">
+        <button class="ab-pill${abIsBlindRating(b)?' active':''}" style="cursor:pointer;flex:1" onclick="setAbLobbyBlind(true)">On</button>
+        <button class="ab-pill${!abIsBlindRating(b)?' active':''}" style="cursor:pointer;flex:1" onclick="setAbLobbyBlind(false)">Off</button>
+      </div>
+    </div>`:''}
     ${isHost&&playersReady&&audienceCount===0?`
     <div style="border-top:1px solid var(--border);padding-top:.75rem;margin-bottom:.75rem">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem">⚙️ Strategy Modes <span style="color:var(--muted);font-weight:500;font-size:.52rem;letter-spacing:.04em">· host only</span></div>
@@ -10787,9 +10856,9 @@ function renderAbRatingSection(pickA,pickB){
   // Compute effective weights with No Hook / Lyrics Don't Matter active (rap only)
   const effWeight=(i,name)=>{
     if(!isRap)return cats[i].weight;
-    if(noHook&&noLyrics){const map={'Replay Value':24/92,'Flow & Delivery':28/92,'Verses':22/92,'Beat':18/92};return map[name]||0;}
-    if(noHook){const map={'Replay Value':0.24,'Flow & Delivery':0.28,'Verses':0.22,'Beat':0.18,'Lyrics / Wordplay':0.08};return map[name]||0;}
-    if(noLyrics){const map={'Replay Value':24/92,'Flow & Delivery':20/92,'Chorus':16/92,'Verses':14/92,'Beat':18/92};return map[name]||0;}
+    if(noHook&&noLyrics){const map={'Replay Value':24/92,'Delivery':28/92,'Verses':22/92,'Beat':18/92};return map[name]||0;}
+    if(noHook){const map={'Replay Value':0.24,'Delivery':0.28,'Verses':0.22,'Beat':0.18,'Lyrics / Wordplay':0.08};return map[name]||0;}
+    if(noLyrics){const map={'Replay Value':24/92,'Delivery':20/92,'Chorus':16/92,'Verses':14/92,'Beat':18/92};return map[name]||0;}
     return cats[i].weight;
   };
   ratingSection.innerHTML=`
@@ -10838,10 +10907,16 @@ function renderAbRatingSection(pickA,pickB){
           <div id="ab-rate-${side}-${i}-step-desc" data-cat="${escAttr(cat.name)}" style="margin-top:.5rem;font-size:.7rem;font-style:italic;color:${cat.color};font-family:'Fraunces','Playfair Display',serif;line-height:1.25;min-height:1.2em">${esc(abCatDescription(cat.name,vals[i]||5))}</div>
         </div>`;
       }).join('')}
+      ${abIsBlindRating(b)?`
+      <div style="text-align:center;padding:.7rem 0;border-top:1px solid var(--border)">
+        <div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:.2rem">🔒 Blind Rating</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1rem;font-weight:500;color:var(--muted2);line-height:1.3;max-width:18rem;margin:0 auto">Your score is hidden until the reveal animation after the round.</div>
+        <div id="ab-rate-${side}-live-num" style="display:none">${finalScore!==null?parseFloat(finalScore).toFixed(1):'—'}</div>
+      </div>`:`
       <div id="ab-rate-${side}-live" style="text-align:center;padding:.7rem 0;border-top:1px solid var(--border)">
         <div style="font-size:.55rem;color:var(--muted);font-family:'Barlow Condensed',sans-serif;letter-spacing:.14em;text-transform:uppercase;font-weight:800;margin-bottom:.2rem">${existing?'Your saved score':'Your final score (live)'}</div>
         <div id="ab-rate-${side}-live-num" style="font-family:'Fraunces','Playfair Display',serif;font-size:2.2rem;font-weight:900;color:${color};line-height:1">${finalScore!==null?parseFloat(finalScore).toFixed(1):'—'}</div>
-      </div>
+      </div>`}
       <button class="ab-submit-rating-btn" id="ab-submit-rate-${side}" onclick="submitAuxBattleRating('${side}')" style="background:${color}">${existing?'Update Rating':'Submit Rating · '+esc(songName)}</button>
     </div>`;
   // Compute and show live score on load
@@ -12303,8 +12378,22 @@ function subscribeToAuxBattleRealtime(battleId){
       renderAbRematchPanel();
       maybeTriggerAuxRematch();
     })
+    .on('broadcast',{event:'blind_rating_set'},({payload})=>{
+      if(!payload)return;
+      abBlindRating=!!payload.enabled;
+      if(currentAuxBattle)currentAuxBattle={...currentAuxBattle,blind_rating:abBlindRating};
+      if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
+      else if(currentAuxBattle?.status==='round_active')renderAuxBattleRound();
+    })
     .subscribe(async status=>{
-      if(status==='SUBSCRIBED'&&currentUser)await abChannel.track({user_id:currentUser.id});
+      if(status==='SUBSCRIBED'&&currentUser){
+        await abChannel.track({user_id:currentUser.id});
+        // If I'm the host, re-broadcast my blind-rating state so anyone who
+        // just joined picks it up immediately.
+        if(currentAuxBattle?.host_id===currentUser.id){
+          abChannel.send({type:'broadcast',event:'blind_rating_set',payload:{enabled:abBlindRating}});
+        }
+      }
     });
 }
 
