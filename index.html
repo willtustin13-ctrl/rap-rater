@@ -781,6 +781,10 @@
     /* Vertical em-dash separator (printed between meta items) */
     .ed-sep::before{content:" — ";color:var(--muted2);font-family:'Fraunces','Playfair Display',serif;font-weight:400;margin:0 .15rem}
 
+    /* Custom <summary> markers (we provide our own glyph) */
+    summary::-webkit-details-marker{display:none}
+    summary{list-style:none}
+
     /* ── PAPER GRAIN OVERLAY ──────────────────────────────────────────
        Tiny SVG fBm-noise tile, repeated. Sits above the background but
        below all content. Multiply-style: lifts the visual a hair on
@@ -2712,10 +2716,9 @@
     </div>
     <label class="modal-lbl">Songs Per Side</label>
     <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem" id="ab-song-count-btns">
+      <button class="ab-pill" style="cursor:pointer" data-count="1" onclick="setAbSongCount(1,this)">1</button>
       <button class="ab-pill" style="cursor:pointer" data-count="3" onclick="setAbSongCount(3,this)">3</button>
       <button class="ab-pill active" style="cursor:pointer" data-count="5" onclick="setAbSongCount(5,this)">5</button>
-      <button class="ab-pill" style="cursor:pointer" data-count="7" onclick="setAbSongCount(7,this)">7</button>
-      <button class="ab-pill" style="cursor:pointer" data-count="10" onclick="setAbSongCount(10,this)">10</button>
       <button class="ab-pill" style="cursor:pointer" data-count="custom" onclick="setAbSongCount('custom',this)">Custom</button>
     </div>
     <div id="ab-custom-count-wrap" style="display:none;margin-bottom:.75rem">
@@ -10109,12 +10112,36 @@ async function submitAuxBattlePick(){
   }).select('*').single();
   if(pickData){abPicks=[...abPicks,pickData];}
   const updateData={current_pick_index:newPickIndex};
-  if(allDone){updateData.status='arranging';}
+  const isSingleSong=b.song_count===1;
+  if(allDone){
+    if(isSingleSong){
+      // 1-song battle: arrangement is meaningless. Skip the arrange phase and
+      // go straight into the single round. Both picks already have pick_number=1,
+      // also set round_position so abPickForRound resolves them by round.
+      updateData.status='round_active';
+      updateData.current_round=1;
+      updateData.arrangement_locked_a=true;
+      updateData.arrangement_locked_b=true;
+    } else {
+      updateData.status='arranging';
+    }
+  }
   const{data:updatedBattle,error:ue}=await db.from('aux_battles').update(updateData).eq('id',b.id).select('*').single();
   if(ue){alert(ue.message);btn.disabled=false;btn.textContent='Lock Pick';return;}
   currentAuxBattle=updatedBattle;
   btn.disabled=false;btn.textContent='Lock Pick';
-  if(allDone){abArrangement=new Array(b.song_count).fill(null);abState('arrange');}
+  if(allDone){
+    if(isSingleSong){
+      // Set round_position=1 on both picks so the round screen finds them.
+      await Promise.all(abPicks.map(p=>db.from('aux_battle_picks').update({round_position:1}).eq('id',p.id)));
+      const{data:freshPicks}=await db.from('aux_battle_picks').select('*').eq('battle_id',b.id);
+      if(freshPicks)abPicks=freshPicks;
+      await loadAbRoundData();
+      abState('round');
+    } else {
+      abArrangement=new Array(b.song_count).fill(null);abState('arrange');
+    }
+  }
   else{clearAbPickSelection();renderAuxBattleDraft();}
 }
 
@@ -10130,6 +10157,9 @@ function renderAbTimeline(){
   if(!tl)return;
   const b=currentAuxBattle;
   if(!b||b.status==='lobby'||b.status==='wheel'){tl.style.display='none';return;}
+  // 1-song battles: no momentum to visualise (no prior rounds, no arrangement,
+  // no cumulative score, no "match point" moments). Hide the timeline entirely.
+  if(b.song_count===1){tl.style.display='none';return;}
   tl.style.display='block';
 
   const songCount=b.song_count||5;
@@ -10693,10 +10723,12 @@ function renderAuxBattleRound(){
   const rn=b.current_round;
   const isHost=b.host_id===currentUser?.id;
   const isTiebreaker=b.status==='rating_tiebreaker';
-  document.getElementById('ab-round-label').textContent=`Round ${rn} of ${b.song_count}`;
+  document.getElementById('ab-round-label').textContent=b.song_count===1?'Rate the Songs':`Round ${rn} of ${b.song_count}`;
   const pointsA=abRoundResults.reduce((s,r)=>s+(r.points_a||0),0);
   const pointsB=abRoundResults.reduce((s,r)=>s+(r.points_b||0),0);
-  document.getElementById('ab-round-score-pill').textContent=`${b.artist_a} ${pointsA} – ${pointsB} ${b.artist_b}`;
+  const scorePillEl=document.getElementById('ab-round-score-pill');
+  if(b.song_count===1){scorePillEl.textContent='';scorePillEl.style.display='none';}
+  else{scorePillEl.textContent=`${b.artist_a} ${pointsA} – ${pointsB} ${b.artist_b}`;scorePillEl.style.display='';}
   document.getElementById('ab-round-tiebreaker-banner').style.display=isTiebreaker?'':'none';
   const pickA=abPickForRound('A',rn);
   const pickB=abPickForRound('B',rn);
@@ -11130,9 +11162,16 @@ async function finalizeAuxBattleRound(){
   abRoundResults=[...abRoundResults.filter(r=>r.round_number!==b.current_round),roundRes];
   const finalScoreA=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_a)||0),0);
   const finalScoreB=abRoundResults.reduce((s,r)=>s+(parseFloat(r.points_b)||0),0);
-  // Always go to round_result first — even on the last round — so the per-round
-  // reveal animation plays. The host then manually advances to 'final'.
-  await db.from('aux_battles').update({status:'round_result',final_score_a:finalScoreA,final_score_b:finalScoreB}).eq('id',b.id);
+  // 1-song battles: there's only ever one round, and the round-result reveal is
+  // identical to the final reveal. Skip the intermediate step and go straight
+  // to 'final'. Multi-round battles still go to 'round_result' so the per-round
+  // reveal animation plays before the host manually advances.
+  if(b.song_count===1){
+    const winSide=finalScoreA>finalScoreB?'A':finalScoreA<finalScoreB?'B':'split';
+    await db.from('aux_battles').update({status:'final',final_score_a:finalScoreA,final_score_b:finalScoreB,winner_side:winSide}).eq('id',b.id);
+  } else {
+    await db.from('aux_battles').update({status:'round_result',final_score_a:finalScoreA,final_score_b:finalScoreB}).eq('id',b.id);
+  }
 }
 
 // Host advances from the last-round result screen to the final recap animation.
@@ -12015,64 +12054,43 @@ async function renderAuxBattleFinal(){
     <div class="ab-section-lbl" style="margin-bottom:.45rem">Updated Records</div>
     <div style="display:flex;gap:.55rem">${recBadge(paProfF,paRecF,'A',aDidWin)}${recBadge(pbProfF,pbRecF,'B',bDidWin)}</div>
   </div>`:'';
-  const closestRound=abRoundResults.length?abRoundResults.reduce((a,r)=>{
-    const s1=r.rating_avg_a!=null?Math.abs(r.rating_avg_a-r.rating_avg_b):Math.abs((r.vote_count_a||0)-(r.vote_count_b||0));
-    const s2=a.diff;return s1<s2?{r,diff:s1}:a;
-  },{r:abRoundResults[0],diff:Infinity}).r:null;
-  const biggestRound=abRoundResults.length&&abRoundResults.some(r=>r.vote_count_a!=null)?
-    abRoundResults.reduce((a,r)=>{const d=Math.abs((r.vote_count_a||0)-(r.vote_count_b||0));return d>a.diff?{r,diff:d}:a;},{r:abRoundResults[0],diff:-1}).r:null;
-  const tiebreakerUsed=abRoundResults.some(r=>r.tiebreaker_used);
-  // ── EDITORIAL LEDE ──────────────────────────────────────────────────
-  // A real sentence, not "Winner: X". Drop-cap on the first letter.
-  const lede=(()=>{
-    if(!winSide||winSide==='split'){
-      return `A wash — neither side could pull away, finishing level at ${pointsA}.`;
-    }
+  // ── Compact margin label for the hero ────────────────────────────
+  const winMarginText=(()=>{
+    if(!winSide||winSide==='split')return 'Tied at the buzzer';
     const winScore=winSide==='A'?pointsA:pointsB;
     const loseScore=winSide==='A'?pointsB:pointsA;
-    const loseArtist=winSide==='A'?b.artist_b:b.artist_a;
     const margin=Math.abs(winScore-loseScore);
-    if(margin>=3) return `A blowout — ${winArtist} ran away with it, taking the night ${winScore} rounds to ${loseScore}.`;
-    if(margin===1) return `Decided by a single round — ${winArtist} edged ${loseArtist} ${winScore} to ${loseScore}.`;
-    return `${winArtist} takes it from ${loseArtist} by ${margin}, finishing ${winScore} rounds to ${loseScore}.`;
+    if(margin>=3)return `Wins by ${margin} rounds · decisive`;
+    if(margin===1)return `Edges it by a single round`;
+    return `Wins by ${margin} rounds`;
   })();
-  const ledeFirst=lede.charAt(0);
-  const ledeRest=lede.slice(1);
-  const dateStr=b.created_at?new Date(b.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}).toUpperCase():'';
-  const modeStr=b.duel_mode?'DUEL EDITION':'AUDIENCE EDITION';
+  const hasExtras=b.ban_count>0||b.album_lock||abPicks.length>0;
   document.getElementById('ab-final-body').innerHTML=`
-    <!-- ── MASTHEAD ────────────────────────────────────────────────── -->
-    <div style="border-top:2px solid currentColor;border-bottom:1px solid var(--border2);padding:.4rem 0 .35rem;margin-bottom:1.1rem;display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase">
-      <span>ISSUE №<span style="color:var(--text)">${esc(b.code||'—')}</span></span>
-      <span style="color:var(--muted2)">${dateStr}</span>
-      <span>${modeStr}</span>
+    <!-- ── HERO ─────────────────────────────────────────────────────── -->
+    <div style="text-align:center;padding:.5rem 0 1.6rem">
+      <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem">${winSide==='split'||!winSide?'Battle ends in a draw':'Battle Complete'}</div>
+      ${winArtist?`<div style="font-family:'Fraunces','Playfair Display',serif;font-size:2.7rem;font-weight:900;line-height:1.02;color:${winColor};letter-spacing:-.015em;font-variation-settings:'opsz' 144,'SOFT' 30">${esc(winArtist)}</div>
+      <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2);margin-top:.65rem">${esc(winMarginText)}</div>`
+      :`<div style="font-family:'Fraunces','Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--muted)">Tied</div>`}
     </div>
 
-    <!-- ── EDITORIAL LEDE ───────────────────────────────────────────── -->
-    <p style="font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-size:1.45rem;font-weight:500;line-height:1.22;color:var(--text);margin:0 0 1.4rem;font-variation-settings:'opsz' 144,'SOFT' 30,'WONK' 0;letter-spacing:-.005em">
-      <span style="float:left;font-family:'Fraunces','Playfair Display',serif;font-style:normal;font-weight:900;font-size:4.4rem;line-height:.85;padding:.18rem .35rem 0 0;color:${winColor};font-variation-settings:'opsz' 144,'SOFT' 50,'WONK' 0">${esc(ledeFirst)}</span>${esc(ledeRest)}
-    </p>
-
-    <!-- ── FINAL TALLY · PRINTED ────────────────────────────────────── -->
-    <div style="border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);padding:1.1rem 0;margin:0 0 1.5rem;display:flex;align-items:baseline;justify-content:space-between;gap:.55rem">
-      <div style="flex:1;min-width:0">
-        <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem">Side A</div>
-        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);font-style:italic;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variation-settings:'opsz' 36,'WONK' 0">${esc(b.artist_a||'—')}</div>
+    <!-- ── FINAL TALLY ──────────────────────────────────────────────── -->
+    <div style="border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);padding:1rem 0 .95rem;margin:0 0 1.25rem;display:flex;align-items:baseline;justify-content:center;gap:1rem">
+      <div style="text-align:center;flex:1;min-width:0">
+        <div class="ed-numeral" style="font-size:2.6rem;color:${winSide==='A'?winColor:'var(--muted)'};line-height:1">${pointsA}</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.72rem;font-weight:600;color:var(--text);margin-top:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variation-settings:'opsz' 18">${esc(b.artist_a||'—')}</div>
       </div>
-      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:3.4rem;font-weight:900;line-height:1;color:var(--text);font-feature-settings:'tnum','lnum';font-variation-settings:'opsz' 144,'SOFT' 30;flex-shrink:0;display:flex;align-items:baseline;gap:.4rem">
-        <span style="color:${winSide==='A'?winColor:'var(--muted)'}">${pointsA}</span>
-        <span style="font-size:1.6rem;color:var(--muted2);font-weight:400">—</span>
-        <span style="color:${winSide==='B'?winColor:'var(--muted)'}">${pointsB}</span>
-      </div>
-      <div style="flex:1;min-width:0;text-align:right">
-        <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem">Side B</div>
-        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);font-style:italic;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variation-settings:'opsz' 36,'WONK' 0">${esc(b.artist_b||'—')}</div>
+      <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1.4rem;color:var(--muted2);font-weight:400;align-self:center">—</div>
+      <div style="text-align:center;flex:1;min-width:0">
+        <div class="ed-numeral" style="font-size:2.6rem;color:${winSide==='B'?winColor:'var(--muted)'};line-height:1">${pointsB}</div>
+        <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.72rem;font-weight:600;color:var(--text);margin-top:.3rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variation-settings:'opsz' 18">${esc(b.artist_b||'—')}</div>
       </div>
     </div>
 
     ${recordsBlockHTML}
 
-    <!-- ── ROUND BY ROUND · TYPESET ─────────────────────────────────── -->
+    <!-- ── ROUND BY ROUND ──────────────────────────────────────────── -->
+    ${b.song_count===1?'':`
     <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border2);padding-bottom:.25rem;margin-bottom:.2rem">Round by Round</div>
     <div style="margin-bottom:1.25rem">
       ${abRoundResults.map(r=>{
@@ -12087,120 +12105,67 @@ async function renderAuxBattleFinal(){
         return`<div style="display:grid;grid-template-columns:1.6rem 1fr auto;gap:.6rem .75rem;align-items:baseline;padding:.6rem 0;border-bottom:1px solid var(--border)">
           <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.62rem;color:var(--muted);font-feature-settings:'tnum'">${String(r.round_number).padStart(2,'0')}</div>
           <div style="min-width:0">
-            <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.82rem;line-height:1.25;color:var(--text);font-variation-settings:'opsz' 24"><span style="color:${r.winner_side==='A'?'var(--text)':'var(--muted)'};${r.winner_side==='A'?'font-weight:600':'font-weight:400'}">${esc(aName)}</span>${aScore?` <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;color:var(--muted2);font-feature-settings:'tnum'">${aScore}</span>`:''} <span style="font-style:italic;color:var(--muted2);font-weight:400">vs</span> <span style="color:${r.winner_side==='B'?'var(--text)':'var(--muted)'};${r.winner_side==='B'?'font-weight:600':'font-weight:400'}">${esc(bName)}</span>${bScore?` <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;color:var(--muted2);font-feature-settings:'tnum'">${bScore}</span>`:''}</div>
+            <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.82rem;line-height:1.25;color:var(--text);font-variation-settings:'opsz' 24"><span style="color:${r.winner_side==='A'?'var(--text)':'var(--muted)'};${r.winner_side==='A'?'font-weight:600':'font-weight:400'}">${esc(aName)}</span>${aScore?` <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;color:var(--muted2);font-feature-settings:'tnum'">${aScore}</span>`:''} <span style="color:var(--muted2);font-weight:400">vs</span> <span style="color:${r.winner_side==='B'?'var(--text)':'var(--muted)'};${r.winner_side==='B'?'font-weight:600':'font-weight:400'}">${esc(bName)}</span>${bScore?` <span style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.6rem;color:var(--muted2);font-feature-settings:'tnum'">${bScore}</span>`:''}</div>
             ${r.tiebreaker_used?`<div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;color:var(--muted2);letter-spacing:.1em;text-transform:uppercase;margin-top:.18rem">↳ Tiebreaker · ${esc(r.tiebreaker_used)}</div>`:''}
           </div>
           <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:${wColor};text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:6rem">${esc(winnerName)}</div>
         </div>`;
       }).join('')}
     </div>
-    ${(()=>{
-      let leadFlip=null,maxFlip=0;
-      let runA=0,runB=0,prevLeader=0;
-      abRoundResults.forEach(r=>{
-        runA+=parseFloat(r.points_a)||0;
-        runB+=parseFloat(r.points_b)||0;
-        const newLeader=runA>runB?1:runA<runB?-1:0;
-        if(prevLeader&&newLeader&&prevLeader!==newLeader){
-          const flipMag=Math.abs((parseFloat(r.points_a)||0)-(parseFloat(r.points_b)||0));
-          if(flipMag>=maxFlip){maxFlip=flipMag;leadFlip=r;}
-        }
-        if(newLeader)prevLeader=newLeader;
-      });
-      const biggestDiff=abRoundResults.length?abRoundResults.reduce((m,r)=>{const d=Math.abs((parseFloat(r.points_a)||0)-(parseFloat(r.points_b)||0));return d>m.diff?{r,diff:d}:m;},{r:null,diff:-1}).r:null;
-      const swingRound=leadFlip||biggestDiff;
-      const swingLabel=leadFlip?'Lead Change':'Biggest Round';
-      const roundDetail=r=>{
-        const pa=abPickForRound('A',r.round_number);
-        const pb=abPickForRound('B',r.round_number);
-        const aName=pa?.song_name||b.artist_a;
-        const bName=pb?.song_name||b.artist_b;
-        const wColor=r.winner_side==='A'?'var(--gold)':r.winner_side==='B'?'#f472b6':'var(--muted2)';
-        const winText=r.winner_side==='A'?`Won by ${esc(b.artist_a)}`:r.winner_side==='B'?`Won by ${esc(b.artist_b)}`:'Split';
-        return`<div style="font-size:.55rem;color:var(--muted);margin-top:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(aName)} vs ${esc(bName)}</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:800;letter-spacing:.08em;color:${wColor};margin-top:.15rem;text-transform:uppercase">${winText}</div>`;
-      };
-      return`
-      <div style="display:flex;gap:.5rem;margin-bottom:.6rem">
-        ${closestRound?`<div style="flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">Closest Round</div><div style="font-size:.66rem;color:var(--text)">Round ${closestRound.round_number}</div>${roundDetail(closestRound)}</div>`:''}
-        ${swingRound?`<div style="flex:1;min-width:0;background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .7rem"><div class="ab-section-lbl">${swingLabel}</div><div style="font-size:.66rem;color:var(--text)">Round ${swingRound.round_number}</div>${roundDetail(swingRound)}</div>`:''}
-      </div>`;
-    })()}
-    ${tiebreakerUsed?`<div style="background:rgba(244,114,182,.08);border:1px solid #f472b6;border-radius:.55rem;padding:.55rem .85rem;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.08em;color:#f472b6;text-align:center;margin-bottom:.6rem">⚡ Tiebreaker(s) used this battle</div>`:''}
-    ${(b.ban_count>0||b.album_lock)?`
-      <div class="ab-section-lbl" style="margin-bottom:.5rem">Strategy Modes</div>
-      <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem">
-        ${b.ban_count>0?`<span class="ab-pill" style="font-size:.55rem">⛔ ${b.ban_count} ban${b.ban_count===1?'':'s'} each</span>`:''}
-        ${b.album_lock?`<span class="ab-pill" style="font-size:.55rem">💿 ${esc(b.album_a_name||'?')} vs ${esc(b.album_b_name||'?')}</span>`:''}
-      </div>
-    `:''}
-    ${b.ban_count>0?`
-      <div class="ab-section-lbl" style="margin-bottom:.5rem">Bans</div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.55rem .8rem;margin-bottom:.85rem">
-        ${['A','B'].map(side=>{
-          const sideArtist=side==='A'?b.artist_a:b.artist_b;
-          const oppArtist=side==='A'?b.artist_b:b.artist_a;
-          const sideBans=abBans.filter(x=>x.side===side);
-          return`<div style="margin-bottom:.45rem">
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.08em;color:${side==='A'?'var(--gold)':'#f472b6'};margin-bottom:.2rem">${esc(sideArtist)} banned from ${esc(oppArtist)}</div>
-            ${sideBans.length?sideBans.map(bn=>`<div style="font-size:.62rem;color:var(--text);padding:.18rem 0">⛔ ${esc(bn.song_name)}</div>`).join(''):'<div style="font-size:.6rem;color:var(--muted);font-style:italic">No bans used</div>'}
+    `}
+
+    <!-- ── DETAILS · collapsed by default ──────────────────────────── -->
+    ${hasExtras?`<details style="margin-bottom:1rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+      <summary style="cursor:pointer;padding:.7rem 0;font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);list-style:none;display:flex;align-items:center;justify-content:space-between;-webkit-tap-highlight-color:transparent">
+        <span>Show picks · bans · album lock</span>
+        <span style="color:var(--muted2);font-family:'JetBrains Mono','DM Mono',monospace">▾</span>
+      </summary>
+      <div style="padding:.55rem 0 .85rem">
+        ${b.ban_count>0?`<div class="ab-section-lbl" style="margin:.65rem 0 .35rem">Bans</div>
+        <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.4rem;padding:.55rem .8rem;margin-bottom:.7rem">
+          ${['A','B'].map(side=>{
+            const sideArtist=side==='A'?b.artist_a:b.artist_b;
+            const oppArtist=side==='A'?b.artist_b:b.artist_a;
+            const sideBans=abBans.filter(x=>x.side===side);
+            return`<div style="margin-bottom:.45rem">
+              <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.5rem;font-weight:500;letter-spacing:.16em;color:${side==='A'?'var(--gold)':'#f472b6'};text-transform:uppercase;margin-bottom:.25rem">${esc(sideArtist)} banned from ${esc(oppArtist)}</div>
+              ${sideBans.length?sideBans.map(bn=>`<div style="font-size:.62rem;color:var(--text);padding:.15rem 0;font-family:'Fraunces','Playfair Display',serif">${esc(bn.song_name)}</div>`).join(''):'<div style="font-size:.6rem;color:var(--muted);font-style:italic">No bans used</div>'}
+            </div>`;
+          }).join('')}
+        </div>`:''}
+        ${b.album_lock?`<div class="ab-section-lbl" style="margin:.65rem 0 .35rem">Album Lock</div>
+        <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.4rem;padding:.65rem .8rem;margin-bottom:.7rem">
+          <div style="display:flex;align-items:center;gap:.7rem">
+            <div style="flex:1;display:flex;align-items:center;gap:.5rem;min-width:0">
+              ${b.album_a_cover?`<img src="${esc(b.album_a_cover)}" style="width:38px;height:38px;object-fit:cover;flex-shrink:0">`:''}
+              <div style="min-width:0">
+                <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.72rem;font-weight:700;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.album_a_name||'?')}</div>
+                <div style="font-size:.5rem;color:var(--muted);font-family:'JetBrains Mono','DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase">${esc(b.artist_a)}</div>
+              </div>
+            </div>
+            <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.9rem;color:var(--muted2)">—</div>
+            <div style="flex:1;display:flex;align-items:center;gap:.5rem;min-width:0">
+              ${b.album_b_cover?`<img src="${esc(b.album_b_cover)}" style="width:38px;height:38px;object-fit:cover;flex-shrink:0">`:''}
+              <div style="min-width:0">
+                <div style="font-family:'Fraunces','Playfair Display',serif;font-size:.72rem;font-weight:700;color:#f472b6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.album_b_name||'?')}</div>
+                <div style="font-size:.5rem;color:var(--muted);font-family:'JetBrains Mono','DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase">${esc(b.artist_b)}</div>
+              </div>
+            </div>
+          </div>
+        </div>`:''}
+        ${abPicks.length>0?`<div class="ab-section-lbl" style="margin:.65rem 0 .35rem">Draft Order</div>
+        ${[...Array(b.song_count)].map((_,i)=>{
+          const pa=abPicks.find(p=>p.side==='A'&&p.pick_number===i+1);
+          const pb=abPicks.find(p=>p.side==='B'&&p.pick_number===i+1);
+          return`<div style="display:grid;grid-template-columns:1.4rem 1fr 1fr;gap:.55rem;align-items:baseline;padding:.35rem 0;border-bottom:1px solid var(--border);font-family:'Fraunces','Playfair Display',serif;font-size:.72rem">
+            <div style="font-family:'JetBrains Mono','DM Mono',monospace;font-size:.55rem;color:var(--muted);font-feature-settings:'tnum'">${String(i+1).padStart(2,'0')}</div>
+            <div style="color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(pa?.song_name||'—')}</div>
+            <div style="color:#f472b6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right">${esc(pb?.song_name||'—')}</div>
           </div>`;
-        }).join('')}
+        }).join('')}`:''}
       </div>
-    `:''}
-    ${b.album_lock?`
-      <div class="ab-section-lbl" style="margin-bottom:.5rem">Album Lock</div>
-      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:.55rem;padding:.65rem .8rem;margin-bottom:.85rem">
-        <div style="display:flex;align-items:center;gap:.7rem">
-          <div style="flex:1;display:flex;align-items:center;gap:.5rem;min-width:0">
-            ${b.album_a_cover?`<img src="${esc(b.album_a_cover)}" style="width:42px;height:42px;border-radius:3px;object-fit:cover;flex-shrink:0">`:''}
-            <div style="min-width:0">
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.album_a_name||'?')}</div>
-              <div style="font-size:.5rem;color:var(--muted)">${esc(b.artist_a)}</div>
-            </div>
-          </div>
-          <div style="font-family:'Fraunces','Playfair Display',serif;font-size:1rem;color:var(--muted);font-style:italic">vs</div>
-          <div style="flex:1;display:flex;align-items:center;gap:.5rem;min-width:0">
-            ${b.album_b_cover?`<img src="${esc(b.album_b_cover)}" style="width:42px;height:42px;border-radius:3px;object-fit:cover;flex-shrink:0">`:''}
-            <div style="min-width:0">
-              <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;color:#f472b6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(b.album_b_name||'?')}</div>
-              <div style="font-size:.5rem;color:var(--muted)">${esc(b.artist_b)}</div>
-            </div>
-          </div>
-        </div>
-        <div style="text-align:center;margin-top:.55rem;font-family:'Barlow Condensed',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.1em;color:${winSide==='A'?'var(--gold)':winSide==='B'?'#f472b6':'var(--muted)'}">${winSide?'Album Winner: '+esc(winSide==='A'?b.album_a_name:b.album_b_name):'Tie'}</div>
-      </div>
-    `:''}
-    <div class="ab-section-lbl" style="margin-bottom:.5rem">Draft Order</div>
-    ${[...Array(b.song_count)].map((_,i)=>{
-      const pa=abPicks.find(p=>p.side==='A'&&p.pick_number===i+1);
-      const pb=abPicks.find(p=>p.side==='B'&&p.pick_number===i+1);
-      return`<div style="display:flex;gap:.5rem;margin-bottom:.4rem">
-        <div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.45rem .6rem;min-width:0">
-          <div style="font-size:.5rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase">A · Pick ${i+1}</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(pa?.song_name||'—')}</div>
-        </div>
-        <div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.45rem .6rem;min-width:0">
-          <div style="font-size:.5rem;color:#f472b6;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase">B · Pick ${i+1}</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(pb?.song_name||'—')}</div>
-        </div>
-      </div>`;
-    }).join('')}
-    <div class="ab-section-lbl" style="margin-bottom:.5rem;margin-top:.9rem">Round Order (Arranged)</div>
-    ${[...Array(b.song_count)].map((_,i)=>{
-      const pa=abPickForRound('A',i+1);
-      const pb=abPickForRound('B',i+1);
-      return`<div style="display:flex;gap:.5rem;margin-bottom:.4rem">
-        <div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.45rem .6rem;min-width:0">
-          <div style="font-size:.5rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase">A · Round ${i+1}</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(pa?.song_name||'—')}</div>
-        </div>
-        <div style="flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:.45rem;padding:.45rem .6rem;min-width:0">
-          <div style="font-size:.5rem;color:#f472b6;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase">B · Round ${i+1}</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(pb?.song_name||'—')}</div>
-        </div>
-      </div>`;
-    }).join('')}
+    </details>`:''}
+
     <div id="ab-rematch-panel" style="margin-top:1.25rem"></div>
   `;
   renderAbRematchPanel();
@@ -12223,9 +12188,10 @@ function renderAbRematchPanel(){
   if(!el)return;
   const b=currentAuxBattle;
   if(!b||b.status!=='final'){el.innerHTML='';return;}
-  // Drop any votes from users who left the room
-  const present=abRoomPresentIds();
-  _abRematchVoters=new Set([..._abRematchVoters].filter(id=>present.has(id)));
+  // Votes are NOT filtered by presence. A cast vote stays counted even if the
+  // voter leaves the room — and crucially, this avoids dropping a freshly
+  // broadcast vote whose sender hasn't yet synced to the receiver's presence,
+  // which would prevent the threshold check from ever reaching majority.
   const need=abRematchThreshold();
   const have=_abRematchVoters.size;
   const reached=have>=need;
@@ -12298,7 +12264,32 @@ async function doAuxBattleRematch(){
   // disappears from both players' records. Invalidate so the lobby fetches fresh.
   _abInvalidateRecordCache(oldA);
   _abInvalidateRecordCache(oldB);
-  // Local state cleanup is handled by the realtime update handler.
+  // Belt-and-suspenders: reset the flag immediately on success in case the
+  // realtime UPDATE event is delayed. The handler will also reset it.
+  _abRematchInProgress=false;
+  // Don't depend on the host's own realtime UPDATE event arriving — locally
+  // transition right now. The handler is idempotent: if/when the event does
+  // arrive, prev will already be the new status so the reset branch is skipped.
+  currentAuxBattle={
+    ...currentAuxBattle,
+    status:newStatus,
+    artist_a:'',artist_b:'',
+    player_a_id:null,player_b_id:null,
+    current_pick_index:0,current_round:1,
+    duel_mode:null,
+    final_score_a:null,final_score_b:null,
+    winner_side:null,
+    album_a_name:null,album_a_id:null,album_a_cover:null,
+    album_b_name:null,album_b_id:null,album_b_cover:null,
+    bans_locked_a:false,bans_locked_b:false,
+    arrangement_locked_a:false,arrangement_locked_b:false,
+    wheel_winner_a:null,wheel_winner_b:null,wheel_spun_at:null
+  };
+  _abResetRematchVoteState();
+  abPicks=[];abBans=[];abRoundVotes=[];abRoundRatings=[];abRoundResults=[];
+  abArrangement=[];abMyRatingA=null;abMyRatingB=null;
+  _stopAbLobbyPoll();
+  abState(newStatus);
 }
 
 // ─── Realtime ─────────────────────────────────────────────────────────────────
@@ -12310,7 +12301,13 @@ function subscribeToAuxBattleRealtime(battleId){
       abPresence=abChannel.presenceState();
       if(currentAuxBattle?.status==='lobby')renderAuxBattleLobby();
       else if(currentAuxBattle?.status==='round_active'||currentAuxBattle?.status==='rating_tiebreaker')refreshAbRatingProgress();
-      else if(currentAuxBattle?.status==='final')renderAbRematchPanel();
+      else if(currentAuxBattle?.status==='final'){
+        renderAbRematchPanel();
+        // If someone left, the threshold may have dropped below current votes
+        // OR the host fallback chain may now resolve to a present client —
+        // re-check so the reset can still fire after late presence updates.
+        maybeTriggerAuxRematch();
+      }
     })
     .on('postgres_changes',{event:'UPDATE',schema:'public',table:'aux_battles',filter:`id=eq.${battleId}`},async()=>{
       const prev=currentAuxBattle?.status;
